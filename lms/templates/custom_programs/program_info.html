@@ -1,0 +1,122 @@
+<%namespace name='static' file='../static_content.html'/>
+<%!
+from datetime import datetime
+from pytz import timezone, utc
+from django.urls import reverse
+from django.utils.translation import ngettext
+from django.utils.translation import gettext as _
+from openedx.features.course_experience import course_home_url
+from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+from leaderboard.models import LeaderBoard
+%>
+
+<%inherit file="../main.html" />
+<%block name="headextra">
+  ## OG (Open Graph) title and description added below to give social media info to display
+  ## (https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content#tags)
+    <meta property="og:title" content="${program.name}" />
+    <meta property="og:description" content="${program.short_description}" />
+    <link rel="stylesheet" type="text/css" href="${static.url('custom_css/program_info.css')}">
+</%block>
+
+<%block name="pagetitle">${program.name}</%block>
+<%
+    total_courses = len(program_courses)
+    c_progress = 0
+    for course in program_courses:
+        c_progress += course_grades.get(course.id).get('points', 0.0)
+    program_progress = int(c_progress/total_courses)
+
+%>
+<style type="text/css">
+    .certificate-program-btn{text-align: left;margin-top: 25px;}
+    body.rtl .certificate-program-btn{text-align: right;}
+    .course-info header.program-profile h1{text-align: left;color: #fff;font-weight: bold;font-size: 45px;padding-bottom: 70px;}
+    .view-certificate-btn{transition: background-color 0.3s;color: #262626;font-family: 'TheSansArabic';font-size: 18px;font-style: normal;font-weight: 530;padding: 10px 32px;border-right: 3px solid #262626;border-bottom: 2px solid #262626;text-decoration: none;background: #EDEDED;}
+    .courses-container .courses-block-inner{position: relative;}
+    .courses-block-inner .view-certificate-btn{position: absolute;right: 40px;bottom: 47px;}
+    body.rtl .courses-block-inner .view-certificate-btn{right: auto;left: 40px;}
+</style>
+<section class="course-info">
+    <header class="program-profile banner" style="background-image: url('${program.banner.url}');">
+        <div class="container">
+            <h1 id="program-title">${program.name}</h1>
+            % if cert_url:
+                <div class="certificate-program-btn">
+                    <div role="group">
+                        <a href="${cert_url}" class="btn btn-cta view-certificate-btn" target="_blank">${_("View Certificate")}</a>
+                    </div>
+                </div>
+            % endif
+        </div>
+    </header>
+</section>
+<section class="program-info">
+    <div class="progress-block">
+        <div class="program_progress_block">
+            <div class="container">
+                <div class="meter">
+                    <span style="width: ${program_progress}%"></span>
+                    <p>التقدم العام</p>
+                </div>
+                <div class="program_progress"><h4>${program_progress}%</h4></div>
+            </div>
+        </div>
+    </div>
+    <div class="courses-container progress">
+        <div class="courses-block-inner">
+            <h3>التقدّم في الدورات التدريبية</h3>
+            <p>الرجاء الضغط على البطاقات أدناه لعرض الدورات:</p>
+            <div class="courses">
+                <ul class="courses-listing courses-list">
+                    % for course in program_courses:
+                        <%
+                            course_overview = course
+                            points, passed = LeaderBoard.get_score(request.user, course.id)
+                            progress = "not-started"
+                            if int(points) == 100:
+                                progress = "completed"
+                            elif int(points) > 0:
+                                progress = "in-progress"
+                        %>
+                        <li class="courses-listing-item">
+                            <article class="course" id="${course.id}" role="region" aria-label="${course_overview.display_name_with_default}">
+                                <a href="${course_home_url(course.id)}">
+                                    <header class="course-image">
+                                        <div class="cover-image">
+                                            <img src="${course_overview.image_urls['small']}" alt="${_('{course_number} {course_name} Home Page').format(course_number=course_overview.number, course_name=course_overview.display_name_with_default)}" />
+                                        </div>
+                                    </header>
+                                    <div class="course-info" aria-hidden="true">
+                                        <span class="span-text">دورة</span>
+                                        <h2 class="course-name">
+                                            <span class="course-title">${course_overview.display_name_with_default}</span>
+                                        </h2>
+                                    </div>
+                                    <div class="course-progress-bar ${progress}" style="--progress-value: ${points}%;">
+                                        <div class="progress-container">
+                                            <div class="progress"></div>
+                                            <span class="progress-label">${points}%</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </article>
+                        </li>
+                    % endfor
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="courses-container certificate">
+        <div class="courses-block-inner certificate">
+            <h3>الشهادة</h3>
+            <p>يتلقى جميع المشاركين في المسار شهادةً عند إتمامهم جميع الدورات التدريبية فيه، والحصول على شهادة كل دورة منها.</p>
+            <div class="certificate-box">
+                <img src="${static.url('images/program-cert.jpeg')}" alt="${program.name} Certificate">
+            </div>
+            % if cert_url:
+                <a href="${cert_url}" class="btn btn-cta view-certificate-btn" style="background-color: #FFCB05;" target="_blank">${_("View Certificate")}</a>
+            % endif
+        </div>
+    </div>
+</section>

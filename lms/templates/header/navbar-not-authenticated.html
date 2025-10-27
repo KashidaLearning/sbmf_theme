@@ -1,0 +1,140 @@
+## mako
+
+<%page expression_filter="h"/>
+
+<%namespace name='static' file='../static_content.html'/>
+<%namespace file='../main.html' import="login_query"/>
+
+<%!
+from django.conf import settings
+from django.urls import reverse
+from django.utils.translation import gettext as _
+from six import text_type
+
+from openedx.core.djangoapps.user_authn.toggles import should_redirect_to_authn_microfrontend
+%>
+
+<%
+  mktg_site_enabled = static.get_value('ENABLE_MKTG_SITE', settings.FEATURES.get('ENABLE_MKTG_SITE', False))
+  courses_are_browsable = settings.FEATURES.get('COURSES_ARE_BROWSABLE')
+  allows_login = not settings.FEATURES['DISABLE_LOGIN_BUTTON'] and not combined_login_and_register
+  can_discover_courses = settings.FEATURES.get('ENABLE_COURSE_DISCOVERY')
+  allow_public_account_creation = static.get_value('ALLOW_PUBLIC_ACCOUNT_CREATION', settings.FEATURES.get('ALLOW_PUBLIC_ACCOUNT_CREATION'))
+  should_redirect_to_authn_mfe = should_redirect_to_authn_microfrontend()
+%>
+
+<style>
+  nav.nav-links {
+    display: flex;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .global-header .nav-links .main {
+    margin: 0 !important;
+    margin-right: 80px !important;
+  }
+
+  .global-header .nav-links .secondary {
+    margin: 0 !important;
+  }
+
+  .global-header .nav-links .secondary .nav-item {
+    padding: 0 !important;
+  }
+
+  .global-header .nav-links .secondary a.register-btn {
+    display: none !important;
+  }
+
+
+  .nav-links .main a,
+  .nav-links .secondary a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    padding: 8px 12px;
+  }
+
+  .global-header .nav-links .main .nav-item a{
+    color: white !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+
+  }
+
+
+
+  .global-header .nav-links .secondary a.sign-in-btn {
+    background-color: #EE9147 !important;
+    color: #000000 !important;
+    border-radius: 20px !important;
+    border: none !important;
+    font-weight: 700 !important;
+    height: 32px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+  }
+
+  .nav-links .secondary .btn:hover {
+    background-color: #005bb5;
+  }
+</style>
+
+
+<nav class="nav-links" aria-label=${_("Supplemental Links")}>
+  <div class="main">
+  % if mktg_site_enabled:
+    <div class="mobile-nav-item hidden-mobile nav-item">
+      <a href="${marketing_link('HOW_IT_WORKS')}">${_("How it Works")}</a>
+    </div>
+    % if courses_are_browsable:
+      <div class="mobile-nav-item hidden-mobile nav-item">
+        <a href="${marketing_link('COURSES')}">${_("Courses")}</a>
+      </div>
+    % endif
+    <div class="mobile-nav-item hidden-mobile nav-item">
+      <a href="${marketing_link('SCHOOLS')}">${_("Schools")}</a>
+    </div>
+  % endif
+     <!-- Custom Links -->
+ 
+  <div class="mobile-nav-item hidden-mobile nav-item">
+    <a href="/about-us">حول المؤسسة</a>
+  </div>
+  <div class="mobile-nav-item hidden-mobile nav-item">
+    <a href="/blog">المدوّنة</a>
+  </div>
+   <div class="mobile-nav-item hidden-mobile nav-item">
+    <a href="/future-skills">مهارات المستقبل</a>
+  </div>
+
+  </div>
+  <div class="secondary">
+    <div>
+      % if allows_login:
+        % if allow_public_account_creation:
+          % if should_redirect_to_authn_mfe:
+            <div class="mobile-nav-item hidden-mobile nav-item">
+                <a class="register-btn btn" href="${settings.AUTHN_MICROFRONTEND_URL}/register${login_query()}">${_("Register")}</a>
+            </div>
+          % else:
+      
+          % endif
+        % endif
+        % if should_redirect_to_authn_mfe:
+          <div class="mobile-nav-item hidden-mobile nav-item">
+              <a class="sign-in-btn btn" href="${settings.AUTHN_MICROFRONTEND_URL}/login${login_query()}">${_("Sign in")}</a>
+          </div>
+        % else:
+          <div class="mobile-nav-item hidden-mobile nav-item">
+              <a class="sign-in-btn btn" href="/login${login_query()}">${_("Sign in")}</a>
+          </div>
+        % endif
+      % endif
+    </div>
+  </div>
+</nav>

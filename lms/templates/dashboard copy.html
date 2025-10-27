@@ -1,0 +1,364 @@
+<%page expression_filter="h"/>
+<%inherit file="main.html" />
+<%def name="online_help_token()"><% return "learnerdashboard" %></%def>
+<%namespace name='static' file='static_content.html'/>
+
+<%!
+import pytz
+import six
+from datetime import datetime, timedelta
+from django.urls import reverse
+from six import text_type
+from django.utils.translation import gettext as _
+from django.template import RequestContext
+from common.djangoapps.entitlements.models import CourseEntitlement
+from common.djangoapps.third_party_auth import pipeline
+from common.djangoapps.util.date_utils import strftime_localized
+from opaque_keys.edx.keys import CourseKey
+from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
+from openedx.core.djangolib.js_utils import dump_js_escaped_json, js_escaped_string
+from openedx.core.djangolib.markup import HTML, Text
+from openedx.features.course_experience import course_home_url
+from common.djangoapps.student.models import CourseEnrollment
+from leaderboard.models import LeaderBoard
+from custom_programs.models import Program, ProgramEnrollment
+%>
+
+<%block name="pagetitle">${_("Dashboard")}</%block>
+<%block name="bodyclass">view-dashboard is-authenticated</%block>
+<!-- <%block name="headextra">
+  <link rel="stylesheet" type="text/css" href="${static.url('custom_css/dashboard.css')}">
+</%block> -->
+
+<%
+  user = request.user
+  programs = list(Program.objects.all()[:4])
+
+  from lms.djangoapps.grades.api import CourseGradeFactory
+
+  def get_program_progress(program, user):
+      """
+      Calculate program completion percentage for a given user.
+      Tries to compute dynamically from course grades,
+      and falls back to ProgramEnrollment.progress if available.
+      """
+      try:
+          # Safely get program courses if relation exists
+          if hasattr(program, "courses"):
+              courses = program.courses.all()
+          else:
+              courses = []
+
+          total_courses = len(courses)
+          completed_courses = 0
+
+          # Check each course grade
+          for course in courses:
+              course_key = getattr(course, "course_id", None) or getattr(course, "id", None)
+              if not course_key:
+                  continue
+
+              try:
+                  grade = CourseGradeFactory().read(user, course_key)
+                  if grade and grade.passed:
+                      completed_courses += 1
+              except Exception:
+                  continue
+
+          progress = 0
+          if total_courses > 0:
+              progress = int((completed_courses / total_courses) * 100)
+
+          # If ProgramEnrollment.progress exists and is higher, use it
+          enrollment = ProgramEnrollment.objects.filter(user=user, program=program).first()
+          if enrollment and hasattr(enrollment, "progress") and enrollment.progress > progress:
+              progress = enrollment.progress
+
+          return progress
+
+      except Exception as e:
+          # Silent fallback in case of missing data
+          return 0
+%>
+
+
+<main id="main" aria-label="Content" tabindex="-1" dir="rtl">
+
+  <section class="programs-section">
+    <div class="section-title">المغامرات في البرنامج</div>
+
+    <div class="programs-grid">
+      % for index, program in enumerate(programs):
+        <% program_progress = get_program_progress(program, user) %>
+        <a href="${reverse('custom_programs:program_about', args=[program.id])}" class="program-card">
+          <div class="spline-bg">
+            % if index == 0:
+              <iframe src="https://my.spline.design/hands3duicopy-7gyoxesQffZHhLfjeK9Il4p0/" frameborder="0" loading="lazy"></iframe>
+            % elif index == 1:
+              <iframe src="https://my.spline.design/3dtextbluecopy-Jp7uaBn9JsoMwQv3dEwO2QJQ/" frameborder="0" loading="lazy"></iframe>
+            % elif index == 2:
+              <iframe src="https://my.spline.design/planetcopy-VE3Vwhawyvd06rBgG4YtES3f/" frameborder="0" loading="lazy"></iframe>
+            % else:
+              <iframe src="https://my.spline.design/planetcopy-VE3Vwhawyvd06rBgG4YtES3f/" frameborder="0" loading="lazy"></iframe>
+            % endif
+
+            <div class="progress-badge">
+                ${program_progress}%
+            </div>
+
+            <div class="program-info">
+              <h3 class="program-title">${program.name}</h3>
+              <div class="program-subject">
+                <img src="${static.url('images/Frame.png')}">
+                ${program.subject if hasattr(program, 'subject') else 'المهارة'}
+              </div>
+            </div>
+          </div>
+        </a>
+      % endfor
+    </div>
+  </section>
+
+  <!-- --------------- ORIGINAL DASHBOARD COURSE SECTION (COMMENTED) --------------- -->
+
+  <div class="dashboard" id="dashboard-main">
+    <div class="courses-container">
+      <div class="enrollment-sections">
+        <div class="title-section">
+          <h2>${_("Progress")}</h2>
+          <p>ستشاهد مقدار محتوى البرنامج الذي تم إكماله.</p>
+        </div>
+
+        % if plugins.get('custom_programs', {}).get('my_programs'):
+        <div class="program-listing-items">
+          <div class="title-section">
+            <h2>المسارات</h2>
+            <p>المسارات المصممة خصيصاً لمساعدتك في تطوير مهاراتك وتحقيق أهدافك التعليمية.</p>
+          </div>
+          <ul class="courses-listing courses-list">
+            % for program in plugins.get('custom_programs', {}).get('my_programs'):
+            <li class="courses-listing-item">
+              <article class="course" id="program-${program.get('id')}" role="region" aria-label="${program.get('name')}">
+                <a href="${reverse('custom_programs:program_about', args=[text_type(program.get('id'))])}">
+                  <header class="course-image">
+                    <div class="cover-image">
+                      <img src="${program.get('card_image')}" alt="${program.get('name')} Image">
+                      <div class="learn-more" aria-hidden="true">عرض التفاصيل</div>
+                    </div>
+                  </header>
+                  <div class="course-info" aria-hidden="true">
+                    <h2 class="course-name">
+                      <span class="course-title">${program.get('name')}</span>
+                    </h2>
+                    <div class="program-progress-bar" style="--progress-value: ${program.get('progress', 0)}%">
+                      <div class="progress-container">
+                        <div class="progress"></div>
+                        <span class="progress-label">${program.get('progress', 0)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </article>
+            </li>
+            % endfor
+          </ul>
+        </div>
+        % endif
+      </div>
+    </div>
+  </div>
+</main>
+
+% if show_account_activation_popup:
+  <div id="activate-account-modal" class="modal activate-account-modal" aria-hidden="true" tabindex=0>
+    <div class="inner-wrapper" role="dialog" aria-labelledby="activate-account-modal-title" aria-live="polite">
+      <h3>
+        ${_("Activate your account so you can log back in")}
+        <span class="sr">${_("window open")}</span>
+      </h3>
+      <p class="activate-account-modal-body">${Text(_("We sent an email to {strong_start}{email}{strong_end} with a link to activate your account. Can’t find it? Check your spam folder or {link_start}resend the email{link_end}.")).format(
+          strong_start=HTML('<strong>'),
+          email=user.email,
+          strong_end=HTML('</strong>'),
+          link_start=HTML('<a href=\"#\" id=\"send_cta_email\" >'),
+          link_end=HTML('</a>')
+          )}
+      </p>
+      <div class="activate-account-modal-button">
+        <button class="btn btn-primary" id="button">
+          ${Text(_("Continue to {platform_name}")).format(platform_name=settings.PLATFORM_NAME)}
+          <svg style="vertical-align:bottom" width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+% endif
+
+<div id="email-settings-modal" class="modal" aria-hidden="true">
+  <div class="inner-wrapper" role="dialog" aria-labelledby="email-settings-title">
+    <button class="close-modal"><span class="icon fa fa-remove"></span><span class="sr">${_("Close")}</span></button>
+    <header>
+      <h2 id="email-settings-title">
+        ${Text(_("Email Settings for {course_number}")).format(course_number=HTML('<span id=\"email_settings_course_number\"></span>'))}
+        <span class="sr">${_("window open")}</span>
+      </h2>
+      <hr/>
+    </header>
+    <form id="email_settings_form" method="post">
+      <input name="course_id" id="email_settings_course_id" type="hidden" />
+      <label><input type="checkbox" id="receive_emails" name="receive_emails" />${_("Receive course emails")}</label>
+      <div class="submit"><input type="submit" id="submit" value="${_("Save Settings")}" /></div>
+    </form>
+  </div>
+</div>
+
+<div id="unenroll-modal" class="modal unenroll-modal" aria-hidden="true">
+  <div class="inner-wrapper" role="dialog" aria-labelledby="unenrollment-modal-title" aria-live="polite">
+    <button class="close-modal"><span class="icon fa fa-remove"></span><span class="sr">${_("Close")}</span></button>
+    <header class="unenroll-header">
+      <h2 id="unenrollment-modal-title">
+        <span id='track-info'></span>
+        <span id='refund-info'></span>
+        <span class="sr">${_("window open")}</span>
+      </h2>
+      <hr/>
+    </header>
+    <div id="unenroll_error" class="modal-form-error"></div>
+    <form id="unenroll_form" method="post" data-remote="true" action="${reverse('change_enrollment')}">
+      <input name="course_id" id="unenroll_course_id" type="hidden" />
+      <input name="enrollment_action" type="hidden" value="unenroll" />
+      <div class="submit"><input class="submit-button" name="submit" type="submit" value="${_("Unenroll")}" /></div>
+    </form>
+  </div>
+</div>
+
+<%include file="dashboard/_dashboard_entitlement_unenrollment_modal.html"/>
+
+<style>
+.program-subject img {
+  margin-left: 12px;
+  width: 24px;
+  height: 24px;
+  margin-top: -9px;
+}
+
+.programs-section {
+  background: linear-gradient(to bottom, #1A0E32 0%, #3A2F82 40%, #6C52B9 100%);
+  text-align: center;
+  padding: 80px 0 120px;
+  overflow-x: hidden;
+}
+
+.section-title {
+  color: #FFFFFF;
+  font-size: 64px;
+  font-weight: bold;
+  margin-bottom: 70px;
+  font-family: 'Cairo', sans-serif !important;
+  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+}
+
+.programs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.program-card {
+  width: 420px;
+  height: 560px;
+  position: relative;
+  border-radius: 26px;
+  overflow: hidden;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.program-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(255,203,5,0.4);
+}
+
+.spline-bg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.spline-bg iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+}
+
+.progress-badge {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  color: #110D7C;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 5px 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  min-width: 75px;
+  padding-top: 12px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.program-info {
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+  text-align: right;
+  padding-right: 10px;
+  z-index: 10;
+  font-family: 'Cairo', sans-serif !important;
+}
+.program-title {
+  color: #fff;
+  font-size: 46px;
+  font-weight: bold;
+  padding-left: 170px;
+  margin-bottom: 17px;
+  align-content: right;
+  font-family: 'Cairo', sans-serif !important;
+}
+
+.program-subject {
+  display: inline-block;
+  background: #292589;
+  border-radius: 10px;
+  padding: 10px 40px 12px 50px;
+  margin-bottom: -6px;
+  padding-right: 25px;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Cairo', sans-serif !important;
+}
+.program-subject:hover { background: #3b36a5; }
+
+header.global-header { background-color: #110D7C !important; }
+.wrapper.wrapper-footer { background-color: #110D7C !important; }
+
+@media (max-width: 1200px) { .program-card { width: 45%; } }
+@media (max-width: 768px) {
+  .program-card { width: 90%; height: 480px; }
+  .section-title { font-size: 36px; }
+  .program-title { font-size: 22px; }
+}
+header.global-header .header-logo a .logo { height: 42px; }
+div#content {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+</style>

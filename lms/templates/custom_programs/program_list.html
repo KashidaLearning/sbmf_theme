@@ -1,0 +1,56 @@
+<%!
+  import json
+  import boto3
+  from django.conf import settings
+ from django.utils.translation import gettext as _
+  from openedx.core.djangolib.js_utils import dump_js_escaped_json
+  from django.urls import reverse
+%>
+<%inherit file="../main.html" />
+
+<%namespace name='static' file='../static_content.html'/>
+
+
+<%block name="pagetitle">${_("Programs")}</%block>
+<style type="text/css">
+  .courses-container .courses .course .course-image .cover-image img{
+      height: 157px;
+  }
+</style>
+<main id="main" aria-label="Content" tabindex="-1">
+    <section class="find-courses">
+        <section class="courses-container">
+            <div class="courses no-course-discovery" role="region" aria-label="${_('List of Courses')}">
+                <ul class="courses-listing">
+                    %for course in programs:
+                        <li class="courses-listing-item">
+                            <%
+                                if context.get('LANGUAGE_CODE') == 'ar':
+                                    program_name = course.name_arabic if course.name_arabic else course.name
+                                else:
+                                    program_name = course.name
+                            %>                  
+                            <article class="course" id="${course.id}" role="region" aria-label="${program_name}">
+                                <a href="${reverse('program_about', kwargs=dict(program_id=course.id))}">
+                                    <header class="course-image">
+                                        <div class="cover-image">
+                                            <img src="${course.banner_image.url if course.banner_image else static.url('images/pencils.jpg')}" alt="${program_name} " />
+                                            <div class="learn-more" aria-hidden="true">${_("LEARN MORE")}</div>
+                                        </div>
+                                    </header>
+                                    <div class="course-info" aria-hidden="true">
+                                        <h2 class="course-name">
+                                            <span class="course-code">${course.short_description}</span>
+                                            <span class="course-title">${program_name}</span>
+                                        </h2>
+                                    </div>
+                                    <div class="sr"><ul></ul></div>
+                                </a>
+                            </article>
+                        </li>
+                    %endfor
+                </ul>
+            </div>
+        </section>
+    </section>
+</main>

@@ -1,0 +1,104 @@
+<%namespace name='static' file='../static_content.html'/>
+<%!
+    from datetime import datetime
+    from pytz import timezone, utc
+    from django.utils import timezone
+    from django.utils.translation import gettext as _
+    from django.urls import reverse
+    from django.conf import settings
+    from six import text_type
+    from openedx.core.djangolib.markup import HTML, Text
+    from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
+    from openedx.core.djangoapps.models.course_details import CourseDetails
+    from custom_programs.models import ProgramEnrollmentRequest
+%>
+
+<%inherit file="../main.html" />
+<%block name="headextra">
+    ## OG (Open Graph) title and description added below to give social media info to display
+    ## (https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content#tags)
+    <meta property="og:title" content="${program.name}" />
+    <meta property="og:description" content="${program.short_description}" />
+    <link rel="stylesheet" type="text/css" href="${static.url('custom_css/program_about.css')}">
+</%block>
+
+<%block name="js_extra">
+  <script src="${static.url('js/course_info.js')}"></script>
+</%block>
+
+<%block name="pagetitle">${program.name}</%block>
+
+<section class="course-info">
+    <header class="program-profile banner" style="background-image: url('${program.banner.url}');">
+        <div class="container">
+            <div class="col-6 video-wrapper">
+                % if program.introductory_video:
+                    <div class="program-video-container">
+                        <!-- Video player -->
+                        <video id="program-intro-video" class="program-video" width="100%" poster="${program.card.url}" controls>
+                            <source src="${program.introductory_video.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <!-- Custom play button -->
+                        <div class="play-button" id="play-button">
+                            <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                % endif
+            </div>
+            <div class="col-6 banner-text_buy_button">    
+                <h1 id="program-title">${program.name}</h1>
+                <div class="start-program-btn">
+                    <div role="group" aria-label="Program purchase and email options">
+                        % if user_is_enrolled:
+                            <span class="btn btn-cta one-click-purchase-btn disabled">انت مسجل في المسار</span>
+                            <a href="${reverse('custom_programs:program_info', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn">عرض المسار</a>
+                        % elif program.enrollment_start >  timezone.now():
+                            <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Not Started Yet")}</span>
+                        % elif program.enrollment_end <  timezone.now():
+                            <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Closed")}</span>
+                        % elif not program.self_enrollment:
+                            % if request.user.is_authenticated and ProgramEnrollmentRequest.get_active_request(program.id, request.user.id):
+                                <span class="btn btn-cta one-click-purchase-btn disabled">طلب التسجيل الخاص بك قيد المراجعة</span>
+                            % else:
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">طلب التسجيل في المسار</a>
+                            % endif
+                        % else:
+                            % if program.price <= 0:
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">${_("Register in the Program")}</a>
+                            % else:
+                                <a href="${reverse('custom_programs:program_buy', kwargs=dict(program_id=program.id))}" class="btn btn-cta one-click-purchase-btn active">${_("Pursue the Program ({program_price} {currency_symbol})").format(program_price=program.price, currency_symbol=_("SAR"))}</a>
+                            % endif
+                        % endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="details">
+            <div class="inner-wrapper">${HTML(program.overview)}</div>
+        </div>
+        <div class="course-sidebar">
+            <div class="inner-wrapper">${HTML(program.addition_info)}</div>
+        </div>
+    </div>
+</section>
+
+% if program.introductory_video:
+    <section id="video-modal" class="modal home-page-video-modal video-modal">
+      <div class="inner-wrapper">
+        <iframe title="YouTube Video" width="640" height="360" src="${program.introductory_video.url}" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </section>
+% endif
+
+<script type="text/javascript">
+    document.getElementById('play-button').addEventListener('click', function() {
+        const video = document.getElementById('program-intro-video');
+        video.style.display = 'block';  // Show the video
+        video.play();
+        this.style.display = 'none';    // Hide the play button
+});
+
+</script>

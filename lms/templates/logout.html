@@ -1,0 +1,67 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%!
+
+from django.utils.translation import gettext as _
+
+%>
+ 
+<%inherit file="main.html"/>
+ 
+<%block name="title">
+
+    ${_("Signed Out")} | ${parent.title()}
+</%block>
+ 
+<%block name="body">
+
+    % if show_tpa_logout_link:
+<h1>${_("You have signed out.")}</h1>
+ 
+        <p style="text-align: center; margin-bottom: 20px;">
+<%
+
+                sso_signout_msg = _('Click here to delete your single signed-on (SSO) session.')
+
+            %>
+<a href="${tpa_logout_url}">${sso_signout_msg}</a>
+</p>
+ 
+    % else:
+
+        % if enterprise_target:
+<!-- Enterprise SSO flow -->
+<h1>${_("We are signing you in.")}</h1>
+ 
+            <p style="text-align: center; margin-bottom: 20px;">
+
+                ${_("This may take a minute. If you are not redirected, go to the home page.")}
+</p>
+ 
+        % else:
+<h1>${_("You have signed out.")}</h1>
+ 
+            <p style="text-align: center; margin-bottom: 20px;">
+
+                ${_("If you are not redirected within 5 seconds, ")}
+<a href="${target}">${_("click here to go to the home page.")}</a>
+</p>
+
+        % endif
+ 
+        <script type="text/javascript" src="${static.url('js/jquery.allLoaded.js')}"></script>
+<script type="text/javascript" src="${static.url('js/logout.js')}"></script>
+
+    % endif
+ 
+    <div id="iframeContainer" style="visibility: hidden" data-redirect-url="${target}">
+
+        % for uri in logout_uris:
+<iframe src="${uri}"></iframe>
+
+        % endfor
+</div>
+ 
+</%block>
+
+ 
