@@ -363,13 +363,10 @@
         <br>
         <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
          % if cert_url:
-    <p>تهانينا! شهادتك جاهزة للتنزيل</p>
-    <a href="${cert_url}" class="download-btn">تنزيل الشهادة</a>
-    % else:
-        <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
-        <a href="#" class="download-btn disabled" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
-        <p style=" margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
-    % endif
+            <p>تهانينا! شهادتك جاهزة للتنزيل</p>
+            <a href="${cert_url}" class="download-btn">تنزيل الشهادة</a>
+   
+        % endif
     </div>
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
