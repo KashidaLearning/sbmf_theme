@@ -142,17 +142,7 @@
             </div>
         </div>
         % endif
-        % if user_is_enrolled:
-            <div class="progress-block">
-                <div class="program_progress_block">
-                    <div class="meter">
-                        <span style="width: ${program_progress}%"></span>
-                        <p>التقدم العام</p>
-                    </div>
-                    <div class="program_progress"><h4>${program_progress}%</h4></div>
-                </div>
-            </div> 
-        % endif
+        
         <div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 70px;">
         <%
             first_course = courses.filter(order=1, display_layout="horizontal").first()
@@ -359,10 +349,27 @@
                 <h2>شهاداتي </h2>
             </div>     
         <br>
+        % if user_is_enrolled:
+            <div class="progress-block">
+                <div class="program_progress_block">
+                    <div class="meter">
+                        <span style="width: ${program_progress}%"></span>
+                        <p>التقدم العام</p>
+                    </div>
+                    <div class="program_progress"><h4>${program_progress}%</h4></div>
+                </div>
+            </div> 
+        % endif
+        <br>
         <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
+         % if cert_url:
+    <p>تهانينا! شهادتك جاهزة للتنزيل</p>
+    <a href="${cert_url}" class="download-btn">تنزيل الشهادة</a>
+    % else:
         <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
-        <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+        <a href="#" class="download-btn disabled" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
         <p style=" margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+    % endif
     </div>
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
