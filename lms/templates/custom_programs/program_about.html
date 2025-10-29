@@ -292,6 +292,19 @@
         <h2>قائمة المتصدر</h2>
     </div>
     <br>
+     % if user_is_enrolled:
+            <div class="progress-block">
+                <div class="program_progress_block">
+                    <div class="meter">
+                        <span style="width: ${program_progress}%"></span>
+                        <p>التقدم العام</p>
+                    </div>
+                    <div class="program_progress"><h4>${program_progress}%</h4></div>
+                </div>
+            </div> 
+        % endif
+        <br>
+
    % if top_users:
     % for index, user in enumerate(top_users, start=1):
         <% 
@@ -349,24 +362,20 @@
                 <h2>شهاداتي </h2>
             </div>     
         <br>
-        % if user_is_enrolled:
-            <div class="progress-block">
-                <div class="program_progress_block">
-                    <div class="meter">
-                        <span style="width: ${program_progress}%"></span>
-                        <p>التقدم العام</p>
-                    </div>
-                    <div class="program_progress"><h4>${program_progress}%</h4></div>
-                </div>
-            </div> 
-        % endif
-        <br>
-        <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
-        % if cert_url:
-            <p>تهانينا! شهادتك جاهزة للتنزيل</p>
-            <a href="${cert_url}" class="btn btn-cta view-certificate-btn" >تنزيل الشهادة</a>
-        % endif
+        <div id="certificate-status">
+            % if cert_url:
+                <p>تهانينا! شهادتك جاهزة للتنزيل</p>
+                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة</a>
+            % else:
+                <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
+                <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
+                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+                <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+            % endif
+        </div>
     </div>
+     
+
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
         <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden;">
