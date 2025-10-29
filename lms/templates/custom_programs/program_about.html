@@ -362,14 +362,10 @@
         % endif
         <br>
         <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
-        <%page expression_filter="h"/>
-            % if program_certificate and program_certificate.download_url:
-                <div class="certificate-program-btn">
-                    <div role="group">
-                        <a href="${program_certificate.download_url}" class="btn btn-cta view-certificate-btn" target="_blank">${_("View Certificate")}</a>
-                    </div>
-                </div>
-            % endif
+        % if cert_url:
+            <p>تهانينا! شهادتك جاهزة للتنزيل</p>
+            <a href="${cert_url}" class="btn btn-cta view-certificate-btn" >تنزيل الشهادة</a>
+        % endif
     </div>
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
