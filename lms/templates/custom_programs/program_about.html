@@ -90,7 +90,7 @@
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
                     % if program.subject:
-                        <div class="cat-name"><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
+                        <div class="cat-name" style="background-color:${program.css_color};"><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
                     <p><b>هنا تبدأ قصتك كصانع</b></p>
