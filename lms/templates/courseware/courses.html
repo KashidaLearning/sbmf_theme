@@ -33,14 +33,14 @@
           <iframe src="${program.spline_url}" frameborder="0"></iframe>
            % endif
  
-            <div class="progress-badge">
+            <div class="progress-badge" style="background-color:${program.css_color};">
               ${int(program_progress)}%
             </div>
  
             <div class="program-info">
               <h3 class="program-title">${program.name}</h3>
-              <div class="program-subject">
-               <img src="${static.url('images/Frame.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
+              <div class="program-subject" style="background-color:${program.css_color};">
+               <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
               </div>
             </div>
           </div>
@@ -125,7 +125,6 @@
     top: -4px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fff;
     color: #110D7C;
     font-size: 15px;
     font-weight: 800;
@@ -164,12 +163,11 @@
   
 .program-subject {
     display: inline-block;
-    background: #292589;
     border-radius: 10px;
     padding: 10px 40px 12px 50px;
     margin-bottom: -6px;
     padding-right: 25px;
-    color: #fff;
+    color:  #110D7C;;
     font-size: 16px;
     font-family: 'Cairo', sans-serif !important;
 }

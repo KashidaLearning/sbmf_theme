@@ -172,14 +172,14 @@ setattr(program, 'progress', program_progress_average)
             <img src="${program.program_card.url if getattr(program, 'program_card', None) else static.url('images/default-program.jpg')}" alt="${program.name or 'Program'}" />
           % endif
 
-          <div class="progress-badge">
+          <div class="progress-badge" style="background-color:${program.css_color};">
             ${getattr(program, 'progress', 0)}%
           </div>
 
           <div class="program-info">
             <h3 class="program-title">${program.name}</h3>
-            <div class="program-subject">
-              <img src="${static.url('images/Frame.png')}" alt="Subject Icon"/>
+            <div class="program-subject" style="background-color:${program.css_color};">
+              <img src="${static.url('images/cat-icon.png')}" alt="Subject Icon"/>
               ${program.subject if hasattr(program, 'subject') else 'المهارة'}
             </div>
           </div>
