@@ -61,7 +61,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(20, 20, 20, 0.9);
+    background: #ffffff00;
     color: #fff;
     padding: 16px 25px;
     border-radius: 8px;
@@ -90,7 +90,7 @@
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
                     % if program.subject:
-                        <div class="cat-name" style="background-color:${program.css_color};"><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
+                        <div class="cat-name" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
                     <p><b>هنا تبدأ قصتك كصانع</b></p>
@@ -516,7 +516,7 @@
             // Create new message
             const msg = document.createElement('div');
             msg.className = 'locked-message';
-            msg.textContent = "This course is locked until you complete its prerequisite.";
+            msg.textContent = "هذه الدورة مقفلة حتى تُكمل المتطلب السابق.";
             document.body.appendChild(msg);
 
             void msg.offsetWidth; // reflow
@@ -524,7 +524,7 @@
             setTimeout(() => {
                 msg.classList.remove('show');
                 setTimeout(() => msg.remove(), 300);
-            }, 2500);
+            }, 7000);
         }
     });
 });
