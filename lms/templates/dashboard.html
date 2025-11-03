@@ -129,7 +129,7 @@ cert_name_long = settings.CERT_NAME_LONG
     all_programs = Program.objects.all()
   %>
 
-  <section class="programs-section">
+ <section class="programs-section">
   <h1 class="section-title">لوحة القيادة الخاصة بك</h1>
 
   % for program in all_programs:
@@ -150,13 +150,19 @@ cert_name_long = settings.CERT_NAME_LONG
                   total_progress += course_progress
                   course_count += 1
                   course_progress_list.append({
-                      'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),  # <-- Fixed here
+                      'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
                       'progress': course_progress,
                       'course_url': course_home_url(course_obj.course_key),
                   })
   
   program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
   setattr(program, 'progress', program_progress_average)
+
+  # Filter badges belonging to this program only
+  program_badges = UserBadge.objects.filter(
+      user=request.user, 
+      badge__program=program
+  ).select_related('badge')
   %>
 
   <div class="program-container">
@@ -170,61 +176,62 @@ cert_name_long = settings.CERT_NAME_LONG
       </div>
     </div>
 
-   <div class="separator"></div>
+    <div class="separator"></div>
 
-
-% if course_progress_list:
-<div class="program-courses">
-  <h3>تحدياتي في هذه الرحلة</h3>
-  <ul class="courses-list">
-    % for course in course_progress_list:
-    <li class="course-item">
-      <a href="${course['course_url']}" class="course-link">
-        <div class="course-info">
-          <span class="course-name">${course['name']}</span>
-          <div class="course-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width:${course['progress']}%;"></div>
+    % if course_progress_list:
+    <div class="program-courses">
+      <h3>تحدياتي في هذه الرحلة</h3>
+      <ul class="courses-list">
+        % for course in course_progress_list:
+        <li class="course-item">
+          <a href="${course['course_url']}" class="course-link">
+            <div class="course-info">
+              <span class="course-name">${course['name']}</span>
+              <div class="course-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${course['progress']}%;"></div>
+                </div>
+                <span class="progress-label">${course['progress']}%</span>
+              </div>
             </div>
-            <span class="progress-label">${course['progress']}%</span>
+          </a>
+        </li>
+        % endfor
+      </ul>
+    </div>
+    % else:
+      <p class="no-courses">لا توجد تحديات في هذه الرحلة بعد.</p>
+    % endif
+
+    <div class="separator"></div>
+
+    <div class="user-badges-section">
+      <h3>شاراتي في هذه الرحلة</h3>
+      % if program_badges.exists():
+      <div class="badge-grid">
+        % for user_badge in program_badges:
+        <div class="badge-card">
+          % if user_badge.badge.icon:
+            <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
+          % endif
+          <div class="badge-info">
+            <p class="badge-title">${user_badge.badge.title}</p>
+            % if user_badge.badge.description:
+              <p class="badge-description">${user_badge.badge.description}</p>
+            % endif
           </div>
         </div>
-      </a>
-    </li>
-    % endfor
-  </ul>
-</div>
-% else:
-  <p class="no-courses">لا توجد تحديات في هذه الرحلة بعد.</p>
-% endif
-
-
-   <div class="separator"></div>
-
-<div class="user-badges-section">
-  <h3>شاراتي</h3>
-  <div class="badge-grid">
-    % for user_badge in UserBadge.get_my_badges(request.user):
-    <div class="badge-card">
-      % if user_badge.badge.icon:
-        <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
-      % endif
-      <div class="badge-info">
-        <p class="badge-title">${user_badge.badge.title}</p>
-        % if user_badge.badge.description:
-          <p class="badge-description">${user_badge.badge.description}</p>
-        % endif
+        % endfor
       </div>
+      % else:
+        <p class="no-badges">لا توجد شارات مكتسبة في هذه الرحلة بعد.</p>
+      % endif
     </div>
-    % endfor
-  </div>
-</div>
-
-
   </div>
 
   % endfor
 </section>
+
 
 </div></div></div>
 </main>
