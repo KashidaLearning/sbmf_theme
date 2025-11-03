@@ -171,7 +171,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
     % if course_progress_list:
     <div class="program-courses">
-      <h3>التحديات في هذه الرحلة</h3>
+      <h3>تحدياتي في هذه الرحلة</h3>
       <ul class="courses-list">
         % for course in course_progress_list:
         <li class="course-item">
@@ -193,6 +193,22 @@ cert_name_long = settings.CERT_NAME_LONG
     % else:
       <p class="no-courses">لا توجدتحديات في هذ الرحلة بعد.</p>
     % endif
+
+      <div class="separator"></div>
+
+
+      <div class="program-badges">
+        <h3>شاراتي في الرحلة</h3>
+
+        <!--
+        % if program.badges.exists():
+          <ul class="badges-list">
+            % for badge in program.badges.all():
+              <li class="badge-item">
+                <img src="${badge.image.url}" alt="${badge.name}" class="badge-image"/>
+                <span class="badge-name">${badge.name}</span>
+      </div>
+      -->
   </div>
 
   % endfor

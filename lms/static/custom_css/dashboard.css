@@ -13,7 +13,7 @@
   font-weight: bold;
 }
 
-.program-courses h3 {
+.program-courses h3, .program-badges h3 {
   font-size: 1.2rem;
   color: #222;
   margin-bottom: 16px;
@@ -90,6 +90,11 @@
 
 .course-info {
   font-family: 'Cairo' !important;  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
 }
 
 
