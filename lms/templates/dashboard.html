@@ -26,6 +26,7 @@ from leaderboard.models import LeaderBoard
 <%!
 from django.db.models import QuerySet
 from custom_programs.models import Program
+from achievements.models import UserBadge
 
 if not hasattr(Program, "courses"):
     def _fake_courses(self):
@@ -36,6 +37,9 @@ if not hasattr(Program, "courses"):
     Program.courses = property(_fake_courses)
 %>
 
+<%
+    user_badges = UserBadge.objects.filter(user=request.user).select_related('badge')
+%>
 
 <%
 cert_name_short = settings.CERT_NAME_SHORT
@@ -197,20 +201,20 @@ cert_name_long = settings.CERT_NAME_LONG
       <div class="separator"></div>
 
 
-  <div class="program-badges">
-  <h3>شاراتي في الرحلة</h3>
-  % if hasattr(program, 'badges') and program.badges.exists():
-    <ul class="badges-list">
-      % for badge in program.badges.all():
-        <li class="badge-item">
-          <img src="${badge.image.url}" alt="${badge.name}" class="badge-image"/>
-          <span class="badge-name">${badge.name}</span>
-        </li>
-      % endfor
-    </ul>
-  % else:
-    <p class="no-badges">لا توجد شارات بعد في هذه الرحلة.</p>
-  % endif
+ <div class="program-badges">
+    <h3>شاراتي في الرحلة</h3>
+    % if user_badges:
+        <ul class="badges-list">
+            % for user_badge in user_badges:
+                <li class="badge-item">
+                    <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.name}" class="badge-image"/>
+                    <span class="badge-name">${user_badge.badge.name}</span>
+                </li>
+            % endfor
+        </ul>
+    % else:
+        <p class="no-badges">لم تحصل على أي شارات بعد.</p>
+    % endif
 </div>
   </div>
 

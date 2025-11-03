@@ -105,5 +105,36 @@
     margin: 12px 0;
 }
 
+.program-badges {
+    padding: 20px;
+    text-align: center;
+}
+
+.badges-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.badge-item {
+    text-align: center;
+}
+
+.badge-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+}
+
+.badge-name {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
 
  
