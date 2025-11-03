@@ -198,18 +198,20 @@ cert_name_long = settings.CERT_NAME_LONG
 
 
       <div class="program-badges">
-        <h3>شاراتي في الرحلة</h3>
-
-        <!--
-        % if program.badges.exists():
-          <ul class="badges-list">
-            % for badge in program.badges.all():
-              <li class="badge-item">
-                <img src="${badge.image.url}" alt="${badge.name}" class="badge-image"/>
-                <span class="badge-name">${badge.name}</span>
-      </div>
-      -->
-  </div>
+  <h3>شاراتي في الرحلة</h3>
+  % if program.badges.exists():
+    <ul class="badges-list">
+      % for badge in program.badges.all():
+        <li class="badge-item">
+          <img src="${badge.image.url}" alt="${badge.name}" class="badge-image"/>
+          <span class="badge-name">${badge.name}</span>
+        </li>
+      % endfor
+    </ul>
+  % else:
+    <p class="no-badges">لا توجد شارات بعد في هذا البرنامج.</p>
+  % endif
+</div>
 
   % endfor
 </section>
