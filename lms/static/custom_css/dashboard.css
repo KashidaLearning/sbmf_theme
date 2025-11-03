@@ -4,6 +4,22 @@
   padding: 80px 0 120px;
   overflow-x: hidden;
 }
+
+.section-title {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 40px;
+  font-family: 'Cairo' !important;
+  font-weight: bold;
+}
+
+.program-courses h3 {
+  font-size: 1.2rem;
+  color: #222;
+  margin-bottom: 16px;
+  font-family: 'Cairo' !important;
+  font-weight: bold;
+}
  
 .program-container {
   border: 1px solid #ddd;
@@ -12,6 +28,9 @@
   margin-bottom: 24px;
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .program-header {
@@ -19,6 +38,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  font-family: 'Cairo' !important;
 }
 
 .program-title {
@@ -67,5 +87,17 @@
   font-size: 0.9rem;
   color: #555;
 }
+
+.course-info {
+  font-family: 'Cairo' !important;  
+}
+
+
+.separator {
+    height: 2px;
+    background-color: #ccc;
+    margin: 12px 0;
+}
+
 
  

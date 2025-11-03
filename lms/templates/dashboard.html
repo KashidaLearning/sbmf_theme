@@ -126,7 +126,7 @@ cert_name_long = settings.CERT_NAME_LONG
   %>
 
   <section class="programs-section">
-  <h1 class="section-title">المغامرات في البرنامج</h1>
+  <h1 class="section-title">لوحة القيادة الخاصة بك</h1>
 
   % for program in all_programs:
   <%
@@ -159,16 +159,19 @@ cert_name_long = settings.CERT_NAME_LONG
     <div class="program-header">
       <h2 class="program-title">${program.name}</h2>
       <div class="program-progress">
-        <span>تقدم البرنامج: ${program.progress}%</span>
+        <span>تقدم الرحلة: ${program.progress}%</span>
         <div class="progress-bar" style="--progress-value:${program.progress}%;">
           <div class="progress-fill" style="width:${program.progress}%;"></div>
         </div>
       </div>
     </div>
 
+   <div class="separator"></div>
+
+
     % if course_progress_list:
     <div class="program-courses">
-      <h3>الدورات في هذا البرنامج</h3>
+      <h3>التحديات في هذه الرحلة</h3>
       <ul class="courses-list">
         % for course in course_progress_list:
         <li class="course-item">
@@ -188,7 +191,7 @@ cert_name_long = settings.CERT_NAME_LONG
       </ul>
     </div>
     % else:
-      <p class="no-courses">لا توجد دورات في هذا البرنامج بعد.</p>
+      <p class="no-courses">لا توجدتحديات في هذ الرحلة بعد.</p>
     % endif
   </div>
 
