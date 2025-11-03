@@ -176,59 +176,51 @@ cert_name_long = settings.CERT_NAME_LONG
 % if course_progress_list:
 <div class="program-courses">
   <h3>تحدياتي في هذه الرحلة</h3>
-  <table class="courses-table">
-    <thead>
-      <tr>
-        <th>اسم التحدي</th>
-        <th>التقدم</th>
-        <th>الشارات المكتسبة</th>
-      </tr>
-    </thead>
-    <tbody>
-      % for course in course_progress_list:
-      <%
-          course_badges = UserBadge.get_my_course_badges(request.user, course['course_id'])
-      %>
-      <tr>
-        <!-- Course Name -->
-        <td class="course-name-cell">
-          <a href="${course['course_url']}" class="course-link">${course['name']}</a>
-        </td>
-
-        <!-- Progress Bar -->
-        <td class="progress-cell">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width:${course['progress']}%;"></div>
-          </div>
-          <span class="progress-label">${course['progress']}%</span>
-        </td>
-
-        <!-- Badges -->
-        <td class="badges-cell">
-          % if course_badges:
-            <div class="badges-row">
-              % for badge in course_badges:
-                <div class="badge-icon" title="${badge.badge.title}">
-                  % if badge.badge.icon:
-                    <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-                  % else:
-                    🏅
-                  % endif
-                </div>
-              % endfor
+  <ul class="courses-list">
+    % for course in course_progress_list:
+    <li class="course-item">
+      <a href="${course['course_url']}" class="course-link">
+        <div class="course-info">
+          <span class="course-name">${course['name']}</span>
+          <div class="course-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${course['progress']}%;"></div>
             </div>
-          % else:
-            <span class="no-badges">—</span>
-          % endif
-        </td>
-      </tr>
-      % endfor
-    </tbody>
-  </table>
+            <span class="progress-label">${course['progress']}%</span>
+          </div>
+        </div>
+      </a>
+    </li>
+    % endfor
+  </ul>
 </div>
 % else:
   <p class="no-courses">لا توجد تحديات في هذه الرحلة بعد.</p>
 % endif
+
+
+   <div class="separator"></div>
+
+<div class="user-badges-section">
+  <h3>شاراتي</h3>
+  <div class="badge-grid">
+    % for user_badge in UserBadge.get_my_badges(request.user):
+    <div class="badge-card">
+      % if user_badge.badge.icon:
+        <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
+      % endif
+      <div class="badge-info">
+        <p class="badge-title">${user_badge.badge.title}</p>
+        % if user_badge.badge.description:
+          <p class="badge-description">${user_badge.badge.description}</p>
+        % endif
+      </div>
+    </div>
+    % endfor
+  </div>
+</div>
+
+
   </div>
 
   % endfor
