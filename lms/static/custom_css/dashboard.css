@@ -63,85 +63,87 @@
   transition: width 0.3s ease;
 }
 
-.program-courses ul {
-  list-style: none;
-  padding: 0;
-  width: 500px;
-}
-
-.course-item {
-  margin-bottom: 12px;
-}
-
-.course-name {
-  font-weight: 500;
-  color: #333;
-}
-
-.course-progress {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.progress-label {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.course-info {
-  font-family: 'Cairo' !important;  
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 20px;
-}
-
-
 .separator {
     height: 2px;
     background-color: #ccc;
     margin: 12px 0;
 }
 
-.user-badges-section {
-  margin: 40px 0;
-  padding: 20px;
-  border-top: 2px solid #ddd;
+
+.course-progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  direction: rtl;
 }
 
-.badge-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.badge-card {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  padding: 15px;
+.course-progress-table th,
+.course-progress-table td {
+  padding: 10px 12px;
   text-align: center;
-  width: 140px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #ddd;
 }
 
-.badge-icon {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  margin-bottom: 10px;
+.course-progress-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
 }
 
-.badge-title {
-  font-weight: bold;
-  color: #333;
+.course-link {
+  color: #0073e6;
+  text-decoration: none;
 }
 
-.badge-description {
+.course-link:hover {
+  text-decoration: underline;
+}
+
+/* Progress bar styling */
+.progress-bar {
+  background-color: #eee;
+  border-radius: 10px;
+  height: 10px;
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  background-color: #4caf50;
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-label {
+  display: block;
   font-size: 12px;
   color: #666;
+  margin-top: 5px;
 }
 
+/* Badge column */
+.badge-cell {
+  text-align: center;
+}
+
+.badge-icon-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.no-badge {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.no-courses {
+  text-align: center;
+  color: #888;
+  margin-top: 10px;
+}
 
  

@@ -173,52 +173,54 @@ cert_name_long = settings.CERT_NAME_LONG
    <div class="separator"></div>
 
 
-    % if course_progress_list:
-    <div class="program-courses">
-      <h3>تحدياتي في هذه الرحلة</h3>
-      <ul class="courses-list">
-        % for course in course_progress_list:
-        <li class="course-item">
-          <a href="${course['course_url']}" class="course-link">
-            <div class="course-info">
-              <span class="course-name">${course['name']}</span>
-              <div class="course-progress">
-                <div class="progress-bar">
-                  <div class="progress-fill" style="width:${course['progress']}%;"></div>
-                </div>
-                <span class="progress-label">${course['progress']}%</span>
-              </div>
-            </div>
-          </a>
-        </li>
-        % endfor
-      </ul>
-    </div>
-    % else:
-      <p class="no-courses">لا توجدتحديات في هذه الرحلة بعد.</p>
-    % endif
+% if course_progress_list:
+<div class="program-courses">
+  <h3>تحدياتي في هذه الرحلة</h3>
 
-      <div class="separator"></div>
+  <table class="course-progress-table">
+    <thead>
+      <tr>
+        <th>اسم التحدي</th>
+        <th>التقدم</th>
+        <th>الشارة المكتسبة</th>
+      </tr>
+    </thead>
+    <tbody>
+      % for course in course_progress_list:
+      <tr>
+        <td class="course-name-cell">
+          <a href="${course['course_url']}" class="course-link">${course['name']}</a>
+        </td>
 
+        <td class="progress-cell">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${course['progress']}%;"></div>
+          </div>
+          <span class="progress-label">${course['progress']}%</span>
+        </td>
 
- <div class="user-badges-section">
-    <h3>شاراتي</h3>
-    <div class="badge-grid">
-        % for user_badge in UserBadge.get_my_badges(request.user):
-            <div class="badge-card">
-                % if user_badge.badge.icon:
-                    <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
-                % endif
-                <div class="badge-info">
-                    <p class="badge-title">${user_badge.badge.title}</p>
-                    % if user_badge.badge.description:
-                        <p class="badge-description">${user_badge.badge.description}</p>
-                    % endif
-                </div>
-            </div>
-        % endfor
-    </div>
+        <td class="badge-cell">
+          <% course_badges = UserBadge.get_my_course_badges(request.user, course['course_url'].split('/')[-1]) %>
+          % if course_badges.exists():
+            % for user_badge in course_badges:
+              % if user_badge.badge.icon:
+                <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon-small" title="${user_badge.badge.title}">
+              % else:
+                <span class="badge-placeholder">🏅</span>
+              % endif
+            % endfor
+          % else:
+            <span class="no-badge">—</span>
+          % endif
+        </td>
+      </tr>
+      % endfor
+    </tbody>
+  </table>
 </div>
+% else:
+  <p class="no-courses">لا توجد تحديات في هذه الرحلة بعد.</p>
+% endif
   </div>
 
   % endfor
