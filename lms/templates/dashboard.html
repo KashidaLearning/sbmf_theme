@@ -191,15 +191,15 @@ cert_name_long = settings.CERT_NAME_LONG
       </ul>
     </div>
     % else:
-      <p class="no-courses">لا توجدتحديات في هذ الرحلة بعد.</p>
+      <p class="no-courses">لا توجدتحديات في هذه الرحلة بعد.</p>
     % endif
 
       <div class="separator"></div>
 
 
-      <div class="program-badges">
+  <div class="program-badges">
   <h3>شاراتي في الرحلة</h3>
-  % if program.badges.exists():
+  % if hasattr(program, 'badges') and program.badges.exists():
     <ul class="badges-list">
       % for badge in program.badges.all():
         <li class="badge-item">
@@ -209,7 +209,7 @@ cert_name_long = settings.CERT_NAME_LONG
       % endfor
     </ul>
   % else:
-    <p class="no-badges">لا توجد شارات بعد في هذا البرنامج.</p>
+    <p class="no-badges">لا توجد شارات بعد في هذه الرحلة.</p>
   % endif
 </div>
 
