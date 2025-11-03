@@ -124,127 +124,75 @@ cert_name_long = settings.CERT_NAME_LONG
     from custom_programs.models import Program
     all_programs = Program.objects.all()
   %>
+<section class="programs-section">
+  <h1 class="section-title">>المغامرات في البرنامج</h1>
 
-  <section class="programs-section">
-  <h1 class="section-title">المغامرات في البرنامج</h1>
+  % for program in all_programs:
+  <%
+  total_progress = 0
+  course_count = 0
+  program_courses = program.program_courses.all() if hasattr(program, 'program_courses') and program.program_courses.exists() else []
+  course_progress_list = []
 
-  <div class="programs-grid">
-    % for program in all_programs:
-<%
-total_progress = 0
-course_count = 0
+  if program_courses:
+      for program_course in program_courses:
+          course_obj = program_course.course
+          if course_obj:
+              course_key_string = str(course_obj.course_key)
+              if CourseEnrollment.objects.filter(user=request.user, course_id=course_key_string, is_active=True).exists():
+                  points, passed = LeaderBoard.get_score(request.user, str(course_obj.course_key))
+                  course_progress = int(float(points)) if points else 0
+                  total_progress += course_progress
+                  course_count += 1
+                  course_progress_list.append({
+                      'name': course_obj.display_name,
+                      'progress': course_progress,
+                      'course_url': course_home_url(course_obj.course_key),
+                  })
+  
+  program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
+  setattr(program, 'progress', program_progress_average)
+  %>
 
-program_courses = program.program_courses.all() if hasattr(program, 'program_courses') and program.program_courses.exists() else []
-
-if program_courses:
-    for program_course in program_courses:
-        course_obj = program_course.course
-        
-        if course_obj:
-            # Safely convert the OpaqueKey to a string for database query
-            course_key_string = str(course_obj.course_key)
-
-            
-            if CourseEnrollment.objects.filter(user=request.user, course_id=course_key_string, is_active=True).exists():
-                # Use the globally imported LeaderBoard
-                points, passed = LeaderBoard.get_score(request.user, str(course_obj.course_key))
-
-                
-                course_progress = int(float(points)) if points else 0
-                
-                total_progress += course_progress
-                course_count += 1
-
-program_progress_average = 0
-if course_count > 0:
-    # Calculate average progress and round it to a whole number
-    program_progress_average = int(round(total_progress / course_count))
-
-# Attach the calculated progress to the program object
-setattr(program, 'progress', program_progress_average)
-%>
-
-      <a href="${reverse('custom_programs:program_about', args=[text_type(program.id)])}" class="program-card">
-        <div class="spline-bg">
-          % if getattr(program, 'spline_url', None):
-            <iframe src="${program.spline_url}" frameborder="0"></iframe>
-          % else:
-            <img src="${program.program_card.url if getattr(program, 'program_card', None) else static.url('images/default-program.jpg')}" alt="${program.name or 'Program'}" />
-          % endif
-
-          <div class="progress-badge">
-            ${getattr(program, 'progress', 0)}%
-          </div>
-
-          <div class="program-info">
-            <h3 class="program-title">${program.name}</h3>
-            <div class="program-subject">
-              <img src="${static.url('images/Frame.png')}" alt="Subject Icon"/>
-              ${program.subject if hasattr(program, 'subject') else 'المهارة'}
-            </div>
-          </div>
+  <div class="program-container">
+    <div class="program-header">
+      <h2 class="program-title">${program.name}</h2>
+      <div class="program-progress">
+        <span>تقدم البرنامج: ${program.progress}%</span>
+        <div class="progress-bar" style="--progress-value:${program.progress}%;">
+          <div class="progress-fill" style="width:${program.progress}%;"></div>
         </div>
-      </a>
-
-    % endfor
-  </div>
-</section>
-
-
-  <div class="enrolled-courses" style="display: none;">
-    <h3>الدورات التدريبية</h3>
-    <div class="courses">
-      % if len(course_entitlements + course_enrollments) > 0:
-        <ul class="courses-listing courses-list">
-          % for dashboard_index, enrollment in enumerate(course_entitlements + course_enrollments):
-            <%
-              entitlement = enrollment if isinstance(enrollment, CourseEntitlement) else None
-              entitlement_session = entitlement.enrollment_course_run if entitlement else None
-              if entitlement and entitlement_session:
-                  enrollment = entitlement_session
-
-              course_overview = CourseOverview.get_from_id(enrollment.course_id)
-              course_target = course_home_url(course_overview.id)
-              points, passed = LeaderBoard.get_score(request.user, course_overview.id)
-              progress = "not-started"
-              if int(points) == 100:
-                  progress = "completed"
-              elif int(points) > 0:
-                  progress = "in-progress"
-            %>
-            <li class="courses-listing-item">
-              <article class="course" role="region">
-                <a href="${course_target}" data-course-key="${enrollment.course_id}">
-                  <header class="course-image">
-                    <div class="cover-image">
-                      <img src="${course_overview.image_urls['small']}" alt="${_('{course_number} {course_name}').format(course_number=course_overview.number, course_name=course_overview.display_name_with_default)}"/>
-                    </div>
-                  </header>
-                  <div class="course-info">
-                    <span class="span-text">دورة</span>
-                    <h2 class="course-name">${course_overview.display_name_with_default}</h2>
-                  </div>
-                  <div class="course-progress-bar ${progress}" style="--progress-value:${points}%;">
-                    <div class="progress-container">
-                      <div class="progress"></div>
-                      <span class="progress-label">${points}%</span>
-                    </div>
-                  </div>
-                </a>
-              </article>
-            </li>
-          % endfor
-        </ul>
-      % else:
-        <div class="empty-dashboard-message">
-          <p>لست ملتحقًا بأية دورات بعد.</p>
-          % if settings.FEATURES.get('COURSES_ARE_BROWSABLE'):
-            <a class="btn btn-primary" href="${marketing_link('COURSES')}">تصفح الدورات</a>
-          % endif
-        </div>
-      % endif
+      </div>
     </div>
+
+    % if course_progress_list:
+    <div class="program-courses">
+      <h3>الدورات في هذا البرنامج</h3>
+      <ul class="courses-list">
+        % for course in course_progress_list:
+        <li class="course-item">
+          <a href="${course['course_url']}" class="course-link">
+            <div class="course-info">
+              <span class="course-name">${course['name']}</span>
+              <div class="course-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:${course['progress']}%;"></div>
+                </div>
+                <span class="progress-label">${course['progress']}%</span>
+              </div>
+            </div>
+          </a>
+        </li>
+        % endfor
+      </ul>
+    </div>
+    % else:
+      <p class="no-courses">لا توجد دورات في هذا البرنامج بعد.</p>
+    % endif
   </div>
+
+  % endfor
+</section>
 
 </div></div></div>
 </main>
