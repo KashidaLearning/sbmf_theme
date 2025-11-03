@@ -105,35 +105,42 @@
     margin: 12px 0;
 }
 
-.program-badges {
-    padding: 20px;
-    text-align: center;
+.user-badges-section {
+  margin: 40px 0;
+  padding: 20px;
+  border-top: 2px solid #ddd;
 }
 
-.badges-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+.badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.badge-item {
-    text-align: center;
+.badge-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  width: 140px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.badge-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid #ddd;
+.badge-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 
-.badge-name {
-    display: block;
-    margin-top: 8px;
-    font-size: 14px;
+.badge-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.badge-description {
+  font-size: 12px;
+  color: #666;
 }
 
 

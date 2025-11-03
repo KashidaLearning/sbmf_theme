@@ -38,7 +38,7 @@ if not hasattr(Program, "courses"):
 %>
 
 <%
-    user_badges = UserBadge.objects.filter(user=request.user).select_related('badge')
+    user_badges = UserBadge.get_my_badges(request.user).select_related('badge')
 %>
 
 <%
@@ -201,20 +201,23 @@ cert_name_long = settings.CERT_NAME_LONG
       <div class="separator"></div>
 
 
- <div class="program-badges">
-    <h3>شاراتي في الرحلة</h3>
-    % if user_badges:
-        <ul class="badges-list">
-            % for user_badge in user_badges:
-                <li class="badge-item">
-                    <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.name}" class="badge-image"/>
-                    <span class="badge-name">${user_badge.badge.name}</span>
-                </li>
-            % endfor
-        </ul>
-    % else:
-        <p class="no-badges">لم تحصل على أي شارات بعد.</p>
-    % endif
+ <div class="user-badges-section">
+    <h3>شاراتي</h3>
+    <div class="badge-grid">
+        % for user_badge in UserBadge.get_my_badges(request.user):
+            <div class="badge-card">
+                % if user_badge.badge.icon:
+                    <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
+                % endif
+                <div class="badge-info">
+                    <p class="badge-title">${user_badge.badge.title}</p>
+                    % if user_badge.badge.description:
+                        <p class="badge-description">${user_badge.badge.description}</p>
+                    % endif
+                </div>
+            </div>
+        % endfor
+    </div>
 </div>
   </div>
 
