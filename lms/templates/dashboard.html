@@ -206,6 +206,12 @@ cert_name_long = settings.CERT_NAME_LONG
    <div class="separator"></div>
 
 
+<%
+my_badges = UserBadge.objects.filter(user=request.user)
+%>
+<p>DEBUG: total badges: ${my_badges.count()}</p>
+
+
 <div class="user-badges-section">
     <h3>شارات الرحلة</h3>
 
