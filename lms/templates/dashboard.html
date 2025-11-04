@@ -27,13 +27,10 @@ from leaderboard.models import LeaderBoard
 
 # Import these here so they are not imported later inside runtime blocks.
 from custom_programs.models import Program
-from achievements.models import UserBadge
+from achievements.models import UserBadge , Badge
+from custom_programs.models import ProgramEnrollmentRequest
 %>
 
-<%
-    # runtime variables that use the module-level imports above
-    user_badges = UserBadge.get_my_badges(request.user).select_related('badge')
-%>
 
 <%
 cert_name_short = settings.CERT_NAME_SHORT
@@ -156,6 +153,12 @@ cert_name_long = settings.CERT_NAME_LONG
   
   program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
   setattr(program, 'progress', program_progress_average)
+
+
+   my_badges = UserBadge.objects.filter(
+        user=request.user,
+        badge__specific_program=program
+    ).select_related('badge')
   %>
 
   <div class="program-container">
@@ -201,35 +204,25 @@ cert_name_long = settings.CERT_NAME_LONG
    <div class="separator"></div>
 
 
-<%
-program_badges = Badge.objects.filter(specific_program=program)
-earned_badge_ids = set(UserBadge.objects.filter(user=request.user).values_list('badge_id', flat=True))
-%>
-
 <div class="user-badges-section">
-  <h3>شارات الرحلة</h3>
+    <h3>شارات الرحلة</h3>
 
-  % if program_badges:
-    <div class="badge-grid">
-      % for badge in program_badges:
-        % earned = badge.id in earned_badge_ids
-        <div class="badge-card ${'earned' if earned else 'locked'}">
-          % if badge.icon:
-            <img src="${badge.icon.url}" alt="${badge.title}" class="badge-icon">
-          % endif
-          <div class="badge-info">
-            <p class="badge-title">${badge.title}</p>
-            % if badge.description:
-              <p class="badge-description">${badge.description}</p>
-            % endif
-          </div>
+    % if my_badges:
+        <div class="badge-grid">
+            % for user_badge in my_badges:
+                <div class="badge-item">
+                    % if user_badge.badge.icon:
+                        <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}">
+                    % endif
+                    <p>${user_badge.badge.title}</p>
+                </div>
+            % endfor
         </div>
-      % endfor
-    </div>
-  % else:
-    <p class="no-badges">لا توجد شارات لهذه الرحلة بعد.</p>
-  % endif
+    % else:
+        <p class="no-badges">لم تكسب أي شارات بعد.</p>
+    % endif
 </div>
+
 
   </div>
 
