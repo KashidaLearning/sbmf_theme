@@ -24,8 +24,6 @@ from openedx.core.djangolib.markup import HTML, Text
 from openedx.features.course_experience import course_home_url
 from common.djangoapps.student.models import CourseEnrollment
 from leaderboard.models import LeaderBoard
-
-# Import these here so they are not imported later inside runtime blocks.
 from custom_programs.models import Program
 from achievements.models import UserBadge , Badge
 from custom_programs.models import ProgramEnrollmentRequest
@@ -123,43 +121,47 @@ cert_name_long = settings.CERT_NAME_LONG
   <section class="programs-section">
   <h1 class="section-title">لوحة القيادة الخاصة بك</h1>
 
-  % for program in all_programs:
-  <%
-  total_progress = 0
-  course_count = 0
-  # Use program.program_courses where available, avoid relying on Program.courses
-  try:
-      program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
-  except Exception:
-      program_courses_qs = []
+  % for program in Program.objects.all():
 
-  course_progress_list = []
+    <%
+    # Initialize progress counters
+    total_progress = 0
+    course_count = 0
+    course_progress_list = []
 
-  if program_courses_qs:
-      for program_course in program_courses_qs:
-          course_obj = program_course.course
-          if course_obj:
-              course_key_string = str(course_obj.course_key)
-              if CourseEnrollment.objects.filter(user=request.user, course_id=course_key_string, is_active=True).exists():
-                  points, passed = LeaderBoard.get_score(request.user, str(course_obj.course_key))
-                  course_progress = int(float(points)) if points else 0
-                  total_progress += course_progress
-                  course_count += 1
-                  course_progress_list.append({
-                      'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
-                      'progress': course_progress,
-                      'course_url': course_home_url(course_obj.course_key),
-                  })
-  
-  program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
-  setattr(program, 'progress', program_progress_average)
+    # Get courses for this program
+    try:
+        program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
+    except Exception:
+        program_courses_qs = []
 
+    # Calculate progress for each enrolled course
+    for program_course in program_courses_qs:
+        course_obj = program_course.course
+        if course_obj:
+            course_key_string = str(course_obj.course_key)
+            if CourseEnrollment.objects.filter(user=request.user, course_id=course_key_string, is_active=True).exists():
+                points, passed = LeaderBoard.get_score(request.user, str(course_obj.course_key))
+                course_progress = int(float(points)) if points else 0
+                total_progress += course_progress
+                course_count += 1
+                course_progress_list.append({
+                    'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
+                    'progress': course_progress,
+                    'course_url': course_home_url(course_obj.course_key),
+                })
 
-   my_badges = UserBadge.objects.filter(
+    # Average program progress
+    program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
+    setattr(program, 'progress', program_progress_average)
+
+    # Get badges earned by the user for this program
+    my_badges = UserBadge.objects.filter(
         user=request.user,
         badge__specific_program=program
     ).select_related('badge')
-  %>
+    %>
+
 
   <div class="program-container">
     <div class="program-header">
