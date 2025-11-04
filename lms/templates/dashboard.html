@@ -201,39 +201,36 @@ cert_name_long = settings.CERT_NAME_LONG
 
    <div class="separator"></div>
 
-<div class="user-badges-section">
-  <h3>شاراتي في هذه الرحلة</h3>
 
-  <%
-    from achievements.models import Badge
-    # Filter badges linked to the current program
-    program_badges = UserBadge.objects.filter(
-        user=request.user,
-        badge__badgespecificprogram__program_id=program.id
-    ).select_related('badge')
-  %>
+<%
+    from achievements.models import UserBadge
+    # Get badges linked to the current program for this user
+    program_badges = UserBadge.get_my_program_badges(request.user, program.id).select_related('badge')
+%>
+
+<div class="user-badges-section">
+  <h3>شارات الرحلة</h3>
 
   % if program_badges:
-  <div class="badge-grid">
-    % for user_badge in program_badges:
-      <div class="badge-card">
-        % if user_badge.badge.icon:
-          <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
-        % endif
-        <div class="badge-info">
-          <p class="badge-title">${user_badge.badge.title}</p>
-          % if user_badge.badge.description:
-            <p class="badge-description">${user_badge.badge.description}</p>
+    <div class="badge-grid">
+      % for user_badge in program_badges:
+        <div class="badge-card">
+          % if user_badge.badge.icon:
+            <img src="${user_badge.badge.icon.url}" alt="${user_badge.badge.title}" class="badge-icon">
           % endif
+          <div class="badge-info">
+            <p class="badge-title">${user_badge.badge.title}</p>
+            % if user_badge.badge.description:
+              <p class="badge-description">${user_badge.badge.description}</p>
+            % endif
+          </div>
         </div>
-      </div>
-    % endfor
-  </div>
+      % endfor
+    </div>
   % else:
     <p class="no-badges">لا توجد شارات لهذه الرحلة بعد.</p>
   % endif
 </div>
-
 
   </div>
 
