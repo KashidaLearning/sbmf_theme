@@ -200,10 +200,15 @@ cert_name_long = settings.CERT_NAME_LONG
 
    <div class="separator"></div>
 
+
 <%
-    # Use module-level UserBadge import (do not import here).
-    program_badges = UserBadge.get_my_program_badges(request.user, program.id).select_related('badge')
+    # Get badges linked to the current program for this user
+    program_badges = UserBadge.objects.filter(
+        user=request.user,
+        badge__specific_program__id=program.id
+    ).select_related('badge')
 %>
+
 
 <div class="user-badges-section">
   <h3>شارات الرحلة</h3>
