@@ -205,9 +205,15 @@ cert_name_long = settings.CERT_NAME_LONG
 
    <div class="separator"></div>
 
-
+<!--
 <%
 my_badges = UserBadge.objects.filter(user=request.user)
+%>
+-->
+
+<%
+# Get badges for the current program only
+my_badges = UserBadge.objects.filter(user=request.user, badge__specific_program=program).select_related('badge')
 %>
 <p>DEBUG: total badges: ${my_badges.count()}</p>
 
@@ -230,7 +236,6 @@ my_badges = UserBadge.objects.filter(user=request.user)
         <p class="no-badges">لم تكسب أي شارات بعد.</p>
     % endif
 </div>
-
 
   </div>
 
