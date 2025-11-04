@@ -212,9 +212,10 @@ my_badges = UserBadge.objects.filter(user=request.user)
 -->
 
 <%
-# Get badges for the current program only
-my_badges = UserBadge.objects.filter(user=request.user, badge__specific_program=program).select_related('badge')
+my_badges = UserBadge.objects.filter(user=request.user).select_related('badge')
+program_badges = [ub for ub in my_badges if ub.badge.specific_program == program]
 %>
+
 <p>DEBUG: total badges: ${my_badges.count()}</p>
 
 
