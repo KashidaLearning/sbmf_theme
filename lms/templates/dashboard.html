@@ -202,10 +202,9 @@ cert_name_long = settings.CERT_NAME_LONG
 
 
 <%
-    # Get badges linked to the current program for this user
     program_badges = UserBadge.objects.filter(
         user=request.user,
-        badge__specific_program__id=program.id
+        badge__specific_program=program
     ).select_related('badge')
 %>
 
