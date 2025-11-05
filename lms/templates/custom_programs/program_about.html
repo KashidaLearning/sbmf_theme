@@ -18,7 +18,6 @@
     from openedx.features.course_experience.utils import get_course_outline_block_tree, get_start_block
 %>
 
-
 <%inherit file="../main.html" />
 <%block name="headextra">
     ## OG (Open Graph) title and description added below to give social media info to display
@@ -29,57 +28,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </%block>
 <%block name="pagetitle">${program.name}</%block>
-<style>
-.card.locked::after ,.wide-cta.locked::after{
-    content: url("${static.url('images/locked.png')}");
-    /* Unicode lock icon */
-    font-size: 50px;
-    /* Size of the icon */
-    color: white;
-    /* Color of the icon */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Center the icon precisely */
-    z-index: 2;
-    /* Place above the overlay */
-    padding: 15px;
-    /* Padding around the icon */
-    border-radius: 50%;
-    /* Make the background circular */
-    /* Add a subtle shadow */
-    display: flex;
-    /* Helps in perfect centering of unicode character */
-    justify-content: center;
-    align-items: center;
-    line-height: 1;
-    /* Ensures vertical centering of the unicode character */
-}
-.locked-message {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff00;
-    color: #fff;
-    padding: 16px 25px;
-    border-radius: 8px;
-    font-family: 'Cairo', sans-serif;
-    font-size: 16px;
-    text-align: center;
-    z-index: 9999;
-    backdrop-filter: blur(30px);
-    opacity: 0;
-    border: 1px solid rgba(255, 255, 255, .22) ;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, .25);
-    transition: opacity 0.3s ease-in-out;
-}
-.locked-message.show {
-    opacity: 1;
-}
 
-</style>
 <div class="program-about">
     <div class="container">
         <section class="hero">
@@ -92,7 +41,7 @@
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
                     % if program.subject:
-                        <div class="cat-name" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
+                        <div class="cat-name"><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
                     <p><b>هنا تبدأ قصتك كصانع</b></p>
@@ -109,47 +58,42 @@
                                     <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">طلب التسجيل في المسار</a>
                                 % endif
                             % else:
-                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">${_("التحق في الرحلة")}</a>
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">${_("Register in the Program")}</a>
                             % endif
                         </div>
                     % endif
                 </div>
+                <!-- This will be the rightmost column (Column 1) -->
+                
+                <div class="column column-right">
+                    % if user_is_enrolled:
+                        <div id="leaderboard" class="orange-btn" role="button" tabindex="0">
+                            <span><img src="${static.url('images/leaderboard-icon.png')}"></span><span>قائمة التصدر</span>
+                        </div>
+                        <div id="my-badges" class="orange-btn" role="button" tabindex="0">
+                            <span><img src="${static.url('images/badges-icon.png')}"></span> <span>شاراتي</span>
+                        </div>
+                        <div id="certificate" class="orange-btn" role="button" tabindex="0">
+                            <span><img src="${static.url('images/cert-icon.png')}"></span><span>شهادتي</span>
+                        </div>
+                    % endif
+                </div>
             </div>
-
-    </div>
         </section>
-    <!-- This will be the rightmost column (Column 1) -->
-   
         % if user_is_enrolled:
-        <div class="purple-icon-row">
-            <div class="icon-item" id="leaderboard" role="button" tabindex="0">
-                <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon.png')}" alt="قائمة التصدر">
+            <div class="progress-block">
+                <div class="program_progress_block">
+                    <div class="meter">
+                        <span style="width: ${program_progress}%"></span>
+                        <p>التقدم العام</p>
+                    </div>
+                    <div class="program_progress"><h4>${program_progress}%</h4></div>
                 </div>
-                <p>قائمة التصدر</p>
             </div>
-
-            <div class="icon-item" id="my-badges" role="button" tabindex="0">
-                <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon.png')}" alt="شاراتي">
-                </div>
-                <p>أدوات الاستمرارية</p>
-            </div>
-
-            <div class="icon-item" id="certificate" role="button" tabindex="0">
-                <div class="icon-circle">
-                    <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
-                </div>
-                <p>شهاداتي</p>
-            </div>
-        </div>
         % endif
-        
-        <div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 70px;">
         <%
             first_course = courses.filter(order=1, display_layout="horizontal").first()
         %>
-        
         % if first_course:
             <%
                 overview = CourseOverview.get_from_id(first_course.course.course_key)
@@ -160,12 +104,12 @@
                     is_locked = True
                 if resume_button_urls.get(str(overview.id)):
                     course_link = resume_button_urls.get(str(overview.id))
-                    button_text = "باشر بالتحدي! "
+                    button_text = "عرض التحدي"
                 else:
                     course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
                     start_block = get_start_block(course_blocks)
                     course_link = start_block['lms_web_url']
-                    button_text = " باشر بالتحدي!"
+                    button_text = "ابدأ التحدي"
             %>
             <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1">
                 % if course_badges:
@@ -194,12 +138,12 @@
                             is_locked = True
                         if resume_button_urls.get(str(overview.id)):
                             course_link = resume_button_urls.get(str(overview.id))
-                            button_text = "باشر بالتحدي! "
+                            button_text = "عرض التحدي"
                         else:
                             course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
                             start_block = get_start_block(course_blocks)
                             course_link = start_block['lms_web_url']
-                            button_text = " باشر بالتحدي!"
+                            button_text = "ابدأ التحدي"
                     %>
                     <article class="card ${'locked' if is_locked else ''}">
                         % if course_badges:
@@ -233,12 +177,12 @@
                         is_locked = True
                     if resume_button_urls.get(str(overview.id)):
                         course_link = resume_button_urls.get(str(overview.id))
-                        button_text = "باشر بالتحدي!"
+                        button_text = "عرض التحدي"
                     else:
                         course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
                         start_block = get_start_block(course_blocks)
                         course_link = start_block['lms_web_url']
-                        button_text = "باشر بالتحدي! "
+                        button_text = "ابدأ التحدي"
                 %>
                 <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}">
                     % if course_badges:
@@ -254,17 +198,15 @@
             % endfor
         % endif
     </div>
-    </div>
     <!-- Popup HTML Structure -->
     <div id="global-popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
         <div class="popup-content">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
-                 <h3 id="popup-title"></h3> 
+            <h3 id="popup-title"></h3>
             <div id="popup-dynamic-content"></div>
             <!-- This div will hold the HTML content -->
         </div>
     </div>
-   <!--
     <div id="leaderboard-content" style="display: none;">
         <div class="leaderboard">
             % if top_users:
@@ -277,6 +219,7 @@
                                 <div class="badges">عدد الشارات: ${user.badge_count}</div>
                             </div>
                         </div>
+                        <div class="grade">الوسام الذهبي</div>
                     </div>
                 % endfor
             % else:
@@ -286,101 +229,27 @@
             % endif
         </div>
     </div>
-   --> 
-   <div id="leaderboard-content" style="display: none;">
-    <div class="leaderboard">
-    <div class="title-leaderboard">
-        <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
-        <h2>قائمة المتصدر</h2>
-    </div>
-    <br>
-     % if user_is_enrolled:
-            <div class="progress-block">
-                <div class="program_progress_block">
-                    <div class="meter">
-                        <span style="width: ${program_progress}%"></span>
-                        <p>التقدم العام</p>
-                    </div>
-                    <div class="program_progress"><h4>${program_progress}%</h4></div>
-                </div>
-            </div> 
-        % endif
-        <br>
-
-   % if top_users:
-    % for index, user in enumerate(top_users, start=1):
-        <% 
-            color_class = (
-                "gold" if index == 1 else 
-                "silver" if index == 2 else 
-                "bronze" if index == 3 else 
-                "blue1" if index == 4 else 
-                "blue2"
-            )
-        %>
-        <div class="leaderboard-row ">
-            <div class="rank-icon">${index}</div>
-            <div class="icon">
-                <img src="${static.url('images/image-profile.png')}" alt="avatar">
-            </div>
-            <div class="row-right ${color_class}"> 
-                <div class="name pt0">${user.profile.name or user.username}</div>
-                <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-                <div class="pt2">
-                    <div class="progress-bar"> 
-                        <div class="progress-fill"style="width: ${user.progress}%"></div>
-                    </div>
-                    <div class="xp"> <h4>${user.progress}%</h4></div>
-                </div>
-            </div>
-        </div>
-    % endfor
-% else:
-    <p class="no-badge">${_("No users have earned badges yet.")}</p>
-% endif
-
-    </div>
-    </div>
-
-   <div id="my-badges-content" style="display: none;">
-        <div class="title-badgescontent">
-                <img src="${static.url('images/badges-icon-popup.png')}" alt="img">
-                <h2>ادوات الاستمرارية</h2>
-            </div>   
-        <br>    
-         <div class="badge-grid">
+    <div id="my-badges-content" style="display: none;">
+        <p>تهانينا على الشارات التي جمعتها! كل شارة تمثل إنجازاً جديداً.</p>
+        <div class="badge-grid">
             % for badge in my_badges:
                 <div class="badge-item">
                     <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-                 <!--<p>${badge.badge.title}</p>-->   
+                    <p>${badge.badge.title}</p>
                 </div>
             % endfor
         </div>
         <p>هناك المزيد من الشارات بانتظارك!</p>
     </div>
     <div id="certificate-content" style="display: none;">
-         <div class="title-certificatecontent">
-                <img src="${static.url('images/cert-popup.png')}" alt="img">
-                <h2>شهاداتي </h2>
-            </div>     
-        <br>
-        <div id="certificate-status">
-            % if cert_url:
-                <p>تهانينا! شهادتك جاهزة للتنزيل</p>
-                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة</a>
-            % else:
-                <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
-                <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
-                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
-                <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
-            % endif
-        </div>
+        <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
+        <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
+        <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+        <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
     </div>
-     
-
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
-        <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden;">
+        <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#fff; border-radius:8px; overflow:hidden;">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
             <iframe allowfullscreen="" frameborder="0" height="100%" id="courseFrame" width="100%"></iframe>
         </div>
@@ -423,10 +292,7 @@
                 if (!popupOverlay) return;
                 popupOverlay.classList.remove('visible');
                 document.body.style.overflow = '';
-                 window.location.reload();
-
             }
-           
 
             // Define HTML content for each popup type
             var leaderboardHTML = document.getElementById('leaderboard-content').innerHTML;
@@ -490,46 +356,15 @@
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-                 window.location.reload();
-
             });
             // Optional: Close modal when clicking outside modal content
             $('#courseModal').on('click', function(event) {
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
-                     window.location.reload();
-
                 }
             });
         });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('click', function(e) {
-        const lockedCard = e.target.closest('.wide-cta.locked, .card.locked');
-        if (lockedCard) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Remove old popup if visible
-            const oldMsg = document.querySelector('.locked-message');
-            if (oldMsg) oldMsg.remove();
-
-            // Create new message
-            const msg = document.createElement('div');
-            msg.className = 'locked-message';
-            msg.textContent = "هذه الدورة مقفلة حتى تُكمل المتطلب السابق";
-            document.body.appendChild(msg);
-
-            void msg.offsetWidth; // reflow
-            msg.classList.add('show');
-            setTimeout(() => {
-                msg.classList.remove('show');
-                setTimeout(() => msg.remove(), 300);
-            }, 7000);
-        }
-    });
-});
     </script>
 
 
