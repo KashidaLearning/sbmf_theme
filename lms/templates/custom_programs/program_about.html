@@ -1,5 +1,4 @@
 <%namespace name='static' file='../static_content.html'/>
-
 <%!
     from datetime import datetime
     from pytz import timezone, utc
@@ -19,109 +18,109 @@
     from openedx.features.course_experience.utils import get_course_outline_block_tree, get_start_block
 %>
 
-<%inherit file="../main.html" />
 
+<%inherit file="../main.html" />
 <%block name="headextra">
+    ## OG (Open Graph) title and description added below to give social media info to display
+    ## (https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content#tags)
     <meta property="og:title" content="${program.name}" />
     <meta property="og:description" content="${program.short_description}" />
     <link rel="stylesheet" type="text/css" href="${static.url('custom_css/program.css')}">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </%block>
-
 <%block name="pagetitle">${program.name}</%block>
-
 <style>
-.card.locked::after, .wide-cta.locked::after {
+.card.locked::after ,.wide-cta.locked::after{
     content: url("${static.url('images/locked.png')}");
+    /* Unicode lock icon */
+    font-size: 50px;
+    /* Size of the icon */
+    color: white;
+    /* Color of the icon */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /* Center the icon precisely */
     z-index: 2;
+    /* Place above the overlay */
+    padding: 15px;
+    /* Padding around the icon */
+    border-radius: 50%;
+    /* Make the background circular */
+    /* Add a subtle shadow */
     display: flex;
+    /* Helps in perfect centering of unicode character */
     justify-content: center;
     align-items: center;
+    line-height: 1;
+    /* Ensures vertical centering of the unicode character */
 }
-.card.in-progress::after,
-.wide-cta.in-progress::after {
-    content: url("${static.url('images/start-icon.png')}"); 
-    position: absolute;
+.locked-message {
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 3;
-    width: 70px;
-    height: 70px;
-    cursor: pointer;
-    pointer-events: none;
+    background: #ffffff00;
+    color: #fff;
+    padding: 16px 25px;
+    border-radius: 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    z-index: 9999;
+    backdrop-filter: blur(30px);
+    opacity: 0;
+    border: 1px solid rgba(255, 255, 255, .22) ;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .25);
+    transition: opacity 0.3s ease-in-out;
 }
-
-.card.in-progress,
-.wide-cta.in-progress {
-    position: relative; 
-    cursor: pointer; 
+.locked-message.show {
+    opacity: 1;
 }
 
 </style>
-
 <div class="program-about">
     <div class="container">
         <section class="hero">
             <div class="row">
-                <!-- Left column -->
+                <!-- This will be the leftmost column (Column 3) -->
                 <div class="column column-left">
-                    <div>
-                        <img src="${static.url('images/internetd-icon.png')}" alt="img" class="hero-img">
-                    </div>
+                    <div><img src="${static.url('images/internetd-icon.png')}" alt="img" class="hero-img"></div>
                 </div>
-
-                <!-- Middle column -->
+                <!-- This will be the middle column (Column 2) -->
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
                     % if program.subject:
-                        <div class="cat-name">
-                            <img src="${static.url('images/cat-icon.png')}">
-                            <span>${program.subject.name}</span>
-                        </div>
+                        <div class="cat-name" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
                     <p><b>هنا تبدأ قصتك كصانع</b></p>
-
                     % if not user_is_enrolled:
                         <div class="enrollment-info">
-                            % if program.enrollment_start > timezone.now():
-                                <span class="btn btn-cta one-click-purchase-btn disabled">
-                                    ${_("Enrollment Not Started Yet")}
-                                </span>
-                            % elif program.enrollment_end < timezone.now():
-                                <span class="btn btn-cta one-click-purchase-btn disabled">
-                                    ${_("Enrollment Closed")}
-                                </span>
+                            % if program.enrollment_start >  timezone.now():
+                                <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Not Started Yet")}</span>
+                            % elif program.enrollment_end <  timezone.now():
+                                <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Closed")}</span>
                             % elif not program.self_enrollment:
                                 % if request.user.is_authenticated and ProgramEnrollmentRequest.get_active_request(program.id, request.user.id):
-                                    <span class="btn btn-cta one-click-purchase-btn disabled">
-                                        طلب التسجيل الخاص بك قيد المراجعة
-                                    </span>
+                                    <span class="btn btn-cta one-click-purchase-btn disabled">طلب التسجيل الخاص بك قيد المراجعة</span>
                                 % else:
-                                    <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
-                                       class="btn btn-cta one-click-purchase-btn active">
-                                       طلب التسجيل في المسار
-                                    </a>
+                                    <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">طلب التسجيل في المسار</a>
                                 % endif
                             % else:
-                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
-                                   class="btn btn-cta one-click-purchase-btn active">
-                                   ${_("التحق في الرحلة")}
-                                </a>
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">${_("التحق في الرحلة")}</a>
                             % endif
                         </div>
                     % endif
-                </div> <!-- closes column-middle -->
-            </div> <!-- closes row -->
-        </section> <!-- closes hero -->
-    </div> <!-- closes container -->
+                </div>
+            </div>
 
-    % if user_is_enrolled:
+    </div>
+        </section>
+    <!-- This will be the rightmost column (Column 1) -->
+   
+        % if user_is_enrolled:
         <div class="purple-icon-row">
             <div class="icon-item" id="leaderboard" role="button" tabindex="0">
                 <div class="icon-circle">
@@ -129,12 +128,14 @@
                 </div>
                 <p>قائمة التصدر</p>
             </div>
+
             <div class="icon-item" id="my-badges" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/badges-icon.png')}" alt="شاراتي">
                 </div>
                 <p>أدوات الاستمرارية</p>
             </div>
+
             <div class="icon-item" id="certificate" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
@@ -142,58 +143,42 @@
                 <p>شهاداتي</p>
             </div>
         </div>
-    % endif
-
-    <div class="courses-container" style="max-width:1240px; padding:20px; padding-bottom:70px;">
-    <%
-        first_course = courses.filter(order=1, display_layout="horizontal").first()
-    %>
-    % if first_course:
+        % endif
+        
+        <div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 70px;">
         <%
-            # Basic overview and badges
-            overview = CourseOverview.get_from_id(first_course.course.course_key)
-            course_badges = UserBadge.get_my_course_badges(request.user, first_course.course.course_key)
-
-            # Determine lock state safely
-            is_locked = True  # default
-            if user_is_enrolled:
-                is_locked = False
-            course_requirements = courses_requirements_not_met.get(overview.id)
-            if course_requirements:
-                is_locked = True
-
-            # Determine link + button
-            has_resume_link = resume_button_urls.get(str(overview.id))
-            has_badge = course_badges and len(course_badges) > 0
-            if has_resume_link:
-                course_link = has_resume_link
-            else:
-                course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
-                start_block = get_start_block(course_blocks)
-                course_link = start_block['lms_web_url']
-
-            button_text = "باشر بالتحدي!"
-
-            # Determine if in progress
-            is_in_progress = user_is_enrolled and has_resume_link and not has_badge and not is_locked
+            first_course = courses.filter(order=1, display_layout="horizontal").first()
         %>
-
-        <div class="wide-cta ${'locked' if is_locked else ''} ${'in-progress' if is_in_progress else ''}" id="card-1">
-            % if course_badges:
-                % for badge in course_badges:
-                    <div class="badge-icon">
-                        <img src="${badge.badge.icon.url}" alt="badge">
-                    </div>
-                % endfor
-            % endif
-            <div class="title">${overview.display_name_with_default}</div>
-            <div class="pill">
-                <a href="${course_link}" class="open-course-modal-link">${button_text}</a>
+        
+        % if first_course:
+            <%
+                overview = CourseOverview.get_from_id(first_course.course.course_key)
+                course_badges = UserBadge.get_my_course_badges(request.user, first_course.course.course_key)
+                course_requirements = courses_requirements_not_met.get(overview.id)
+                is_locked = False if user_is_enrolled else True
+                if course_requirements:
+                    is_locked = True
+                if resume_button_urls.get(str(overview.id)):
+                    course_link = resume_button_urls.get(str(overview.id))
+                    button_text = "باشر بالتحدي! "
+                else:
+                    course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
+                    start_block = get_start_block(course_blocks)
+                    course_link = start_block['lms_web_url']
+                    button_text = " باشر بالتحدي!"
+            %>
+            <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1">
+                % if course_badges:
+                    % for badge in course_badges:
+                        <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
+                    % endfor
+                % endif
+                <div class="title">${overview.display_name_with_default}</div>
+                <div class="pill">
+                    <a href="${course_link}" class="open-course-modal-link">${button_text}</a>
+                </div>
             </div>
-        </div>
-    % endif
-
-
+        % endif
         <%
             vertical_courses = courses.filter(display_layout="vertical").order_by('order')
         %>
@@ -207,19 +192,16 @@
                         is_locked = False if user_is_enrolled else True
                         if course_requirements:
                             is_locked = True
-                        has_resume_link = resume_button_urls.get(str(overview.id))
-                        has_badge = course_badges and len(course_badges) > 0
-                        is_in_progress = user_is_enrolled and has_resume_link and not has_badge and not is_locked
-                        if has_resume_link:
-                            course_link = has_resume_link
-                            button_text = "باشر بالتحدي!"
+                        if resume_button_urls.get(str(overview.id)):
+                            course_link = resume_button_urls.get(str(overview.id))
+                            button_text = "باشر بالتحدي! "
                         else:
                             course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
                             start_block = get_start_block(course_blocks)
                             course_link = start_block['lms_web_url']
-                            button_text = "باشر بالتحدي!"
+                            button_text = " باشر بالتحدي!"
                     %>
-                    <article class="card ${'locked' if is_locked else ''} ${'in-progress' if is_in_progress else ''}">
+                    <article class="card ${'locked' if is_locked else ''}">
                         % if course_badges:
                             % for badge in course_badges:
                                 <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
@@ -228,7 +210,7 @@
                         <div class="sub">${overview.display_name_with_default}</div>
                         <div class="dark-sub">${overview.short_description}</div>
                         <div class="course-thumbnail">
-                            <img src="${overview.course_image_url}" alt="image" width="100%">
+                            <img src="${overview.course_image_url}" alt="image" width="100%;">
                         </div>
                         <button class="btn">
                             <a href="${course_link}" class="open-course-modal-link">${button_text}</a>
@@ -237,7 +219,6 @@
                 % endfor
             </section>
         % endif
-
         <%
             horizontal_courses = courses.filter(display_layout="horizontal").exclude(order=1).order_by('order')
         %>
@@ -250,19 +231,16 @@
                     is_locked = False if user_is_enrolled else True
                     if course_requirements:
                         is_locked = True
-                    has_resume_link = resume_button_urls.get(str(overview.id))
-                    has_badge = course_badges and len(course_badges) > 0
-                    is_in_progress = user_is_enrolled and has_resume_link and not has_badge and not is_locked
-                    if has_resume_link:
-                        course_link = has_resume_link
+                    if resume_button_urls.get(str(overview.id)):
+                        course_link = resume_button_urls.get(str(overview.id))
                         button_text = "باشر بالتحدي!"
                     else:
                         course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
                         start_block = get_start_block(course_blocks)
                         course_link = start_block['lms_web_url']
-                        button_text = "باشر بالتحدي!"
+                        button_text = "باشر بالتحدي! "
                 %>
-                <div class="wide-cta ${'locked' if is_locked else ''} ${'in-progress' if is_in_progress else ''}" id="card-n-${course.order}">
+                <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}">
                     % if course_badges:
                         % for badge in course_badges:
                             <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
@@ -275,151 +253,48 @@
                 </div>
             % endfor
         % endif
-    </div> <!-- closes courses-container -->
-
-    <!-- POPUPS -->
+    </div>
+    </div>
+    <!-- Popup HTML Structure -->
     <div id="global-popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
         <div class="popup-content">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
-            <h3 id="popup-title"></h3>
+                 <h3 id="popup-title"></h3> 
             <div id="popup-dynamic-content"></div>
+            <!-- This div will hold the HTML content -->
         </div>
     </div>
-
-    <!-- Leaderboard -->
-    <div id="leaderboard-content" style="display:none;">
+   <!--
+    <div id="leaderboard-content" style="display: none;">
         <div class="leaderboard">
-            <div class="title-leaderboard">
-                <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
-                <h2>قائمة المتصدر</h2>
-            </div>
-        <div class="evaluation-stages">
-        <%
-            pre = courses.filter(course_type="Pre-assessment").first()
-            challenges = courses.filter(course_type="Challenges")
-            assignment = courses.filter(course_type="Assignment").first()
-            post = courses.filter(course_type="Post-assessment").first()
-
-            # ---- Calculate challenges progress ----
-            total_challenges = challenges.count()
-            completed_challenges = 0
-
-            for ch in challenges:
-                overview = CourseOverview.get_from_id(ch.course.course_key)
-                course_badges = UserBadge.get_my_course_badges(request.user, ch.course.course_key)
-                if course_badges and len(course_badges) > 0:
-                    completed_challenges += 1
-
-            progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
-
-            # ---- Helper function: check if course completed ----
-            def is_course_completed(course_obj):
-                if not course_obj:
-                    return False
-                overview = CourseOverview.get_from_id(course_obj.course.course_key)
-                progress = getattr(overview, "progress_percent", 0)
-                badges = UserBadge.get_my_course_badges(request.user, course_obj.course.course_key)
-                return (badges and len(badges) > 0) or progress >= 100
-
-            pre_done = is_course_completed(pre)
-            assignment_done = is_course_completed(assignment)
-            post_done = is_course_completed(post)
-        %>
-
-        <ul class="evaluation-list">
-            <li>
-                <span class="label">التقييم القبلي</span>
-                <span class="status ${'done' if pre_done else 'locked'}">
-                    ${'✅' if pre_done else '🔒'}
-                </span>
-            </li>
-
-            <li>
-                <span class="label">التحديات</span>
-                <span class="status ${'in-progress' if 0 < completed_challenges < total_challenges else ('done' if completed_challenges == total_challenges else 'locked')}">
-                    ${f'{completed_challenges}/{total_challenges}' if total_challenges else '0/0'}
-                </span>
-            </li>
-
-            <li>
-                <span class="label">الواجب</span>
-                <span class="status ${'done' if assignment_done else 'locked'}">
-                    ${'🔓' if assignment_done else '🔒'}
-                </span>
-            </li>
-
-            <li>
-                <span class="label">التقييم النهائي</span>
-                <span class="status ${'done' if post_done else 'locked'}">
-                    ${'✅' if post_done else '🔒'}
-                </span>
-            </li>
-        </ul>
-
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${program_progress}%"></div>
-            </div>
-            <div class="progress-text">${program_progress}%</div>
-        </div>
-    </div>
-
             % if top_users:
-                % for index, user in enumerate(top_users, start=1):
-                    <% 
-                        color_class = (
-                            "gold" if index == 1 else
-                            "silver" if index == 2 else
-                            "bronze" if index == 3 else
-                            "blue1" if index == 4 else
-                            "blue2"
-                        )
-                        progress = user.individual_program_progress
-                    %>
-                    <div class="leaderboard-row">
-                        <div class="rank-icon">${index}</div>
-                        <div class="icon"><img src="${static.url('images/image-profile.png')}" alt="avatar"></div>
-                        <div class="row-right ${color_class}">
-                            <div class="name pt0">${user.profile.name or user.username}</div>
-                            <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-                            <div class="pt2">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${progress}%"></div>
-                                </div>
-                                <div class="xp"><h4>${progress}%</h4></div>
+                % for user in top_users:
+                    <div class="row">
+                        <div class="info">
+                            <div class="avatar"><img src="${get_profile_image_urls_for_user(user)['medium']}" alt="avatar"></div>
+                            <div class="text">
+                                <div class="name">${user.profile.name or user.username}</div>
+                                <div class="badges">عدد الشارات: ${user.badge_count}</div>
                             </div>
                         </div>
                     </div>
                 % endfor
             % else:
-                <p class="no-badge">${_("No users have earned badges yet.")}</p>
+                <p class="no-badge">
+                    ${_("No users have earned badges yet.")}
+                </p>
             % endif
         </div>
     </div>
-
-    <!-- My Badges -->
-    <div id="my-badges-content" style="display:none;">
-        <div class="title-badgescontent">
-            <img src="${static.url('images/badges-icon-popup.png')}" alt="img">
-            <h2>ادوات الاستمرارية</h2>
-        </div>
-        <div class="badge-grid">
-            % for badge in my_badges:
-                <div class="badge-item">
-                    <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-                </div>
-            % endfor
-        </div>
-        <p>هناك المزيد من الشارات بانتظارك!</p>
+   --> 
+   <div id="leaderboard-content" style="display: none;">
+    <div class="leaderboard">
+    <div class="title-leaderboard">
+        <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
+        <h2>قائمة المتصدر</h2>
     </div>
-
-    <!-- Certificate -->
-    <div id="certificate-content" style="display:none;">
-        <div class="title-certificatecontent">
-            <img src="${static.url('images/cert-popup.png')}" alt="img">
-            <h2>شهاداتي</h2>
-        </div>
-        % if user_is_enrolled:
+    <br>
+     % if user_is_enrolled:
             <div class="progress-block">
                 <div class="program_progress_block">
                     <div class="meter">
@@ -428,27 +303,89 @@
                     </div>
                     <div class="program_progress"><h4>${program_progress}%</h4></div>
                 </div>
+            </div> 
+        % endif
+        <br>
+
+   % if top_users:
+    % for index, user in enumerate(top_users, start=1):
+        <% 
+            color_class = (
+                "gold" if index == 1 else 
+                "silver" if index == 2 else 
+                "bronze" if index == 3 else 
+                "blue1" if index == 4 else 
+                "blue2"
+            )
+        %>
+        <div class="leaderboard-row ">
+            <div class="rank-icon">${index}</div>
+            <div class="icon">
+                <img src="${static.url('images/image-profile.png')}" alt="avatar">
             </div>
-        % endif
-        % if cert_url:
-            <p>تهانينا! شهادتك جاهزة للتنزيل</p>
-            <a href="${cert_url}" class="download-btn">تنزيل الشهادة</a>
-        % else:
-            <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة.</p>
-            <a href="#" class="download-btn disabled" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
-            <p style="margin-top:20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
-        % endif
+            <div class="row-right ${color_class}"> 
+                <div class="name pt0">${user.profile.name or user.username}</div>
+                <div class="pt1">عدد الشارات: ${user.badge_count}</div>
+                <div class="pt2">
+                    <div class="progress-bar"> 
+                        <div class="progress-fill"style="width: ${user.progress}%"></div>
+                    </div>
+                    <div class="xp"> <h4>${user.progress}%</h4></div>
+                </div>
+            </div>
+        </div>
+    % endfor
+% else:
+    <p class="no-badge">${_("No users have earned badges yet.")}</p>
+% endif
+
+    </div>
     </div>
 
-    <!-- Course Modal -->
+   <div id="my-badges-content" style="display: none;">
+        <div class="title-badgescontent">
+                <img src="${static.url('images/badges-icon-popup.png')}" alt="img">
+                <h2>ادوات الاستمرارية</h2>
+            </div>   
+        <br>    
+         <div class="badge-grid">
+            % for badge in my_badges:
+                <div class="badge-item">
+                    <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
+                 <!--<p>${badge.badge.title}</p>-->   
+                </div>
+            % endfor
+        </div>
+        <p>هناك المزيد من الشارات بانتظارك!</p>
+    </div>
+    <div id="certificate-content" style="display: none;">
+         <div class="title-certificatecontent">
+                <img src="${static.url('images/cert-popup.png')}" alt="img">
+                <h2>شهاداتي </h2>
+            </div>     
+        <br>
+        <div id="certificate-status">
+            % if cert_url:
+                <p>تهانينا! شهادتك جاهزة للتنزيل</p>
+                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة</a>
+            % else:
+                <p>عند إكمال الدورة بنجاح، ستظهر شهادتك هنا جاهزة للتنزيل.</p>
+                <p>أنت على بعد خطوة واحدة من الحصول على شهادتك المعتمدة. أكمل جميع المهام والتقييمات النهائية.</p>
+                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+                <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+            % endif
+        </div>
+    </div>
+     
+
+
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
         <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden;">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
-            <iframe allowfullscreen frameborder="0" height="100%" id="courseFrame" width="100%"></iframe>
+            <iframe allowfullscreen="" frameborder="0" height="100%" id="courseFrame" width="100%"></iframe>
         </div>
     </div>
 </div>
-
 <%block name="js_extra">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -581,7 +518,7 @@
             // Create new message
             const msg = document.createElement('div');
             msg.className = 'locked-message';
-            msg.textContent = "This course is locked until you complete its prerequisite.";
+            msg.textContent = "هذه الدورة مقفلة حتى تُكمل المتطلب السابق";
             document.body.appendChild(msg);
 
             void msg.offsetWidth; // reflow
@@ -589,49 +526,10 @@
             setTimeout(() => {
                 msg.classList.remove('show');
                 setTimeout(() => msg.remove(), 300);
-            }, 2500);
+            }, 7000);
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function () {
-    // Handle locked courses (same as before)
-    document.body.addEventListener('click', function(e) {
-        const lockedCard = e.target.closest('.wide-cta.locked, .card.locked');
-        if (lockedCard) {
-            e.preventDefault();
-            e.stopPropagation();
-            const oldMsg = document.querySelector('.locked-message');
-            if (oldMsg) oldMsg.remove();
-            const msg = document.createElement('div');
-            msg.className = 'locked-message';
-            msg.textContent = "This course is locked until you complete its prerequisite.";
-            document.body.appendChild(msg);
-            void msg.offsetWidth;
-            msg.classList.add('show');
-            setTimeout(() => {
-                msg.classList.remove('show');
-                setTimeout(() => msg.remove(), 300);
-            }, 2500);
-        }
-    });
-
-    // ✅ Handle clicks on in-progress cards (center play icon)
-    document.body.addEventListener('click', function (e) {
-        const card = e.target.closest('.card.in-progress, .wide-cta.in-progress');
-        if (card) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const link = card.querySelector('a.open-course-modal-link');
-            if (link && link.href) {
-                // open in modal
-                $('#courseFrame').attr('src', link.href);
-                $('#courseModal').css('display', 'block');
-            }
-        }
-    });
-});
-
     </script>
 
 
