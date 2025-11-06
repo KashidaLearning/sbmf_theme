@@ -1,0 +1,9 @@
+Usage: tutor local run [OPTIONS] ARGS...
+
+  Run a command in a new container. This is a wrapper around `docker compose
+  run`. Any option or argument passed to this command will be forwarded to
+  docker compose. Thus, you may use `-v` or `-p` to mount volumes and expose
+  ports.
+
+Options:
+  -h, --help  Show this message and exit.
