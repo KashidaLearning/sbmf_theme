@@ -1091,3 +1091,52 @@ span {
 .card.locked::after {
     pointer-events: none !important; /* ✅ ensures lock icons & overlays don't block */
 }
+
+/* --- New Styles for Leaderboard Course Status --- */
+.course-status-icons {
+    display: flex;
+    gap: 10px; /* Space between icons */
+    margin-top: 5px;
+    align-items: center;
+    /* Optional: To make icons stand out in the row */
+    padding: 5px 0;
+}
+
+.course-icon {
+    width: 25px; /* Adjust size as needed */
+    height: 25px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.challenges-count {
+    width: auto; /* Allow span to define width */
+    height: auto;
+    background: #FF9900; /* Challenge status color */
+    border-radius: 12px;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+}
+
+.challenges-count .count {
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    margin-left: 5px; /* Space between count and icon */
+}
+
+/* Ensure the hourglass image is appropriately sized within the challenges-count container */
+.challenges-count img {
+    width: 15px; /* Smaller icon inside the pill */
+    height: 15px;
+}
+/* --- End of New Styles --- */
