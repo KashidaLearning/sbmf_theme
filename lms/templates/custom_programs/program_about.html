@@ -368,61 +368,6 @@
             <div class="row-right ${color_class}"> 
                 <div class="name pt0">${user.profile.name or user.username}</div>
                 <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-               <%
-                    pre_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Pre-assessment' or c.get('type') == 'التّقييم القَبلي']
-                    challenge_courses = [c for c in user.course_status_data if c.get('type') == 'Challenges']
-                %>
-                
-                <div class="course-status-icons">
-                    
-                    % for course in pre_assessment_courses:
-                        <%
-                            icon_image = ''
-                            if course.get('status') == 'completed' and course.get('has_badge'):
-                                icon_image = static.url('images/tick-icon.png') # Assuming a tick image
-                            elif course.get('status') == 'locked':
-                                icon_image = static.url('images/locked.png') # Assuming a locked image
-                        %>
-                        % if icon_image:
-                            <div class="course-icon" title="${course.get('name')}">
-                                <img src="${icon_image}" alt="${course.get('status')}">
-                            </div>
-                        % endif
-                    % endfor
-                    
-                    % if challenge_courses:
-                        <%
-                            total_challenges = sum(c.get('total', 0) for c in challenge_courses)
-                            completed_challenges = sum(c.get('completed', 0) for c in challenge_courses)
-                            
-                            # Display the Challenges count with an icon (like the hourglass/sand timer)
-                        %>
-                        <div class="course-icon challenges-count" title="التّحديات: ${completed_challenges}/${total_challenges}">
-                            <span class="count">${completed_challenges}/${total_challenges}</span>
-                            <img src="${static.url('images/hourglass-icon.png')}" alt="Challenges"> </div>
-                    % endif
-                    
-                    <%
-                    assignment_courses = [c for c in user.course_status_data if c.get('type') == 'Assignment' or c.get('name') == 'الواجب']
-                    post_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Post-assessment' or c.get('name') == 'التّقييم النّهائي']
-
-                    for course in assignment_courses + post_assessment_courses:
-                        icon_image = ''
-                        if course.get('status') == 'locked':
-                            icon_image = static.url('images/locked.png')
-                        elif course.get('status') == 'completed' and course.get('has_badge'):
-                            icon_image = static.url('images/tick-icon.png')
-
-                        if icon_image:
-                    %>
-                            <div class="course-icon" title="${course.get('name')}">
-                                <img src="${icon_image}" alt="${course.get('status')}">
-                            </div>
-                    <%
-                        endif
-                    endfor
-                    %>
-                    
                 </div>
                 <div class="pt2">
                     <div class="progress-bar"> 
@@ -430,6 +375,62 @@
                     </div>
                     <div class="xp"> <h4>${user.progress}%</h4></div>
                 </div>
+            
+        <div class="evaluation-stages">
+            <%
+                pre = courses.filter(course_type="Pre-assessment").first()
+                challenges = courses.filter(course_type="Challenges")
+                assignment = courses.filter(course_type="Assignment").first()
+                post = courses.filter(course_type="Post-assessment").first()
+                
+                total_challenges = challenges.count()
+                completed_challenges = 0
+                
+                for ch in challenges:
+                    overview = CourseOverview.get_from_id(ch.course.course_key)
+                    course_badges = UserBadge.get_my_course_badges(request.user, ch.course.course_key)
+                    if course_badges and len(course_badges) > 0:
+                        completed_challenges += 1
+
+                progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
+            %>
+
+            <ul class="evaluation-list">
+                <li>
+                    <span class="label">التقييم القبلي</span>
+                    <span class="status ${'done' if pre and UserBadge.get_my_course_badges(request.user, pre.course.course_key) else 'locked'}">
+                        ${'✅' if pre and UserBadge.get_my_course_badges(request.user, pre.course.course_key) else '🔒'}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="label">التحديات</span>
+                    <span class="status ${'in-progress' if 0 < completed_challenges < total_challenges else ('done' if completed_challenges == total_challenges else 'locked')}">
+                        ${f'{completed_challenges}/{total_challenges}' if total_challenges else '0/0'}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="label">الواجب</span>
+                    <span class="status ${'done' if assignment and UserBadge.get_my_course_badges(request.user, assignment.course.course_key) else 'locked'}">
+                        ${'🔓' if assignment and UserBadge.get_my_course_badges(request.user, assignment.course.course_key) else '🔒'}
+                    </span>
+                </li>
+
+                <li>
+                    <span class="label">التقييم النهائي</span>
+                    <span class="status ${'done' if post and UserBadge.get_my_course_badges(request.user, post.course.course_key) else 'locked'}">
+                        ${'✅' if post and UserBadge.get_my_course_badges(request.user, post.course.course_key) else '🔒'}
+                    </span>
+                </li>
+            </ul>
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: ${progress_percent}%"></div>
+        </div>
+        <div class="progress-text">${progress_percent}%</div>
+    </div>
             </div>
         </div>
     % endfor
