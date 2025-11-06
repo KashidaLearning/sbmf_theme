@@ -329,117 +329,161 @@
         </div>
     </div>
    --> 
-   <div id="leaderboard-content" style="display: none;">
-    <div class="leaderboard">
+<div id="leaderboard-content" style="display: none;">
+  <div class="leaderboard">
     <div class="title-leaderboard">
-        <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
-        <h2>قائمة المتصدر</h2>
+      <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
+      <h2>قائمة المتصدر</h2>
     </div>
     <br>
-     % if user_is_enrolled:
-            <div class="progress-block">
-                <div class="program_progress_block">
-                    <div class="meter">
-                        <span style="width: ${program_progress}%"></span>
-                        <p>التقدم العام</p>
-                    </div>
-                    <div class="program_progress"><h4>${program_progress}%</h4></div>
-                </div>
-            </div> 
-        % endif
-        <br>
 
-   % if top_users:
-    % for index, user in enumerate(top_users, start=1):
+    % if user_is_enrolled:
+      <div class="progress-block">
+        <div class="program_progress_block">
+          <div class="meter">
+            <span style="width: ${program_progress}%"></span>
+            <p>التقدم العام</p>
+          </div>
+          <div class="program_progress"><h4>${program_progress}%</h4></div>
+        </div>
+      </div> 
+    % endif
+    <br>
+
+    % if top_users:
+      % for index, user in enumerate(top_users, start=1):
         <% 
-            color_class = (
-                "gold" if index == 1 else 
-                "silver" if index == 2 else 
-                "bronze" if index == 3 else 
-                "blue1" if index == 4 else 
-                "blue2"
-            )
+          color_class = (
+            "gold" if index == 1 else 
+            "silver" if index == 2 else 
+            "bronze" if index == 3 else 
+            "blue1" if index == 4 else 
+            "blue2"
+          )
         %>
         <div class="leaderboard-row ">
-            <div class="rank-icon">${index}</div>
-            <div class="icon">
-                <img src="${static.url('images/image-profile.png')}" alt="avatar">
+          <div class="rank-icon">${index}</div>
+          <div class="icon">
+            <img src="${static.url('images/image-profile.png')}" alt="avatar">
+          </div>
+          <div class="row-right ${color_class}"> 
+            <div class="name pt0">${user.profile.name or user.username}</div>
+            <div class="pt1">عدد الشارات: ${user.badge_count}</div>
+          </div>
+          <div class="pt2">
+            <div class="progress-bar"> 
+              <div class="progress-fill" style="width: ${user.progress}%"></div>
             </div>
-            <div class="row-right ${color_class}"> 
-                <div class="name pt0">${user.profile.name or user.username}</div>
-                <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-                </div>
-                <div class="pt2">
-                    <div class="progress-bar"> 
-                        <div class="progress-fill"style="width: ${user.progress}%"></div>
-                    </div>
-                    <div class="xp"> <h4>${user.progress}%</h4></div>
-                </div>
-            
-        <div class="evaluation-stages">
-            <%
-                pre = courses.filter(course_type="Pre-assessment").first()
-                challenges = courses.filter(course_type="Challenges")
-                assignment = courses.filter(course_type="Assignment").first()
-                post = courses.filter(course_type="Post-assessment").first()
-                
-                total_challenges = challenges.count()
-                completed_challenges = 0
-                
-                for ch in challenges:
-                    overview = CourseOverview.get_from_id(ch.course.course_key)
-                    course_badges = UserBadge.get_my_course_badges(request.user, ch.course.course_key)
-                    if course_badges and len(course_badges) > 0:
-                        completed_challenges += 1
+            <div class="xp"><h4>${user.progress}%</h4></div>
+          </div>
+        </div>
+      % endfor
 
-                progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
-            %>
+      <div class="evaluation-stages">
+        <%
+          # collect courses by type (supporting Arabic and English labels)
+          pre_courses = courses.filter(course_type__in=["Pre-assessment", "التقييم القبلي"])
+          challenge_courses = courses.filter(course_type__in=["Challenges", "التحديات"])
+          assignment_courses = courses.filter(course_type__in=["Assignment", "الواجب"])
+          post_courses = courses.filter(course_type__in=["Post-assessment", "التقييم النهائي"])
 
-            <ul class="evaluation-list">
-                <li>
-                    <span class="label">التقييم القبلي</span>
-                    <span class="status ${'done' if pre and UserBadge.get_my_course_badges(request.user, pre.course.course_key) else 'locked'}">
-                        ${'✅' if pre and UserBadge.get_my_course_badges(request.user, pre.course.course_key) else '🔒'}
-                    </span>
-                </li>
+          def is_completed(course):
+              badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
+              return bool(badges)
 
-                <li>
-                    <span class="label">التحديات</span>
-                    <span class="status ${'in-progress' if 0 < completed_challenges < total_challenges else ('done' if completed_challenges == total_challenges else 'locked')}">
-                        ${f'{completed_challenges}/{total_challenges}' if total_challenges else '0/0'}
-                    </span>
-                </li>
+          def is_locked_fn(course):
+              overview = CourseOverview.get_from_id(course.course.course_key)
+              return bool(courses_requirements_not_met.get(overview.id))
 
-                <li>
-                    <span class="label">الواجب</span>
-                    <span class="status ${'done' if assignment and UserBadge.get_my_course_badges(request.user, assignment.course.course_key) else 'locked'}">
-                        ${'🔓' if assignment and UserBadge.get_my_course_badges(request.user, assignment.course.course_key) else '🔒'}
-                    </span>
-                </li>
+          # pre-assessment
+          pre_course = pre_courses.first()
+          pre_completed = pre_course and is_completed(pre_course)
+          pre_locked = pre_course and is_locked_fn(pre_course)
 
-                <li>
-                    <span class="label">التقييم النهائي</span>
-                    <span class="status ${'done' if post and UserBadge.get_my_course_badges(request.user, post.course.course_key) else 'locked'}">
-                        ${'✅' if post and UserBadge.get_my_course_badges(request.user, post.course.course_key) else '🔒'}
-                    </span>
-                </li>
-            </ul>
+          # challenges
+          total_challenges = challenge_courses.count()
+          completed_challenges = sum(1 for ch in challenge_courses if is_completed(ch))
+          in_progress_challenges = 0 < completed_challenges < total_challenges
+          progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
 
-    <div class="progress-container">
-        <div class="progress-bar">
+          # assignment
+          assignment_course = assignment_courses.first()
+          assignment_completed = assignment_course and is_completed(assignment_course)
+          assignment_locked = assignment_course and is_locked_fn(assignment_course)
+
+          # post-assessment
+          post_course = post_courses.first()
+          post_completed = post_course and is_completed(post_course)
+          post_locked = post_course and is_locked_fn(post_course)
+        %>
+
+        <ul class="evaluation-list">
+          <!-- Pre-assessment -->
+          <li>
+            <span class="label">التقييم القبلي</span>
+            % if pre_completed:
+              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
+            % elif pre_locked:
+              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
+            % else:
+              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
+            % endif
+          </li>
+
+          <!-- Challenges -->
+          <li>
+            <span class="label">التحديات</span>
+            % if total_challenges == 0:
+              <span class="status-text">0/0</span>
+            % else:
+              % if completed_challenges == total_challenges:
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
+              % elif completed_challenges == 0:
+                <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
+              % else:
+                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
+              % endif
+              <span class="status-text">${completed_challenges}/${total_challenges}</span>
+            % endif
+          </li>
+
+          <!-- Assignment -->
+          <li>
+            <span class="label">الواجب</span>
+            % if assignment_completed:
+              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
+            % elif assignment_locked:
+              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
+            % else:
+              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
+            % endif
+          </li>
+
+          <!-- Post-assessment -->
+          <li>
+            <span class="label">التقييم النهائي</span>
+            % if post_completed:
+              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
+            % elif post_locked:
+              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
+            % else:
+              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
+            % endif
+          </li>
+        </ul>
+
+        <div class="progress-container">
+          <div class="progress-bar">
             <div class="progress-fill" style="width: ${progress_percent}%"></div>
+          </div>
+          <div class="progress-text">${progress_percent}%</div>
         </div>
-        <div class="progress-text">${progress_percent}%</div>
-    </div>
-            </div>
-        </div>
-    % endfor
-% else:
-    <p class="no-badge">${_("No users have earned badges yet.")}</p>
-% endif
-
-    </div>
-    </div>
+      </div>
+    % else:
+      <p class="no-badge">${_("No users have earned badges yet.")}</p>
+    % endif
+  </div>
+</div>
 
    <div id="my-badges-content" style="display: none;">
         <div class="title-badgescontent">
