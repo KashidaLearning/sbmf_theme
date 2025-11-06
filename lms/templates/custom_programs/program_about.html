@@ -78,7 +78,28 @@
 .locked-message.show {
     opacity: 1;
 }
+.start-icon-overlay {
+    position: absolute;
+    top: 10px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    z-index: 3;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
 
+.start-icon-overlay:hover {
+    transform: scale(1.05);
+}
+
+.start-icon-overlay img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 </style>
 <div class="program-about">
     <div class="container">
@@ -158,6 +179,8 @@
                 is_locked = False if user_is_enrolled else True
                 if course_requirements:
                     is_locked = True
+                is_completed = bool(course_badges)
+                is_active_or_in_progress = user_is_enrolled and not is_locked and not is_completed
                 if resume_button_urls.get(str(overview.id)):
                     course_link = resume_button_urls.get(str(overview.id))
                     button_text = "باشر بالتحدي! "
@@ -168,6 +191,11 @@
                     button_text = " باشر بالتحدي!"
             %>
             <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1">
+                % if is_active_or_in_progress:
+                    <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
+                        <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                    </a>
+                % endif
                 % if course_badges:
                     % for badge in course_badges:
                         <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
@@ -192,6 +220,8 @@
                         is_locked = False if user_is_enrolled else True
                         if course_requirements:
                             is_locked = True
+                        is_completed = bool(course_badges)
+                        is_active_or_in_progress = user_is_enrolled and not is_locked and not is_completed
                         if resume_button_urls.get(str(overview.id)):
                             course_link = resume_button_urls.get(str(overview.id))
                             button_text = "باشر بالتحدي! "
@@ -202,6 +232,11 @@
                             button_text = " باشر بالتحدي!"
                     %>
                     <article class="card ${'locked' if is_locked else ''}">
+                        % if is_active_or_in_progress:
+                            <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
+                                <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                            </a>
+                        % endif
                         % if course_badges:
                             % for badge in course_badges:
                                 <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
@@ -231,6 +266,8 @@
                     is_locked = False if user_is_enrolled else True
                     if course_requirements:
                         is_locked = True
+                    is_completed = bool(course_badges)
+                    is_active_or_in_progress = user_is_enrolled and not is_locked and not is_completed
                     if resume_button_urls.get(str(overview.id)):
                         course_link = resume_button_urls.get(str(overview.id))
                         button_text = "باشر بالتحدي!"
@@ -241,6 +278,11 @@
                         button_text = "باشر بالتحدي! "
                 %>
                 <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}">
+                   % if is_active_or_in_progress:
+                        <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
+                            <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                        </a>
+                    % endif
                     % if course_badges:
                         % for badge in course_badges:
                             <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
