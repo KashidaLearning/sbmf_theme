@@ -340,7 +340,6 @@
 from django.db import connection
 %>
 
-
 <div class="course-evaluation-table">
 <%!
 from django.contrib.auth.models import User
@@ -366,20 +365,19 @@ from django.db import connection
         <%
           course_id = str(course.course.course_key)
 
-          # --- Raw SQL combining all relevant tables including effort ---
+          # --- Raw SQL combining all relevant tables including final grade and effort ---
           query = f"""
           SELECT
               AU.username,
               AU.email,
-              SCE.created AS EnrolmentDate,
-              CGC.grade AS FinalScore,
-              CGC.created_date AS CertificateIssuedDate,
+              SCE.created AS EnrollmentDate,
               (
                   SELECT MIN(CSM.created)
                   FROM courseware_studentmodule AS CSM
                   WHERE CSM.student_id = AU.id
                   AND CSM.course_id = '{course_id}'
               ) AS FirstInteractionDate,
+              GPC.percent_grade * 100 AS FinalScore,
               (
                   SELECT LL.score
                   FROM leaderboard_leaderboard AS LL
@@ -387,13 +385,15 @@ from django.db import connection
                   AND LL.course_id = '{course_id}'
                   LIMIT 1
               ) AS LeaderboardScore,
+              CGC.created_date AS CertificateIssuedDate,
               CO.effort AS Effort
           FROM auth_user AS AU
           JOIN student_courseenrollment AS SCE
               ON AU.id = SCE.user_id
+          LEFT JOIN grades_persistentcoursegrade AS GPC
+              ON AU.id = GPC.user_id AND SCE.course_id = GPC.course_id
           LEFT JOIN certificates_generatedcertificate AS CGC
-              ON AU.id = CGC.user_id
-              AND SCE.course_id = CGC.course_id
+              ON AU.id = CGC.user_id AND SCE.course_id = CGC.course_id
           LEFT JOIN course_overviews_courseoverview AS CO
               ON SCE.course_id = CO.id
           WHERE SCE.course_id = '{course_id}'
@@ -413,9 +413,9 @@ from django.db import connection
               data = dict(zip(columns, row))
               username = data.get("username", "N/A")
               email = data.get("email", "N/A")
-              enroll_date = data.get("EnrolmentDate", "N/A")
+              enroll_date = data.get("EnrollmentDate", "N/A")
               first_interaction = data.get("FirstInteractionDate", "N/A")
-              final_grade = data.get("FinalScore", "N/A")
+              final_score = data.get("FinalScore", "N/A")
               leaderboard_score = data.get("LeaderboardScore", "N/A")
               cert_date = data.get("CertificateIssuedDate", "N/A")
               effort = data.get("Effort", "00:00")
@@ -426,7 +426,7 @@ from django.db import connection
               <td>${email}</td>
               <td>${enroll_date}</td>
               <td>${first_interaction}</td>
-              <td>${final_grade}</td>
+              <td>${final_score}</td>
               <td>${leaderboard_score}</td>
               <td>${cert_date}</td>
               <td>${effort}</td>
