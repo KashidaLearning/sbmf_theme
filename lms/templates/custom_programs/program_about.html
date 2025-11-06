@@ -331,13 +331,12 @@
    --> 
    <div id="leaderboard-content" style="display: none;">
     <div class="leaderboard">
-        <div class="title-leaderboard">
-            <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
-            <h2>قائمة المتصدر</h2>
-        </div>
-        <br>
-
-        % if user_is_enrolled:
+    <div class="title-leaderboard">
+        <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
+        <h2>قائمة المتصدر</h2>
+    </div>
+    <br>
+     % if user_is_enrolled:
             <div class="progress-block">
                 <div class="program_progress_block">
                     <div class="meter">
@@ -350,99 +349,96 @@
         % endif
         <br>
 
-        % if top_users:
-            % for index, user in enumerate(top_users, start=1):
-                <% 
-                    color_class = (
-                        "gold" if index == 1 else 
-                        "silver" if index == 2 else 
-                        "bronze" if index == 3 else 
-                        "blue1" if index == 4 else 
-                        "blue2"
-                    )
+   % if top_users:
+    % for index, user in enumerate(top_users, start=1):
+        <% 
+            color_class = (
+                "gold" if index == 1 else 
+                "silver" if index == 2 else 
+                "bronze" if index == 3 else 
+                "blue1" if index == 4 else 
+                "blue2"
+            )
+        %>
+        <div class="leaderboard-row ">
+            <div class="rank-icon">${index}</div>
+            <div class="icon">
+                <img src="${static.url('images/image-profile.png')}" alt="avatar">
+            </div>
+            <div class="row-right ${color_class}"> 
+                <div class="name pt0">${user.profile.name or user.username}</div>
+                <div class="pt1">عدد الشارات: ${user.badge_count}</div>
+               <%
+                    pre_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Pre-assessment' or c.get('type') == 'التّقييم القَبلي']
+                    challenge_courses = [c for c in user.course_status_data if c.get('type') == 'Challenges']
                 %>
-
-                <div class="leaderboard-row">
-                    <div class="rank-icon">${index}</div>
-                    <div class="icon">
-                        <img src="${static.url('images/image-profile.png')}" alt="avatar">
-                    </div>
-                    <div class="row-right ${color_class}"> 
-                        <div class="name pt0">${user.profile.name or user.username}</div>
-                        <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-                        
-                        <%  
-                            # Separate the course types you need to display icons for.
-                            pre_assessment_courses = [c for c in user.course_status_data if c.get('type') in ['Pre-assessment', 'التّقييم القَبلي']]
-                            challenge_courses = [c for c in user.course_status_data if c.get('type') == 'Challenges']
+                
+                <div class="course-status-icons">
+                    
+                    % for course in pre_assessment_courses:
+                        <%
+                            icon_image = ''
+                            if course.get('status') == 'completed' and course.get('has_badge'):
+                                icon_image = static.url('images/tick-icon.png') # Assuming a tick image
+                            elif course.get('status') == 'locked':
+                                icon_image = static.url('images/locked.png') # Assuming a locked image
                         %>
-                        
-                        <div class="course-status-icons">
-                            % for course in pre_assessment_courses:
-                                <%
-                                    # Logic for Pre-assessment / التّقييم القَبلي
-                                    icon_image = ''
-                                    if course.get('status') == 'completed' and course.get('has_badge'):
-                                        icon_image = static.url('images/tick-icon.png')
-                                    elif course.get('status') == 'locked':
-                                        icon_image = static.url('images/locked.png')
-                                %>
-                                % if icon_image:
-                                    <div class="course-icon" title="${course.get('name')}">
-                                        <img src="${icon_image}" alt="${course.get('status')}">
-                                    </div>
-                                % endif
-                            % endfor
-                            
-                            % if challenge_courses:
-                                <%
-                                    total_challenges = sum(c.get('total', 0) for c in challenge_courses)
-                                    completed_challenges = sum(c.get('completed', 0) for c in challenge_courses)
-                                %>
-                                <div class="course-icon challenges-count" title="التّحديات: ${completed_challenges}/${total_challenges}">
-                                    <span class="count">${completed_challenges}/${total_challenges}</span>
-                                    <img src="${static.url('images/hourglass-icon.png')}" alt="Challenges">
-                                </div>
-                            % endif
-                            
-                            <%
-                                # --- Add other course types logic here if needed ---
-                                assignment_courses = [c for c in user.course_status_data if c.get('type') in ['Assignment', 'الواجب']]
-                                post_assessment_courses = [c for c in user.course_status_data if c.get('type') in ['Post-assessment', 'التّقييم النّهائي']]
-
-                                for course in assignment_courses + post_assessment_courses:
-                                    icon_image = ''
-                                    if course.get('status') == 'locked':
-                                        icon_image = static.url('images/locked.png')
-                                    elif course.get('status') == 'completed' and course.get('has_badge'):
-                                        icon_image = static.url('images/tick-icon.png')
-
-                                    if icon_image:
-                            %>
-                                        <div class="course-icon" title="${course.get('name')}">
-                                            <img src="${icon_image}" alt="${course.get('status')}">
-                                        </div>
-                            <%
-                                    endif
-                                endfor
-                            %>
-                        </div>
-                        
-                        <div class="pt2">
-                            <div class="progress-bar"> 
-                                <div class="progress-fill" style="width: ${user.progress}%"></div>
+                        % if icon_image:
+                            <div class="course-icon" title="${course.get('name')}">
+                                <img src="${icon_image}" alt="${course.get('status')}">
                             </div>
-                            <div class="xp"><h4>${user.progress}%</h4></div>
-                        </div>
-                    </div>
-                </div>
-            % endfor
-        % else:
-            <p class="no-badge">${_("No users have earned badges yet.")}</p>
-        % endif
-    </div>
-</div>
+                        % endif
+                    % endfor
+                    
+                    % if challenge_courses:
+                        <%
+                            total_challenges = sum(c.get('total', 0) for c in challenge_courses)
+                            completed_challenges = sum(c.get('completed', 0) for c in challenge_courses)
+                            
+                            # Display the Challenges count with an icon (like the hourglass/sand timer)
+                        %>
+                        <div class="course-icon challenges-count" title="التّحديات: ${completed_challenges}/${total_challenges}">
+                            <span class="count">${completed_challenges}/${total_challenges}</span>
+                            <img src="${static.url('images/hourglass-icon.png')}" alt="Challenges"> </div>
+                    % endif
+                    
+                    <%
+                    assignment_courses = [c for c in user.course_status_data if c.get('type') == 'Assignment' or c.get('name') == 'الواجب']
+                    post_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Post-assessment' or c.get('name') == 'التّقييم النّهائي']
 
+                    for course in assignment_courses + post_assessment_courses:
+                        icon_image = ''
+                        if course.get('status') == 'locked':
+                            icon_image = static.url('images/locked.png')
+                        elif course.get('status') == 'completed' and course.get('has_badge'):
+                            icon_image = static.url('images/tick-icon.png')
+
+                        if icon_image:
+                    %>
+                            <div class="course-icon" title="${course.get('name')}">
+                                <img src="${icon_image}" alt="${course.get('status')}">
+                            </div>
+                    <%
+                        endif
+                    endfor
+                    %>
+                    
+                </div>
+                <div class="pt2">
+                    <div class="progress-bar"> 
+                        <div class="progress-fill"style="width: ${user.progress}%"></div>
+                    </div>
+                    <div class="xp"> <h4>${user.progress}%</h4></div>
+                </div>
+            </div>
+        </div>
+    % endfor
+% else:
+    <p class="no-badge">${_("No users have earned badges yet.")}</p>
+% endif
+
+    </div>
+    </div>
 
    <div id="my-badges-content" style="display: none;">
         <div class="title-badgescontent">
