@@ -371,6 +371,7 @@
                 
                 <%
                     # Separate the course types you need to display icons for.
+                    # Assuming user.course_status_data is available from the view context
                     pre_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Pre-assessment' or c.get('type') == 'التّقييم القَبلي']
                     challenge_courses = [c for c in user.course_status_data if c.get('type') == 'Challenges']
                 %>
@@ -400,31 +401,33 @@
                             total_challenges = sum(c.get('total', 0) for c in challenge_courses)
                             completed_challenges = sum(c.get('completed', 0) for c in challenge_courses)
                             
-                            # Display the Challenges count with an icon (like the hourglass/sand timer shown in image_709b8b.png)
+                            # Display the Challenges count with an icon (like the hourglass/sand timer)
                         %>
-                        <div class="course-icon challenges-count" title="التّحديات">
+                        <div class="course-icon challenges-count" title="التّحديات: ${completed_challenges}/${total_challenges}">
                             <span class="count">${completed_challenges}/${total_challenges}</span>
                             <img src="${static.url('images/hourglass-icon.png')}" alt="Challenges"> </div>
                     % endif
                     
                     <%
                     # --- Add other course types logic here if needed ---
-                    # Example for Assignment (الواجب) / Post-assessment (التّقييم النّهائي) based on image_709b8b.png
                     assignment_courses = [c for c in user.course_status_data if c.get('type') == 'Assignment' or c.get('name') == 'الواجب']
                     post_assessment_courses = [c for c in user.course_status_data if c.get('type') == 'Post-assessment' or c.get('name') == 'التّقييم النّهائي']
 
                     for course in assignment_courses + post_assessment_courses:
                         icon_image = ''
                         if course.get('status') == 'locked':
-                            icon_image = static.url('images/lockedstatus.png')
+                            icon_image = static.url('images/locked.png')
                         elif course.get('status') == 'completed' and course.get('has_badge'):
-                            # Assuming you have a specific icon for completed assignment/post-assessment
                             icon_image = static.url('images/tick-icon.png')
 
                         if icon_image:
+                    %>
                             <div class="course-icon" title="${course.get('name')}">
                                 <img src="${icon_image}" alt="${course.get('status')}">
                             </div>
+                    <%
+                        endif
+                    endfor
                     %>
                     
                 </div>
@@ -443,7 +446,7 @@
 % endif
 
     </div>
-    </div>
+</div>
 
    <div id="my-badges-content" style="display: none;">
         <div class="title-badgescontent">
