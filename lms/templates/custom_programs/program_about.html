@@ -342,24 +342,31 @@ from django.db import connection
 
 
 <div class="course-evaluation-table">
-  <h3>تفاصيل تقدم المساقات</h3>
+<%!
+from django.contrib.auth.models import User
+from django.db import connection
+%>
+  <h3>Course Progress Details</h3>
   <table class="course-details-table">
     <thead>
       <tr>
-        <th>معرّف المساق</th>
-        <th>اسم المستخدم</th>
-        <th>البريد الإلكتروني</th>
-        <th>تاريخ التسجيل</th>
-        <th>تاريخ أول تفاعل</th>
-        <th>النتيجة (التقييم الأول)</th>
-        <th>التقدم / نقاط التحدي</th>
-        <th>تاريخ إصدار الشهادة</th>
+        <th>Course ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Enrollment Date</th>
+        <th>First Interaction Date</th>
+        <th>Final Score</th>
+        <th>Leaderboard Score</th>
+        <th>Certificate Issued Date</th>
+        <th>Effort (per week)</th>
       </tr>
     </thead>
     <tbody>
       % for course in courses:
         <%
           course_id = str(course.course.course_key)
+
+          # --- Raw SQL combining all relevant tables including effort ---
           query = f"""
           SELECT
               AU.username,
@@ -379,13 +386,16 @@ from django.db import connection
                   WHERE LL.user_id = AU.id
                   AND LL.course_id = '{course_id}'
                   LIMIT 1
-              ) AS LeaderboardScore
+              ) AS LeaderboardScore,
+              CO.effort AS Effort
           FROM auth_user AS AU
           JOIN student_courseenrollment AS SCE
               ON AU.id = SCE.user_id
           LEFT JOIN certificates_generatedcertificate AS CGC
               ON AU.id = CGC.user_id
               AND SCE.course_id = CGC.course_id
+          LEFT JOIN course_overviews_courseoverview AS CO
+              ON SCE.course_id = CO.id
           WHERE SCE.course_id = '{course_id}'
           AND SCE.is_active = 1
           ORDER BY AU.username;
@@ -405,9 +415,10 @@ from django.db import connection
               email = data.get("email", "N/A")
               enroll_date = data.get("EnrolmentDate", "N/A")
               first_interaction = data.get("FirstInteractionDate", "N/A")
-              final_grade = data.get("FinalScore", "غير متوفر")
+              final_grade = data.get("FinalScore", "N/A")
               leaderboard_score = data.get("LeaderboardScore", "N/A")
-              cert_date = data.get("CertificateIssuedDate", "NULL")
+              cert_date = data.get("CertificateIssuedDate", "N/A")
+              effort = data.get("Effort", "00:00")
             %>
             <tr>
               <td>${course_id}</td>
@@ -418,10 +429,11 @@ from django.db import connection
               <td>${final_grade}</td>
               <td>${leaderboard_score}</td>
               <td>${cert_date}</td>
+              <td>${effort}</td>
             </tr>
           % endfor
         % else:
-          <tr><td colspan="8" style="text-align:center;">لا يوجد طلاب مسجلين في هذا المساق.</td></tr>
+          <tr><td colspan="9" style="text-align:center;">No enrolled students for this course.</td></tr>
         % endif
       % endfor
     </tbody>
