@@ -380,42 +380,50 @@
       % endfor
 
       <div class="evaluation-stages">
-        <%
-          # collect courses by type (supporting Arabic and English labels)
-          pre_courses = courses.filter(course_type__in=["Pre-assessment", "التقييم القبلي"])
-          challenge_courses = courses.filter(course_type__in=["Challenges", "التحديات"])
-          assignment_courses = courses.filter(course_type__in=["Assignment", "الواجب"])
-          post_courses = courses.filter(course_type__in=["Post-assessment", "التقييم النهائي"])
+            <%
+            pre_courses = courses.filter(course_type__in=[
+                "pre_assessment", "Pre-assessment", "pre-assessment", "التقييم القبلي"
+            ])
+            challenge_courses = courses.filter(course_type__in=[
+                "challenge", "Challenges", "التحديات"
+            ])
+            assignment_courses = courses.filter(course_type__in=[
+                "assignment", "Assignment", "الواجب"
+            ])
+            post_courses = courses.filter(course_type__in=[
+                "post_assessment", "Post-assessment", "post-assessment", "التقييم النهائي"
+            ])
 
-          def is_completed(course):
-              badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
-              return bool(badges)
+            def is_completed(course):
+                badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
+                return bool(badges)
 
-          def is_locked_fn(course):
-              overview = CourseOverview.get_from_id(course.course.course_key)
-              return bool(courses_requirements_not_met.get(overview.id))
+            def is_locked_fn(course):
+                overview = CourseOverview.get_from_id(course.course.course_key)
+                return bool(courses_requirements_not_met.get(overview.id))
 
-          # pre-assessment
-          pre_course = pre_courses.first()
-          pre_completed = pre_course and is_completed(pre_course)
-          pre_locked = pre_course and is_locked_fn(pre_course)
+            # pre-assessment
+            pre_course = pre_courses.first()
+            pre_completed = pre_course and is_completed(pre_course)
+            pre_locked = pre_course and is_locked_fn(pre_course)
 
-          # challenges
-          total_challenges = challenge_courses.count()
-          completed_challenges = sum(1 for ch in challenge_courses if is_completed(ch))
-          in_progress_challenges = 0 < completed_challenges < total_challenges
-          progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
+            # challenges
+            total_challenges = challenge_courses.count()
+            completed_challenges = sum(1 for ch in challenge_courses if is_completed(ch))
+            in_progress_challenges = 0 < completed_challenges < total_challenges
+            progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
 
-          # assignment
-          assignment_course = assignment_courses.first()
-          assignment_completed = assignment_course and is_completed(assignment_course)
-          assignment_locked = assignment_course and is_locked_fn(assignment_course)
+            # assignment
+            assignment_course = assignment_courses.first()
+            assignment_completed = assignment_course and is_completed(assignment_course)
+            assignment_locked = assignment_course and is_locked_fn(assignment_course)
 
-          # post-assessment
-          post_course = post_courses.first()
-          post_completed = post_course and is_completed(post_course)
-          post_locked = post_course and is_locked_fn(post_course)
-        %>
+            # post-assessment
+            post_course = post_courses.first()
+            post_completed = post_course and is_completed(post_course)
+            post_locked = post_course and is_locked_fn(post_course)
+            %>
+
 
         <ul class="evaluation-list">
           <!-- Pre-assessment -->
