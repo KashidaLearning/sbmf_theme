@@ -349,7 +349,8 @@ from datetime import datetime
         <th>Course ID</th>
         <th>Username</th>
         <th>Email</th>
-        <th>Enrollment Date</th>
+<!--         <th>Enrollment Date</th>
+ -->        
         <th>First Interaction Date</th>
         <th>Final Grade (%)</th>
         <th>Leaderboard Score</th>
@@ -449,7 +450,7 @@ from datetime import datetime
               # XP Formula Calculations
               final_score_1000 = final_grade * 10       # final score × 1000
               leaderboard_1000 = leaderboard_score * 1000
-              duration_with_effort = (1000 * effort_seconds / duration_seconds) if duration_seconds > 0 else 0
+              duration_with_effort = 1000 * (effort_seconds / duration_seconds) if duration_seconds > 0 else 0
               xp = (final_grade * 600) + (leaderboard_score * 300) + (100 * duration_with_effort)
             %>
 
@@ -457,8 +458,8 @@ from datetime import datetime
               <td>${course_id}</td>
               <td>${username}</td>
               <td>${email}</td>
-              <td>${enroll_date}</td>
-              <td>${first_interaction}</td>
+<!--               <td>${enroll_date}</td>
+ -->          <td>${first_interaction}</td>
               <td>${round(final_grade, 2)}</td>
               <td>${round(leaderboard_score, 2)}</td>
               <td>${cert_date}</td>
@@ -474,9 +475,9 @@ from datetime import datetime
                         <th>Duration (Days HH:MM:SS)</th>
                         <th>Time Spent (sec)</th>
                         <th>Effort (sec)</th>
-                        <th>Final Score ×1000</th>
-                        <th>Leaderboard ×1000</th>
-                        <th>Duration w/ Effort</th>
+                        <!-- <th>Final Score ×1000</th>
+                        <th>Leaderboard ×1000</th> -->
+                        <!-- <th>Duration w/ Effort</th> -->
                         <th>XP</th>
                       </tr>
                     </thead>
