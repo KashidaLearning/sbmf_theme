@@ -362,6 +362,7 @@ from datetime import datetime
         <%
           course_id = str(course.course.course_key)
 
+          # Main query for course data
           query = f"""
           SELECT
               AU.username,
@@ -373,7 +374,7 @@ from datetime import datetime
                   WHERE CSM.student_id = AU.id
                   AND CSM.course_id = '{course_id}'
               ) AS FirstInteractionDate,
-              ROUND(GPC.percent_grade * 100, 2) AS FinalGradePercent,
+              GPC.percent_grade * 100 AS FinalGradePercent,
               (
                   SELECT LL.score
                   FROM leaderboard_leaderboard AS LL
@@ -382,9 +383,10 @@ from datetime import datetime
                   LIMIT 1
               ) AS LeaderboardScore,
               (
-                  SELECT MIN(AUB.created)
-                  FROM achievements_userbadge AS AUB
-                  WHERE AUB.user_id = AU.id
+                  SELECT MIN(CGC.created_date)
+                  FROM certificates_generatedcertificate AS CGC
+                  WHERE CGC.user_id = AU.id
+                  AND CGC.course_id = '{course_id}'
               ) AS CertificateIssuedDate,
               CO.effort AS Effort
           FROM auth_user AS AU
@@ -418,6 +420,10 @@ from datetime import datetime
         %>
 
         % if rows:
+          <tr class="course-header">
+            <td colspan="9"><b>Course: ${course_id}</b></td>
+          </tr>
+
           % for row in rows:
             <%
               data = dict(zip(columns, row))
@@ -425,12 +431,12 @@ from datetime import datetime
               email = data.get("email") or "N/A"
               enroll_date = data.get("EnrollmentDate")
               first_interaction = data.get("FirstInteractionDate")
-              final_grade = data.get("FinalGradePercent") or 0
-              leaderboard_score = data.get("LeaderboardScore") or 0
+              final_grade = float(data.get("FinalGradePercent") or 0)
+              leaderboard_score = float(data.get("LeaderboardScore") or 0)
               cert_date = data.get("CertificateIssuedDate")
               effort_str = data.get("Effort") or "00:00"
 
-              # Convert to seconds
+              # Convert effort to seconds
               effort_seconds = time_to_seconds(effort_str)
               duration_seconds = 0
               duration_str = "N/A"
@@ -440,8 +446,8 @@ from datetime import datetime
                   duration_seconds = int(duration.total_seconds())
                   duration_str = str(duration)
 
-              # Compute values
-              final_score_1000 = final_grade * 10
+              # XP Formula Calculations
+              final_score_1000 = final_grade * 10       # final score × 1000
               leaderboard_1000 = leaderboard_score * 1000
               duration_with_effort = (1000 * effort_seconds / duration_seconds) if duration_seconds > 0 else 0
               xp = (final_grade * 600) + (leaderboard_score * 300) + (100 * duration_with_effort)
@@ -465,7 +471,7 @@ from datetime import datetime
                   <table style="width:100%; border:1px solid #999; margin-top:10px;">
                     <thead>
                       <tr>
-                        <th>Duration (HH:MM:SS)</th>
+                        <th>Duration (Days HH:MM:SS)</th>
                         <th>Time Spent (sec)</th>
                         <th>Effort (sec)</th>
                         <th>Final Score ×1000</th>
@@ -479,8 +485,8 @@ from datetime import datetime
                         <td>${duration_str}</td>
                         <td>${duration_seconds}</td>
                         <td>${effort_seconds}</td>
-                        <td>${final_score_1000}</td>
-                        <td>${leaderboard_1000}</td>
+                        <td>${round(final_score_1000, 2)}</td>
+                        <td>${round(leaderboard_1000, 2)}</td>
                         <td>${round(duration_with_effort, 2)}</td>
                         <td><b>${round(xp, 2)}</b></td>
                       </tr>
@@ -497,6 +503,8 @@ from datetime import datetime
     </tbody>
   </table>
 </div>
+
+
 
 
 
