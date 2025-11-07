@@ -336,14 +336,11 @@
       <h2>قائمة المتصدر</h2>
     </div>
     <br>
-<%!
-from django.db import connection
-%>
-
 <div class="course-evaluation-table">
 <%!
 from django.contrib.auth.models import User
 from django.db import connection
+from datetime import datetime
 %>
   <h3>Course Progress Details</h3>
   <table class="course-details-table">
@@ -354,7 +351,7 @@ from django.db import connection
         <th>Email</th>
         <th>Enrollment Date</th>
         <th>First Interaction Date</th>
-        <th>Final Score</th>
+        <th>Final Grade (%)</th>
         <th>Leaderboard Score</th>
         <th>Certificate Issued Date</th>
         <th>Effort (per week)</th>
@@ -365,7 +362,6 @@ from django.db import connection
         <%
           course_id = str(course.course.course_key)
 
-          # --- Raw SQL combining all relevant tables including final grade and effort ---
           query = f"""
           SELECT
               AU.username,
@@ -377,7 +373,7 @@ from django.db import connection
                   WHERE CSM.student_id = AU.id
                   AND CSM.course_id = '{course_id}'
               ) AS FirstInteractionDate,
-              GPC.percent_grade * 100 AS FinalScore,
+              GPC.percent_grade * 100 AS FinalGradePercent,
               (
                   SELECT LL.score
                   FROM leaderboard_leaderboard AS LL
@@ -401,6 +397,18 @@ from django.db import connection
           ORDER BY AU.username;
           """
 
+          def time_to_seconds(timestr):
+              """Convert HH:MM to total seconds."""
+              if not timestr:
+                  return 0
+              try:
+                  parts = timestr.split(":")
+                  h = int(parts[0]) if len(parts) > 0 else 0
+                  m = int(parts[1]) if len(parts) > 1 else 0
+                  return h * 3600 + m * 60
+              except Exception:
+                  return 0
+
           with connection.cursor() as cursor:
               cursor.execute(query)
               rows = cursor.fetchall()
@@ -411,25 +419,76 @@ from django.db import connection
           % for row in rows:
             <%
               data = dict(zip(columns, row))
-              username = data.get("username", "N/A")
-              email = data.get("email", "N/A")
-              enroll_date = data.get("EnrollmentDate", "N/A")
-              first_interaction = data.get("FirstInteractionDate", "N/A")
-              final_score = data.get("FinalScore", "N/A")
-              leaderboard_score = data.get("LeaderboardScore", "N/A")
-              cert_date = data.get("CertificateIssuedDate", "N/A")
-              effort = data.get("Effort", "00:00")
+              username = data.get("username") or "N/A"
+              email = data.get("email") or "N/A"
+              enroll_date = data.get("EnrollmentDate")
+              first_interaction = data.get("FirstInteractionDate")
+              final_grade = data.get("FinalGradePercent") or 0
+              leaderboard_score = data.get("LeaderboardScore") or 0
+              cert_date = data.get("CertificateIssuedDate")
+              effort_str = data.get("Effort") or "00:00"
+
+              # Convert to seconds
+              effort_seconds = time_to_seconds(effort_str)
+              duration_seconds = 0
+              duration_str = "N/A"
+
+              if cert_date and first_interaction:
+                  duration = cert_date - first_interaction
+                  duration_seconds = int(duration.total_seconds())
+                  duration_str = str(duration)
+              
+              # Formulas
+              final_score_1000 = final_grade * 10  # multiply by 1000 (already *100)
+              leaderboard_1000 = leaderboard_score * 1000
+              duration_with_effort = 0
+              if duration_seconds > 0:
+                  duration_with_effort = (1000 * effort_seconds) / duration_seconds
+              
+              xp = (final_grade * 600) + (leaderboard_score * 300) + (100 * duration_with_effort)
             %>
+
             <tr>
               <td>${course_id}</td>
               <td>${username}</td>
               <td>${email}</td>
               <td>${enroll_date}</td>
               <td>${first_interaction}</td>
-              <td>${final_score}</td>
-              <td>${leaderboard_score}</td>
+              <td>${round(final_grade, 2)}</td>
+              <td>${round(leaderboard_score, 2)}</td>
               <td>${cert_date}</td>
-              <td>${effort}</td>
+              <td>${effort_str}</td>
+            </tr>
+
+            <tr class="xp-row">
+              <td colspan="9">
+                <div class="xp-subtable">
+                  <table style="width:100%; border:1px solid #999; margin-top:10px;">
+                    <thead>
+                      <tr>
+                        <th>Duration (HH:MM:SS)</th>
+                        <th>Time Spent (sec)</th>
+                        <th>Effort (sec)</th>
+                        <th>Final Score ×1000</th>
+                        <th>Leaderboard ×1000</th>
+                        <th>Duration w/ Effort</th>
+                        <th>XP</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>${duration_str}</td>
+                        <td>${duration_seconds}</td>
+                        <td>${effort_seconds}</td>
+                        <td>${final_score_1000}</td>
+                        <td>${leaderboard_1000}</td>
+                        <td>${round(duration_with_effort, 2)}</td>
+                        <td><b>${round(xp, 2)}</b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
             </tr>
           % endfor
         % else:
@@ -439,6 +498,7 @@ from django.db import connection
     </tbody>
   </table>
 </div>
+
 
 
         
