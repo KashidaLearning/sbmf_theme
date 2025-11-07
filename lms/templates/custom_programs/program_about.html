@@ -373,19 +373,25 @@ from datetime import datetime
                   WHERE CSM.student_id = AU.id
                   AND CSM.course_id = '{course_id}'
               ) AS FirstInteractionDate,
-              GPC.percent_grade * 100 AS FinalGradePercent,
-              LL.score AS LeaderboardScore,
-              CGC.created_date AS CertificateIssuedDate,
+              ROUND(GPC.percent_grade * 100, 2) AS FinalGradePercent,
+              (
+                  SELECT LL.score
+                  FROM leaderboard_leaderboard AS LL
+                  WHERE LL.user_id = AU.id
+                  AND LL.course_id = '{course_id}'
+                  LIMIT 1
+              ) AS LeaderboardScore,
+              (
+                  SELECT MIN(AUB.created)
+                  FROM achievements_userbadge AS AUB
+                  WHERE AUB.user_id = AU.id
+              ) AS CertificateIssuedDate,
               CO.effort AS Effort
           FROM auth_user AS AU
           JOIN student_courseenrollment AS SCE
               ON AU.id = SCE.user_id
           LEFT JOIN grades_persistentcoursegrade AS GPC
               ON AU.id = GPC.user_id AND SCE.course_id = GPC.course_id
-          LEFT JOIN leaderboard_leaderboard AS LL
-              ON AU.id = LL.user_id AND SCE.course_id = LL.course_id
-          LEFT JOIN certificates_generatedcertificate AS CGC
-              ON AU.id = CGC.user_id AND SCE.course_id = CGC.course_id
           LEFT JOIN course_overviews_courseoverview AS CO
               ON SCE.course_id = CO.id
           WHERE SCE.course_id = '{course_id}'
@@ -394,6 +400,7 @@ from datetime import datetime
           """
 
           def time_to_seconds(timestr):
+              """Convert HH:MM to total seconds."""
               if not timestr:
                   return 0
               try:
@@ -414,9 +421,8 @@ from datetime import datetime
           % for row in rows:
             <%
               data = dict(zip(columns, row))
-
-              username = data.get("username", "N/A")
-              email = data.get("email", "N/A")
+              username = data.get("username") or "N/A"
+              email = data.get("email") or "N/A"
               enroll_date = data.get("EnrollmentDate")
               first_interaction = data.get("FirstInteractionDate")
               final_grade = data.get("FinalGradePercent") or 0
@@ -424,6 +430,7 @@ from datetime import datetime
               cert_date = data.get("CertificateIssuedDate")
               effort_str = data.get("Effort") or "00:00"
 
+              # Convert to seconds
               effort_seconds = time_to_seconds(effort_str)
               duration_seconds = 0
               duration_str = "N/A"
@@ -433,9 +440,10 @@ from datetime import datetime
                   duration_seconds = int(duration.total_seconds())
                   duration_str = str(duration)
 
+              # Compute values
               final_score_1000 = final_grade * 10
               leaderboard_1000 = leaderboard_score * 1000
-              duration_with_effort = 1000 * (effort_seconds / duration_seconds) if duration_seconds > 0 else 0
+              duration_with_effort = (1000 * effort_seconds / duration_seconds) if duration_seconds > 0 else 0
               xp = (final_grade * 600) + (leaderboard_score * 300) + (100 * duration_with_effort)
             %>
 
@@ -460,8 +468,8 @@ from datetime import datetime
                         <th>Duration (HH:MM:SS)</th>
                         <th>Time Spent (sec)</th>
                         <th>Effort (sec)</th>
-                       <!--  <th>Final Score ×1000</th>
-                        <th>Leaderboard ×1000</th> -->
+                        <th>Final Score ×1000</th>
+                        <th>Leaderboard ×1000</th>
                         <th>Duration w/ Effort</th>
                         <th>XP</th>
                       </tr>
@@ -471,8 +479,8 @@ from datetime import datetime
                         <td>${duration_str}</td>
                         <td>${duration_seconds}</td>
                         <td>${effort_seconds}</td>
-                        <td>${round(final_score_1000, 2)}</td>
-                        <td>${round(leaderboard_1000, 2)}</td>
+                        <td>${final_score_1000}</td>
+                        <td>${leaderboard_1000}</td>
                         <td>${round(duration_with_effort, 2)}</td>
                         <td><b>${round(xp, 2)}</b></td>
                       </tr>
@@ -489,6 +497,7 @@ from datetime import datetime
     </tbody>
   </table>
 </div>
+
 
 
 
