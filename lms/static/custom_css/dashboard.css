@@ -1,160 +1,145 @@
-.program-subject img {
-    margin-left: 12px;
-    width: 24px;
-    height: 24px;
-    margin-top: -9px;
-}
- 
 .programs-section {
   background: linear-gradient(to bottom, #1A0E32 0%, #3A2F82 40%, #6C52B9 100%);  
   text-align: center;
   padding: 80px 0 120px;
   overflow-x: hidden;
 }
- 
- 
+
 .section-title {
-    color: #FFFFFF;
-    font-size: 64px;
-    font-weight: 800;
-    font-family: 'Cairo', sans-serif !important;
-    margin-bottom: 70px;
-    text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+  font-size: 48px;
+  color: #fff;
+  margin-bottom: 40px;
+  font-family: 'Cairo' !important;
+  font-weight: bold;
+}
+
+.program-courses h3, .user-badges-section h3 {
+  font-size: 32px;
+  color: #222;
+  margin-bottom: 32px;
+  font-family: 'Cairo' !important;
+  font-weight: bold;
 }
  
- 
-.programs-grid {
+.program-container {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-family: 'Cairo' !important;
+}
+
+.program-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #222;
+}
+
+.progress-bar {
+  background: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 10px;
+  width: 150px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.program-courses ul {
+  list-style: none;
+  padding: 0;
+  width: 500px;
+}
+
+.course-item {
+  margin-bottom: 12px;
+}
+
+.course-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.course-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.course-info {
+  font-family: 'Cairo' !important;  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+
+.separator {
+    height: 2px;
+    background-color: #ccc;
+    margin: 12px 0;
+}
+
+.user-badges-section {
+  margin: 40px 0;
+  padding: 20px;
+}
+
+.badge-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 60px;
-  max-width: 1300px;
-  margin: 0 auto;
+  gap: 20px;
 }
- 
- 
-.program-card {
-  width: 420px;
-  height: 560px;
-  position: relative;
-  border-radius: 26px;
-  overflow: hidden;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 15px 45px rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
- 
-.program-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(255,203,5,0.4);
-}
- 
- 
-.spline-bg {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
- 
-.spline-bg iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  object-fit: cover;
-}
- 
- 
-.progress-badge {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #110D7C;
-    font-size: 15px;
-    font-weight: 800;
-    padding: 5px 20px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-    min-width: 75px;
-    padding-top: 12px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
- 
- 
- 
- 
-.program-info {
-    position: absolute;
-    bottom: 25px;
-    width: 100%;
-    text-align: right;
-    padding-right: 10px;
-    font-family: 'Cairo', sans-serif !important;
-    z-index: 10;
-}
-.program-title {
-  color: #fff;
-    font-size: 46px;
-    font-weight: bold;
-    padding-left: 170px;
-    margin-bottom: 17px;
-    align-content: right;
-    font-family: 'Cairo', sans-serif !important;
 
+.badge-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+.badge-icon {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.badge-title {
+  font-weight: bold;
+  color: #333;
+}
+
+.badge-description {
+  font-size: 12px;
+  color: #666;
+}
+
+
  
-  
-.program-subject {
-    display: inline-block;
-    border-radius: 10px;
-    padding: 10px 40px 12px 50px;
-    margin-bottom: -6px;
-    padding-right: 25px;
-    color:  #110D7C;;
-    font-size: 16px;
-    font-family: 'Cairo', sans-serif !important;
-}
-  
-.program-subject:hover {
-  background: #3b36a5;
-}
- 
- 
-header.global-header {
-  background-color: #110D7C !important;
-}
-.wrapper.wrapper-footer {
-  background-color: #110D7C !important;
-}
- 
- 
-@media (max-width: 1200px) {
-  .program-card {
-    width: 45%;
-  }
-}
- 
-@media (max-width: 768px) {
-  .program-card {
-    width: 90%;
-    height: 480px;
-  }
-  .section-title {
-    font-size: 36px;
-  }
-  .program-title {
-    font-size: 22px;
-    
-  }
-}
- 
-header.global-header .header-logo a .logo {
-  height: 42px;
-}
-div#content {
-    padding: 0px !important;
-    margin: 0px !important;
-}
