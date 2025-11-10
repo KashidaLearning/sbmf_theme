@@ -461,7 +461,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
           if duration_seconds > 0:
               duration_with_effort = effort_seconds / duration_seconds
 
-      xp = (final_grade * 60) + (completion_percent * 30) + (1000 * duration_with_effort)
+      xp = (final_grade * 6) + (completion_percent * 3) + (100 * duration_with_effort)
       total_points += xp
 
       badges = UserBadge.get_my_course_badges(user, course.course.course_key)
@@ -480,7 +480,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   % endfor
 
   <%
-  total_badges_overall=total_badges*1000
+  total_badges_overall=total_badges*100
   rank_value = 0.5 * total_points +0.5* total_badges_overall
   display_rank = str(int(rank_value))
   %>
