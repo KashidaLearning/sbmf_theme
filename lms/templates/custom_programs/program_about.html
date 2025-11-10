@@ -481,7 +481,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
 
   <%
   total_badges_overall=total_badges*1000
-  rank_value = 0.2 * total_points * 0.8 * total_badges_overall
+  rank_value = 0.2 * total_points +0.8 * total_badges_overall
   display_rank = str(int(rank_value))
   %>
   <tr style="background:#4b2d7f;color:white;font-weight:bold;">
