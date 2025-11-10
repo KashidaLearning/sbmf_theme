@@ -98,6 +98,19 @@
   padding-bottom: 20px;
 }
 
+.course-status {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
 
 .separator {
     height: 2px;
