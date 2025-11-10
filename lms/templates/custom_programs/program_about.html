@@ -341,74 +341,57 @@
 from django.contrib.auth.models import User
 from django.db import connection
 from datetime import datetime
-from custom_programs.models import ProgramEnrollment
-from common.djangoapps.student.models import CourseEnrollment
 from achievements.models import UserBadge
 %>
 
-  <h3>Course Progress Details (Per User with Rank)</h3>
-  <table class="course-details-table">
-    <thead>
-      <tr>
-        <th>Course ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>First Interaction</th>
-        <th>Final Grade (%)</th>
-        <th>Completion (%)</th>
-        <th>Certificate Date</th>
-        <th>Effort (per week)</th>
-        <th>XP</th>
-      </tr>
-    </thead>
-    <tbody>
+<h3>Course Progress Details (Grouped by User)</h3>
+<table class="course-details-table">
+  <thead>
+    <tr>
+      <th>Course ID</th>
+      <th>Final Grade (%)</th>
+      <th>Completion (%)</th>
+      <th>First Interaction</th>
+      <th>Certificate Date</th>
+      <th>Effort (per week)</th>
+      <th>XP</th>
+    </tr>
+  </thead>
+  <tbody>
 
 <%
-# ------------------------------------------------
-# Collect enrolled users in this program
-# ------------------------------------------------
-try:
-    student_ids = ProgramEnrollment.objects.filter(
-        program=program, is_active=True
-    ).values_list("user_id", flat=True)
-except Exception:
-    student_ids = CourseEnrollment.objects.filter(
-        course_id__in=[str(c.course.course_key) for c in courses],
-        is_active=True
-    ).values_list("user_id", flat=True)
-
-enrolled_users = User.objects.filter(id__in=student_ids).distinct()
-total_courses = courses.count()
-
 def time_to_seconds(timestr):
-    """Convert HH:MM to total seconds."""
     if not timestr:
         return 0
     try:
-        parts = timestr.split(":")
-        h = int(parts[0]) if len(parts) > 0 else 0
-        m = int(parts[1]) if len(parts) > 1 else 0
+        h, m = map(int, timestr.split(":"))
         return h * 3600 + m * 60
-    except Exception:
+    except:
         return 0
 %>
 
-% for user in enrolled_users:
-  <tr>
-    <td colspan="9"><b>Username:</b> ${user.username} | <b>Email:</b> ${user.email}</td>
-  </tr>
 <%
-  total_user_xp = 0
-  total_user_badges = 0
+# Get all enrolled users across all program courses
+user_ids = []
+with connection.cursor() as cursor:
+    cursor.execute("SELECT DISTINCT user_id FROM student_courseenrollment WHERE is_active=1;")
+    user_ids = [row[0] for row in cursor.fetchall()]
 
-  for course in courses:
+users = User.objects.filter(id__in=user_ids).order_by("username")
+%>
+
+% for user in users:
+  <%
+  total_xp = 0
+  total_badges = 0
+  %>
+  <tr style="background:#3b247a;color:#fff;">
+    <td colspan="7"><b>Username:</b> ${user.username} | <b>Email:</b> ${user.email}</td>
+  </tr>
+
+  % for course in courses:
+      <%
       course_id = str(course.course.course_key)
-      # Count badges
-      badges = UserBadge.get_my_course_badges(user, course.course.course_key)
-      if badges:
-          total_user_badges += len(badges)
-
-      # Detailed query per course
       query = f"""
       WITH total_blocks AS (
           SELECT course_key, COUNT(DISTINCT block_key) AS total_blocks
@@ -422,33 +405,36 @@ def time_to_seconds(timestr):
           GROUP BY user_id, course_key
       )
       SELECT
-          GPC.percent_grade*100 AS final_grade,
+          GPC.percent_grade * 100 AS FinalGradePercent,
           ROUND(
               COALESCE(
-                  100.0*UC.completed_blocks/NULLIF(TB.total_blocks,0),
+                  100.0 * UC.completed_blocks / NULLIF(TB.total_blocks, 0),
                   0
-              ),2
-          ) AS completion_percent,
+              ), 2
+          ) AS CourseCompletionPercent,
           (
               SELECT MIN(CSM.created)
               FROM courseware_studentmodule AS CSM
               WHERE CSM.student_id = {user.id}
               AND CSM.course_id = '{course_id}'
-          ) AS first_interaction,
+          ) AS FirstInteractionDate,
           (
               SELECT MIN(CGC.created_date)
               FROM certificates_generatedcertificate AS CGC
               WHERE CGC.user_id = {user.id}
               AND CGC.course_id = '{course_id}'
-          ) AS cert_date,
-          CO.effort
+          ) AS CertificateIssuedDate,
+          CO.effort AS Effort
       FROM grades_persistentcoursegrade AS GPC
-      LEFT JOIN user_completion AS UC ON UC.user_id = {user.id} AND UC.course_key = '{course_id}'
-      LEFT JOIN total_blocks AS TB ON TB.course_key = '{course_id}'
-      LEFT JOIN course_overviews_courseoverview AS CO ON CO.id = '{course_id}'
-      WHERE GPC.user_id = {user.id}
-      AND GPC.course_id = '{course_id}'
+      LEFT JOIN user_completion AS UC
+          ON UC.user_id = {user.id} AND UC.course_key = '{course_id}'
+      LEFT JOIN total_blocks AS TB
+          ON TB.course_key = '{course_id}'
+      LEFT JOIN course_overviews_courseoverview AS CO
+          ON CO.id = '{course_id}'
+      WHERE GPC.user_id = {user.id} AND GPC.course_id = '{course_id}'
       """
+
       with connection.cursor() as cursor:
           cursor.execute(query)
           rows = cursor.fetchall()
@@ -457,53 +443,61 @@ def time_to_seconds(timestr):
       if not rows:
           continue
 
-      for row in rows:
-          data = dict(zip(cols, row))
-          final_grade = float(data.get("final_grade") or 0)
-          completion_percent = float(data.get("completion_percent") or 0)
-          first_interaction = data.get("first_interaction")
-          cert_date = data.get("cert_date")
-          effort_str = data.get("effort") or "00:00"
-          effort_seconds = time_to_seconds(effort_str)
-          duration_seconds = 0
-          duration_with_effort = 0
+      data = dict(zip(cols, rows[0]))
+      final_grade = float(data.get("FinalGradePercent") or 0)
+      completion_percent = float(data.get("CourseCompletionPercent") or 0)
+      first_interaction = data.get("FirstInteractionDate")
+      cert_date = data.get("CertificateIssuedDate")
+      effort_str = data.get("Effort") or "00:00"
 
-          if cert_date and first_interaction:
-              duration = cert_date - first_interaction
-              duration_seconds = int(duration.total_seconds())
-              if duration_seconds > 0:
-                  duration_with_effort = effort_seconds / duration_seconds
+      effort_seconds = time_to_seconds(effort_str)
+      duration_seconds = 0
+      duration_with_effort = 0
+      if cert_date and first_interaction:
+          duration = cert_date - first_interaction
+          duration_seconds = int(duration.total_seconds())
+          if duration_seconds > 0:
+              duration_with_effort = effort_seconds / duration_seconds
 
-          xp = (final_grade * 600) + (completion_percent * 300) + (100 * duration_with_effort)
-          total_user_xp += xp
-%>
-  <tr>
-    <td>${course_id}</td>
-    <td>${user.username}</td>
-    <td>${user.email}</td>
-    <td>${first_interaction}</td>
-    <td>${round(final_grade,2)}</td>
-    <td>${round(completion_percent,2)}</td>
-    <td>${cert_date}</td>
-    <td>${effort_str}</td>
-    <td><b>${round(xp,2)}</b></td>
-  </tr>
-<%  # end inner course loop
-  # After listing all user courses
-  rank_value = 200 * (total_user_xp) * 800 * (total_user_badges)
-%>
-  <tr >
-    <td colspan="9" style="text-align:center;">
-      <b>Total XP:</b> ${round(total_user_xp,2)} |
-      <b>Total Badges:</b> ${total_user_badges} |
-      <span style="color:#663399;">${round(rank_value,2)}</span>
+      xp = (final_grade * 600) + (completion_percent * 300) + (100 * duration_with_effort)
+      total_xp += xp
+
+      badges = UserBadge.get_my_course_badges(user, course.course.course_key)
+      if badges:
+          total_badges += len(badges)
+      %>
+      <tr>
+        <td>${course_id}</td>
+        <td>${round(final_grade,2)}</td>
+        <td>${round(completion_percent,2)}</td>
+        <td>${first_interaction}</td>
+        <td>${cert_date}</td>
+        <td>${effort_str}</td>
+        <td><b>${round(xp,2)}</b></td>
+      </tr>
+  % endfor
+
+  <%
+  rank_value = 200 * total_xp * 800 * total_badges
+  display_rank = str(int(rank_value))[:5]
+  %>
+  <tr style="background:#4b2d7f;color:white;font-weight:bold;">
+    <td colspan="7" style="text-align:center;">
+      <b>Total XP:</b> ${round(total_xp,2)} |
+      <b>Total Badges:</b> ${total_badges} |
+      <b>Rank:</b> <span style="color:#FFD700;">${display_rank}</span>
     </td>
   </tr>
+
 % endfor
 
-    </tbody>
-  </table>
+  </tbody>
+</table>
 </div>
+
+
+
+
 
 
 
