@@ -474,19 +474,19 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
         <td>${completion_percent}</td>
         <td>${duration_seconds}</td>
         <td>${effort_seconds}</td>
-        <td>${round(duration_with_effort,0)}</td>
-        <td><b>${round(xp,0)}</b></td>
+        <td>${round(duration_with_effort,2)}</td>
+        <td><b>${int(xp)}</b></td>
       </tr>
   % endfor
 
   <%
   total_badges_overall=total_badges*1000
-  rank_value = 0.2 * total_points +0.8 * total_badges_overall
+  rank_value = 0.5 * total_points +0.5* total_badges_overall
   display_rank = str(int(rank_value))
   %>
   <tr style="background:#4b2d7f;color:white;font-weight:bold;">
     <td colspan="7" style="text-align:center;">
-      <b>Total Points:</b> ${total_points} |
+      <b>Total Points:</b> ${int(total_points)} |
       <b>Total Badges:</b> ${total_badges} |
       <b>Rank:</b> <span style="color:#FFD700;">${display_rank}</span>
     </td>
