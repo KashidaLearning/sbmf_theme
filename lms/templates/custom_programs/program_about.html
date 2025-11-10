@@ -437,7 +437,6 @@ from datetime import datetime
               cert_date = data.get("CertificateIssuedDate")
               effort_str = data.get("Effort") or "00:00"
 
-              # Convert effort to seconds
               effort_seconds = time_to_seconds(effort_str)
               duration_seconds = 0
               duration_str = "N/A"
@@ -447,9 +446,8 @@ from datetime import datetime
                   duration_seconds = int(duration.total_seconds())
                   duration_str = str(duration)
 
-              # XP Formula Calculations
-              final_score_1000 = final_grade * 10       # final score × 1000
-              leaderboard_1000 = leaderboard_score * 1000
+              final_score_1000 = final_grade * 10       
+              leaderboard_1000 = leaderboard_score *10
               duration_with_effort = 1000 * (effort_seconds / duration_seconds) if duration_seconds > 0 else 0
               xp = (final_grade * 600) + (leaderboard_score * 300) + (100 * duration_with_effort)
             %>
@@ -475,8 +473,8 @@ from datetime import datetime
                         <th>Duration (Days HH:MM:SS)</th>
                         <th>Time Spent (sec)</th>
                         <th>Effort (sec)</th>
-                        <!-- <th>Final Score ×1000</th>
-                        <th>Leaderboard ×1000</th> -->
+<!--                          <th>Final Score ×1000</th>
+ -->                        <th>Leaderboard ×1000</th> 
                         <!-- <th>Duration w/ Effort</th> -->
                         <th>XP</th>
                       </tr>
@@ -486,10 +484,10 @@ from datetime import datetime
                         <td>${duration_str}</td>
                         <td>${duration_seconds}</td>
                         <td>${effort_seconds}</td>
-                        <td>${round(final_score_1000, 2)}</td>
-                        <td>${round(leaderboard_1000, 2)}</td>
-                        <td>${round(duration_with_effort, 2)}</td>
-                        <td><b>${round(xp, 2)}</b></td>
+<!--                         <td>${round(final_score_1000, 2)}</td>
+ -->                        <td>${round(leaderboard_1000, 2)}</td>
+<!--                         <td>${round(duration_with_effort, 2)}</td>
+ -->                        <td><b>${round(xp, 2)}</b></td>
                       </tr>
                     </tbody>
                   </table>
