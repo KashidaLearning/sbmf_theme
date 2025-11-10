@@ -5,6 +5,15 @@
   overflow-x: hidden;
 }
 
+.program-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.program-link:hover {
+    text-decoration: underline;
+}
+
 .section-title {
   font-size: 48px;
   color: #fff;
@@ -71,6 +80,16 @@
 
 .course-item {
   margin-bottom: 12px;
+}
+
+.courses-list .course-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.course-progress {
+    flex: 1;
 }
 
 .course-name {
