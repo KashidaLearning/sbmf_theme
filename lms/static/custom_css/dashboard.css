@@ -123,13 +123,45 @@
   align-items: center;
   gap: 0.25rem;
 }
-.fa-spinner {
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  100% { transform: rotate(360deg); }
+
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
 }
 
+.courses-table th, .courses-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.courses-table th {
+    background-color: #f4f4f4;
+}
+
+.progress-bar {
+    background-color: #e5e5e5;
+    height: 10px;
+    border-radius: 5px;
+    position: relative;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.progress-fill {
+    background-color: #4caf50;
+    height: 100%;
+    border-radius: 5px;
+    width: 0%;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
 
 .separator {
     height: 2px;
