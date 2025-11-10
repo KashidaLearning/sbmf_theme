@@ -344,16 +344,16 @@ from datetime import datetime
 from achievements.models import UserBadge
 %>
 
-<h3>Course Progress Details (Grouped by User)</h3>
+<h3>Course Progress Debug Table (Grouped by User)</h3>
 <table class="course-details-table">
   <thead>
     <tr>
       <th>Course ID</th>
-      <th>Final Grade (%)</th>
-      <th>Completion (%)</th>
-      <th>First Interaction</th>
-      <th>Certificate Date</th>
+      <th>Final Grade </th>
+      <th>Completion </th>
+      <th>Time Spent (seconds)</th>
       <th>Effort (per week)</th>
+      <th>Duration with Effort</th>
       <th>XP</th>
     </tr>
   </thead>
@@ -361,6 +361,7 @@ from achievements.models import UserBadge
 
 <%
 def time_to_seconds(timestr):
+    """Convert HH:MM to total seconds."""
     if not timestr:
         return 0
     try:
@@ -382,7 +383,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
 
 % for user in users:
   <%
-  total_xp = 0
+  total_points = 0
   total_badges = 0
   %>
   <tr style="background:#3b247a;color:#fff;">
@@ -452,15 +453,16 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
 
       effort_seconds = time_to_seconds(effort_str)
       duration_seconds = 0
-      duration_with_effort = 0
+      duration_with_effort = 0.0
+
       if cert_date and first_interaction:
           duration = cert_date - first_interaction
           duration_seconds = int(duration.total_seconds())
           if duration_seconds > 0:
               duration_with_effort = effort_seconds / duration_seconds
 
-      xp = (final_grade * 600) + (completion_percent * 300) + (100 * duration_with_effort)
-      total_xp += xp
+      xp = (final_grade * 60) + (completion_percent * 30) + (10 * duration_with_effort)
+      total_points += xp
 
       badges = UserBadge.get_my_course_badges(user, course.course.course_key)
       if badges:
@@ -468,22 +470,23 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
       %>
       <tr>
         <td>${course_id}</td>
-        <td>${round(final_grade,2)}</td>
-        <td>${round(completion_percent,2)}</td>
-        <td>${first_interaction}</td>
-        <td>${cert_date}</td>
+        <td>${final_grade}</td>
+        <td>${completion_percent}</td>
+        <td>${duration_seconds}</td>
         <td>${effort_str}</td>
-        <td><b>${round(xp,2)}</b></td>
+        <td>${duration_with_effort}</td>
+        <td><b>${xp}</b></td>
       </tr>
   % endfor
 
   <%
-  rank_value = 200 * total_xp * 800 * total_badges
-  display_rank = str(int(rank_value))[:5]
+  total_badges_overall=total_badges*1000
+  rank_value = 0.2 * total_points * 0.8 * total_badges_overall
+  display_rank = str(int(rank_value))
   %>
   <tr style="background:#4b2d7f;color:white;font-weight:bold;">
     <td colspan="7" style="text-align:center;">
-      <b>Total XP:</b> ${round(total_xp,2)} |
+      <b>Total Points:</b> ${total_points} |
       <b>Total Badges:</b> ${total_badges} |
       <b>Rank:</b> <span style="color:#FFD700;">${display_rank}</span>
     </td>
@@ -494,6 +497,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   </tbody>
 </table>
 </div>
+
 
 
 
