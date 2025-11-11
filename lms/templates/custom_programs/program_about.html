@@ -233,7 +233,7 @@
                     %>
                     <article class="card ${'locked' if is_locked else ''}">
                         % if is_active_or_in_progress:
-                            <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
+                            <a href="${course_link}" class="open-course-modal-link">
                                 <img src="${static.url('images/start-icon.png')}" alt="Start Course">
                             </a>
                         % endif
@@ -329,14 +329,67 @@
         </div>
     </div>
    --> 
-<div id="leaderboard-content" style="display: none;">
+<div id="leaderboard-content" style="display: none;"> 
   <div class="leaderboard">
     <div class="title-leaderboard">
       <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
       <h2>قائمة المتصدر</h2>
     </div>
     <br>
-<div class="course-evaluation-table">
+     <%
+            pre_courses = courses.filter(course_type__in=[
+                "pre_assessment", "Pre-assessment", "pre-assessment", "التقييم القبلي"
+            ])
+            challenge_courses = courses.filter(course_type__in=[
+                "challenge", "Challenges", "التحديات"
+            ])
+            assignment_courses = courses.filter(course_type__in=[
+                "assignment", "Assignment", "الواجب"
+            ])
+            post_courses = courses.filter(course_type__in=[
+                "post_assessment", "Post-assessment", "post-assessment", "التقييم النهائي"
+            ])
+
+            def is_completed(course):
+                badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
+                return bool(badges)
+
+            def is_locked_fn(course):
+                overview = CourseOverview.get_from_id(course.course.course_key)
+                return bool(courses_requirements_not_met.get(overview.id))
+
+          
+            pre_course = pre_courses.first()
+            pre_completed = pre_course and is_completed(pre_course)
+            pre_locked = pre_course and is_locked_fn(pre_course)
+
+            
+            total_challenges = challenge_courses.count()
+            completed_challenges = sum(1 for ch in challenge_courses if is_completed(ch))
+            in_progress_challenges = 0 < completed_challenges < total_challenges
+            progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
+
+           
+            assignment_course = assignment_courses.first()
+            assignment_completed = assignment_course and is_completed(assignment_course)
+            assignment_locked = assignment_course and is_locked_fn(assignment_course)
+
+            
+            post_course = post_courses.first()
+            post_completed = post_course and is_completed(post_course)
+            post_locked = post_course and is_locked_fn(post_course)
+        %>
+        <%
+        # Prevent NameError for undefined rank variables
+        user_rank = locals().get("user_rank", 0)
+        user_xp = locals().get("user_xp", 0)
+        remaining_xp = locals().get("remaining_xp", 0)
+        leaderboard_data = []
+        current_user_rank_points = 0
+        current_user_rank_progress = 0
+        current_user_progress = 0
+        %>
+
 <%!
 from django.contrib.auth.models import User
 from django.db import connection
@@ -344,22 +397,8 @@ from datetime import datetime
 from achievements.models import UserBadge
 %>
 
-<h3>Course Progress Debug Table (Grouped by User)</h3>
-<table class="course-details-table">
-  <thead>
-    <tr>
-      <th>Course ID</th>
-      <th>Final Grade </th>
-      <th>Completion </th>
-      <th>Time Spent (seconds)</th>
-      <th>Effort (per week)</th>
-      <th>Duration with Effort</th>
-      <th>XP</th>
-    </tr>
-  </thead>
-  <tbody>
-
 <%
+# Helper function
 def time_to_seconds(timestr):
     """Convert HH:MM to total seconds."""
     if not timestr:
@@ -386,10 +425,6 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   total_points = 0
   total_badges = 0
   %>
-  <tr style="background:#3b247a;color:#fff;">
-    <td colspan="7"><b>Username:</b> ${user.username} | <b>Email:</b> ${user.email}</td>
-  </tr>
-
   % for course in courses:
       <%
       course_id = str(course.course.course_key)
@@ -468,194 +503,158 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
       if badges:
           total_badges += len(badges)
       %>
-      <tr>
-        <td>${course_id}</td>
-        <td>${final_grade}</td>
-        <td>${completion_percent}</td>
-        <td>${duration_seconds}</td>
-        <td>${effort_seconds}</td>
-        <td>${round(duration_with_effort,2)}</td>
-        <td><b>${int(xp)}</b></td>
-      </tr>
   % endfor
 
   <%
-  total_badges_overall=total_badges*1000
-  rank_value = 0.5 * total_points +0.5* total_badges_overall
-  display_rank = str(int(rank_value))
-  %>
-  <tr style="background:#4b2d7f;color:white;font-weight:bold;">
-    <td colspan="7" style="text-align:center;">
-      <b>Total Points:</b> ${int(total_points)} |
-      <b>Total Badges:</b> ${total_badges} |
-      <b>Rank:</b> <span style="color:#FFD700;">${display_rank}</span>
-    </td>
-  </tr>
+  total_badges_overall = total_badges * 1000
+  rank_value = 0.5 * total_points + 0.5 * total_badges_overall
 
+  # ✅ Compute real program progress per user
+  completed_courses = sum(1 for c in courses if UserBadge.get_my_course_badges(user, c.course.course_key))
+  total_courses = len(courses)
+  user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
+
+  # Add to leaderboard
+  leaderboard_data.append({
+      'user': user,
+      'rank_points': rank_value,
+      'progress': user_program_progress,
+      'username': user.username,
+      'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username
+  })
+  %>
 % endfor
 
-  </tbody>
-</table>
+<%
+# 🔹 Sort all users by rank value
+sorted_leaderboard = sorted(leaderboard_data, key=lambda x: x['rank_points'], reverse=True)
+top_users_by_rank = sorted_leaderboard[:10]
+
+# ✅ Find current user's rank position and points
+current_user_id = request.user.id
+current_user_rank = 0
+current_user_rank_points = 0
+for index, data in enumerate(sorted_leaderboard, start=1):
+    if data['user'].id == current_user_id:
+        current_user_rank = index
+        current_user_rank_points = int(data['rank_points'])
+        current_user_progress = data['progress']
+        break
+%>
+
+<div class="leaderboard-header">
+    <div class="lh-left">
+        <ul class="eval-grid">
+            <li class="eval-item">
+                <span class="label">الواجب</span>
+                % if assignment_completed:
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                % elif assignment_locked:
+                <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                % else:
+                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                % endif
+            </li>
+            <li class="eval-item">
+                <span class="label">التقييم القبلي</span>
+                % if pre_completed:
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                % elif pre_locked:
+                <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                % else:
+                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                % endif
+            </li>
+            <li class="eval-item">
+                <span class="label">التقييم النهائي</span>
+                % if post_completed:
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                % elif post_locked:
+                <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                % else:
+                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                % endif
+            </li>
+            <li class="eval-item">
+                <span class="label">${completed_challenges}/${total_challenges}</span>
+                <span class="label">التحديات</span>
+                % if total_challenges == 0:
+                <span class="status-text">0/0</span>
+                % else:
+                % if completed_challenges == total_challenges:
+                    <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                % elif completed_challenges == 0:
+                    <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                % else:
+                    <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                % endif
+                
+
+            % endif
+            </li>
+        </ul>
+        % if user_is_enrolled:
+            <div class="lh-progress">
+                <div class="lh-progress-val">${current_user_progress}%</div> 
+                <div class="lh-progress-track">
+                    <div class="lh-progress-fill" style="width: ${current_user_progress}%"></div>
+                </div>
+            </div>
+            % endif
+
+    </div>
+    <div class="lh-divider"></div>
+    <div class="lh-right">
+        <div class="lh-rank-text">
+            <h2 class="lh-rank-title">مركزك الحالي: <span>المرتبة ${current_user_rank}</span></h2>
+            <p class="lh-p">نقاطك:   <b>XP ${current_user_rank_points}</b> </p>
+           
+        </div>
+        <div class="lh-avatar">
+            <img src="${static.url('images/image-profile.png')}">
+        </div>
+    </div>
 </div>
 
-
-
-
-
-
-
-
-    % if user_is_enrolled:
-      <div class="progress-block">
-        <div class="program_progress_block">
-          <div class="meter">
-            <span style="width: ${program_progress}%"></span>
-            <p>التقدم العام</p>
-          </div>
-          <div class="program_progress"><h4>${program_progress}%</h4></div>
-        </div>
-      </div> 
-    % endif
-    <br>
-
-    % if top_users:
-      % for index, user in enumerate(top_users, start=1):
-        <% 
-          color_class = (
-            "gold" if index == 1 else 
-            "silver" if index == 2 else 
-            "bronze" if index == 3 else 
-            "blue1" if index == 4 else 
-            "blue2"
-          )
-        %>
-        <div class="leaderboard-row ">
-          <div class="rank-icon">${index}</div>
-          <div class="icon">
-            <img src="${static.url('images/image-profile.png')}" alt="avatar">
-          </div>
-          <div class="row-right ${color_class}"> 
-            <div class="name pt0">${user.profile.name or user.username}</div>
-            <div class="pt1">عدد الشارات: ${user.badge_count}</div>
-          </div>
-          <div class="pt2">
-            <div class="progress-bar"> 
-              <div class="progress-fill" style="width: ${user.progress}%"></div>
-            </div>
-            <div class="xp"><h4>${user.progress}%</h4></div>
-          </div>
-        </div>
-      % endfor
-
-      <div class="evaluation-stages">
-            <%
-            pre_courses = courses.filter(course_type__in=[
-                "pre_assessment", "Pre-assessment", "pre-assessment", "التقييم القبلي"
-            ])
-            challenge_courses = courses.filter(course_type__in=[
-                "challenge", "Challenges", "التحديات"
-            ])
-            assignment_courses = courses.filter(course_type__in=[
-                "assignment", "Assignment", "الواجب"
-            ])
-            post_courses = courses.filter(course_type__in=[
-                "post_assessment", "Post-assessment", "post-assessment", "التقييم النهائي"
-            ])
-
-            def is_completed(course):
-                badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
-                return bool(badges)
-
-            def is_locked_fn(course):
-                overview = CourseOverview.get_from_id(course.course.course_key)
-                return bool(courses_requirements_not_met.get(overview.id))
-
-          
-            pre_course = pre_courses.first()
-            pre_completed = pre_course and is_completed(pre_course)
-            pre_locked = pre_course and is_locked_fn(pre_course)
-
-            
-            total_challenges = challenge_courses.count()
-            completed_challenges = sum(1 for ch in challenge_courses if is_completed(ch))
-            in_progress_challenges = 0 < completed_challenges < total_challenges
-            progress_percent = int((completed_challenges / total_challenges) * 100) if total_challenges > 0 else 0
-
-           
-            assignment_course = assignment_courses.first()
-            assignment_completed = assignment_course and is_completed(assignment_course)
-            assignment_locked = assignment_course and is_locked_fn(assignment_course)
-
-            
-            post_course = post_courses.first()
-            post_completed = post_course and is_completed(post_course)
-            post_locked = post_course and is_locked_fn(post_course)
-            %>
-
-
-        <ul class="evaluation-list">
-          <li>
-            <span class="label">التقييم القبلي</span>
-            % if pre_completed:
-              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
-            % elif pre_locked:
-              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
-            % else:
-              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
-            % endif
-          </li>
-
-          <li>
-            <span class="label">التحديات</span>
-            % if total_challenges == 0:
-              <span class="status-text">0/0</span>
-            % else:
-              % if completed_challenges == total_challenges:
-                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
-              % elif completed_challenges == 0:
-                <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
-              % else:
-                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
-              % endif
-              <span class="status-text">${completed_challenges}/${total_challenges}</span>
-            % endif
-          </li>
-
-          <li>
-            <span class="label">الواجب</span>
-            % if assignment_completed:
-              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
-            % elif assignment_locked:
-              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
-            % else:
-              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
-            % endif
-          </li>
-
-          <li>
-            <span class="label">التقييم النهائي</span>
-            % if post_completed:
-              <img src="${static.url('images/tick-icon.png')}" alt="تم" class="status-icon">
-            % elif post_locked:
-              <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="status-icon">
-            % else:
-              <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="status-icon">
-            % endif
-          </li>
-        </ul>
-
-        <div class="progress-container">
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${program_progress}%"></div>
-          </div>
-          <div class="progress-text">${program_progress}%</div>
-        </div>
+% if top_users_by_rank:
+  % for index, user_data in enumerate(top_users_by_rank, start=1):
+    <%
+    color_class = (
+      "gold" if index == 1 else 
+      "silver" if index == 2 else 
+      "bronze" if index == 3 else 
+      "blue1" if index == 4 else 
+      "blue2"
+    )
+    %>
+    <div class="leaderboard-row">
+      <div class="rank-icon">${index}</div>
+      <div class="icon">
+        <img src="${static.url('images/image-profile.png')}" alt="avatar">
       </div>
-    % else:
-      <p class="no-badge">${_("No users have earned badges yet.")}</p>
-    % endif
+      <div class="row-right ${color_class}"> 
+        <div class="name pt0">${user_data['name'] or user_data['username']}</div>
+        <div class="pt2">
+        <div class="progress-bar"> 
+          <div class="progress-fill" style="width: ${user_data['progress']}%"></div>
+        </div>
+        <div class="xp"><h4></h4></div>
+      </div>
+        <div class="pt1">XP <b>${int(user_data['rank_points'])}</b></div>
+
+      </div>
+ 
+    </div>
+  % endfor
+% else:
+  <p class="no-badge">${_("No users have earned badges yet.")}</p>
+% endif
   </div>
 </div>
+
+
+
+
 
    <div id="my-badges-content" style="display: none;">
         <div class="title-badgescontent">
