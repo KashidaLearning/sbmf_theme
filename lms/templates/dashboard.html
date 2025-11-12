@@ -170,14 +170,8 @@ cert_name_long = settings.CERT_NAME_LONG
             <a href="/programs/${program.id}" class="program-link">${program.name}</a>
         </h2>
     <%
-completed_courses = 0
-for c in program_courses_qs:
-  course_obj = c.course
-  if course_obj:
-    if UserBadge.get_my_course_badges(request.user, course_obj.course_key):
-      completed_courses += 1
-
-total_courses = len(program_courses_qs)
+completed_courses = sum(1 for c in courses if UserBadge.get_my_course_badges(user, c.course.course_key))
+total_courses = len(courses)
 user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
 %>
 
