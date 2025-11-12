@@ -169,13 +169,13 @@ cert_name_long = settings.CERT_NAME_LONG
         <h2 class="program-title">
             <a href="/programs/${program.id}" class="program-link">${program.name}</a>
         </h2>
-
-    <%  # Calculate how many courses completed vs total  %>
     <%
-    completed_courses = sum(1 for c in course_progress_list if c['progress'] == 100)
-    total_courses = len(course_progress_list)
-    %>
-
+completed_courses = 0
+for c in course_progress_list:
+    if c['progress'] == 100:
+        completed_courses += 1
+total_courses = len(course_progress_list)
+%>
 
       <div class="program-progress">
     <span>
