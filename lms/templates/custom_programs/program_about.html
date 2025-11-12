@@ -101,6 +101,29 @@
     object-fit: contain;
 }
 </style>
+% if program.css_color:
+    <style>
+        .program-about {
+            background: ${program.css_color};
+        }
+    </style>
+% endif
+<%
+    program_background_images = program.program_background_images.all()
+    top_left_background_image = None
+    top_right_background_image = None
+    bottom_left_background_image = None
+    bottom_right_background_image = None
+    for background_image in program_background_images:
+        if background_image.position == "top-left":
+            top_left_background_image = background_image.image.url
+        elif background_image.position == "top-right":
+            top_right_background_image = background_image.image.url
+        elif background_image.position == "bottom-left":
+            bottom_left_background_image = background_image.image.url
+        elif background_image.position == "bottom-right":
+            bottom_right_background_image = background_image.image.url
+%>
 <div class="program-about">
     <div class="container">
         <section class="hero">
@@ -664,6 +687,11 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         <br>    
          <div class="badge-grid">
             % for badge in my_badges:
+                <%      
+                    badge_placeholder_icon = ""          
+                    if badge.badge.placeholder_icon:
+                        badge_placeholder_icon = badge.badge.placeholder_icon.url
+                %>
                 <div class="badge-item">
                     <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
                  <!--<p>${badge.badge.title}</p>-->   
