@@ -171,10 +171,15 @@ cert_name_long = settings.CERT_NAME_LONG
         </h2>
     <%
 completed_courses = 0
-for c in course_progress_list:
-    if c['progress'] == 100:
-        completed_courses += 1
-total_courses = len(course_progress_list)
+for c in program_courses_qs:
+  course_obj = c.course
+  if course_obj:
+    if UserBadge.get_my_course_badges(request.user, course_obj.course_key):
+      completed_courses += 1
+
+total_courses = len(program_courses_qs)
+user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
+        %>
 %>
 
       <div class="program-progress">
