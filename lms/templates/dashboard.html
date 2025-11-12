@@ -169,12 +169,24 @@ cert_name_long = settings.CERT_NAME_LONG
         <h2 class="program-title">
             <a href="/programs/${program.id}" class="program-link">${program.name}</a>
         </h2>
-        <div class="program-progress">
-            <span>تقدم الرحلة: ${program.progress}%</span>
-            <div class="progress-bar" style="--progress-value:${program.progress}%;">
-                <div class="progress-fill" style="width:${program.progress}%;"></div>
-            </div>
-        </div>
+
+    <%  # Calculate how many courses completed vs total  %>
+    <%
+    completed_courses = sum(1 for c in course_progress_list if c['progress'] == 100)
+    total_courses = len(course_progress_list)
+    %>
+
+
+      <div class="program-progress">
+    <span>
+        تقدم الرحلة:
+        % if total_courses > 0:
+            ${completed_courses} من ${total_courses} تحدي مكتمل
+        % else:
+            لا توجد تحديات في هذه الرحلة بعد.
+        % endif
+    </span>
+</div>
     </div>
 
     <div class="separator"></div>
@@ -227,11 +239,6 @@ cert_name_long = settings.CERT_NAME_LONG
     % endif
 
     <div class="separator"></div>
-</div>
-
-
-
-   <div class="separator"></div>
 
 <!--
 <%

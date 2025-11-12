@@ -206,4 +206,10 @@
 }
 
 
+.courses-table th:nth-child(2),
+.courses-table td:nth-child(2) {
+    display: none !important;
+}
+
+
  
