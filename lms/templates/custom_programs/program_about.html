@@ -102,6 +102,29 @@
 }
 </style>
 <div class="program-about">
+    <%
+
+    def _course_completed_for(user, course_obj):
+        try:
+            # course_obj.course.course_key متوفّرة عندك حسب الكود
+            return bool(UserBadge.get_my_course_badges(user, course_obj.course.course_key))
+        except:
+            return False
+
+    try:
+        _total_courses = len(courses)
+    except Exception:
+        _total_courses = courses.count() if hasattr(courses, "count") else 0
+
+    _completed_courses = 0
+    if _total_courses:
+        for _c in courses:
+            if _course_completed_for(request.user, _c):
+                _completed_courses += 1
+
+    current_user_progress = int((_completed_courses / _total_courses) * 100) if _total_courses else 0
+    %>
+
     <div class="container">
         <section class="hero">
             <div class="row">
@@ -139,6 +162,7 @@
 
     </div>
         </section>
+
     <!-- This will be the rightmost column (Column 1) -->
    
         % if user_is_enrolled:
@@ -165,7 +189,14 @@
             </div>
         </div>
         % endif
-        
+        % if user_is_enrolled:
+            <div class="lh-progress-out">
+                <div class="lh-progress-val-out">${current_user_progress}%</div> 
+                <div class="lh-progress-track-out">
+                    <div class="lh-progress-fill-out" style="width: ${current_user_progress}% "></div>
+                </div>
+            </div>
+            % endif
         <div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 70px;">
         <%
             first_course = courses.filter(order=1, display_layout="horizontal").first()
