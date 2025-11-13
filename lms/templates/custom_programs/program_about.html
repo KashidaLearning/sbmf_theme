@@ -805,7 +805,12 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (!popupOverlay) return;
                 popupOverlay.classList.remove('visible');
                 document.body.style.overflow = '';
-                 refreshBadges("${program.id}");
+                 <text>
+                        refreshBadges("${program.id}");
+                    </text>
+
+
+
 
 
             }
@@ -873,7 +878,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-                 refreshBadges("${program.id}");
+                    <text>
+                        refreshBadges("${program.id}");
+                    </text>
 
 
             });
@@ -882,7 +889,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
-                     refreshBadges("${program.id}");
+                    <text>
+                        refreshBadges("${program.id}");
+                    </text>
 
 
                 }
