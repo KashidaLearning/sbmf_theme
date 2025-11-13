@@ -145,6 +145,13 @@
                 _completed_courses += 1
 
     current_user_progress = int((_completed_courses / _total_courses) * 100) if _total_courses else 0
+    try:
+    # Fetch all badges earned by the current user, newest first
+    my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
+    except Exception:
+        # Fallback in case of any unexpected error
+        my_badges = []
+
     %>
 
     <div class="container">
@@ -459,7 +466,6 @@ from achievements.models import UserBadge
 %>
 
 <%
-# Helper function
 def time_to_seconds(timestr):
     """Convert HH:MM to total seconds."""
     if not timestr:
@@ -472,7 +478,6 @@ def time_to_seconds(timestr):
 %>
 
 <%
-# Get all enrolled users across all program courses
 user_ids = []
 with connection.cursor() as cursor:
     cursor.execute("SELECT DISTINCT user_id FROM student_courseenrollment WHERE is_active=1;")
