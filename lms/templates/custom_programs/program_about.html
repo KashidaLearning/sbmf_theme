@@ -244,17 +244,20 @@
                     course_link = start_block['lms_web_url']
                     button_text = " باشر بالتحدي!"
             %>
-            <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1">
+            <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1" data-course-id="${first_course.course.course_key}">
                 % if is_active_or_in_progress:
                     <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
                         <img src="${static.url('images/start-icon.png')}" alt="Start Course">
                     </a>
                 % endif
+            <div class="badge-icon-container">
+
                 % if course_badges:
                     % for badge in course_badges:
                         <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
                     % endfor
                 % endif
+            </div>
                 <div class="title">${overview.display_name_with_default}</div>
                 <div class="pill">
                     <a href="${course_link}" class="open-course-modal-link">${button_text}</a>
@@ -285,17 +288,20 @@
                             course_link = start_block['lms_web_url']
                             button_text = " باشر بالتحدي!"
                     %>
-                    <article class="card ${'locked' if is_locked else ''}">
+                    <article class="card ${'locked' if is_locked else ''}" data-course-id="${course.course.course_key}">
                         % if is_active_or_in_progress:
                             <a href="${course_link}" class="open-course-modal-link">
                                 <img src="${static.url('images/start-icon.png')}" alt="Start Course">
                             </a>
                         % endif
+                    <div class="badge-icon-container">
+
                         % if course_badges:
                             % for badge in course_badges:
                                 <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
                             % endfor
                         % endif
+                </div>
                         <div class="sub">${overview.display_name_with_default}</div>
                         <div class="dark-sub">${overview.short_description}</div>
                         <div class="course-thumbnail">
@@ -331,17 +337,20 @@
                         course_link = start_block['lms_web_url']
                         button_text = "باشر بالتحدي! "
                 %>
-                <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}">
+                <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}" data-course-id="${course.course.course_key}">
                    % if is_active_or_in_progress:
                         <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
                             <img src="${static.url('images/start-icon.png')}" alt="Start Course">
                         </a>
                     % endif
+                  <div class="badge-icon-container">
+
                     % if course_badges:
                         % for badge in course_badges:
                             <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
                         % endfor
                     % endif
+                </div>
                     <span class="title">${overview.display_name_with_default}</span>
                     <span class="pill">
                         <a href="${course_link}" class="open-course-modal-link">${button_text}</a>
@@ -796,7 +805,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (!popupOverlay) return;
                 popupOverlay.classList.remove('visible');
                 document.body.style.overflow = '';
-                 window.location.reload();
+                 refreshBadges("${program.id}");
+
 
             }
            
@@ -863,7 +873,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-                 window.location.reload();
+                 refreshBadges("${program.id}");
+
 
             });
             // Optional: Close modal when clicking outside modal content
@@ -871,7 +882,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
-                     window.location.reload();
+                     refreshBadges("${program.id}");
+
 
                 }
             });
@@ -903,6 +915,27 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         }
     });
 });
+function refreshBadges(programId) {
+    $.get(`/programs/${programId}/refresh_badges/`, function (data) {
+        data.badges.forEach(function (course) {
+            const courseId = course.course_id;
+            const card = document.querySelector(`[data-course-id="${courseId}"]`);
+            if (!card) return;
+
+            const badgeContainer = card.querySelector('.badge-icon-container');
+            if (badgeContainer) badgeContainer.innerHTML = '';
+
+            course.badges.forEach(function (badge) {
+                const img = document.createElement('img');
+                img.src = badge.icon;
+                img.alt = badge.title;
+                img.className = 'badge-icon';
+                if (badgeContainer) badgeContainer.appendChild(img);
+            });
+        });
+    });
+}
+
     </script>
 
 
