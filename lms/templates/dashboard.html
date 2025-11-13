@@ -169,12 +169,25 @@ cert_name_long = settings.CERT_NAME_LONG
         <h2 class="program-title">
             <a href="/programs/${program.id}" class="program-link">${program.name}</a>
         </h2>
-        <div class="program-progress">
-            <span>تقدم الرحلة: ${program.progress}%</span>
-            <div class="progress-bar" style="--progress-value:${program.progress}%;">
-                <div class="progress-fill" style="width:${program.progress}%;"></div>
-            </div>
-        </div>
+<%
+completed_courses = sum(
+    1 for c in program_courses_qs 
+    if c.course and UserBadge.get_my_course_badges(request.user, c.course.course_key)
+)
+total_courses = len(program_courses_qs)
+user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
+%>
+
+      <div class="program-progress">
+    <span>
+        تقدم الرحلة:
+        % if total_courses > 0:
+            ${completed_courses} من ${total_courses} تحدي مكتمل
+        % else:
+            لا توجد تحديات في هذه الرحلة بعد.
+        % endif
+    </span>
+</div>
     </div>
 
     <div class="separator"></div>
@@ -227,11 +240,6 @@ cert_name_long = settings.CERT_NAME_LONG
     % endif
 
     <div class="separator"></div>
-</div>
-
-
-
-   <div class="separator"></div>
 
 <!--
 <%
