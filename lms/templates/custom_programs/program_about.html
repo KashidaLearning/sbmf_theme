@@ -146,8 +146,8 @@
 
     current_user_progress = int((_completed_courses / _total_courses) * 100) if _total_courses else 0
     try:
-    # Fetch all badges earned by the current user, newest first
-    my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
+        # Fetch all badges earned by the current user, newest first
+        my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
     except Exception:
         # Fallback in case of any unexpected error
         my_badges = []
