@@ -196,11 +196,11 @@
    
         % if user_is_enrolled:
         <div class="purple-icon-row">
-            <div class="icon-item" id="my-badges" role="button" tabindex="0">
+            <div class="icon-item" id="control" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/badges-icon.png')}" alt="لوحةالتحكم">
                 </div>
-                <p> لوحةالتحكم</p>
+                <p> لوحة التحكم</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0">
                 <div class="icon-circle">
@@ -722,6 +722,32 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
 
+<div id="control-content" style="display: none;">
+    <div class="control-title">
+        <img src="${static.url('images/control-popup.png')}" alt="img">
+        <h2>لوحة التحكم</h2>
+    </div>
+
+    <div class="control-body">
+
+        <div class="control-section">
+            <h3>التحديات</h3>
+            <ul>
+                <li>اختبارات تقييم للتحدي</li>
+                <li>يجب إكمال جميع المستويات لإجتياز التحدي</li>
+            </ul>
+        </div>
+
+        <div class="control-section">
+            <h3>التقييمات والواجبات</h3>
+            <ul>
+                <li>حل التقييمات يساعدنا على قياس مهاراتك قبل التحدي</li>
+                <li>حلّ الواجبات المطلوبة للحصول على شارة الإنجاز</li>
+                <li>استمر بالتقدم لتحصل على نقاط أكثر وارتقِ في الترتيب</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 
    <div id="my-badges-content" style="display: none;">
@@ -780,6 +806,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             var leaderboardDiv = document.getElementById('leaderboard');
             var myBadgesDiv = document.getElementById('my-badges');
             var certificateDiv = document.getElementById('certificate');
+            var controlDiv = document.getElementById('control');
 
             // Get references to the popup elements
             var popupOverlay = document.getElementById('global-popup-overlay');
@@ -842,6 +869,13 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             if (certificateDiv) {
                 certificateDiv.addEventListener('click', function () {
                     showPopup('شهادتي', certificateHTML);
+                });
+            }
+            var controlHTML = document.getElementById('control-content').innerHTML;
+
+            if (controlDiv) {
+                controlDiv.addEventListener('click', function () {
+                    showPopup('لوحة التحكم', controlHTML);
                 });
             }
 
