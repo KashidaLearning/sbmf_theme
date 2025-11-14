@@ -1383,33 +1383,100 @@ flex: unset !important;
     color: #fff;
 }
 
-/* HEADER GAME CONTROLLER IMAGE */
+/* --- HEADER GAME CONTROLLER IMAGE --- */
 .control-header {
+    /* Use position: relative for context or simply rely on text-align to center */
     text-align: center;
-    margin-top: -73px;
+    position: relative; 
+    /* Pull the subsequent content up so it starts near the controller */
+    margin-bottom: -40px; 
+    z-index: 10; /* Ensure the image is above all other content */
 }
 
 .controller-header-img {
     width: 350px;
     filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
-    padding-right: 600px;
+    
+    /* Center the image and pull it up to create the overlapping effect */
+    display: block;
+    margin: -100px auto 0; /* Adjust vertical placement. -100px moves it up. */
+    padding: 0; /* Remove unnecessary fixed padding */
 }
 
-/* EACH ROW: IMAGE RIGHT + TEXT LEFT */
+/* --- TOP TABS (CERTIFICATES, BADGES, etc.) --- */
+.control-tabs {
+    display: flex;
+    gap: 18px;
+    
+    /* Position tabs absolutely at the top right of the popup */
+    position: absolute;
+    top: 30px; /* Distance from top of the popup */
+    right: 30px; /* Distance from right of the popup (RTL) */
+    
+    /* Override initial large fixed margins/paddings */
+    margin: 0;
+    padding: 0;
+    
+    z-index: 20; /* Ensure tabs are above the controller image and background */
+    direction: rtl; /* Necessary to align the tabs to the right in sequence */
+}
+
+.control-tabs .tab-item {
+    font-size: 18px;
+    color: #dcdcec;
+    background: rgba(255,255,255,0.08);
+    padding: 10px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    backdrop-filter: blur(10px);
+}
+
+.control-tabs .tab-item.active {
+    background: rgba(255,255,255,0.25);
+    font-weight: 700;
+    color: #fff;
+}
+
+/* --- CONTROL CONTENT SECTIONS WRAPPER --- */
+/* Add a new wrapper or padding to the content area to start below the header */
+.control-sections {
+    /* Create space for the controller and tabs which are positioned above */
+    padding-top: 100px; 
+    padding-bottom: 20px;
+    max-width: 800px; /* Optional: Constrain width for readability */
+    margin: 0 auto;
+    direction: rtl;
+}
+
+/* --- EACH ROW: IMAGE RIGHT + TEXT LEFT --- */
 .control-row {
     display: flex;
+    /* In RTL, the image should appear on the left and text on the right */
+    flex-direction: row-reverse; 
     align-items: flex-start;
-    gap: 25px;
+    gap: 40px; /* Increase gap for more separation as seen in the image */
     margin-bottom: 40px;
 }
 
-/* Right-side image */
+/* Image container (Right-side in the RTL flow) */
+.control-image {
+    flex-shrink: 0; /* Prevent image from shrinking */
+    padding-top: 10px; /* Slight offset to align the image block */
+}
+
 .control-image img {
-    width: 140px;
+    /* Keep width, but the original image shows different sizes/perspectives */
+    width: 140px; 
     filter: drop-shadow(0 8px 25px rgba(0,0,0,0.25));
 }
 
-/* Left-side text */
+/* Text container (Left-side in the RTL flow) */
+.control-text {
+    flex-grow: 1;
+    text-align: right; /* Ensure block text aligns right (RTL default) */
+}
+
 .control-text h3 {
     font-size: 24px;
     font-weight: 700;
@@ -1419,19 +1486,16 @@ flex: unset !important;
 
 .control-text ul {
     margin: 0;
-    padding-right: 20px;
+    /* In RTL, padding-right is the standard padding/indentation */
+    padding-right: 20px; 
     line-height: 1.9;
+    list-style-type: none; /* Remove default bullet points if you are using custom ones or none at all */
 }
 
 .control-text ul li {
     color: #d9d9e9;
     font-size: 17px;
-}
-
-/* Popup glass style */
-#global-popup-overlay .popup-content {
-    background: rgba(255,255,255,0.08) !important;
-    backdrop-filter: blur(22px) !important;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 20px;
+    /* If you need custom bullets (as implied by the original list style in the HTML), 
+       you'd add position: relative and use the ::before pseudo-element here. 
+       For now, we'll keep the list-style-type default or explicitly none. */
 }
