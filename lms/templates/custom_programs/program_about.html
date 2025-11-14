@@ -196,31 +196,36 @@
    
         % if user_is_enrolled:
         <div class="purple-icon-row">
-            <div class="icon-item" id="leaderboard" role="button" tabindex="0">
+            <div class="icon-item" id="my-badges" role="button" tabindex="0">
                 <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon.png')}" alt="قائمة التصدر">
+                    <img src="${static.url('images/badges-icon.png')}" alt="لوحةالتحكم">
                 </div>
-                <p>قائمة التصدر</p>
+                <p> لوحةالتحكم</p>
             </div>
-
             <div class="icon-item" id="my-badges" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/badges-icon.png')}" alt="شاراتي">
                 </div>
-                <p>أدوات الاستمرارية</p>
+                <p> شاراتي</p>
             </div>
 
-            <div class="icon-item" id="certificate" role="button" tabindex="0">
+           <!--  <div class="icon-item" id="certificate" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
                 </div>
                 <p>شهاداتي</p>
+            </div> -->
+             <div class="icon-item" id="leaderboard" role="button" tabindex="0">
+                <div class="icon-circle">
+                    <img src="${static.url('images/leaderboard-icon.png')}" alt="لوحة الصدارة">
+                </div>
+                <p> لوحة الصدارة</p>
             </div>
         </div>
         % endif
         % if user_is_enrolled:
             <div class="lh-progress-out">
-                <div class="lh-progress-val-out">${current_user_progress}%</div> 
+                <div class="lh-progress-val-out"></div> 
                 <div class="lh-progress-track-out">
                     <div class="lh-progress-fill-out" style="width: ${current_user_progress}% "></div>
                 </div>
