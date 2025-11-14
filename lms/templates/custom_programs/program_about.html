@@ -196,26 +196,26 @@
    
         % if user_is_enrolled:
         <div class="purple-icon-row">
-            <div class="icon-item" id="control" role="button" tabindex="0">
+            <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
                 <div class="icon-circle">
                     <img src="${static.url('images/law7atta7akom.png')}" alt="لوحةالتحكم">
                 </div>
                 <p> لوحة التحكم</p>
             </div>
-            <div class="icon-item" id="my-badges" role="button" tabindex="0">
+            <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/sharati.png')}" alt="شاراتي">
+                    <img src="${static.url('images/sharati.png')}" alt="شاراتي" >
                 </div>
                 <p> شاراتي</p>
             </div>
 
-            <div class="icon-item" id="certificate" role="button" tabindex="0">
+            <div class="icon-item" id="certificate" role="button" tabindex="0" data-target="certificate-content">
                 <div class="icon-circle">
                     <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
                 </div>
                 <p>شهاداتي</p>
             </div> 
-             <div class="icon-item" id="leaderboard" role="button" tabindex="0">
+             <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
                 <div class="icon-circle">
                     <img src="${static.url('images/leaderboard-icon.png')}" alt="لوحة الصدارة">
                 </div>
@@ -1008,7 +1008,97 @@ document.querySelectorAll(".control-tabs .tab-item").forEach(tab => {
         }
     });
 });
+$(function() {
+            var $popupOverlay = $('#global-popup-overlay');
+            var $popupTitle = $('#popup-title');
+            var $popupContentArea = $('#popup-dynamic-content');
+            var $closeButton = $popupOverlay.find('.close-button');
 
+            // --- Function to switch content inside the popup ---
+            function activateTab(tabTargetId, isInitialOpen) {
+                // 1. Hide all content and remove 'active' from all content
+                $popupContentArea.children('div').removeClass('active');
+                
+                // 2. Show the target content and add 'active'
+                $('#' + tabTargetId).addClass('active').appendTo($popupContentArea);
+
+                // 3. Update the internal tabs' active state
+                // Note: Only select tabs INSIDE the currently active content
+                // For example, the .control-tabs are only in #control-content, but we want to 
+                // re-use them for all tabs. Let's make the tabs dynamic/global.
+                
+                // If the user clicked an external icon, the first tab is active by default.
+                // If the user clicked an internal tab, we need to update the tab bar.
+                if (!isInitialOpen) {
+                    $('.control-tabs .tab-item').removeClass('active');
+                    $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').addClass('active');
+                    
+                    // Also update the popup title to match the new tab (optional)
+                    var newTitle = $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').text().trim();
+                    $popupTitle.text(newTitle);
+                }
+                
+                // For the initial open, the title is already set by the click handler below.
+                if (isInitialOpen) {
+                    // When initially opening, make the corresponding internal tab active
+                    $('.control-tabs .tab-item').removeClass('active');
+                    $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').addClass('active');
+                }
+            }
+
+
+            // --- 1. Handle Clicks on External Purple Icons (To OPEN Popup) ---
+            $('.purple-icon-row .icon-item').on('click keypress', function(e) {
+                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
+                    var targetContentId = $(this).data('target');
+                    var iconName = $(this).find('p').text().trim(); // Get the icon's text for the title
+                    
+                    // Move all hidden content DIVs into the popup content area
+                    // This is important because the internal tabs will target these elements
+                    $('#control-content, #my-badges-content, #leaderboard-content, #certificate-content').appendTo($popupContentArea);
+
+                    // Set Popup Title
+                    $popupTitle.text(iconName);
+
+                    // Activate the corresponding tab content
+                    activateTab(targetContentId, true); 
+
+                    // Show the popup
+                    $popupOverlay.addClass('active');
+                    $('body').css('overflow', 'hidden'); // Prevent background scrolling
+                }
+            });
+
+
+            // --- 2. Handle Clicks on Internal Popup Tabs (To SWITCH Tabs) ---
+            // These tabs exist inside #control-content, but they will switch the main content.
+            $popupContentArea.on('click keypress', '.control-tabs .tab-item', function(e) {
+                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
+                    var targetContentId = $(this).data('target');
+                    
+                    // Activate the new tab content
+                    activateTab(targetContentId, false);
+                }
+            });
+
+
+            // --- 3. Handle Closing the Popup ---
+            $closeButton.on('click keypress', function(e) {
+                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
+                    $popupOverlay.removeClass('active');
+                    $('body').css('overflow', 'auto'); // Restore background scrolling
+                }
+            });
+            
+            // Close on outside click (optional)
+            $popupOverlay.on('click', function(e) {
+                if (e.target === this) {
+                    $popupOverlay.removeClass('active');
+                    $('body').css('overflow', 'auto');
+                }
+            });
+        });
+    </script>
 
     </script>
 
