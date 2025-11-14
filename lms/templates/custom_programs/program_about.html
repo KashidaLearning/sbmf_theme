@@ -198,23 +198,23 @@
         <div class="purple-icon-row">
             <div class="icon-item" id="control" role="button" tabindex="0">
                 <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon.png')}" alt="لوحةالتحكم">
+                    <img src="${static.url('images/law7atta7akom.png')}" alt="لوحةالتحكم">
                 </div>
                 <p> لوحة التحكم</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0">
                 <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon.png')}" alt="شاراتي">
+                    <img src="${static.url('images/sharati.png')}" alt="شاراتي">
                 </div>
                 <p> شاراتي</p>
             </div>
 
-           <!--  <div class="icon-item" id="certificate" role="button" tabindex="0">
+            <div class="icon-item" id="certificate" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
                 </div>
                 <p>شهاداتي</p>
-            </div> -->
+            </div> 
              <div class="icon-item" id="leaderboard" role="button" tabindex="0">
                 <div class="icon-circle">
                     <img src="${static.url('images/leaderboard-icon.png')}" alt="لوحة الصدارة">
@@ -722,32 +722,50 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
 
-<div id="control-content" style="display: none;">
-    <div class="control-title">
-        <img src="${static.url('images/control-popup.png')}" alt="img">
-        <h2>لوحة التحكم</h2>
+<div id="control-content" style="display:none;">
+
+    <!-- TOP NAV TABS -->
+    <div class="control-tabs">
+        <div class="tab-item active">لوحة التحكم</div>
+        <div class="tab-item">مهامي</div>
+        <div class="tab-item">واجباتي</div>
+        <div class="tab-item">التقييمات</div>
     </div>
 
-    <div class="control-body">
+    <!-- CONTENT WRAPPER -->
+    <div class="control-popup-wrapper">
 
-        <div class="control-section">
-            <h3>التحديات</h3>
-            <ul>
-                <li>اختبارات تقييم للتحدي</li>
-                <li>يجب إكمال جميع المستويات لإجتياز التحدي</li>
-            </ul>
+        <!-- COLUMN RIGHT = IMAGE -->
+        <div class="control-popup-image">
+            <img src="${static.url('images/placeholder-game.png')}" alt="placeholder">
         </div>
 
-        <div class="control-section">
-            <h3>التقييمات والواجبات</h3>
-            <ul>
-                <li>حل التقييمات يساعدنا على قياس مهاراتك قبل التحدي</li>
-                <li>حلّ الواجبات المطلوبة للحصول على شارة الإنجاز</li>
-                <li>استمر بالتقدم لتحصل على نقاط أكثر وارتقِ في الترتيب</li>
-            </ul>
+        <!-- COLUMN LEFT = TEXT -->
+        <div class="control-popup-text">
+
+            <!-- SECTION 1 -->
+            <div class="control-block">
+                <h3>التحديات</h3>
+                <ul>
+                    <li>اختبارات تقييم للتحدي</li>
+                    <li>يجب إكمال جميع المستويات لإجتياز التحدي</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="control-block">
+                <h3>التقييمات والواجبات</h3>
+                <ul>
+                    <li>حل التقييمات يساعدنا على قياس مهاراتك قبل التحدي</li>
+                    <li>حلّ الواجبات المطلوبة للحصول على شارة الإنجاز</li>
+                    <li>استمر بالتقدم للحصول على نقاط وترتيب أعلى</li>
+                </ul>
+            </div>
         </div>
+
     </div>
 </div>
+
 
 
    <div id="my-badges-content" style="display: none;">
