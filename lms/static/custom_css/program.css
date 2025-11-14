@@ -1384,58 +1384,54 @@ flex: unset !important;
     color: #fff;
 }
 
-/* --- CONTENT WRAPPER (TWO COLUMNS) --- */
-.control-popup-wrapper {
+/* HEADER GAME CONTROLLER IMAGE */
+.control-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.controller-header-img {
+    width: 180px;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+}
+
+/* EACH ROW: IMAGE RIGHT + TEXT LEFT */
+.control-row {
     display: flex;
-    justify-content: space-between;
-    padding: 20px 20px 10px;
-    gap: 50px;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 40px;
 }
 
-/* RIGHT COLUMN IMAGE */
-.control-popup-image {
-    flex: 1;
-    text-align: right;
+/* Right-side image */
+.control-image img {
+    width: 140px;
+    filter: drop-shadow(0 8px 25px rgba(0,0,0,0.25));
 }
 
-.control-popup-image img {
-    width: 260px;
-    filter: drop-shadow(0px 8px 22px rgba(0,0,0,0.25));
-}
-
-/* LEFT COLUMN TEXT */
-.control-popup-text {
-    flex: 2;
-    color: #fff;
-    font-size: 18px;
-}
-
-.control-block {
-    margin-bottom: 25px;
-}
-
-.control-block h3 {
+/* Left-side text */
+.control-text h3 {
     font-size: 24px;
-    margin-bottom: 10px;
     font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
 }
 
-.control-block ul {
+.control-text ul {
     margin: 0;
     padding-right: 20px;
+    line-height: 1.9;
 }
 
-.control-block ul li {
-    margin-bottom: 6px;
+.control-text ul li {
     color: #d9d9e9;
-    line-height: 1.8;
+    font-size: 17px;
 }
 
-/* Matching the blurred blue popup look */
+/* Popup glass style */
 #global-popup-overlay .popup-content {
     background: rgba(255,255,255,0.08) !important;
     backdrop-filter: blur(22px) !important;
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 20px;
 }
-

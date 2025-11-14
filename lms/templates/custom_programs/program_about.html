@@ -724,40 +724,47 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 <div id="control-content" style="display:none;">
 
-    <!-- TOP NAV TABS -->
-    <div class="control-tabs">
-        <div class="tab-item active">لوحة التحكم</div>
-        <div class="tab-item">مهامي</div>
-        <div class="tab-item">واجباتي</div>
-        <div class="tab-item">التقييمات</div>
+    <!-- HEADER WITH BIG CONTROLLER -->
+    <div class="control-header">
+        <img src="${static.url('images/game-controller.png')}" class="controller-header-img">
     </div>
 
-    <!-- CONTENT WRAPPER -->
-    <div class="control-popup-wrapper">
-
-        <!-- COLUMN RIGHT = IMAGE -->
-        <div class="control-popup-image">
-            <img src="${static.url('images/placeholder-game.png')}" alt="placeholder">
+    <!-- TOP NAV TABS -->
+        <div class="control-tabs">
+            <div class="tab-item active" data-target="control-content">لوحة التحكم</div>
+            <div class="tab-item" data-target="my-badges-content">شاراتي</div>
+            <div class="tab-item" data-target="leaderboard-content">لوحة الصدارة</div>
+            <div class="tab-item" data-target="certificate-content">شهاداتي</div>
         </div>
 
-        <!-- COLUMN LEFT = TEXT -->
-        <div class="control-popup-text">
 
-            <!-- SECTION 1 -->
-            <div class="control-block">
+    <!-- CONTENT ROWS -->
+    <div class="control-sections">
+
+        <!-- SECTION 1 -->
+        <div class="control-row">
+            <div class="control-image">
+                <img src="${static.url('images/control-challenges.png')}" alt="">
+            </div>
+            <div class="control-text">
                 <h3>التحديات</h3>
                 <ul>
                     <li>اختبارات تقييم للتحدي</li>
                     <li>يجب إكمال جميع المستويات لإجتياز التحدي</li>
                 </ul>
             </div>
+        </div>
 
-            <!-- SECTION 2 -->
-            <div class="control-block">
+        <!-- SECTION 2 -->
+        <div class="control-row">
+            <div class="control-image">
+                <img src="${static.url('images/control-evaluation.png')}" alt="">
+            </div>
+            <div class="control-text">
                 <h3>التقييمات والواجبات</h3>
                 <ul>
-                    <li>حل التقييمات يساعدنا على قياس مهاراتك قبل التحدي</li>
-                    <li>حلّ الواجبات المطلوبة للحصول على شارة الإنجاز</li>
+                    <li>حلّ التقييمات يساعدنا على قياس مستوى التقدّم</li>
+                    <li>الواجبات أساسية للحصول على شارة الإنجاز</li>
                     <li>استمر بالتقدم للحصول على نقاط وترتيب أعلى</li>
                 </ul>
             </div>
@@ -973,6 +980,31 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 msg.classList.remove('show');
                 setTimeout(() => msg.remove(), 300);
             }, 7000);
+        }
+    });
+});
+// ----------- TAB SWITCHING LOGIC -------------
+document.querySelectorAll(".control-tabs .tab-item").forEach(tab => {
+
+    tab.addEventListener("click", function () {
+
+        // 1. Remove active class from old tab
+        document.querySelectorAll(".control-tabs .tab-item")
+            .forEach(t => t.classList.remove("active"));
+
+        // 2. Apply active to clicked tab
+        this.classList.add("active");
+
+        // 3. Get the popup content ID
+        const targetId = this.getAttribute("data-target");
+        const targetDiv = document.getElementById(targetId);
+
+        if (targetDiv) {
+            // 4. Replace popup content dynamically
+            popupDynamicContent.innerHTML = targetDiv.innerHTML;
+
+            // 5. Update popup title based on tab text
+            popupTitle.textContent = this.textContent.trim();
         }
     });
 });
