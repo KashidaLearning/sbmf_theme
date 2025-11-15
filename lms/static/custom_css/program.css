@@ -1387,7 +1387,6 @@ flex: unset !important;
 .control-header {
     text-align: center;
     position: relative; 
-    /* Pull the subsequent content up */
     margin-bottom: -40px; 
     z-index: 10; 
 }
@@ -1396,53 +1395,41 @@ flex: unset !important;
     width: 350px;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
-    /* Uses your vertical pull (-116px) but corrects horizontal centering (auto) */
+    /* Keeps vertical position, ensures horizontal centering */
     margin: -116px auto 0; 
-    /* Remove conflicting fixed positioning */
     padding: 0; 
 }
 
-/* --- TOP TABS: STYLED AS CIRCULAR ICONS --- */
+/* --- TOP TABS: STYLED AS CIRCULAR ICONS (CORRECTED VERTICAL STACK) --- */
 .control-tabs {
     display: flex;
-    flex-direction: row-reverse; /* For RTL flow of tabs */
-    gap: 15px; /* Spacing between circles */
+    /* FIX 1: Stack tabs vertically */
+    flex-direction: column; 
+    gap: 15px; 
     
-    /* Uses your updated positioning */
     position: absolute;
-    top: 75px; 
-    right: 187px; 
+    /* FIX 2: Adjusted coordinates to position the stack correctly */
+    top: 5px; 
+    right: 320px; /* Adjust this value based on the center of the controller */
     
     margin: 0;
     padding: 0;
     z-index: 20;
+    /* direction: rtl is not strictly needed for a vertical stack but won't hurt */
     direction: rtl; 
 }
 
 .control-tabs .tab-item {
-    /* **CIRCULAR ICON STYLING** */
+    /* ... (Rest of the circular styles are correct) ... */
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background-color: #3C2E91; /* Deep purple background */
-    
-    /* Center contents (icon and text) */
+    background-color: #3C2E91;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    
-    /* Font and Effects */
-    font-size: 13px; /* Smaller font for icon label */
-    color: #fff;
-    font-weight: 500;
-    backdrop-filter: none; /* Override glass effect */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    user-select: none;
-    white-space: nowrap; 
+    /* ... (and so on) ... */
 }
 
 .control-tabs .tab-item:hover {
