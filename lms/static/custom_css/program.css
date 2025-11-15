@@ -1385,96 +1385,127 @@ flex: unset !important;
 
 /* --- HEADER GAME CONTROLLER IMAGE --- */
 .control-header {
-    /* Use position: relative for context or simply rely on text-align to center */
     text-align: center;
     position: relative; 
-    /* Pull the subsequent content up so it starts near the controller */
+    /* Pull the subsequent content up */
     margin-bottom: -40px; 
-    z-index: 10; /* Ensure the image is above all other content */
+    z-index: 10; 
 }
 
 .controller-header-img {
     width: 350px;
-    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
-    
-    /* Center the image and pull it up to create the overlapping effect */
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
-    margin: -100px auto 0; /* Adjust vertical placement. -100px moves it up. */
-    padding: 0; /* Remove unnecessary fixed padding */
+    /* Uses your vertical pull (-116px) but corrects horizontal centering (auto) */
+    margin: -116px auto 0; 
+    /* Remove conflicting fixed positioning */
+    padding: 0; 
 }
 
-/* --- TOP TABS (CERTIFICATES, BADGES, etc.) --- */
+/* --- TOP TABS: STYLED AS CIRCULAR ICONS --- */
 .control-tabs {
     display: flex;
-    gap: 18px;
+    flex-direction: row-reverse; /* For RTL flow of tabs */
+    gap: 15px; /* Spacing between circles */
     
-    /* Position tabs absolutely at the top right of the popup */
+    /* Uses your updated positioning */
     position: absolute;
-    top: 30px; /* Distance from top of the popup */
-    right: 30px; /* Distance from right of the popup (RTL) */
+    top: 75px; 
+    right: 187px; 
     
-    /* Override initial large fixed margins/paddings */
     margin: 0;
     padding: 0;
-    
-    z-index: 20; /* Ensure tabs are above the controller image and background */
-    direction: rtl; /* Necessary to align the tabs to the right in sequence */
+    z-index: 20;
+    direction: rtl; 
 }
 
 .control-tabs .tab-item {
-    font-size: 18px;
-    color: #dcdcec;
-    background: rgba(255,255,255,0.08);
-    padding: 10px 22px;
-    border-radius: 12px;
+    /* **CIRCULAR ICON STYLING** */
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #3C2E91; /* Deep purple background */
+    
+    /* Center contents (icon and text) */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    /* Font and Effects */
+    font-size: 13px; /* Smaller font for icon label */
+    color: #fff;
+    font-weight: 500;
+    backdrop-filter: none; /* Override glass effect */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: 0.2s;
-    backdrop-filter: blur(10px);
+    transition: transform 0.2s, box-shadow 0.2s;
+    user-select: none;
+    white-space: nowrap; 
+}
+
+.control-tabs .tab-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(60, 46, 145, 0.5);
 }
 
 .control-tabs .tab-item.active {
-    background: rgba(255,255,255,0.25);
+    background-color: #5F5C9D; /* Slightly lighter purple for active */
     font-weight: 700;
-    color: #fff;
+    /* Yellow border/ring on active */
+    box-shadow: 0 0 0 3px #FFCB05, 0 6px 20px rgba(60, 46, 145, 0.7); 
+}
+
+/* --- ICON STYLES INSIDE THE TABS (Requires <img> in HTML) --- */
+.control-tabs .tab-icon {
+    width: 28px; 
+    height: 28px;
+    object-fit: contain;
+    margin-bottom: 2px;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+
+.control-tabs .tab-item span {
+    margin-top: 0;
+    line-height: 1;
 }
 
 /* --- CONTROL CONTENT SECTIONS WRAPPER --- */
-/* Add a new wrapper or padding to the content area to start below the header */
 .control-sections {
-    /* Create space for the controller and tabs which are positioned above */
-    padding-top: 100px; 
+    /* Your update: keeps content high (0px padding) */
+    padding-top: 0px; 
     padding-bottom: 20px;
-    max-width: 800px; /* Optional: Constrain width for readability */
-    margin: 0 auto;
-    direction: rtl;
+    /* Your update: new max-width */
+    max-width: 898px;
+    /* Removed margin: 0 auto; to allow the content to align based on parent container/ltr */
+    direction: ltr;
 }
 
 /* --- EACH ROW: IMAGE RIGHT + TEXT LEFT --- */
 .control-row {
     display: flex;
-    /* In RTL, the image should appear on the left and text on the right */
-    flex-direction: row-reverse; 
+    flex-direction: row-reverse; /* Image right, Text left in RTL visual flow */
     align-items: flex-start;
-    gap: 40px; /* Increase gap for more separation as seen in the image */
-    margin-bottom: 40px;
+    gap: 40px;
+    /* Your update: margin-bottom: 41px; */
+    margin-bottom: 41px;
 }
 
-/* Image container (Right-side in the RTL flow) */
+/* ... (Remaining control-row styles are kept as they were in your update) ... */
 .control-image {
-    flex-shrink: 0; /* Prevent image from shrinking */
-    padding-top: 10px; /* Slight offset to align the image block */
+    flex-shrink: 0;
+    padding-top: 10px;
 }
 
 .control-image img {
-    /* Keep width, but the original image shows different sizes/perspectives */
     width: 140px; 
     filter: drop-shadow(0 8px 25px rgba(0,0,0,0.25));
 }
 
-/* Text container (Left-side in the RTL flow) */
 .control-text {
     flex-grow: 1;
-    text-align: right; /* Ensure block text aligns right (RTL default) */
+    text-align: right; 
 }
 
 .control-text h3 {
@@ -1486,16 +1517,12 @@ flex: unset !important;
 
 .control-text ul {
     margin: 0;
-    /* In RTL, padding-right is the standard padding/indentation */
     padding-right: 20px; 
     line-height: 1.9;
-    list-style-type: none; /* Remove default bullet points if you are using custom ones or none at all */
+    list-style-type: none;
 }
 
 .control-text ul li {
     color: #d9d9e9;
     font-size: 17px;
-    /* If you need custom bullets (as implied by the original list style in the HTML), 
-       you'd add position: relative and use the ::before pseudo-element here. 
-       For now, we'll keep the list-style-type default or explicitly none. */
 }

@@ -730,12 +730,20 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     </div>
 
     <!-- TOP NAV TABS -->
-        <div class="control-tabs">
-            <div class="tab-item active" data-target="control-content">لوحة التحكم</div>
-            <div class="tab-item" data-target="my-badges-content">شاراتي</div>
-            <div class="tab-item" data-target="leaderboard-content">لوحة الصدارة</div>
-            <div class="tab-item" data-target="certificate-content">شهاداتي</div>
+       <div class="control-tabs">
+        <div class="tab-item active" data-target="control-content">
+            <img src="${static.url('images/icon-controller.png')}" alt="لوحة التحكم" class="tab-icon">
         </div>
+        <div class="tab-item" data-target="my-badges-content">
+            <img src="${static.url('images/icon-badge.png')}" alt="شاراتي" class="tab-icon">
+        </div>
+        <div class="tab-item" data-target="leaderboard-content">
+            <img src="${static.url('images/icon-leaderboard.png')}" alt="لوحة الصدارة" class="tab-icon">
+        </div>
+        <div class="tab-item" data-target="certificate-content">
+            <img src="${static.url('images/icon-certificate.png')}" alt="شهاداتي" class="tab-icon">
+        </div>
+    </div>
 
 
     <!-- CONTENT ROWS -->
