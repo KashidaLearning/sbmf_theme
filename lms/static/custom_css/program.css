@@ -1413,3 +1413,36 @@ flex: unset !important;
     transform: translateY(-5px);
     box-shadow: 0px 12px 25px rgba(60,46,145,0.5);
 }
+
+.icon-item-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: "Cairo", sans-serif;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.icon-circle-tab{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #3C2E91;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s 
+ease;
+}
+.icon-circle-tab img {
+max-width: 50px;
+}
+.icon-item-tab p {
+  margin-top: 12px;
+  font-size: 16px;
+    font-family: 'Cairo', sans-serif !important;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
