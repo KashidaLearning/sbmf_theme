@@ -1446,3 +1446,10 @@ max-width: 50px;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
+.tab-label{
+   margin-bottom: 1em;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 16px;
+    font-family: 'Cairo', sans-serif !important;
+}
