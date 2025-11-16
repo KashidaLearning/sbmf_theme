@@ -878,8 +878,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     }
 
     popupContent.addEventListener("click", function(e){
-        const icon = e.target.closest(".popup-purple-icons .icon-item");
-        if (!icon) return;
+        const icon = e.target.closest(".icon-item-tab");
+        if (!icon || !popupContent.contains(icon)) return;
 
         const targetId = icon.getAttribute("data-target");
         const contentDiv = document.getElementById(targetId);
@@ -890,11 +890,11 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
         activateIcon(targetId);
 
-        popupTitle.textContent = icon.querySelector("p").textContent.trim();
+        popupTitle.textContent = icon.querySelector(".tab-label").textContent.trim();
     });
 
     function activateIcon(targetId){
-        document.querySelectorAll(".popup-purple-icons .icon-item").forEach(i=>{
+        popupContent.querySelectorAll(".icon-item-tab").forEach(i=>{
             i.classList.remove("active");
             if(i.getAttribute("data-target") === targetId){
                 i.classList.add("active");
