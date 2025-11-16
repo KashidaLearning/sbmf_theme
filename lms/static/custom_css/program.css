@@ -1369,3 +1369,45 @@ flex: unset !important;
     padding-right: 600px;
 }
 
+.popup-purple-icons {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    padding: 20px 0;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(20px);
+    margin-bottom: 30px;
+}
+
+.popup-purple-icons .icon-item {
+    cursor: pointer;
+    text-align: center;
+}
+
+.popup-purple-icons .icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(25px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.25s;
+}
+
+.popup-purple-icons .icon-item.active .icon-circle {
+    background: rgba(255,255,255,0.35);
+    box-shadow: 0 0 20px rgba(255,255,255,0.45);
+}
+
+.popup-purple-icons .icon-circle img {
+    width: 40px;
+    height: 40px;
+}
+
+.popup-purple-icons .icon-item p {
+    color: #fff;
+    margin-top: 10px;
+}

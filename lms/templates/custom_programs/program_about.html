@@ -782,108 +782,117 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
+<!-- TEMPLATE: Purple icons inside popup -->
+<div id="popup-icons-template" style="display:none;">
+    <div class="purple-icon-row popup-icons">
+        <div class="icon-item" data-target="control-content">
+            <div class="icon-circle">
+                <img src="${static.url('images/law7atta7akom.png')}">
+            </div>
+            <p>لوحة التحكم</p>
+        </div>
+
+        <div class="icon-item" data-target="my-badges-content">
+            <div class="icon-circle">
+                <img src="${static.url('images/sharati.png')}">
+            </div>
+            <p>شاراتي</p>
+        </div>
+
+        <div class="icon-item" data-target="leaderboard-content">
+            <div class="icon-circle">
+                <img src="${static.url('images/leaderboard-icon.png')}">
+            </div>
+            <p>لوحة الصدارة</p>
+        </div>
+
+        <div class="icon-item" data-target="certificate-content">
+            <div class="icon-circle">
+                <img src="${static.url('images/cert-icon.png')}">
+            </div>
+            <p>شهاداتي</p>
+        </div>
+    </div>
+</div>
+
 <%block name="js_extra">
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get references to the clickable divs
-            var leaderboardDiv = document.getElementById('leaderboard');
-            var myBadgesDiv = document.getElementById('my-badges');
-            var certificateDiv = document.getElementById('certificate');
-            var controlDiv = document.getElementById('control');
+    document.addEventListener("DOMContentLoaded", function () {
 
-            // Get references to the popup elements
-            var popupOverlay = document.getElementById('global-popup-overlay');
-            var popupTitle = document.getElementById('popup-title');
-            var popupDynamicContent = document.getElementById('popup-dynamic-content');
-            var closeButton = popupOverlay ? popupOverlay.querySelector('.close-button') : null;
+        const popupOverlay = document.getElementById("global-popup-overlay");
+        const popupTitle = document.getElementById("popup-title");
+        const popupContent = document.getElementById("popup-dynamic-content");
 
-            /**
-             * Shows the popup with the given title and HTML content.
-             * @param {string} title - The title for the popup.
-             * @param {string} htmlContent - The HTML string content for the popup body.
-             */
-            function showPopup(title, htmlContent) {
-                if (!popupOverlay || !popupTitle || !popupDynamicContent) return;
-                popupTitle.textContent = title;
-                popupDynamicContent.innerHTML = htmlContent;
-                popupOverlay.classList.add('visible');
-                document.body.style.overflow = 'hidden';
-                if (closeButton) {
-                    closeButton.focus();
-                }
-            }
+        const iconsTemplate = document.getElementById("popup-purple-icons-template").innerHTML;
 
-            /**
-             * Hides the popup.
-             */
-            function hidePopup() {
-                if (!popupOverlay) return;
-                popupOverlay.classList.remove('visible');
-                document.body.style.overflow = '';
-                 window.location.reload();
+        const map = {
+            "control": "control-content",
+            "my-badges": "my-badges-content",
+            "leaderboard": "leaderboard-content",
+            "certificate": "certificate-content"
+        };
 
-
-
-
-
-            }
-           
-
-            // Define HTML content for each popup type
-            var leaderboardHTML = document.getElementById('leaderboard-content').innerHTML;
-
-            var myBadgesHTML = document.getElementById('my-badges-content').innerHTML;
-
-            var certificateHTML = document.getElementById('certificate-content').innerHTML;
-
-            // Add click event listeners to the divs
-            if (leaderboardDiv) {
-                leaderboardDiv.addEventListener('click', function () {
-                    showPopup('قائمة التصدر', leaderboardHTML);
-                });
-            }
-
-            if (myBadgesDiv) {
-                myBadgesDiv.addEventListener('click', function () {
-                    showPopup('شاراتي', myBadgesHTML);
-                });
-            }
-
-            if (certificateDiv) {
-                certificateDiv.addEventListener('click', function () {
-                    showPopup('شهادتي', certificateHTML);
-                });
-            }
-            var controlHTML = document.getElementById('control-content').innerHTML;
-
-            if (controlDiv) {
-                controlDiv.addEventListener('click', function () {
-                    showPopup('لوحة التحكم', controlHTML);
-                });
-            }
-
-            // Add event listener to close the popup when the close button is clicked
-            if (closeButton) {
-                closeButton.addEventListener('click', hidePopup);
-            }
-
-            // Close popup when clicking outside the content area
-            if (popupOverlay) {
-                popupOverlay.addEventListener('click', function (event) {
-                    if (event.target === popupOverlay) {
-                        hidePopup();
-                    }
-                });
-            }
-
-            // Close popup when Escape key is pressed
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape' && popupOverlay && popupOverlay.classList.contains('visible')) {
-                    hidePopup();
-                }
+        // OPEN POPUP FROM OUTSIDE ICONS
+        document.querySelectorAll(".purple-icon-row .icon-item").forEach(item => {
+            item.addEventListener("click", function () {
+                const target = this.getAttribute("id");
+                const targetId = map[target];
+                const title = this.querySelector("p").textContent.trim();
+                showPopup(title, targetId);
             });
         });
-    </script>
+
+        // POPUP SHOW FUNCTION
+        function showPopup(title, targetId) {
+
+            const html = document.getElementById(targetId).innerHTML;
+
+            // Insert purple icons + content
+            popupContent.innerHTML = iconsTemplate + html;
+
+            activateIcon(targetId);
+
+            popupTitle.textContent = title;
+            popupOverlay.classList.add("visible");
+            document.body.style.overflow = "hidden";
+        }
+
+        // INSIDE POPUP SWITCH ICONS
+        popupContent.addEventListener("click", function (e) {
+            const icon = e.target.closest(".popup-purple-icons .icon-item");
+            if (!icon) return;
+
+            const targetId = icon.getAttribute("data-target");
+            const html = document.getElementById(targetId).innerHTML;
+
+            popupContent.innerHTML = iconsTemplate + html;
+            activateIcon(targetId);
+
+            popupTitle.textContent = icon.querySelector("p").textContent.trim();
+        });
+
+        function activateIcon(targetId) {
+            document.querySelectorAll(".popup-purple-icons .icon-item").forEach(i => {
+                i.classList.remove("active");
+                if (i.getAttribute("data-target") === targetId) {
+                    i.classList.add("active");
+                }
+            });
+        }
+
+        // CLOSE
+        const closeBtn = popupOverlay.querySelector(".close-button");
+        closeBtn.addEventListener("click", closePopup);
+        popupOverlay.addEventListener("click", e => { if (e.target === popupOverlay) closePopup(); });
+
+        function closePopup() {
+            popupOverlay.classList.remove("visible");
+            document.body.style.overflow = "";
+        }
+
+    });
+</script>
+
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
         $(function() {
