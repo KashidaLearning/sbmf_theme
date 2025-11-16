@@ -782,43 +782,47 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
-<div class="popup-purple-icons">
+<!-- Popup Purple Icons Template (HIDDEN) -->
+<div id="popup-purple-icons-template" style="display:none;">
+    <div class="popup-purple-icons">
 
-    <!-- LEFT: شهادة -->
-    <div class="popup-left">
-        <div class="icon-item" data-target="certificate-content">
-            <div class="icon-circle">
-                <img src="${static.url('images/cert-icon.png')}">
+        <!-- LEFT -->
+        <div class="popup-left">
+            <div class="icon-item" data-target="certificate-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/cert-icon.png')}">
+                </div>
+                <p>شهاداتي</p>
             </div>
-            <p>شهاداتي</p>
         </div>
+
+        <!-- CENTER -->
+        <div class="popup-center">
+            <div class="icon-item" data-target="leaderboard-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/leaderboard-icon.png')}">
+                </div>
+                <p>لوحة الصدارة</p>
+            </div>
+
+            <div class="icon-item" data-target="my-badges-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/sharati.png')}">
+                </div>
+                <p>شاراتي</p>
+            </div>
+
+            <div class="icon-item" data-target="control-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/law7atta7akom.png')}">
+                </div>
+                <p>لوحة التحكم</p>
+            </div>
+        </div>
+
     </div>
-
-    <!-- CENTER: REMAINING 3 -->
-    <div class="popup-center">
-        <div class="icon-item" data-target="leaderboard-content">
-            <div class="icon-circle">
-                <img src="${static.url('images/leaderboard-icon.png')}">
-            </div>
-            <p>لوحة الصدارة</p>
-        </div>
-
-        <div class="icon-item" data-target="my-badges-content">
-            <div class="icon-circle">
-                <img src="${static.url('images/sharati.png')}">
-            </div>
-            <p>شاراتي</p>
-        </div>
-
-        <div class="icon-item" data-target="control-content">
-            <div class="icon-circle">
-                <img src="${static.url('images/law7atta7akom.png')}">
-            </div>
-            <p>لوحة التحكم</p>
-        </div>
-    </div>
-
 </div>
+
 
 <%block name="js_extra">
 <script>
