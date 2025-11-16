@@ -782,46 +782,46 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
-<!-- Popup Purple Icons Template (HIDDEN) -->
 <div id="popup-purple-icons-template" style="display:none;">
-    <div class="popup-purple-icons">
+    <div class="popup-icons-wrapper">
 
         <!-- LEFT -->
-        <div class="popup-left">
-            <div class="icon-item" data-target="certificate-content">
-                <div class="icon-circle">
+        <div class="popup-left-col">
+            <div class="popup-icon-item" data-target="certificate-content">
+                <div class="popup-icon-circle">
                     <img src="${static.url('images/cert-icon.png')}">
                 </div>
-                <p>شهاداتي</p>
+                <p class="popup-label">شهاداتي</p>
             </div>
         </div>
 
         <!-- CENTER -->
-        <div class="popup-center">
-            <div class="icon-item" data-target="leaderboard-content">
-                <div class="icon-circle">
+        <div class="popup-center-col">
+            <div class="popup-icon-item" data-target="leaderboard-content">
+                <div class="popup-icon-circle">
                     <img src="${static.url('images/leaderboard-icon.png')}">
                 </div>
-                <p>لوحة الصدارة</p>
+                <p class="popup-label">لوحة الصدارة</p>
             </div>
 
-            <div class="icon-item" data-target="my-badges-content">
-                <div class="icon-circle">
+            <div class="popup-icon-item" data-target="my-badges-content">
+                <div class="popup-icon-circle">
                     <img src="${static.url('images/sharati.png')}">
                 </div>
-                <p>شاراتي</p>
+                <p class="popup-label">شاراتي</p>
             </div>
 
-            <div class="icon-item" data-target="control-content">
-                <div class="icon-circle">
+            <div class="popup-icon-item" data-target="control-content">
+                <div class="popup-icon-circle">
                     <img src="${static.url('images/law7atta7akom.png')}">
                 </div>
-                <p>لوحة التحكم</p>
+                <p class="popup-label">لوحة التحكم</p>
             </div>
         </div>
 
     </div>
 </div>
+
 
 
 <%block name="js_extra">
