@@ -99,7 +99,7 @@ max-width: 50px;
 .icon-item p {
   margin-top: 12px;
   font-size: 16px;
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Cairo', sans-serif !important;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -1365,7 +1365,7 @@ flex: unset !important;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
     /* Keeps vertical position, ensures horizontal centering */
-    margin: -264px auto 0; 
+    margin: -194px auto 0; 
     padding-right: 600px;
 }
 
@@ -1376,7 +1376,8 @@ flex: unset !important;
     align-items: center;
     width: 100%;
     padding: 0 40px;
-    margin-bottom: 30px;
+    direction: ltr;
+    margin-top: -71px;
 }
 
 /* LEFT group contains 1 icon */
@@ -1391,7 +1392,7 @@ flex: unset !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 16px; /* ⭐ EXACT spacing */
+    gap: 0px; /* ⭐ EXACT spacing */
     flex: 1; /* center group stays centered */
 }
 
