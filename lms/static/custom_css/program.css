@@ -1447,9 +1447,9 @@ max-width: 50px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 .tab-label{
-   margin-bottom: 1em;
-    text-align: right;
-    padding-right: 20px;
-    font-size: 16px;
+   margin-bottom: 1em !important;
+    text-align: right !important;
+    padding-right: 20px !important;
+    font-size: 16px !important;
     font-family: 'Cairo', sans-serif !important;
 }
