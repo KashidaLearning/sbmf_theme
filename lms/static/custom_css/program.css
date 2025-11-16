@@ -1369,17 +1369,28 @@ flex: unset !important;
     padding-right: 600px;
 }
 
-/* MAKE POPUP ICONS MATCH ORIGINAL PURPLE ICONS */
+/* FIX POPUP ICONS LAYOUT TO MATCH THE ORIGINAL */
+.popup-purple-icons {
+    display: flex;
+    justify-content: flex-start;      /* Shahadati stays at the LEFT */
+    align-items: center;
+    gap: 16px !important;             /* EXACT spacing like original */
+    padding: 20px 40px;               /* small horizontal padding */
+    background: transparent;          /* remove extra white shine */
+    margin-bottom: 30px;
+}
+
+/* Make icons identical size & glow */
 .popup-purple-icons .icon-circle {
     width: 80px;
     height: 80px;
-    background: #3C2E91;
     border-radius: 50%;
+    background: #3C2E91;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .popup-purple-icons .icon-item:hover .icon-circle,
@@ -1389,23 +1400,11 @@ flex: unset !important;
 }
 
 .popup-purple-icons .icon-circle img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
 }
 
 .popup-purple-icons .icon-item p {
-    color: #ffffff;
-    margin-top: 12px;
+    color: #fff;
     font-size: 16px;
-    font-family: 'Cairo', sans-serif;
-    font-weight: 500;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-}
-
-.popup-purple-icons {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    padding: 20px 0;
-    background: transparent; /* remove extra background */
+    margin-top: 10px;
 }
