@@ -1397,14 +1397,14 @@ flex: unset !important;
     display: block;
     /* Keeps vertical position, ensures horizontal centering */
     margin: -116px auto 0; 
-    padding: 0; 
+    padding-right: 600px;
 }
 
 /* --- TOP TABS: STYLED AS CIRCULAR ICONS (CORRECTED VERTICAL STACK) --- */
 .control-tabs {
     display: flex;
     /* FIX 1: Stack tabs vertically */
-    flex-direction: column; 
+    flex-direction: row; 
     gap: 15px; 
     
     position: absolute;
