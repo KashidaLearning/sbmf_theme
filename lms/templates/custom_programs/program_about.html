@@ -782,14 +782,25 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
-<!-- Popup Purple Icons Template -->
-<div id="popup-purple-icons-template" style="display:none;">
-    <div class="purple-icon-row popup-purple-icons">
-        <div class="icon-item" data-target="control-content">
+<div class="popup-purple-icons">
+
+    <!-- LEFT: شهادة -->
+    <div class="popup-left">
+        <div class="icon-item" data-target="certificate-content">
             <div class="icon-circle">
-                <img src="${static.url('images/law7atta7akom.png')}">
+                <img src="${static.url('images/cert-icon.png')}">
             </div>
-            <p>لوحة التحكم</p>
+            <p>شهاداتي</p>
+        </div>
+    </div>
+
+    <!-- CENTER: REMAINING 3 -->
+    <div class="popup-center">
+        <div class="icon-item" data-target="leaderboard-content">
+            <div class="icon-circle">
+                <img src="${static.url('images/leaderboard-icon.png')}">
+            </div>
+            <p>لوحة الصدارة</p>
         </div>
 
         <div class="icon-item" data-target="my-badges-content">
@@ -799,20 +810,14 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             <p>شاراتي</p>
         </div>
 
-        <div class="icon-item" data-target="leaderboard-content">
+        <div class="icon-item" data-target="control-content">
             <div class="icon-circle">
-                <img src="${static.url('images/leaderboard-icon.png')}">
+                <img src="${static.url('images/law7atta7akom.png')}">
             </div>
-            <p>لوحة الصدارة</p>
-        </div>
-
-        <div class="icon-item" data-target="certificate-content">
-            <div class="icon-circle">
-                <img src="${static.url('images/cert-icon.png')}">
-            </div>
-            <p>شهاداتي</p>
+            <p>لوحة التحكم</p>
         </div>
     </div>
+
 </div>
 
 <%block name="js_extra">

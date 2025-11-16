@@ -1365,46 +1365,51 @@ flex: unset !important;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
     /* Keeps vertical position, ensures horizontal centering */
-    margin: -116px auto 0; 
+    margin: -264px auto 0; 
     padding-right: 600px;
 }
 
-/* FIX POPUP ICONS LAYOUT TO MATCH THE ORIGINAL */
+/* MAIN CONTAINER — horizontal layout */
 .popup-purple-icons {
     display: flex;
-    justify-content: flex-start;      /* Shahadati stays at the LEFT */
+    justify-content: space-between; /* LEFT + CENTER aligned */
     align-items: center;
-    gap: 16px !important;             /* EXACT spacing like original */
-    padding: 20px 40px;               /* small horizontal padding */
-    background: transparent;          /* remove extra white shine */
+    width: 100%;
+    padding: 0 40px;
     margin-bottom: 30px;
 }
 
-/* Make icons identical size & glow */
-.popup-purple-icons .icon-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #3C2E91;
+/* LEFT group contains 1 icon */
+.popup-purple-icons .popup-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* CENTER group contains 3 icons */
+.popup-purple-icons .popup-center {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 16px; /* ⭐ EXACT spacing */
+    flex: 1; /* center group stays centered */
+}
+
+/* ICONS STYLE (same as outside icons) */
+.popup-purple-icons .icon-circle {
+    width: 80px;
+    height: 80px;
+    background: #3C2E91;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
+    transition: 0.3s ease;
 }
 
 .popup-purple-icons .icon-item:hover .icon-circle,
 .popup-purple-icons .icon-item.active .icon-circle {
     transform: translateY(-5px);
-    box-shadow: 0px 12px 25px rgba(60, 46, 145, 0.5);
-}
-
-.popup-purple-icons .icon-circle img {
-    width: 45px;
-}
-
-.popup-purple-icons .icon-item p {
-    color: #fff;
-    font-size: 16px;
-    margin-top: 10px;
+    box-shadow: 0px 12px 25px rgba(60,46,145,0.5);
 }
