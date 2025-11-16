@@ -782,9 +782,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
-<!-- TEMPLATE: Purple icons inside popup -->
-<div id="popup-icons-template" style="display:none;">
-    <div class="purple-icon-row popup-icons">
+<!-- Popup Purple Icons Template -->
+<div id="popup-purple-icons-template" style="display:none;">
+    <div class="purple-icon-row popup-purple-icons">
         <div class="icon-item" data-target="control-content">
             <div class="icon-circle">
                 <img src="${static.url('images/law7atta7akom.png')}">
@@ -816,83 +816,95 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 </div>
 
 <%block name="js_extra">
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
 
-        const popupOverlay = document.getElementById("global-popup-overlay");
-        const popupTitle = document.getElementById("popup-title");
-        const popupContent = document.getElementById("popup-dynamic-content");
+    const popupOverlay = document.getElementById("global-popup-overlay");
+    const popupTitle = document.getElementById("popup-title");
+    const popupContent = document.getElementById("popup-dynamic-content");
 
-        const iconsTemplate = document.getElementById("popup-purple-icons-template").innerHTML;
+    const templateEl = document.getElementById("popup-purple-icons-template");
 
-        const map = {
-            "control": "control-content",
-            "my-badges": "my-badges-content",
-            "leaderboard": "leaderboard-content",
-            "certificate": "certificate-content"
-        };
+    if (!templateEl) {
+        console.error("❌ popup-purple-icons-template NOT FOUND!");
+        return;
+    }
 
-        // OPEN POPUP FROM OUTSIDE ICONS
-        document.querySelectorAll(".purple-icon-row .icon-item").forEach(item => {
-            item.addEventListener("click", function () {
-                const target = this.getAttribute("id");
-                const targetId = map[target];
-                const title = this.querySelector("p").textContent.trim();
-                showPopup(title, targetId);
-            });
+    const iconsTemplate = templateEl.innerHTML;
+
+    const map = {
+        "control": "control-content",
+        "my-badges": "my-badges-content",
+        "leaderboard": "leaderboard-content",
+        "certificate": "certificate-content"
+    };
+
+    // External icons
+    document.querySelectorAll(".purple-icon-row .icon-item").forEach(item => {
+        item.addEventListener("click", function () {
+            const id = this.id;
+            const target = map[id];
+            if (!target) return;
+
+            const title = this.querySelector("p").textContent.trim();
+            showPopup(title, target);
         });
-
-        // POPUP SHOW FUNCTION
-        function showPopup(title, targetId) {
-
-            const html = document.getElementById(targetId).innerHTML;
-
-            // Insert purple icons + content
-            popupContent.innerHTML = iconsTemplate + html;
-
-            activateIcon(targetId);
-
-            popupTitle.textContent = title;
-            popupOverlay.classList.add("visible");
-            document.body.style.overflow = "hidden";
-        }
-
-        // INSIDE POPUP SWITCH ICONS
-        popupContent.addEventListener("click", function (e) {
-            const icon = e.target.closest(".popup-purple-icons .icon-item");
-            if (!icon) return;
-
-            const targetId = icon.getAttribute("data-target");
-            const html = document.getElementById(targetId).innerHTML;
-
-            popupContent.innerHTML = iconsTemplate + html;
-            activateIcon(targetId);
-
-            popupTitle.textContent = icon.querySelector("p").textContent.trim();
-        });
-
-        function activateIcon(targetId) {
-            document.querySelectorAll(".popup-purple-icons .icon-item").forEach(i => {
-                i.classList.remove("active");
-                if (i.getAttribute("data-target") === targetId) {
-                    i.classList.add("active");
-                }
-            });
-        }
-
-        // CLOSE
-        const closeBtn = popupOverlay.querySelector(".close-button");
-        closeBtn.addEventListener("click", closePopup);
-        popupOverlay.addEventListener("click", e => { if (e.target === popupOverlay) closePopup(); });
-
-        function closePopup() {
-            popupOverlay.classList.remove("visible");
-            document.body.style.overflow = "";
-        }
-
     });
-</script>
 
+    function showPopup(title, targetId) {
+
+        const contentDiv = document.getElementById(targetId);
+        if (!contentDiv) {
+            console.error("❌ Content div not found:", targetId);
+            return;
+        }
+
+        popupTitle.textContent = title;
+        popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
+
+        activateIcon(targetId);
+
+        popupOverlay.classList.add("visible");
+        document.body.style.overflow = "hidden";
+    }
+
+    popupContent.addEventListener("click", function(e){
+        const icon = e.target.closest(".popup-purple-icons .icon-item");
+        if (!icon) return;
+
+        const targetId = icon.getAttribute("data-target");
+        const contentDiv = document.getElementById(targetId);
+
+        if (!contentDiv) return;
+
+        popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
+
+        activateIcon(targetId);
+
+        popupTitle.textContent = icon.querySelector("p").textContent.trim();
+    });
+
+    function activateIcon(targetId){
+        document.querySelectorAll(".popup-purple-icons .icon-item").forEach(i=>{
+            i.classList.remove("active");
+            if(i.getAttribute("data-target") === targetId){
+                i.classList.add("active");
+            }
+        });
+    }
+
+    const closeBtn = popupOverlay.querySelector(".close-button");
+    closeBtn.addEventListener("click", closePopup);
+    popupOverlay.addEventListener("click", e => {
+        if(e.target === popupOverlay) closePopup();
+    });
+
+    function closePopup(){
+        popupOverlay.classList.remove("visible");
+        document.body.style.overflow = "";
+    }
+});
+</script>
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
         $(function() {
@@ -950,122 +962,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         }
     });
 });
-// ----------- TAB SWITCHING LOGIC -------------
-document.querySelectorAll(".control-tabs .tab-item").forEach(tab => {
 
-    tab.addEventListener("click", function () {
-
-        // 1. Remove active class from old tab
-        document.querySelectorAll(".control-tabs .tab-item")
-            .forEach(t => t.classList.remove("active"));
-
-        // 2. Apply active to clicked tab
-        this.classList.add("active");
-
-        // 3. Get the popup content ID
-        const targetId = this.getAttribute("data-target");
-        const targetDiv = document.getElementById(targetId);
-
-        if (targetDiv) {
-            // 4. Replace popup content dynamically
-            popupDynamicContent.innerHTML = targetDiv.innerHTML;
-
-            // 5. Update popup title based on tab text
-            popupTitle.textContent = this.textContent.trim();
-        }
-    });
-});
-$(function() {
-            var $popupOverlay = $('#global-popup-overlay');
-            var $popupTitle = $('#popup-title');
-            var $popupContentArea = $('#popup-dynamic-content');
-            var $closeButton = $popupOverlay.find('.close-button');
-
-            // --- Function to switch content inside the popup ---
-            function activateTab(tabTargetId, isInitialOpen) {
-                // 1. Hide all content and remove 'active' from all content
-                $popupContentArea.children('div').removeClass('active');
-                
-                // 2. Show the target content and add 'active'
-                $('#' + tabTargetId).addClass('active').appendTo($popupContentArea);
-
-                // 3. Update the internal tabs' active state
-                // Note: Only select tabs INSIDE the currently active content
-                // For example, the .control-tabs are only in #control-content, but we want to 
-                // re-use them for all tabs. Let's make the tabs dynamic/global.
-                
-                // If the user clicked an external icon, the first tab is active by default.
-                // If the user clicked an internal tab, we need to update the tab bar.
-                if (!isInitialOpen) {
-                    $('.control-tabs .tab-item').removeClass('active');
-                    $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').addClass('active');
-                    
-                    // Also update the popup title to match the new tab (optional)
-                    var newTitle = $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').text().trim();
-                    $popupTitle.text(newTitle);
-                }
-                
-                // For the initial open, the title is already set by the click handler below.
-                if (isInitialOpen) {
-                    // When initially opening, make the corresponding internal tab active
-                    $('.control-tabs .tab-item').removeClass('active');
-                    $('.control-tabs .tab-item[data-target="' + tabTargetId + '"]').addClass('active');
-                }
-            }
-
-
-            // --- 1. Handle Clicks on External Purple Icons (To OPEN Popup) ---
-            $('.purple-icon-row .icon-item').on('click keypress', function(e) {
-                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
-                    var targetContentId = $(this).data('target');
-                    var iconName = $(this).find('p').text().trim(); // Get the icon's text for the title
-                    
-                    // Move all hidden content DIVs into the popup content area
-                    // This is important because the internal tabs will target these elements
-                    $('#control-content, #my-badges-content, #leaderboard-content, #certificate-content').appendTo($popupContentArea);
-
-                    // Set Popup Title
-                    $popupTitle.text(iconName);
-
-                    // Activate the corresponding tab content
-                    activateTab(targetContentId, true); 
-
-                    // Show the popup
-                    $popupOverlay.addClass('active');
-                    $('body').css('overflow', 'hidden'); // Prevent background scrolling
-                }
-            });
-
-
-            // --- 2. Handle Clicks on Internal Popup Tabs (To SWITCH Tabs) ---
-            // These tabs exist inside #control-content, but they will switch the main content.
-            $popupContentArea.on('click keypress', '.control-tabs .tab-item', function(e) {
-                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
-                    var targetContentId = $(this).data('target');
-                    
-                    // Activate the new tab content
-                    activateTab(targetContentId, false);
-                }
-            });
-
-
-            // --- 3. Handle Closing the Popup ---
-            $closeButton.on('click keypress', function(e) {
-                if (e.type === 'click' || (e.type === 'keypress' && e.which === 13)) {
-                    $popupOverlay.removeClass('active');
-                    $('body').css('overflow', 'auto'); // Restore background scrolling
-                }
-            });
-            
-            // Close on outside click (optional)
-            $popupOverlay.on('click', function(e) {
-                if (e.target === this) {
-                    $popupOverlay.removeClass('active');
-                    $('body').css('overflow', 'auto');
-                }
-            });
-        });
-    </script>
 
     </script>
 
