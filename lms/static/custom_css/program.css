@@ -75,7 +75,7 @@ header.global-header .header-logo a .logo {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #3C2E91;
+    background: #416A9E;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1364,7 +1364,7 @@ flex: unset !important;
     width: 350px;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
-   margin: -193px 79px -140px;
+   margin: -233px 80px -128px;
     padding-right: 750px;
      pointer-events: none;
 }
@@ -1397,7 +1397,7 @@ flex: unset !important;
 .popup-purple-icons .icon-circle {
     width: 80px;
     height: 80px;
-    background: #3C2E91;
+    background: #416A9E;
     border-radius: 50%;
     display: flex;
     justify-content: center;
