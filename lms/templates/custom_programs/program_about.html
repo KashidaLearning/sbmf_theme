@@ -724,21 +724,19 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 <div id="control-content" style="display:none;">
 
-    <!-- TOP HEADER IMAGE -->
     <div class="control-header">
         <img src="${static.url('images/game-controller.png')}" class="controller-header-img">
     </div>
 
-    <!-- CONTENT WRAPPER -->
     <div class="control-body">
 
-        <!-- ROW 1 → التحديات -->
         <div class="control-row">
             <div class="control-text">
                 <h3>التحديات</h3>
+                <br>
                 <ul>
-                    <li>التحديات تُفتح بالتسلسل.</li>
-                    <li>يجب إكمال المحتوى الحالي للوصول إلى التالي.</li>
+                    <li>التحديات تُفتح بالتسلسل</li>
+                    <li> يجب إكمال المحتوى الحالي للوصول إلى التالي</li>
                 </ul>
             </div>
 
@@ -747,7 +745,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             </div>
         </div>
 
-        <!-- ROW 2 → التقييمات والواجبات -->
         <div class="control-row">
             <div class="control-text">
                 <h3>التقييمات والواجبات</h3>
@@ -770,11 +767,10 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
    <div id="my-badges-content" style="display: none;">
-        <div class="title-badgescontent">
+       <!--  <div class="title-badgescontent">
                 <img src="${static.url('images/badges-icon-popup.png')}" alt="img">
                 <h2>ادوات الاستمرارية</h2>
-            </div>   
-        <br>    
+            </div>    -->
          <div class="badge-grid">
             % for badge in my_badges:
                 <%      
@@ -791,11 +787,10 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         <p>هناك المزيد من الشارات بانتظارك!</p>
     </div>
     <div id="certificate-content" style="display: none;">
-         <div class="title-certificatecontent">
+         <!-- <div class="title-certificatecontent">
                 <img src="${static.url('images/cert-popup.png')}" alt="img">
                 <h2>شهاداتي </h2>
-            </div>     
-        <br>
+            </div>      -->
         <div id="certificate-status">
             % if cert_url:
                 <p>تهانينا! شهادتك جاهزة للتنزيل</p>
@@ -818,7 +813,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
     </div>
 </div>
-<!-- Popup Purple Icons Template (HIDDEN) -->
 <div id="popup-purple-icons-template" style="display:none;">
     <div class="popup-purple-icons">
 
