@@ -1497,3 +1497,6 @@ max-width: 50px;
     height: auto;
     object-fit: contain;
 }
+.control-text {
+  padding-left: 500px;
+}
