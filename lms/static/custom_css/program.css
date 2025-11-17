@@ -1364,7 +1364,7 @@ flex: unset !important;
     width: 350px;
     filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
     display: block;
-   margin: -233px 80px -128px;
+   margin: -178px 80px -128px;
     padding-right: 750px;
      pointer-events: none;
 }
@@ -1377,7 +1377,7 @@ flex: unset !important;
     width: 100%;
     padding: 0 40px;
     direction: ltr;
-    margin-top: -21px;
+        margin-top: -75px;
 }
 
 .popup-purple-icons .popup-left {
@@ -1425,7 +1425,7 @@ flex: unset !important;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #3C2E91;
+    background: #416A9E;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1466,7 +1466,7 @@ max-width: 50px;
     align-items: center;
     justify-content: space-between;
     border-radius: 24px;
-    padding: 40px 50px;
+    padding: 0px 50px;
     margin-bottom: 35px;
     gap: 40px;
 
