@@ -957,13 +957,11 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 var href = $(this).attr('href');
                 $('#courseFrame').attr('src', href);
                 $('#courseModal').css('display', 'block');
-                window.location.reload();
             });
             // Close modal on close button
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-                    window.location.reload();
 
 
             });
@@ -972,7 +970,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
-                    window.location.reload();
 
 
                 }
