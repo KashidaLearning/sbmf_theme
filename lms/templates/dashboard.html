@@ -230,9 +230,11 @@ cert_name_long = settings.CERT_NAME_LONG
           </div>
 
             <!-- Header -->
-            <header class="program-card__header">
-                <h2 class="program-card__title">${program.name}</h2>
-            </header>
+          <header class="program-card__header">
+            <h2 class="program-card__title">
+              <a href="${reverse('custom_programs:program_about', args=[program.id])}">${program.name}</a>
+          </h2>
+          </header>
 
             <!-- Courses list -->
             <div class="program-card__body">
