@@ -185,12 +185,14 @@ cert_name_long = settings.CERT_NAME_LONG
         %>
 
         <article class="program-card" style="--program-accent:${program_accent_color};">
+            
+           <!-- Progress pill (centered on top of card) -->
+          <div class="program-card__progress-pill">
+              <span>${program_progress_average}%</span>
+          </div>
 
-            <!-- Header: title + overall progress -->
+            <!-- Header -->
             <header class="program-card__header">
-                <div class="program-card__progress-pill">
-                    <span>${program_progress_average}%</span>
-                </div>
                 <h2 class="program-card__title">${program.name}</h2>
             </header>
 
@@ -202,29 +204,29 @@ cert_name_long = settings.CERT_NAME_LONG
                         % for course in course_progress_list:
 
                             <%
-                            # Decide visual state + icon based on progress
-                            if course['progress'] == 0:
-                                course_state_class = 'course-row--locked'
-                                course_icon_src = static.url('images/dashboard-locked.png')
-                                course_icon_alt = 'غير مكتمل'
-                            elif course['progress'] < 100:
-                                course_state_class = 'course-row--in-progress'
-                                course_icon_src = static.url('images/dashboard-play.png')
-                                course_icon_alt = 'قيد التنفيذ'
-                            else:
-                                course_state_class = 'course-row--done'
-                                course_icon_src = static.url('images/dashboar-done.png')
-                                course_icon_alt = 'مكتمل'
-                            %>
+                                # Decide visual state + icon based on progress
+                                if course['progress'] == 0:
+                                    course_state_class = 'course-row--locked'
+                                    course_icon_file = 'images/dashboard-locked.png'
+                                    course_icon_alt = 'غير مكتمل'
+                                elif course['progress'] < 100:
+                                    course_state_class = 'course-row--in-progress'
+                                    course_icon_file = 'images/dashboard-play.png'
+                                    course_icon_alt = 'قيد التنفيذ'
+                                else:
+                                    course_state_class = 'course-row--done'
+                                    course_icon_file = 'images/dashboard-done.png'
+                                    course_icon_alt = 'مكتمل'
+                                %>
 
                             <a href="${course['course_url']}"
-                               class="course-row ${course_state_class}">
-                                <span class="course-row__status">
-                                    <img src="${course_icon_src}" alt="${course_icon_alt}">
-                                </span>
-                                <span class="course-row__title">${course['name']}</span>
-                                <span class="course-row__progress">${course['progress']}%</span>
-                            </a>
+                                   class="course-row ${course_state_class}">
+                                    <span class="course-row__status">
+                                        <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
+                                    </span>
+                                    <span class="course-row__title">${course['name']}</span>
+                                    <span class="course-row__progress">${course['progress']}%</span>
+                                </a>
 
                         % endfor
                     % else:
