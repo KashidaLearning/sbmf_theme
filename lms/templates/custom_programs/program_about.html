@@ -193,18 +193,10 @@
         </section>
 
     <!-- This will be the rightmost column (Column 1) -->
-    <div class="yellow-icon-alone">
-        <div class="icon-item yellow-icon">
-            <img src="${static.url('images/home-icon.png')}" alt="home">
-            <div class="icon-label">المغامرات</div>
-        </div>
-    </div>
+
         % if user_is_enrolled:
         <div class="purple-icon-row">
-              <div class="icon-item yellow-icon">
-                <img src="${static.url('images/home-icon.png')}" alt="home">
-                <div class="icon-label">المغامرات</div>
-            </div>
+           
             <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
                 <div class="icon-circle">
                     <img src="${static.url('images/law7atta7akom.png')}" alt="لوحةالتحكم">
@@ -230,7 +222,12 @@
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
-          
+           <div class="yellow-icon-alone">
+            <div class="icon-item yellow-icon">
+                <img src="${static.url('images/home-icon.png')}" alt="home">
+                <div class="icon-label">المغامرات</div>
+            </div>
+        </div>
         </div>
         % endif
         % if user_is_enrolled:
