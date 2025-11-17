@@ -24,7 +24,7 @@
 
 .program-card {
   background: linear-gradient(180deg, #416A9E80 0%, transparent 100%);
-  border-radius: 32px;
+  border-radius: 25px;
   padding: 40px 40px 28px;
   width: 580px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
