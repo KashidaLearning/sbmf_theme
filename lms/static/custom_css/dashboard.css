@@ -8,7 +8,7 @@
 .leader-dashboard__title {
   font-size: 64px;
   font-weight: 800;
-  margin-bottom: 40px;
+  margin-bottom: 100px;
   text-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
   color: #ffffff !important;
 }
@@ -27,7 +27,9 @@
   border-radius: 25px;
   padding: 40px 40px 28px;
   width: 580px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  box-shadow: 6.89px 6.89px 20.67px 0px #221A372E,
+        -6.89px -6.89px 20.67px 0px #FFFFFF1F,
+        0px 4px 4px 0px #00000040;
   text-align: right;
   position: relative;
   display: flex;
@@ -95,6 +97,10 @@
   line-height: 1.4;
   height: 48px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  box-shadow:
+        6.89px 6.89px 20.67px 0px #221A372E,
+        -6.89px -6.89px 20.67px 0px #FFFFFF1F,
+        0px 4px 4px 0px #00000040;
 }
 
 /* Completed course – uses program accent color */
@@ -159,10 +165,10 @@
 
 .program-badges {
   flex-shrink: 0;
-  margin-top: 16px;
+  margin-top: 60px;
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 20px;
 }
 
 .program-badge {
