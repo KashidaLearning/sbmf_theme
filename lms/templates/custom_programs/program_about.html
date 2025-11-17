@@ -165,7 +165,7 @@
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
                     % if program.subject:
-                        <div class="cat-name" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
+                        <div class="cat-name" style="background-color:${program.css_single_color};" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
                     <p><b>هنا تبدأ قصتك كصانع</b></p>
@@ -237,7 +237,7 @@
             <div class="lh-progress-out">
                 <div class="lh-progress-val-out"></div> 
                 <div class="lh-progress-track-out">
-                    <div class="lh-progress-fill-out" style="width: ${current_user_progress}% "></div>
+                    <div class="lh-progress-fill-out" style="width: ${current_user_progress}% ; background-color:${program.css_single_color};"></div>
                 </div>
             </div>
             % endif

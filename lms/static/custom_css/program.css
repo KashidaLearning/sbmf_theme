@@ -1355,8 +1355,8 @@ flex: unset !important;
   top: 0;
   height: 100%;
   border-radius: 50px;
-   background: linear-gradient(90deg, #7b1fa2, #e040fb);
-  transition: width 0.6s ease-in-out;
+/*    background: linear-gradient(90deg, #7b1fa2, #e040fb);
+ */  transition: width 0.6s ease-in-out;
 }
 
 
