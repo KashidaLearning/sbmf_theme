@@ -23,7 +23,7 @@
 /* Program card */
 
 .program-card {
-  background: rgba(5, 15, 60, 0.96);
+  background: linear-gradient(180deg, #416A9E80 0%, transparent 100%);
   border-radius: 32px;
   padding: 40px 40px 28px;
   width: min(480px, 100%);
@@ -113,13 +113,14 @@
 
 .course-row__status {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.12);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-left: 20px;
 }
 
 .course-row__title {
