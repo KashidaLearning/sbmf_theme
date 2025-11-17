@@ -124,10 +124,10 @@ cert_name_long = settings.CERT_NAME_LONG
     <div class="programs-grid">
     % for program in Program.objects.all():
 
-    <%
-        # -----------------------------
-        # Build course progress + badges for this program
-        # -----------------------------
+            <%
+        # -------------------------------------------------------
+        # Build course progress + badge + placeholder per course
+        # -------------------------------------------------------
         total_progress = 0
         course_count = 0
         course_progress_list = []
@@ -140,17 +140,22 @@ cert_name_long = settings.CERT_NAME_LONG
         for program_course in program_courses_qs:
             course_obj = getattr(program_course, 'course', None)
             if course_obj:
+
                 course_key = course_obj.course_key
                 course_key_string = str(course_key)
 
-                # Is the learner enrolled?
+                # -----------------------------
+                # Enrollment check
+                # -----------------------------
                 is_enrolled = CourseEnrollment.objects.filter(
                     user=request.user,
                     course_id=course_key_string,
                     is_active=True
                 ).exists()
 
-                # Progress from LeaderBoard (0–100)
+                # -----------------------------
+                # Progress (0–100)
+                # -----------------------------
                 if is_enrolled:
                     points, passed = LeaderBoard.get_score(request.user, course_key_string)
                     course_progress = int(float(points)) if points else 0
@@ -160,27 +165,48 @@ cert_name_long = settings.CERT_NAME_LONG
                 total_progress += course_progress
                 course_count += 1
 
-                # ------------------------------------
-                # Badge for this course
-                # ------------------------------------
+                # -----------------------------
+                # Badge placeholder for this course
+                # (coming from Badge model -> placeholder_icon)
+                # -----------------------------
+                placeholder_icon_url = None
                 try:
-                    course_badges = UserBadge.get_my_course_badges(request.user, course_key)
+                    # Get the badge definitions attached to this course
+                    possible_badges = Badge.objects.filter(specific_courses=course_obj)
+                    if possible_badges.exists():
+                        placeholder_badge = possible_badges.first()
+                        if placeholder_badge.placeholder_icon:
+                            placeholder_icon_url = placeholder_badge.placeholder_icon.url
                 except Exception:
-                    course_badges = []
+                    pass
 
+                # -----------------------------
+                # User earned badge for this course
+                # -----------------------------
                 badge_icon_url = None
-                if course_badges:
-                    first_badge = course_badges[0]
-                    if getattr(first_badge.badge, "icon", None):
-                        badge_icon_url = first_badge.badge.icon.url
+                try:
+                    earned_badges = UserBadge.get_my_course_badges(request.user, course_key)
+                    if earned_badges:
+                        earned_badge = earned_badges[0]
+                        if getattr(earned_badge.badge, "icon", None):
+                            badge_icon_url = earned_badge.badge.icon.url
+                except Exception:
+                    pass
 
+                # -----------------------------
+                # Append course data
+                # -----------------------------
                 course_progress_list.append({
                     'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
                     'progress': course_progress,
                     'course_url': course_home_url(course_key),
                     'badge_icon': badge_icon_url,
+                    'placeholder_icon': placeholder_icon_url,
                 })
 
+        # -----------------------------
+        # Program average progress
+        # -----------------------------
         program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
 
         # -----------------------------
@@ -188,7 +214,6 @@ cert_name_long = settings.CERT_NAME_LONG
         # -----------------------------
         program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
         %>
-
 
   
 
@@ -243,22 +268,22 @@ cert_name_long = settings.CERT_NAME_LONG
                 </div>
 
                                 <!-- Badges strip -->
-                <div class="program-badges">
-                    % if course_progress_list:
-                        % for course in course_progress_list:
-                            % if course.get('badge_icon'):
-                                <div class="program-badge">
-                                    <img src="${course['badge_icon']}" alt="شارة مكتملة">
-                                </div>
-                            % else:
-                                <div class="program-badge program-badge--placeholder"></div>
-                            % endif
-                        % endfor
-                    % else:
-                        <!-- No courses at all -->
-                        <div class="program-badge program-badge--placeholder"></div>
-                    % endif
-                </div>
+              <div class="program-badges">
+                      % for course in course_progress_list:
+                          % if course['badge_icon']:
+                              <div class="program-badge">
+                                  <img src="${course['badge_icon']}" alt="شارة مكتملة">
+                              </div>
+                          % elif course['placeholder_icon']:
+                              <div class="program-badge">
+                                  <img src="${course['placeholder_icon']}" alt="شارة">
+                              </div>
+                          % else:
+                              <div class="program-badge program-badge--placeholder"></div>
+                          % endif
+                      % endfor
+                  </div>
+
 
 
 
