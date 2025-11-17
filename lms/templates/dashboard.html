@@ -124,7 +124,7 @@ cert_name_long = settings.CERT_NAME_LONG
     <div class="programs-grid">
     % for program in Program.objects.all():
 
-            <%
+                   <%
         # -------------------------------------------------------
         # Build course progress + badge + placeholder per course
         # -------------------------------------------------------
@@ -137,7 +137,7 @@ cert_name_long = settings.CERT_NAME_LONG
         except Exception:
             program_courses_qs = []
 
-               for program_course in program_courses_qs:
+        for program_course in program_courses_qs:
             course_obj = getattr(program_course, 'course', None)
             if course_obj:
 
@@ -158,8 +158,8 @@ cert_name_long = settings.CERT_NAME_LONG
                 is_locked = not is_enrolled
 
                 # -----------------------------
-                # Progress (0–100) - we still compute it for the
-                # overall program progress, but NOT for status
+                # Progress (0–100) - still used for
+                # overall program progress, not for status
                 # -----------------------------
                 if is_enrolled:
                     points, passed = LeaderBoard.get_score(request.user, course_key_string)
@@ -172,7 +172,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
                 # -----------------------------
                 # Badge placeholder for this course
-                # (coming from Badge model -> placeholder_icon)
+                # (Badge.placeholder_icon)
                 # -----------------------------
                 placeholder_icon_url = None
                 try:
