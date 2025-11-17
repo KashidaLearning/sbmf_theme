@@ -137,7 +137,7 @@ cert_name_long = settings.CERT_NAME_LONG
         except Exception:
             program_courses_qs = []
 
-        for program_course in program_courses_qs:
+               for program_course in program_courses_qs:
             course_obj = getattr(program_course, 'course', None)
             if course_obj:
 
@@ -153,8 +153,13 @@ cert_name_long = settings.CERT_NAME_LONG
                     is_active=True
                 ).exists()
 
+                # A simple "locked" flag:
+                # not enrolled => locked
+                is_locked = not is_enrolled
+
                 # -----------------------------
-                # Progress (0–100)
+                # Progress (0–100) - we still compute it for the
+                # overall program progress, but NOT for status
                 # -----------------------------
                 if is_enrolled:
                     points, passed = LeaderBoard.get_score(request.user, course_key_string)
@@ -171,7 +176,6 @@ cert_name_long = settings.CERT_NAME_LONG
                 # -----------------------------
                 placeholder_icon_url = None
                 try:
-                    # Get the badge definitions attached to this course
                     possible_badges = Badge.objects.filter(specific_courses=course_obj)
                     if possible_badges.exists():
                         placeholder_badge = possible_badges.first()
@@ -198,10 +202,11 @@ cert_name_long = settings.CERT_NAME_LONG
                 # -----------------------------
                 course_progress_list.append({
                     'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
-                    'progress': course_progress,
+                    'progress': course_progress,          # still used for program avg
                     'course_url': course_home_url(course_key),
                     'badge_icon': badge_icon_url,
                     'placeholder_icon': placeholder_icon_url,
+                    'is_locked': is_locked,
                 })
 
         # -----------------------------
@@ -237,20 +242,26 @@ cert_name_long = settings.CERT_NAME_LONG
                        % for course in course_progress_list:
 
                             <%
-                                # Decide visual state + icon based on progress
-                                if course['progress'] == 0:
+                                is_locked = course.get('is_locked', False)
+                                has_badge = bool(course.get('badge_icon'))
+
+                                if is_locked:
+                                    # Locked / not started
                                     course_state_class = 'course-row--locked'
                                     course_icon_file = 'images/dashboard-locked.png'
                                     course_icon_alt = 'غير مكتمل'
-                                elif course['progress'] < 100:
-                                    course_state_class = 'course-row--in-progress'
-                                    course_icon_file = 'images/dashboard-play.png'
-                                    course_icon_alt = 'قيد التنفيذ'
-                                else:
+                                elif has_badge:
+                                    # Completed (earned badge)
                                     course_state_class = 'course-row--done'
                                     course_icon_file = 'images/dashboard-done.png'
                                     course_icon_alt = 'مكتمل'
-                                %>
+                                else:
+                                    # In progress (enrolled, not locked, no badge yet)
+                                    course_state_class = 'course-row--in-progress'
+                                    course_icon_file = 'images/dashboard-play.png'
+                                    course_icon_alt = 'قيد التنفيذ'
+                            %>
+
 
                           <div class="course-row ${course_state_class}">
                                 <span class="course-row__title">${course['name']}</span>
