@@ -124,9 +124,9 @@ cert_name_long = settings.CERT_NAME_LONG
     <div class="programs-grid">
     % for program in Program.objects.all():
 
-        <%
+    <%
         # -----------------------------
-        # Build course progress for this program
+        # Build course progress + badges for this program
         # -----------------------------
         total_progress = 0
         course_count = 0
@@ -140,7 +140,8 @@ cert_name_long = settings.CERT_NAME_LONG
         for program_course in program_courses_qs:
             course_obj = getattr(program_course, 'course', None)
             if course_obj:
-                course_key_string = str(course_obj.course_key)
+                course_key = course_obj.course_key
+                course_key_string = str(course_key)
 
                 # Is the learner enrolled?
                 is_enrolled = CourseEnrollment.objects.filter(
@@ -151,7 +152,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
                 # Progress from LeaderBoard (0–100)
                 if is_enrolled:
-                    points, passed = LeaderBoard.get_score(request.user, str(course_obj.course_key))
+                    points, passed = LeaderBoard.get_score(request.user, course_key_string)
                     course_progress = int(float(points)) if points else 0
                 else:
                     course_progress = 0
@@ -159,51 +160,35 @@ cert_name_long = settings.CERT_NAME_LONG
                 total_progress += course_progress
                 course_count += 1
 
+                # ------------------------------------
+                # Badge for this course
+                # ------------------------------------
+                try:
+                    course_badges = UserBadge.get_my_course_badges(request.user, course_key)
+                except Exception:
+                    course_badges = []
+
+                badge_icon_url = None
+                if course_badges:
+                    first_badge = course_badges[0]
+                    if getattr(first_badge.badge, "icon", None):
+                        badge_icon_url = first_badge.badge.icon.url
+
                 course_progress_list.append({
                     'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
                     'progress': course_progress,
-                    'course_url': course_home_url(course_obj.course_key),
+                    'course_url': course_home_url(course_key),
+                    'badge_icon': badge_icon_url,
                 })
 
         program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
 
         # -----------------------------
-        # Badges for this program
-        # -----------------------------
-        my_badges = UserBadge.objects.filter(user=request.user).select_related('badge')
-        program_badges = [
-            ub for ub in my_badges
-            if getattr(ub.badge, 'specific_program_id', None) == program.id
-        ]
-
-        # Extract badge icon URLs (we'll assign them to completed courses)
-        badge_icons = [
-            ub.badge.icon.url
-            for ub in program_badges
-            if getattr(ub.badge, 'icon', None)
-        ]
-
-        # -----------------------------
         # Program accent color from Program.css_single_color
         # -----------------------------
         program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
-
-        # -----------------------------
-        # Build course_badge_list: one slot per course
-        # if course is completed and user has a badge left, attach icon
-        # -----------------------------
-        course_badge_list = []
-        badge_index = 0
-
-        for c in course_progress_list:
-            entry = dict(c)
-            if c['progress'] >= 100 and badge_index < len(badge_icons):
-                entry['badge_icon'] = badge_icons[badge_index]
-                badge_index += 1
-            else:
-                entry['badge_icon'] = None
-            course_badge_list.append(entry)
         %>
+
 
   
 
@@ -224,7 +209,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
                 <div class="program-courses">
                     % if course_progress_list:
-                        % for course in course_badge_list:
+                       % for course in course_progress_list:
 
                             <%
                                 # Decide visual state + icon based on progress
@@ -257,11 +242,11 @@ cert_name_long = settings.CERT_NAME_LONG
                     % endif
                 </div>
 
-                               <!-- Badges strip -->
+                                <!-- Badges strip -->
                 <div class="program-badges">
-                    % if course_badge_list:
-                        % for course in course_badge_list:
-                            % if course['badge_icon']:
+                    % if course_progress_list:
+                        % for course in course_progress_list:
+                            % if course.get('badge_icon'):
                                 <div class="program-badge">
                                     <img src="${course['badge_icon']}" alt="شارة مكتملة">
                                 </div>
@@ -274,6 +259,7 @@ cert_name_long = settings.CERT_NAME_LONG
                         <div class="program-badge program-badge--placeholder"></div>
                     % endif
                 </div>
+
 
 
             </div>
