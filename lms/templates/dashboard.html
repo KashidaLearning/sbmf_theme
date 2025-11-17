@@ -122,7 +122,6 @@ cert_name_long = settings.CERT_NAME_LONG
     <h1 class="leader-dashboard__title">لوحة القيادة</h1>
 
     <div class="programs-grid">
-
     % for program in Program.objects.all():
 
         <%
@@ -177,12 +176,36 @@ cert_name_long = settings.CERT_NAME_LONG
             if getattr(ub.badge, 'specific_program_id', None) == program.id
         ]
 
+        # Extract badge icon URLs (we'll assign them to completed courses)
+        badge_icons = [
+            ub.badge.icon.url
+            for ub in program_badges
+            if getattr(ub.badge, 'icon', None)
+        ]
+
         # -----------------------------
         # Program accent color from Program.css_single_color
         # -----------------------------
         program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
 
+        # -----------------------------
+        # Build course_badge_list: one slot per course
+        # if course is completed and user has a badge left, attach icon
+        # -----------------------------
+        course_badge_list = []
+        badge_index = 0
+
+        for c in course_progress_list:
+            entry = dict(c)
+            if c['progress'] >= 100 and badge_index < len(badge_icons):
+                entry['badge_icon'] = badge_icons[badge_index]
+                badge_index += 1
+            else:
+                entry['badge_icon'] = None
+            course_badge_list.append(entry)
         %>
+
+  
 
         <article class="program-card" style="--program-accent:${program_accent_color};">
             
@@ -201,7 +224,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
                 <div class="program-courses">
                     % if course_progress_list:
-                        % for course in course_progress_list:
+                        % for course in course_badge_list:
 
                             <%
                                 # Decide visual state + icon based on progress
@@ -234,23 +257,24 @@ cert_name_long = settings.CERT_NAME_LONG
                     % endif
                 </div>
 
-                <!-- Badges strip -->
+                               <!-- Badges strip -->
                 <div class="program-badges">
-                    % if program_badges:
-                        % for user_badge in program_badges:
-                            <div class="program-badge">
-                                % if user_badge.badge.icon:
-                                    <img src="${user_badge.badge.icon.url}"
-                                         alt="${user_badge.badge.title}">
-                                % endif
-                            </div>
+                    % if course_badge_list:
+                        % for course in course_badge_list:
+                            % if course['badge_icon']:
+                                <div class="program-badge">
+                                    <img src="${course['badge_icon']}" alt="شارة مكتملة">
+                                </div>
+                            % else:
+                                <div class="program-badge program-badge--placeholder"></div>
+                            % endif
                         % endfor
                     % else:
-                        % for i in range(5):
-                            <div class="program-badge program-badge--placeholder"></div>
-                        % endfor
+                        <!-- No courses at all -->
+                        <div class="program-badge program-badge--placeholder"></div>
                     % endif
                 </div>
+
 
             </div>
         </article>
