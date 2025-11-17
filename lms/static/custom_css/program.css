@@ -1345,7 +1345,7 @@ flex: unset !important;
   position: relative;
   width: 100%;
   height: 12px;
-  background: rgba(255, 255, 255, 0.15);
+  background: white;
   border-radius: 50px;
   overflow: hidden;
 }
@@ -1529,6 +1529,8 @@ max-width: 50px;
     display: flex;
     justify-content: flex-end; 
     margin-bottom: 15px; 
+    margin-top: -110px;
+    padding-left: 1050px;
 }
 
 .yellow-icon img {
@@ -1536,7 +1538,6 @@ max-width: 50px;
     height: 80px;
     border-radius: 50%;
     background: var(--accent);
-    padding: 2px;
     box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
 }
 
@@ -1545,4 +1546,7 @@ max-width: 50px;
     font-size: 16px;
     color: #fff;
     text-align: center;
+}
+.icon-item.yellow-icon {
+  padding-left: 431px;
 }
