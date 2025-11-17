@@ -219,14 +219,12 @@ cert_name_long = settings.CERT_NAME_LONG
                                     course_icon_alt = 'مكتمل'
                                 %>
 
-                            <a href="${course['course_url']}"
-                                   class="course-row ${course_state_class}">
-                                    <span class="course-row__status">
-                                        <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
-                                    </span>
-                                    <span class="course-row__title">${course['name']}</span>
-                                    <span class="course-row__progress">${course['progress']}%</span>
-                                </a>
+                          <div class="course-row ${course_state_class}">
+                                <span class="course-row__title">${course['name']}</span>
+                                <span class="course-row__status">
+                                    <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
+                                </span>
+                            </div>
 
                         % endfor
                     % else:
