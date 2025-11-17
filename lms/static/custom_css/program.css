@@ -1465,14 +1465,10 @@ max-width: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255,255,255,0.10);
     border-radius: 24px;
     padding: 40px 50px;
     margin-bottom: 35px;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.15);
     gap: 40px;
-    direction: ltr;
 
 }
 
@@ -1499,9 +1495,11 @@ max-width: 50px;
 }
 
 .control-text-box h3 {
-    font-size: 28px;
-    font-weight: 800;
-    margin-bottom: 18px;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  visibility: visible;
+  color: white;
 }
 
 .control-text-box ul {
