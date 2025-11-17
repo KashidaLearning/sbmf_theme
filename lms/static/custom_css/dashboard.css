@@ -37,11 +37,12 @@
 }
 
 .program-card__title {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 700;
   margin: 0;
   color: #ffffff;
   text-align: center;
+  margin: 30px auto;
 }
 
 /* Pill with program progress */
@@ -49,9 +50,11 @@
 .program-card__progress-pill {
   position: absolute;
   left: 50%;
+  top: 0px;
   transform: translateX(-50%);
   background: var(--program-accent, transparent);
-  border-radius: 999px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
   padding: 6px 20px;
   font-size: 14px;
   font-weight: 700;
@@ -77,10 +80,11 @@
   justify-content: space-between;
   gap: 12px;
   padding: 10px 18px;
-  border-radius: 999px;
+  border-radius: 10px;
   text-decoration: none;
   font-size: 15px;
   line-height: 1.4;
+  height: 48px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
@@ -118,17 +122,15 @@
   justify-content: center;
 }
 
-.course-row__status img {
-  max-width: 18px;
-  max-height: 18px;
-}
-
 .course-row__title {
   flex: 1 1 auto;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   text-align: right;
+  font-size: 18px;
+  color: #100E4A !important;
+  font-weight: 700;
 }
 
 .course-row__progress {
