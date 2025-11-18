@@ -8,7 +8,7 @@ const CONFIG = {
 
 
    verticalSpacing: 200,
-    specialVerticalSpacing: 120,
+    specialVerticalSpacing: 140,
 
     initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
@@ -116,7 +116,7 @@ function calculatePosition(index, isSpecial) {
     const rect = circlesWrapper.getBoundingClientRect();
     const centerX = rect.width / 2;
 
-    const amplitude = 150;
+    const amplitude = 200;
 
     let y = index * CONFIG.verticalSpacing;
 

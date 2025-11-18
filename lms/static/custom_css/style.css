@@ -4,7 +4,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    min-height: calc(var(--path-items) * 260px); /* dynamic height */
+    min-height: calc(var(--path-items) * 150px); /* dynamic height */
 }
 .circles-wrapper {
     position: relative;
