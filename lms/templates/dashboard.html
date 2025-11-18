@@ -123,37 +123,17 @@ cert_name_long = settings.CERT_NAME_LONG
 
     <div class="programs-grid">
 
-        <%
-        # -----------------------------------------
-        # Does the user have any enrolled programs?
-        # -----------------------------------------
-        user_program_count = ProgramEnrollmentRequest.objects.filter(
-            user=request.user,
-            status="approved"
-        ).count()
-        %>
-
-        % if user_program_count == 0:
+      % if not enrolled_programs:
             <div class="no-programs-message">
                 أنت غير مسجل في أي رحلة حالياً.
-                <span class="go-to-journeys">اذهب إلى صفحة الرحلات.</span>
+                <a href="${reverse('custom_programs:programs_list')}" class="go-to-journeys">
+                    اذهب إلى صفحة الرحلات
+                </a>
             </div>
-        % endif
+
+        % else:
 
         % for program in Program.objects.all():
-
-            <%
-            # -----------------------------------------
-            # Is the user enrolled in this specific program?
-            # -----------------------------------------
-            user_is_enrolled = ProgramEnrollmentRequest.objects.filter(
-                user=request.user,
-                program=program,
-                status="approved"
-            ).exists()
-            %>
-
-            % if user_is_enrolled:
 
                 <%
                 # -------------------------------------------------------
@@ -333,10 +313,12 @@ cert_name_long = settings.CERT_NAME_LONG
                     </div>
                 </article>
 
-            % endif  ## end if user_is_enrolled
+       
 
         % endfor  ## end programs loop
 
+        
+% endif  <!-- end if enrolled_programs -->
     </div>
 </section>
 
