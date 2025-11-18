@@ -83,6 +83,7 @@
   flex-direction: column;
   gap: 30px;
   flex: 1 1 auto;
+  align-items: center;
 }
 
 .course-row {
@@ -91,12 +92,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 18px;
+  padding: 10px 30px;
   border-radius: 10px;
   text-decoration: none;
   font-size: 15px;
-  line-height: 1.4;
+  line-height: 30px;
   height: 32px;
+  width: 460px;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
   box-shadow:
         6.89px 6.89px 20.67px 0px #221A372E,
