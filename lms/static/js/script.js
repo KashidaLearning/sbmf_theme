@@ -8,7 +8,8 @@ const CONFIG = {
 
 
    verticalSpacing: 200,
-    specialVerticalSpacing: 100,
+    specialVerticalSpacing: 120,
+
     initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
 
@@ -117,9 +118,8 @@ function calculatePosition(index, isSpecial) {
 
     const amplitude = 150;
 
-    let y = isSpecial
-        ? index * CONFIG.specialVerticalSpacing * 2
-        : index * CONFIG.verticalSpacing;
+    let y = index * CONFIG.verticalSpacing;
+
 
     const patternIndex = index % CONFIG.positionPattern.length;
     const multiplier = CONFIG.positionPattern[patternIndex];
