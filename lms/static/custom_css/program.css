@@ -866,8 +866,8 @@ text-align: right;
 
 #popup-dynamic-content .badge-grid {
     display: grid;
-    grid-template-columns: auto auto auto ;
-    gap: 0px;
+    grid-template-columns: repeat(4, auto);
+     gap: 0px;
     margin-top: 20px;
     justify-items: center;
 }
@@ -1629,3 +1629,7 @@ font-size: 72px;
   text-shadow: -1px -1px 1px rgba(255, 255, 255, 0.4), 1px 1px 1px rgba(0, 0, 0, 0.7);
   padding-left: 54px;
 }
+
+
+
+

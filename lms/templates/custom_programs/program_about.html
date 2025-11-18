@@ -26,12 +26,14 @@
     <meta property="og:title" content="${program.name}" />
     <meta property="og:description" content="${program.short_description}" />
     <link rel="stylesheet" type="text/css" href="${static.url('custom_css/program.css')}">
+        <link rel="stylesheet" type="text/css" href="${static.url('custom_css/style.css')}">
+
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </%block>
 <%block name="pagetitle">${program.name}</%block>
 <style>
 .card.locked::after ,.wide-cta.locked::after{
-    content: url("${static.url('images/locked.png')}");
+    content: url("${static.url('images/Locked00.png')}");
     /* Unicode lock icon */
     font-size: 50px;
     /* Size of the icon */
@@ -239,7 +241,85 @@
                 </div>
             </div>
             % endif
-        <div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 70px;">
+<div class="courses-container" style="max-width: 1240px ;padding:20px;padding-bottom: 570px;padding-top: 75px;">
+    
+    <div id="circlesWrapper" class="circles-wrapper" 
+     style="position: relative; width: 100%; height: 100%;">
+</div>
+
+    <%!
+        import json
+    %>
+
+    <%
+        # Order courses
+        all_courses_ordered = courses.order_by("order")
+
+        coursePathItems = []
+        active_index = None
+        idx = 0
+
+        for course in all_courses_ordered:
+            overview = CourseOverview.get_from_id(course.course.course_key)
+            course_badges = UserBadge.get_my_course_badges(request.user, course.course.course_key)
+            course_requirements = courses_requirements_not_met.get(overview.id)
+
+            is_locked = False if user_is_enrolled else True
+            if course_requirements:
+                is_locked = True
+
+            is_completed = bool(course_badges)
+            is_active = user_is_enrolled and not is_locked and not is_completed
+            if is_active and active_index is None:
+                active_index = idx
+
+            if resume_button_urls.get(str(overview.id)):
+                course_link = resume_button_urls.get(str(overview.id))
+            else:
+                course_blocks = get_course_outline_block_tree(request, str(overview.id), request.user)
+                start_block = get_start_block(course_blocks)
+                course_link = start_block['lms_web_url']
+
+            is_special = (course.display_layout == "horizontal" or course.order == 1)
+
+            coursePathItems.append({
+                "id": int(course.id),
+                "title": text_type(overview.display_name_with_default),
+                "description": text_type(overview.short_description or ""),
+                "icon": overview.course_image_url,
+                "state": (
+                    "completed" if is_completed
+                    else "active" if is_active
+                    else "locked"
+                ),
+                "link": course_link,
+                "is_special": is_special,
+            })
+
+            idx += 1
+
+        if active_index is None:
+            active_index = 0
+    %>
+
+    <script type="application/json" id="course-path-data-json">
+        ${ json.dumps({
+            "items": coursePathItems,
+            "initialActiveIndex": active_index
+        }) | n }
+    </script>
+
+    <script>
+        const raw = document.getElementById("course-path-data-json").textContent;
+        const parsed = JSON.parse(raw);
+
+        window.coursePathData = parsed.items;
+        window.coursePathConfig = {
+            initialActiveIndex: parsed.initialActiveIndex
+        };
+    </script>
+
+<!-- 
         <%
             first_course = courses.filter(order=1, display_layout="horizontal").first()
         %>
@@ -266,14 +346,14 @@
             <div class="wide-cta ${'locked' if is_locked else ''}" id="card-1">
                 % if is_active_or_in_progress:
                     <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
-                        <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                        <img src="${static.url('images/active00.png')}" alt="Start Course">
                     </a>
                 % endif
           
 
                 % if course_badges:
                     % for badge in course_badges:
-                        <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
+                        <div class="badge-icon"><img src="${static.url('images/completed001.png')}" alt="badge"></div>
                     % endfor
                 % endif
             
@@ -310,14 +390,14 @@
                     <article class="card ${'locked' if is_locked else ''}" >
                         % if is_active_or_in_progress:
                             <a href="${course_link}" class="open-course-modal-link">
-                                <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                                <img src="${static.url('images/active00.png')}" alt="Start Course">
                             </a>
                         % endif
                     
 
                         % if course_badges:
                             % for badge in course_badges:
-                                <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
+                                <div class="badge-icon"><img src="${static.url('images/completed001.png')}" alt="badge"></div>
                             % endfor
                         % endif
                 
@@ -359,13 +439,13 @@
                 <div class="wide-cta ${'locked' if is_locked else ''}" id="card-n-${course.order}">
                    % if is_active_or_in_progress:
                         <a href="${course_link}" class="start-icon-overlay" title="${button_text}">
-                            <img src="${static.url('images/start-icon.png')}" alt="Start Course">
+                            <img src="${static.url('images/active00.png')}" alt="Start Course">
                         </a>
                     % endif
 
                     % if course_badges:
                         % for badge in course_badges:
-                            <div class="badge-icon"><img src="${badge.badge.icon.url}" alt="badge"></div>
+                            <div class="badge-icon"><img src="${static.url('images/completed001.png')}" alt="badge"></div>
                         % endfor
                     % endif
             
@@ -376,7 +456,7 @@
                 </div>
             % endfor
         % endif
-    </div>
+    </div> -->
     </div>
     <!-- Popup HTML Structure -->
     <div id="global-popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
@@ -919,6 +999,16 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 <%block name="js_extra">
 <script>
+    window.STATE_ICONS = {
+        completed: "${static.url('images/completed001.png')}",
+        active: "${static.url('images/active00.png')}",
+        locked: "${static.url('images/lockedstatus.png')}"
+    };
+</script>
+<script src="${static.url('js/script.js')}"></script>
+
+<script>
+    
    document.addEventListener("DOMContentLoaded", function () {
 
     const popupOverlay = document.getElementById("global-popup-overlay");
