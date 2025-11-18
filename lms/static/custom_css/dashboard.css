@@ -40,11 +40,12 @@
   margin-bottom: 24px;
 }
 
-.program-card__title {
+.program-card__title a {
   font-size: 25px;
   font-weight: 700;
   margin: 0;
-  color: #ffffff;
+  color: #ffffff !important;
+  text-decoration: none;
   text-align: center;
   margin: 30px auto;
 }
@@ -169,11 +170,15 @@
   display: flex;
   justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
+  align-content: center;
+  margin: 60px auto 0 auto;
+  max-width: 380px;
 }
 
 .program-badge {
-  width: 42px;
-  height: 48px;
+  width: 60px;
+  height: 69px;
   border-radius: 12px;
   background: #ffffff;
   display: flex;
