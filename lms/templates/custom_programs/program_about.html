@@ -806,31 +806,49 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
 
+<%
+    program_courses = program.program_courses.all().order_by("order")
+    total_courses = program_courses.count()
+    earned_badges = my_badges.count()
+    missing_badges = total_courses - earned_badges
+%>
+<%
+    from achievements.models import Badge
+    placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
+%>
 
 
-   <div id="my-badges-content" style="display: none;">
-       <!--  <div class="title-badgescontent">
-                <img src="${static.url('images/badges-icon-popup.png')}" alt="img">
-                <h2>ادوات الاستمرارية</h2>
-            </div>    -->
-              <div class="sharati-intro-text">
+  <div id="my-badges-content" style="display: none;">
+
+    <div class="sharati-intro-text">
         كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت. أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
     </div>
-         <div class="badge-grid">
-            % for badge in my_badges:
-                <%      
-                    badge_placeholder_icon = ""          
-                    if badge.badge.placeholder_icon:
-                        badge_placeholder_icon = badge.badge.placeholder_icon.url
-                %>
-                <div class="badge-item">
-                    <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-                 <!--<p>${badge.badge.title}</p>-->   
-                </div>
-            % endfor
+
+   <div class="badge-grid">
+
+    % for badge in my_badges:
+        <div class="badge-item">
+            <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
         </div>
-        <p>هناك المزيد من الشارات بانتظارك!</p>
-    </div>
+    % endfor
+
+    % if missing_badges > 0:
+        % for i in range(missing_badges):
+            <div class="badge-item">
+                <img src="${placeholder_badge.placeholder_icon.url}" alt="placeholder">
+            </div>
+        % endfor
+    % endif %
+
+</div>
+
+
+
+
+    <p>هناك المزيد من الشارات بانتظارك!</p>
+</div>
+
+
     <div id="certificate-content" style="display: none;">
          <!-- <div class="title-certificatecontent">
                 <img src="${static.url('images/cert-popup.png')}" alt="img">
