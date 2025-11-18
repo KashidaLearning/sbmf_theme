@@ -40,9 +40,9 @@
   margin-bottom: 24px;
 }
 
-.program-card__title a {
-  font-size: 25px;
-  font-weight: 700;
+.program-card__title a , .program-card__title {
+  font-size: 25px !important;
+  font-weight: 700 !important;
   margin: 0;
   color: #ffffff !important;
   text-decoration: none;
