@@ -118,199 +118,229 @@ cert_name_long = settings.CERT_NAME_LONG
     all_programs = Program.objects.all()
   %>
 
- <section class="programs-section leader-dashboard">
+<section class="programs-section leader-dashboard">
     <h1 class="leader-dashboard__title">لوحة القيادة</h1>
 
     <div class="programs-grid">
-    % for program in Program.objects.all():
 
-                   <%
-        # -------------------------------------------------------
-        # Build course progress + badge + placeholder per course
-        # -------------------------------------------------------
-        total_progress = 0
-        course_count = 0
-        course_progress_list = []
-
-        try:
-            program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
-        except Exception:
-            program_courses_qs = []
-
-        for program_course in program_courses_qs:
-            course_obj = getattr(program_course, 'course', None)
-            if course_obj:
-
-                course_key = course_obj.course_key
-                course_key_string = str(course_key)
-
-                # -----------------------------
-                # Enrollment check
-                # -----------------------------
-                is_enrolled = CourseEnrollment.objects.filter(
-                    user=request.user,
-                    course_id=course_key_string,
-                    is_active=True
-                ).exists()
-
-                # A simple "locked" flag:
-                # not enrolled => locked
-                is_locked = not is_enrolled
-
-                # -----------------------------
-                # Progress (0–100) - still used for
-                # overall program progress, not for status
-                # -----------------------------
-                if is_enrolled:
-                    points, passed = LeaderBoard.get_score(request.user, course_key_string)
-                    course_progress = int(float(points)) if points else 0
-                else:
-                    course_progress = 0
-
-                total_progress += course_progress
-                course_count += 1
-
-                # -----------------------------
-                # Badge placeholder for this course
-                # (coming from Badge model -> placeholder_icon)
-                # -----------------------------
-                placeholder_icon_url = None
-                try:
-                    # MUST FILTER USING CourseOverview, not course_obj
-                    overview = CourseOverview.get_from_id(course_obj.course_key)
-                    possible_badges = Badge.objects.filter(specific_courses=overview)
-
-                    if possible_badges.exists():
-                        placeholder_badge = possible_badges.first()
-                        if placeholder_badge.placeholder_icon:
-                            placeholder_icon_url = placeholder_badge.placeholder_icon.url
-                except Exception:
-                    pass
-
-
-                # -----------------------------
-                # User earned badge for this course
-                # -----------------------------
-                badge_icon_url = None
-                try:
-                    earned_badges = UserBadge.get_my_course_badges(request.user, course_key)
-                    if earned_badges:
-                        earned_badge = earned_badges[0]
-                        if getattr(earned_badge.badge, "icon", None):
-                            badge_icon_url = earned_badge.badge.icon.url
-                except Exception:
-                    pass
-
-                # -----------------------------
-                # Append course data
-                # -----------------------------
-                course_progress_list.append({
-                    'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
-                    'progress': course_progress,          # still used for program avg
-                    'course_url': course_home_url(course_key),
-                    'badge_icon': badge_icon_url,
-                    'placeholder_icon': placeholder_icon_url,
-                    'is_locked': is_locked,
-                })
-
-        # -----------------------------
-        # Program average progress
-        # -----------------------------
-        program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
-
-        # -----------------------------
-        # Program accent color from Program.css_single_color
-        # -----------------------------
-        program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
+        <%
+        # -----------------------------------------
+        # Does the user have any enrolled programs?
+        # -----------------------------------------
+        user_program_count = ProgramEnrollmentRequest.objects.filter(
+            user=request.user,
+            status="approved"
+        ).count()
         %>
 
-  
-
-        <article class="program-card" style="--program-accent:${program_accent_color};">
-            
-           <!-- Progress pill (centered on top of card) -->
-          <div class="program-card__progress-pill">
-              <span>${program_progress_average}%</span>
-          </div>
-
-            <!-- Header -->
-          <header class="program-card__header">
-            <h2 class="program-card__title">
-              <a href="${reverse('custom_programs:program_about', args=[program.id])}">${program.name}</a>
-          </h2>
-          </header>
-
-            <!-- Courses list -->
-            <div class="program-card__body">
-
-                <div class="program-courses">
-                    % if course_progress_list:
-                       % for course in course_progress_list:
-
-                            <%
-                                is_locked = course.get('is_locked', False)
-                                has_badge = bool(course.get('badge_icon'))
-
-                                if is_locked:
-                                    # Locked / not started
-                                    course_state_class = 'course-row--locked'
-                                    course_icon_file = 'images/dashboard-locked.png'
-                                    course_icon_alt = 'غير مكتمل'
-                                elif has_badge:
-                                    # Completed (earned badge)
-                                    course_state_class = 'course-row--done'
-                                    course_icon_file = 'images/dashboard-done.png'
-                                    course_icon_alt = 'مكتمل'
-                                else:
-                                    # In progress (enrolled, not locked, no badge yet)
-                                    course_state_class = 'course-row--in-progress'
-                                    course_icon_file = 'images/dashboard-play.png'
-                                    course_icon_alt = 'قيد التنفيذ'
-                            %>
-
-
-                          <div class="course-row ${course_state_class}">
-                                <span class="course-row__title">${course['name']}</span>
-                                <span class="course-row__status">
-                                    <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
-                                </span>
-                            </div>
-
-                        % endfor
-                    % else:
-                        <p class="program-card__empty">
-                            لا توجد مقررات مرتبطة بهذا البرنامج بعد.
-                        </p>
-                    % endif
-                </div>
-
-                                <!-- Badges strip -->
-              <div class="program-badges">
-                      % for course in course_progress_list:
-                          % if course['badge_icon']:
-                              <div class="program-badge">
-                                  <img src="${course['badge_icon']}" alt="شارة مكتملة">
-                              </div>
-                          % elif course['placeholder_icon']:
-                              <div class="program-badge">
-                                  <img src="${course['placeholder_icon']}" alt="شارة">
-                              </div>
-                          % else:
-                              <div class="program-badge program-badge--placeholder"></div>
-                          % endif
-                      % endfor
-                  </div>
-
-
-
-
+        % if user_program_count == 0:
+            <div class="no-programs-message">
+                أنت غير مسجل في أي رحلة حالياً.
+                <span class="go-to-journeys">اذهب إلى صفحة الرحلات.</span>
             </div>
-        </article>
+        % endif
 
-    % endfor
+        % for program in Program.objects.all():
+
+            <%
+            # -----------------------------------------
+            # Is the user enrolled in this specific program?
+            # -----------------------------------------
+            user_is_enrolled = ProgramEnrollmentRequest.objects.filter(
+                user=request.user,
+                program=program,
+                status="approved"
+            ).exists()
+            %>
+
+            % if user_is_enrolled:
+
+                <%
+                # -------------------------------------------------------
+                # Build course progress + badge + placeholder per course
+                # -------------------------------------------------------
+                total_progress = 0
+                course_count = 0
+                course_progress_list = []
+
+                try:
+                    program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
+                except Exception:
+                    program_courses_qs = []
+
+                for program_course in program_courses_qs:
+                    course_obj = getattr(program_course, 'course', None)
+                    if course_obj:
+
+                        course_key = course_obj.course_key
+                        course_key_string = str(course_key)
+
+                        # -----------------------------
+                        # Enrollment check (course level)
+                        # -----------------------------
+                        is_enrolled = CourseEnrollment.objects.filter(
+                            user=request.user,
+                            course_id=course_key_string,
+                            is_active=True
+                        ).exists()
+
+                        # A simple "locked" flag:
+                        # not enrolled => locked
+                        is_locked = not is_enrolled
+
+                        # -----------------------------
+                        # Progress (0–100) - still used for
+                        # overall program progress, not for status
+                        # -----------------------------
+                        if is_enrolled:
+                            points, passed = LeaderBoard.get_score(request.user, course_key_string)
+                            course_progress = int(float(points)) if points else 0
+                        else:
+                            course_progress = 0
+
+                        total_progress += course_progress
+                        course_count += 1
+
+                        # -----------------------------
+                        # Badge placeholder for this course
+                        # (coming from Badge model -> placeholder_icon)
+                        # -----------------------------
+                        placeholder_icon_url = None
+                        try:
+                            # MUST FILTER USING CourseOverview, not course_obj
+                            overview = CourseOverview.get_from_id(course_obj.course_key)
+                            possible_badges = Badge.objects.filter(specific_courses=overview)
+
+                            if possible_badges.exists():
+                                placeholder_badge = possible_badges.first()
+                                if placeholder_badge.placeholder_icon:
+                                    placeholder_icon_url = placeholder_badge.placeholder_icon.url
+                        except Exception:
+                            pass
+
+                        # -----------------------------
+                        # User earned badge for this course
+                        # -----------------------------
+                        badge_icon_url = None
+                        try:
+                            earned_badges = UserBadge.get_my_course_badges(request.user, course_key)
+                            if earned_badges:
+                                earned_badge = earned_badges[0]
+                                if getattr(earned_badge.badge, "icon", None):
+                                    badge_icon_url = earned_badge.badge.icon.url
+                        except Exception:
+                            pass
+
+                        # -----------------------------
+                        # Append course data
+                        # -----------------------------
+                        course_progress_list.append({
+                            'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
+                            'progress': course_progress,          # still used for program avg
+                            'course_url': course_home_url(course_key),
+                            'badge_icon': badge_icon_url,
+                            'placeholder_icon': placeholder_icon_url,
+                            'is_locked': is_locked,
+                        })
+
+                # -----------------------------
+                # Program average progress
+                # -----------------------------
+                program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
+
+                # -----------------------------
+                # Program accent color from Program.css_single_color
+                # -----------------------------
+                program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
+                %>
+
+                <article class="program-card" style="--program-accent:${program_accent_color};">
+                    
+                    <!-- Progress pill (centered on top of card) -->
+                    <div class="program-card__progress-pill">
+                        <span>${program_progress_average}%</span>
+                    </div>
+
+                    <!-- Header -->
+                    <header class="program-card__header">
+                        <h2 class="program-card__title">
+                            <a href="${reverse('custom_programs:program_about', args=[program.id])}">
+                                ${program.name}
+                            </a>
+                        </h2>
+                    </header>
+
+                    <!-- Courses list -->
+                    <div class="program-card__body">
+
+                        <div class="program-courses">
+                            % if course_progress_list:
+                                % for course in course_progress_list:
+
+                                    <%
+                                        is_locked = course.get('is_locked', False)
+                                        has_badge = bool(course.get('badge_icon'))
+
+                                        if is_locked:
+                                            # Locked / not started
+                                            course_state_class = 'course-row--locked'
+                                            course_icon_file = 'images/dashboard-locked.png'
+                                            course_icon_alt = 'غير مكتمل'
+                                        elif has_badge:
+                                            # Completed (earned badge)
+                                            course_state_class = 'course-row--done'
+                                            course_icon_file = 'images/dashboard-done.png'
+                                            course_icon_alt = 'مكتمل'
+                                        else:
+                                            # In progress (enrolled, not locked, no badge yet)
+                                            course_state_class = 'course-row--in-progress'
+                                            course_icon_file = 'images/dashboard-play.png'
+                                            course_icon_alt = 'قيد التنفيذ'
+                                    %>
+
+                                    <div class="course-row ${course_state_class}">
+                                        <span class="course-row__title">${course['name']}</span>
+                                        <span class="course-row__status">
+                                            <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
+                                        </span>
+                                    </div>
+
+                                % endfor
+                            % else:
+                                <p class="program-card__empty">
+                                    لا توجد مقررات مرتبطة بهذا البرنامج بعد.
+                                </p>
+                            % endif
+                        </div>
+
+                        <!-- Badges strip -->
+                        <div class="program-badges">
+                            % for course in course_progress_list:
+                                % if course['badge_icon']:
+                                    <div class="program-badge">
+                                        <img src="${course['badge_icon']}" alt="شارة مكتملة">
+                                    </div>
+                                % elif course['placeholder_icon']:
+                                    <div class="program-badge">
+                                        <img src="${course['placeholder_icon']}" alt="شارة">
+                                    </div>
+                                % else:
+                                    <div class="program-badge program-badge--placeholder"></div>
+                                % endif
+                            % endfor
+                        </div>
+
+                    </div>
+                </article>
+
+            % endif  ## end if user_is_enrolled
+
+        % endfor  ## end programs loop
 
     </div>
 </section>
+
+
 
 
 </div></div></div>
