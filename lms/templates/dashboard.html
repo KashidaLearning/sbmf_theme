@@ -172,17 +172,21 @@ cert_name_long = settings.CERT_NAME_LONG
 
                 # -----------------------------
                 # Badge placeholder for this course
-                # (Badge.placeholder_icon)
+                # (coming from Badge model -> placeholder_icon)
                 # -----------------------------
                 placeholder_icon_url = None
                 try:
-                    possible_badges = Badge.objects.filter(specific_courses=course_obj)
+                    # MUST FILTER USING CourseOverview, not course_obj
+                    overview = CourseOverview.get_from_id(course_obj.course_key)
+                    possible_badges = Badge.objects.filter(specific_courses=overview)
+
                     if possible_badges.exists():
                         placeholder_badge = possible_badges.first()
                         if placeholder_badge.placeholder_icon:
                             placeholder_icon_url = placeholder_badge.placeholder_icon.url
                 except Exception:
                     pass
+
 
                 # -----------------------------
                 # User earned badge for this course
