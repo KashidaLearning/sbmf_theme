@@ -1,8 +1,4 @@
-/***************************************************
- *  PATH UI — DYNAMIC FROM MAKO
- ***************************************************/
 
-// Data injected from Mako template
 const dataSource = window.coursePathData || [];
 const numCircles = dataSource.length;
 
@@ -173,6 +169,7 @@ function initializeScene() {
     }
 
     circlesWrapper.innerHTML = "";
+    circlesWrapper.style.setProperty("--path-items", dataSource.length);
     circleElements = [];
 
     dataSource.forEach((item, index) => {
