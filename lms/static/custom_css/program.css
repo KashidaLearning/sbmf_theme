@@ -942,6 +942,9 @@ text-align: right;
     border: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
+    position: absolute;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
 }
 
 .close-button:hover,
