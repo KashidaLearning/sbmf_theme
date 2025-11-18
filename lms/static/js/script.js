@@ -3,8 +3,10 @@ const dataSource = window.coursePathData || [];
 const numCircles = dataSource.length;
 
 const CONFIG = {
-    positionPattern: [0, -1, -1.6, -1, 0, 1, 1.6, 1],
-   verticalSpacing: 140,
+    positionPattern: [0, -0.8, -1.4, -0.7, 0.4, 1.4, 2.1, 1.2],
+
+
+   verticalSpacing: 200,
     specialVerticalSpacing: 100,
     initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
@@ -18,9 +20,6 @@ if (!circlesWrapper) {
 }
 
 
-/***************************************************
- *  STATE CONFIGURATION
- ***************************************************/
 const STATE_CONFIG = {
     completed: {
         icon: window.STATE_ICONS.completed,
@@ -38,9 +37,6 @@ const STATE_CONFIG = {
 
 
 
-/***************************************************
- *  CREATE CIRCLE
- ***************************************************/
 function createCircle(data, index) {
     const state = data.state || "locked";
     const stateInfo = STATE_CONFIG[state];
@@ -88,9 +84,7 @@ function createCircle(data, index) {
         `;
     }
 
-    /***************************************************
-     * CLICK LOGIC
-     ***************************************************/
+ 
     circleItem.addEventListener("click", () => {
         if (state === "locked") {
             // trigger your locked popup message
@@ -116,14 +110,11 @@ function createCircle(data, index) {
 }
 
 
-/***************************************************
- * POSITION CALCULATION
- ***************************************************/
 function calculatePosition(index, isSpecial) {
     const rect = circlesWrapper.getBoundingClientRect();
     const centerX = rect.width / 2;
 
-    const amplitude = 220;
+    const amplitude = 150;
 
     let y = isSpecial
         ? index * CONFIG.specialVerticalSpacing * 2
@@ -137,9 +128,6 @@ function calculatePosition(index, isSpecial) {
 }
 
 
-/***************************************************
- * UPDATE POSITIONS
- ***************************************************/
 function updatePositions() {
     circleElements.forEach(({ index, element, isSpecial }) => {
         const { x, y } = calculatePosition(index, isSpecial);
@@ -148,10 +136,6 @@ function updatePositions() {
     });
 }
 
-
-/***************************************************
- * UPDATE STATES
- ***************************************************/
 function updateAllCircleStates() {
     circleElements.forEach(({ index, element }) => {
         element.classList.toggle("circle-item--active", index === activeStepIndex);
@@ -159,9 +143,6 @@ function updateAllCircleStates() {
 }
 
 
-/***************************************************
- * INITIALIZE SCENE
- ***************************************************/
 function initializeScene() {
     if (!dataSource.length) {
         console.warn("⚠ No dataSource found");
@@ -181,17 +162,12 @@ function initializeScene() {
 }
 
 
-/***************************************************
- * SCROLL LISTENER (OPTIONAL)
- ***************************************************/
 window.addEventListener("scroll", () => {
     updatePositions();
 });
 
 
-/***************************************************
- * RUN AFTER LOAD
- ***************************************************/
+
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
 });
