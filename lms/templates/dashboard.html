@@ -126,7 +126,7 @@ cert_name_long = settings.CERT_NAME_LONG
       % if not enrolled_programs:
             <div class="no-programs-message">
                 أنت غير مسجل في أي رحلة حالياً.
-                <a href="${reverse('custom_programs:programs_list')}" class="go-to-journeys">
+                <a href="/courses" class="go-to-journeys">
                     اذهب إلى صفحة الرحلات
                 </a>
             </div>
@@ -317,7 +317,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
         % endfor  ## end programs loop
 
-        
+
 % endif  <!-- end if enrolled_programs -->
     </div>
 </section>
