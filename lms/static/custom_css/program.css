@@ -393,7 +393,7 @@ text-align: right;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     unicode-bidi: isolate;
-    max-width: 80%;
+    max-width: 90%;
     line-height: 1.7em;
     font-size: 17px;
 }
@@ -411,13 +411,13 @@ text-align: right;
 
 
 .column-middle {
-    flex-basis: 80%;
+    flex-basis: 60%;
    font-family: 'Cairo', sans-serif;
 
 }
 
 .column-right {
-    flex-basis: 13%;
+    flex-basis: 20%;
     /* Visual Right (Column 1) */
     /*background-color: #fff0e6;  Light orange */
     /*border: 1px solid #ffe0b3;*/
@@ -1629,7 +1629,17 @@ font-size: 72px;
   text-shadow: -1px -1px 1px rgba(255, 255, 255, 0.4), 1px 1px 1px rgba(0, 0, 0, 0.7);
   padding-left: 54px;
 }
-
+.bottom_left_background_image {
+  position: absolute;
+  top: 38%;
+  left: -95%;
+}
+.bottom_right_background_image {
+  position: absolute;
+  top: 5%;
+  right: -64%;
+  width: 100%;
+}
 
 
 

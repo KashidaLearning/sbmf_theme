@@ -7,8 +7,8 @@ const CONFIG = {
 
 
 
-   verticalSpacing: 200,
-    specialVerticalSpacing: 140,
+   verticalSpacing: 230,
+    specialVerticalSpacing: 80,
 
     initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
@@ -70,7 +70,7 @@ function createCircle(data, index) {
     } else {
         circleItem.innerHTML = `
             <div class="circle-content">
-                <div class="state-icon state-icon--${state}">
+                <div class="state-icon2 state-icon--${state}">
                     <img width="45" src="${stateInfo.icon}">
                 </div>
                 <div class="circle-image-wrapper">
@@ -139,9 +139,17 @@ function updatePositions() {
         element.style.top = `${y}px`;
         element.style.transform = 'translate(-50%, -50%)';
     });
+    updateContainerHeight();
 }
-
-
+const coursescontainer = document.getElementById('coursescontainer');
+function updateContainerHeight() {
+        if (circleElements.length > 0) {
+            const lastPos = calculatePosition(circleElements.length - 1);
+            coursescontainer.style.minHeight = `${lastPos.y + 120}px`;
+        } else {
+            coursescontainer.style.minHeight = `600px`;
+        }
+    }
 function updateAllCircleStates() {
     circleElements.forEach(({ index, element }) => {
         element.classList.toggle("circle-item--active", index === activeStepIndex);

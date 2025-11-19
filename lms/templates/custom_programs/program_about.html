@@ -189,6 +189,15 @@
                         </div>
                     % endif
                 </div>
+                
+                <div class="column column-right">
+                % if top_left_background_image:
+                    <div class="top_left_background_image" >
+                        <img src="${top_left_background_image}" class="bg-img">
+                    </div>
+                % endif
+              
+                </div>
             </div>
 
     </div>
@@ -241,8 +250,20 @@
                 </div>
             </div>
             % endif
-         <div class="courses-container" style="min-height: 2960px;">
-            <div id="circlesWrapper" class="circles-wrapper"></div>
+         <div class="courses-container" id="coursescontainer" >
+         
+            % if bottom_left_background_image:
+                <div class="bottom_left_background_image">
+                    <img src="${bottom_left_background_image}" class="bg-img">
+                </div>
+            % endif
+            % if bottom_right_background_image:
+                <div class="bottom_right_background_image">
+                    <img src="${bottom_right_background_image}" class="bg-img">
+                </div>
+            % endif
+        
+        <div id="circlesWrapper" class="circles-wrapper"></div>
         </div>
     <%!
         import json
