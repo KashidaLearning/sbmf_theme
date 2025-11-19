@@ -101,7 +101,11 @@
     z-index: 6;
     text-transform: capitalize;
 }
-.status-badge--completed { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+.status-badge--completed {
+    background: var(--program-main-color);
+    border-color: var(--program-main-color);
+    box-shadow: 0 0 10px var(--program-main-color);
+}
 .status-badge--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;}
 .status-badge--locked { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
 
@@ -154,11 +158,19 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     z-index: 5;
 }
-.state-icon--completed { background:purple; border: purple;box-shadow: 1px 1px 5px black;}
-.state-icon--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72; }
+
+.state-icon--completed {
+    background: var(--program-main-color);
+    border-color: var(--program-main-color);
+    box-shadow: 0 0 12px var(--program-main-color);
+}
+.state-icon--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;top:-6px; }
 .state-icon--locked { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
-.state-icon2--completed { background:purple; border: purple;box-shadow: 1px 1px 5px black;}
-.state-icon2--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72; }
+.state-icon2--completed {
+    background: var(--program-main-color);
+    border-color: var(--program-main-color);
+    box-shadow: 0 0 12px var(--program-main-color);
+}.state-icon2--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;top:-6px; }
 .state-icon2--locked { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
 /* --- STATE STYLES --- */
 .circle-item--active .circle-content {
@@ -169,7 +181,11 @@
 .circle-item--active {
     z-index: 10; /* Make sure active item is on top */
 }
-.circle-item--completed .circle-content { border-color: #fff; background:purple}
+.circle-item--completed .circle-content {
+    border-color: var(--program-main-color);
+    background: var(--program-main-color);
+    box-shadow: 0 0 25px var(--program-main-color);
+}
 .circle-item--completed:hover .circle-content { transform: scale(1.05); border-color: #86efac; }
 .circle-item--locked { cursor: not-allowed;  opacity: 1; }
 .circle-item--locked:hover .circle-content { transform: none; }

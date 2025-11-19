@@ -30,6 +30,11 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </%block>
+<style>
+:root {
+    --program-main-color: ${program.css_single_color or "#6C2BD9"};
+}
+</style>
 <%block name="pagetitle">${program.name}</%block>
 <style>
 .card.locked::after ,.wide-cta.locked::after{
