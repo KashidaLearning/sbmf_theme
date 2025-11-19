@@ -51,8 +51,8 @@
 
 /* --- LAYOUT 1: NORMAL ITEMS (Text Below) --- */
 .circle-item:not(.circle-item--special-layout) .circle-content {
-    width: 140px;
-    height: 140px;
+    width: 175px;
+    height: 175px;
     border-radius: 50%;
     padding: 8px;    box-shadow: 5px 3px 7px rgb(0 0 0 / 46%);
 }
@@ -121,7 +121,7 @@
     display: flex;
     margin-left: -35px;
 }
-.circle-image { width:165px; height: 100%; border-radius: 50%; object-fit: cover; }
+.circle-image { width:210px; height: 100%; border-radius: 50%; object-fit: cover; }
 
 /* --- MODIFIED STATE ICON STYLES --- */
 .state-icon {
@@ -176,7 +176,7 @@
 .state-icon2--completed img {
     width: 20px;
     height: 20px;
-    filter: brightness(0) invert(1); /* make the tick WHITE */
+   
 }
 .state-icon--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;top:-6px; }
 .state-icon--locked { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
@@ -192,11 +192,11 @@
     z-index: 10; /* Make sure active item is on top */
 }
 .circle-item--completed .circle-content {
-    border-color: var(--program-main-color);
+    border-color: #fff;
     background: var(--program-main-color);
-    box-shadow: 0 0 25px var(--program-main-color);
+     box-shadow: 0 0 12px #010101;
 }
-.circle-item--completed:hover .circle-content { transform: scale(1.05); border-color: #86efac; }
+.circle-item--completed:hover .circle-content { transform: scale(1.05); border-color: var(--program-main-color); }
 .circle-item--locked { cursor: not-allowed;  opacity: 1; }
 .circle-item--locked:hover .circle-content { transform: none; }
 
@@ -330,8 +330,3 @@
     text-decoration: none;
 }
 
-#courseFrame {
-    width: 100%;
-    height: 100%;
-    border: none;
-}

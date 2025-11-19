@@ -3,12 +3,12 @@ const dataSource = window.coursePathData || [];
 const numCircles = dataSource.length;
 
 const CONFIG = {
-    positionPattern: [0, -1, -2.3, -1, 0, 1, 2.3, 1],
+    positionPattern: [0, -1.5, -3, -1.5, 0, 1.5, 3, 1.5],
 
 
 
-   verticalSpacing: 230,
-    specialVerticalSpacing: 80,
+   verticalSpacing: 270,
+    specialVerticalSpacing: 100,
 
     initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
