@@ -129,121 +129,130 @@ cert_name_long = settings.CERT_NAME_LONG
         has_any_program_enrollment = False
         %>
 
-        % for program in Program.objects.all():
+     % for program in Program.objects.all():
 
-            <%
-            # -------------------------------------------------------
-            # Build course progress + badge + placeholder per course
-            # and detect if user is enrolled in any course of program
-            # -------------------------------------------------------
-            total_progress = 0
-            course_count = 0
-            course_progress_list = []
-            program_has_enrollment = False  # <--- program-level flag
+    <%
+    # -------------------------------------------------------
+    # Build course progress + badge + placeholder per course
+    # and detect if user is enrolled in any course of program
+    # -------------------------------------------------------
+    total_progress = 0          # no longer used for avg, kept if you need it later
+    course_count = 0            # total number of courses in program
+    completed_courses_count = 0 # 🔹 NEW: number of completed courses (has badge)
+    course_progress_list = []
+    program_has_enrollment = False  # program-level flag
 
+    try:
+        program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
+    except Exception:
+        program_courses_qs = []
+
+    for program_course in program_courses_qs:
+        course_obj = getattr(program_course, 'course', None)
+        if course_obj:
+
+            course_key = course_obj.course_key
+            course_key_string = str(course_key)
+
+            # -----------------------------
+            # Enrollment check (course level)
+            # -----------------------------
+            is_enrolled = CourseEnrollment.objects.filter(
+                user=request.user,
+                course_id=course_key_string,
+                is_active=True
+            ).exists()
+
+            if is_enrolled:
+                program_has_enrollment = True  # user is in this program
+
+            # A simple "locked" flag:
+            # not enrolled => locked
+            is_locked = not is_enrolled
+
+            # -----------------------------
+            # Progress (0–100) - still computed but
+            # NOT used for program average anymore
+            # -----------------------------
+            if is_enrolled:
+                points, passed = LeaderBoard.get_score(request.user, course_key_string)
+                course_progress = int(float(points)) if points else 0
+            else:
+                course_progress = 0
+
+            total_progress += course_progress
+            course_count += 1
+
+            # -----------------------------
+            # Badge placeholder for this course
+            # (coming from Badge model -> placeholder_icon)
+            # -----------------------------
+            placeholder_icon_url = None
             try:
-                program_courses_qs = program.program_courses.all() if hasattr(program, 'program_courses') else []
+                # MUST FILTER USING CourseOverview, not course_obj
+                overview = CourseOverview.get_from_id(course_obj.course_key)
+                possible_badges = Badge.objects.filter(specific_courses=overview)
+
+                if possible_badges.exists():
+                    placeholder_badge = possible_badges.first()
+                    if placeholder_badge.placeholder_icon:
+                        placeholder_icon_url = placeholder_badge.placeholder_icon.url
             except Exception:
-                program_courses_qs = []
-
-            for program_course in program_courses_qs:
-                course_obj = getattr(program_course, 'course', None)
-                if course_obj:
-
-                    course_key = course_obj.course_key
-                    course_key_string = str(course_key)
-
-                    # -----------------------------
-                    # Enrollment check (course level)
-                    # -----------------------------
-                    is_enrolled = CourseEnrollment.objects.filter(
-                        user=request.user,
-                        course_id=course_key_string,
-                        is_active=True
-                    ).exists()
-
-                    if is_enrolled:
-                        program_has_enrollment = True  # user is in this program
-
-                    # A simple "locked" flag:
-                    # not enrolled => locked
-                    is_locked = not is_enrolled
-
-                    # -----------------------------
-                    # Progress (0–100) - still used for
-                    # overall program progress, not for status
-                    # -----------------------------
-                    if is_enrolled:
-                        points, passed = LeaderBoard.get_score(request.user, course_key_string)
-                        course_progress = int(float(points)) if points else 0
-                    else:
-                        course_progress = 0
-
-                    total_progress += course_progress
-                    course_count += 1
-
-                    # -----------------------------
-                    # Badge placeholder for this course
-                    # (coming from Badge model -> placeholder_icon)
-                    # -----------------------------
-                    placeholder_icon_url = None
-                    try:
-                        # MUST FILTER USING CourseOverview, not course_obj
-                        overview = CourseOverview.get_from_id(course_obj.course_key)
-                        possible_badges = Badge.objects.filter(specific_courses=overview)
-
-                        if possible_badges.exists():
-                            placeholder_badge = possible_badges.first()
-                            if placeholder_badge.placeholder_icon:
-                                placeholder_icon_url = placeholder_badge.placeholder_icon.url
-                    except Exception:
-                        pass
-
-                    # -----------------------------
-                    # User earned badge for this course
-                    # -----------------------------
-                    badge_icon_url = None
-                    try:
-                        earned_badges = UserBadge.get_my_course_badges(request.user, course_key)
-                        if earned_badges:
-                            earned_badge = earned_badges[0]
-                            if getattr(earned_badge.badge, "icon", None):
-                                badge_icon_url = earned_badge.badge.icon.url
-                    except Exception:
-                        pass
-
-                    # -----------------------------
-                    # Append course data
-                    # -----------------------------
-                    course_progress_list.append({
-                        'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
-                        'progress': course_progress,          # still used for program avg
-                        'course_url': course_home_url(course_key),
-                        'badge_icon': badge_icon_url,
-                        'placeholder_icon': placeholder_icon_url,
-                        'is_locked': is_locked,
-                    })
+                pass
 
             # -----------------------------
-            # If user is not enrolled in any course in this program,
-            # skip rendering this program card.
+            # User earned badge for this course
             # -----------------------------
-            if not program_has_enrollment:
-                continue
+            badge_icon_url = None
+            try:
+                earned_badges = UserBadge.get_my_course_badges(request.user, course_key)
+                if earned_badges:
+                    earned_badge = earned_badges[0]
+                    if getattr(earned_badge.badge, "icon", None):
+                        badge_icon_url = earned_badge.badge.icon.url
 
-            # If we reach here, user has at least one course in this program
-            has_any_program_enrollment = True
+                    # 🔹 NEW: mark this course as completed
+                    completed_courses_count += 1
+            except Exception:
+                pass
 
             # -----------------------------
-            # Program average progress
+            # Append course data
             # -----------------------------
-            program_progress_average = int(round(total_progress / course_count)) if course_count > 0 else 0
+            course_progress_list.append({
+                'name': getattr(course_obj, 'name', 'اسم الدورة غير متاح'),
+                'progress': course_progress,          # still available if needed
+                'course_url': course_home_url(course_key),
+                'badge_icon': badge_icon_url,
+                'placeholder_icon': placeholder_icon_url,
+                'is_locked': is_locked,
+            })
 
-            # -----------------------------
-            # Program accent color from Program.css_single_color
-            # -----------------------------
-            program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
-            %>
+    # -----------------------------
+    # If user is not enrolled in any course in this program,
+    # skip rendering this program card.
+    # -----------------------------
+    if not program_has_enrollment:
+        continue
+
+    # If we reach here, user has at least one course in this program
+    has_any_program_enrollment = True
+
+    # -----------------------------
+    # Program average progress (🔹 NEW LOGIC)
+    # Based on completed courses ratio, same as current_user_progress
+    # -----------------------------
+    if course_count > 0:
+        program_progress_average = int((completed_courses_count / course_count) * 100)
+    else:
+        program_progress_average = 0
+
+    # -----------------------------
+    # Program accent color from Program.css_single_color
+    # -----------------------------
+    program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
+    %>
+
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
                     
