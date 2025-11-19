@@ -113,20 +113,22 @@ function createCircle(data, index) {
 
 
 function calculatePosition(index, isSpecial) {
-    const rect = circlesWrapper.getBoundingClientRect();
-    const centerX = rect.width / 2;
 
-    const amplitude = 200;
+    const containerWidth = circlesWrapper.parentElement.offsetWidth;
+    const centerX = containerWidth / 2;
+
+    const amplitude = Math.min(centerX - 120, 110);
 
     let y = index * CONFIG.verticalSpacing;
 
-
     const patternIndex = index % CONFIG.positionPattern.length;
     const multiplier = CONFIG.positionPattern[patternIndex];
+
     const x = centerX + (multiplier * amplitude);
 
     return { x, y };
 }
+
 
 
 function updatePositions() {
@@ -145,6 +147,7 @@ function updateAllCircleStates() {
 
 
 function initializeScene() {
+   
     if (!dataSource.length) {
         console.warn("⚠ No dataSource found");
         return;
@@ -162,7 +165,11 @@ function initializeScene() {
     updatePositions();
 }
 
-
+ let resizeTimeout;
+    window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updatePositions, 120);
+    });
 window.addEventListener("scroll", () => {
     updatePositions();
 });
