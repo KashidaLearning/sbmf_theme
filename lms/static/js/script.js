@@ -3,7 +3,7 @@ const dataSource = window.coursePathData || [];
 const numCircles = dataSource.length;
 
 const CONFIG = {
-    positionPattern: [0, -0.9, -1.5, -0.8, 0.3, 1, 0, 0],
+    positionPattern: [0, -1, -2.3, -1, 0, 1, 2.3, 1],
 
 
 
@@ -112,14 +112,14 @@ function createCircle(data, index) {
 }
 
 
-function calculatePosition(index, isSpecial) {
+function calculatePosition(index) {
 
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
     const centerX = containerWidth / 2;
 
-    const amplitude = Math.min(centerX - 120, 110);
+    const amplitude = Math.min(centerX - 120, 100);
 
-    let y = index * CONFIG.verticalSpacing;
+    let y = 100 + (index * CONFIG.verticalSpacing);
 
     const patternIndex = index % CONFIG.positionPattern.length;
     const multiplier = CONFIG.positionPattern[patternIndex];
@@ -131,13 +131,16 @@ function calculatePosition(index, isSpecial) {
 
 
 
+
 function updatePositions() {
-    circleElements.forEach(({ index, element, isSpecial }) => {
-        const { x, y } = calculatePosition(index, isSpecial);
+    circleElements.forEach(({ index, element }) => {
+        const { x, y } = calculatePosition(index);
         element.style.left = `${x}px`;
         element.style.top = `${y}px`;
+        element.style.transform = 'translate(-50%, -50%)';
     });
 }
+
 
 function updateAllCircleStates() {
     circleElements.forEach(({ index, element }) => {
