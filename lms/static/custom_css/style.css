@@ -162,14 +162,14 @@
 .state-icon--completed,
 .state-icon2--completed {
     background: var(--program-main-color);
-    border: 2px solid var(--program-main-color);
+    border: #fff;
     width: 36px;
     height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 12px var(--program-main-color);
+     box-shadow: 0 0 12px #010101;
 }
 
 .state-icon--completed img,
@@ -178,6 +178,7 @@
     height: 20px;
    
 }
+
 .state-icon--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;top:-6px; }
 .state-icon--locked { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); }
 .state-icon2--active { background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%); color: #1e3c72;top:-6px; }
