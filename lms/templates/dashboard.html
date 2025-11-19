@@ -157,18 +157,21 @@ cert_name_long = settings.CERT_NAME_LONG
             # -----------------------------
             # Enrollment check (course level)
             # -----------------------------
-            is_enrolled = CourseEnrollment.objects.filter(
-                user=request.user,
-                course_id=course_key_string,
-                is_active=True
-            ).exists()
+            overview = CourseOverview.get_from_id(course_obj.course_key)
 
-            if is_enrolled:
-                program_has_enrollment = True  # user is in this program
+            try:
+                course_requirements = courses_requirements_not_met.get(overview.id)
+            except NameError:
+                # fallback if the dict is not passed in context
+                course_requirements = None
 
-            # A simple "locked" flag:
-            # not enrolled => locked
-            is_locked = not is_enrolled
+            # Program-level enrollment:
+            # if user appears in this program at all, we consider them "in the program"
+            program_has_enrollment = True
+
+            # Locked if there are unmet requirements for this course
+            is_locked = True if course_requirements else False
+
 
             # -----------------------------
             # Progress (0–100) - still computed but
