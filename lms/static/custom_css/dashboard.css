@@ -1,5 +1,9 @@
+.dashboard {
+   background: radial-gradient(circle at top, #3f7ed4 0%, #183a70 40%, #0a1450 100%) !important;
+}
+
+
 .programs-section.leader-dashboard {
-  background: radial-gradient(circle at top, #3f7ed4 0%, #183a70 40%, #0a1450 100%);
   padding: 80px 0 120px;
   text-align: center;
   color: #ffffff;
@@ -174,12 +178,10 @@
   flex-wrap: wrap;
   align-content: center;
   margin: 60px auto 0 auto;
-  max-width: 380px;
 }
 
 .program-badge {
-  width: 60px;
-  height: 69px;
+  height: 96px;
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -187,7 +189,6 @@
 }
 
 .program-badge img {
-  width: 100%;
   height: 100%;
 }
 
