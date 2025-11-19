@@ -225,7 +225,6 @@ cert_name_long = settings.CERT_NAME_LONG
                 'course_url': course_home_url(course_key),
                 'badge_icon': badge_icon_url,
                 'placeholder_icon': placeholder_icon_url,
-                'is_locked': is_locked,
             })
 
     # -----------------------------
@@ -275,37 +274,39 @@ cert_name_long = settings.CERT_NAME_LONG
 
                     <div class="program-courses">
                         % if course_progress_list:
-                            % for course in course_progress_list:
+                          % for course in course_progress_list:
 
-                                <%
-                                    is_locked = course.get('is_locked', False)
-                                    has_badge = bool(course.get('badge_icon'))
+                                          <%
+                                              has_badge = bool(course.get('badge_icon'))
+                                              progress = course.get('progress', 0) or 0
 
-                                    if is_locked:
-                                        # Locked / not started
-                                        course_state_class = 'course-row--locked'
-                                        course_icon_file = 'images/dashboard-locked.png'
-                                        course_icon_alt = 'غير مكتمل'
-                                    elif has_badge:
-                                        # Completed (earned badge)
-                                        course_state_class = 'course-row--done'
-                                        course_icon_file = 'images/dashboard-done.png'
-                                        course_icon_alt = 'مكتمل'
-                                    else:
-                                        # In progress (enrolled, not locked, no badge yet)
-                                        course_state_class = 'course-row--in-progress'
-                                        course_icon_file = 'images/dashboard-play.png'
-                                        course_icon_alt = 'قيد التنفيذ'
-                                %>
+                                              if has_badge:
+                                                  # Completed (earned badge)
+                                                  course_state_class = 'course-row--done'
+                                                  course_icon_file = 'images/dashboard-done.png'
+                                                  course_icon_alt = 'مكتمل'
+                                              elif progress > 0:
+                                                  # In progress (some points but no badge yet)
+                                                  course_state_class = 'course-row--in-progress'
+                                                  course_icon_file = 'images/dashboard-play.png'
+                                                  course_icon_alt = 'قيد التنفيذ'
+                                              else:
+                                                  # Not started: no badge, 0 progress
+                                                  course_state_class = 'course-row--locked'
+                                                  course_icon_file = 'images/dashboard-locked.png'
+                                                  course_icon_alt = 'غير مكتمل'
+                                          %>
 
-                                <div class="course-row ${course_state_class}">
-                                    <span class="course-row__title">${course['name']}</span>
-                                    <span class="course-row__status">
-                                        <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
-                                    </span>
-                                </div>
+                                          <div class="course-row ${course_state_class}">
+                                              <span class="course-row__title">${course['name']}</span>
+                                              <span class="course-row__status">
+                                                  <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
+                                              </span>
+                                          </div>
 
-                            % endfor
+                                      % endfor
+
+                           
                         % else:
                             <p class="program-card__empty">
                                 لا توجد مقررات مرتبطة بهذا البرنامج بعد.
