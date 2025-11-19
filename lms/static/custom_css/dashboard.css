@@ -131,14 +131,13 @@
 
 .course-row__status {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.12);
+  background: var(--program-accent, transparent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-left: 20px;
 }
 
 .course-row__title {
