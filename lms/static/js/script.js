@@ -57,8 +57,9 @@ function createCircle(data, index) {
     const isCompleted = state === "completed";
 
     const iconToUse = (isFirst && isCompleted)
-        ? "/static/images/tickicon.png"
+        ? window.FIRST_COMPLETED_BADGE
         : stateInfo.icon;
+
 
     if (isSpecial) {
         circleItem.classList.add("circle-item--special-layout");
