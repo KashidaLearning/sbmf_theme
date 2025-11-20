@@ -48,7 +48,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
     border: 2px solid rgba(255,255,255,0.3);
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     backdrop-filter: blur(10px);
@@ -165,7 +164,6 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     background: var(--program-main-color);
     width: 36px;
     height: 36px;
-    box-shadow: 0 0 12px #010101;
     border-color: #fff;
 }
 
@@ -208,6 +206,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
 .circle-item--completed:hover .circle-content {
     transform: scale(1.05);
+  border-color: var(--program-main-color);
+  box-shadow: 0 0 15px var(--program-main-color);
 }
 
 
@@ -240,12 +240,20 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
    ACTIVE — NON SPECIAL (Expanded)
 ========================================= */
 .circle-item--active:not(.circle-item--special-layout) .circle-content {
-    width: 199px;
-    height: 103px;
-    border-radius: 95px;
-    flex-direction: row;
-    justify-content: center;
-    padding: 0 10px;
+   width: 199px;
+  height: 103px;
+  border-radius: 95px;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0 10px;
+  border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: rgba(255, 255, 255, 0.3);
+    border-right-color: rgba(255, 255, 255, 0.3);
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+    border-left-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.12);
+  border-color: #fbbf24;
+
 }
 
 .circle-item--active:not(.circle-item--special-layout) .circle-image-container2 {
