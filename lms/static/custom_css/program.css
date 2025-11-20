@@ -1631,12 +1631,12 @@ font-size: 72px;
 }
 .bottom_left_background_image {
   position: absolute;
-  top: 38%;
+  top: 48%;
   left: -95%;
 }
 .bottom_right_background_image {
   position: absolute;
-  top: 5%;
+  top: 10%;
   right: -64%;
   width: 100%;
 }
