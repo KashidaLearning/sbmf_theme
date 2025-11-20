@@ -1050,7 +1050,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
 </script>
 <script>
-    window.PROGRAM_PAGE_URL = "${request.path}";
+    window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_detail', kwargs={'program_id': program.id})}";
+
 </script>
 <script src="${static.url('js/script.js')}"></script>
 
@@ -1179,7 +1180,8 @@ function refreshCourseStatus() {
     console.log("Refreshing status...");
 
     $.ajax({
-        url: window.location.pathname + "?ajax=1",
+       url: window.PROGRAM_PAGE_URL + "?ajax=1",
+
         type: "GET",
         success: function (data) {
             try {
