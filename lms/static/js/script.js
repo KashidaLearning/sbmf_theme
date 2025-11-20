@@ -1,26 +1,18 @@
-
 const dataSource = window.coursePathData || [];
 const numCircles = dataSource.length;
 
 const CONFIG = {
     positionPattern: [0, -1.5, -3, -1.5, 0, 1.5, 3, 1.5],
-
-
-
-   verticalSpacing: 270,
+    verticalSpacing: 270,
     specialVerticalSpacing: 100,
-
-    initialActiveIndex: window.coursePathConfig?.initialActiveIndex ?? 0
 };
 
-let activeStepIndex = CONFIG.initialActiveIndex;
 let circleElements = [];
 
 const circlesWrapper = document.getElementById("circlesWrapper");
 if (!circlesWrapper) {
     console.error("❌ circlesWrapper not found");
 }
-
 
 const STATE_CONFIG = {
     completed: {
@@ -37,8 +29,6 @@ const STATE_CONFIG = {
     }
 };
 
-
-
 function createCircle(data, index) {
     const state = data.state || "locked";
     const stateInfo = STATE_CONFIG[state];
@@ -46,9 +36,9 @@ function createCircle(data, index) {
     const circleItem = document.createElement("div");
     circleItem.className = `circle-item circle-item--${state}`;
 
-    // special layout comes from backend
     const isSpecial = !!data.is_special;
 
+   
     if (isSpecial) {
         circleItem.classList.add("circle-item--special-layout");
 
@@ -68,6 +58,7 @@ function createCircle(data, index) {
             </div>
         `;
     } else {
+      
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
@@ -84,22 +75,19 @@ function createCircle(data, index) {
                 <div class="circle-description">${data.description || ""}</div>
             </div>
         `;
+
+        if (state === "active") {
+            circleItem.classList.add("circle-item--active");
+        }
     }
 
- 
     circleItem.addEventListener("click", () => {
         if (state === "locked") {
-            // trigger your locked popup message
             document.body.dispatchEvent(new Event("lockedCourseClick"));
             return;
         }
-
-        // open your real modal
         $('#courseFrame').attr('src', data.link);
         $('#courseModal').css('display', 'block');
-
-        activeStepIndex = index;
-        updateAllCircleStates();
     });
 
     circlesWrapper.appendChild(circleItem);
@@ -111,9 +99,7 @@ function createCircle(data, index) {
     });
 }
 
-
 function calculatePosition(index) {
-
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
     const centerX = containerWidth / 2;
 
@@ -129,9 +115,6 @@ function calculatePosition(index) {
     return { x, y };
 }
 
-
-
-
 function updatePositions() {
     circleElements.forEach(({ index, element }) => {
         const { x, y } = calculatePosition(index);
@@ -141,24 +124,19 @@ function updatePositions() {
     });
     updateContainerHeight();
 }
+
 const coursescontainer = document.getElementById('coursescontainer');
+
 function updateContainerHeight() {
-        if (circleElements.length > 0) {
-            const lastPos = calculatePosition(circleElements.length - 1);
-            coursescontainer.style.minHeight = `${lastPos.y + 120}px`;
-        } else {
-            coursescontainer.style.minHeight = `600px`;
-        }
+    if (circleElements.length > 0) {
+        const lastPos = calculatePosition(circleElements.length - 1);
+        coursescontainer.style.minHeight = `${lastPos.y + 120}px`;
+    } else {
+        coursescontainer.style.minHeight = `600px`;
     }
-function updateAllCircleStates() {
-    circleElements.forEach(({ index, element }) => {
-        element.classList.toggle("circle-item--active", index === activeStepIndex);
-    });
 }
 
-
 function initializeScene() {
-   
     if (!dataSource.length) {
         console.warn("⚠ No dataSource found");
         return;
@@ -172,20 +150,18 @@ function initializeScene() {
         createCircle(item, index);
     });
 
-    updateAllCircleStates();
     updatePositions();
 }
 
- let resizeTimeout;
-    window.addEventListener("resize", () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(updatePositions, 120);
-    });
+let resizeTimeout;
+window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(updatePositions, 120);
+});
+
 window.addEventListener("scroll", () => {
     updatePositions();
 });
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();

@@ -1148,31 +1148,31 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             });
         });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('click', function(e) {
-        const lockedCard = e.target.closest('.wide-cta.locked, .card.locked');
-        if (lockedCard) {
-            e.preventDefault();
-            e.stopPropagation();
 
-            // Remove old popup if visible
-            const oldMsg = document.querySelector('.locked-message');
-            if (oldMsg) oldMsg.remove();
+  document.body.addEventListener('click', function(e) {
+    const lockedCircle = e.target.closest('.circle-item--locked');
 
-            // Create new message
-            const msg = document.createElement('div');
-            msg.className = 'locked-message';
-            msg.textContent = "هذه الدورة مقفلة حتى تُكمل المتطلب السابق";
-            document.body.appendChild(msg);
+    if (lockedCircle) {
+        e.preventDefault();
+        e.stopPropagation();
 
-            void msg.offsetWidth; // reflow
-            msg.classList.add('show');
-            setTimeout(() => {
-                msg.classList.remove('show');
-                setTimeout(() => msg.remove(), 300);
-            }, 7000);
-        }
-    });
+        // Remove old popup if visible
+        const oldMsg = document.querySelector('.locked-message');
+        if (oldMsg) oldMsg.remove();
+
+        // Create new message
+        const msg = document.createElement('div');
+        msg.className = 'locked-message';
+        msg.textContent = "هذه الدورة مقفلة حتى تُكمل المتطلب السابق";
+        document.body.appendChild(msg);
+
+        void msg.offsetWidth;
+        msg.classList.add('show');
+        setTimeout(() => {
+            msg.classList.remove('show');
+            setTimeout(() => msg.remove(), 300);
+        }, 7000);
+    }
 });
 
 
