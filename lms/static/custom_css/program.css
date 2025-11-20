@@ -1598,7 +1598,7 @@ position: inherit;
 }
 
 .yellow-icon .icon-label {
-    margin-top: 12px;
+    margin-top: -11px;
     font-size: 16px;
     color: #fff;
     text-align: center;

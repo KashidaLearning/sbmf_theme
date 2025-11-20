@@ -31,18 +31,18 @@ const STATE_CONFIG = {
 
 function getAmplitude() {
     const screenWidth = window.innerWidth;
-    if (screenWidth < 480) {
+    if (screenWidth < 600) {
         return 60;
     }
     return Math.min((screenWidth / 2) - 120, 100);
 }
 
 function getVerticalSpacing() {
-    return window.innerWidth < 480 ? 260 : CONFIG.verticalSpacing;
+    return window.innerWidth < 600 ? 260 : CONFIG.verticalSpacing;
 }
 
 function getPatternMultiplier(base) {
-    return window.innerWidth < 480 ? base / 2 : base;
+    return window.innerWidth < 600 ? base / 2 : base;
 }
 
 function createCircle(data, index) {
