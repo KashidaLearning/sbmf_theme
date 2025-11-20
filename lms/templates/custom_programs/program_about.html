@@ -1050,7 +1050,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
 </script>
 <script>
-    window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_detail', kwargs={'program_id': program.id})}";
+
+    window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
+
 
 </script>
 <script src="${static.url('js/script.js')}"></script>
@@ -1185,18 +1187,15 @@ function refreshCourseStatus() {
         type: "GET",
         success: function (data) {
             try {
-                // تحديث الشارات
                 if (data.badges_html) {
                     $("#my-badges-content .badge-grid").html(data.badges_html);
                 }
 
-                // تحديث شريط التقدم
                 if (data.progress_percent !== undefined) {
                     $(".lh-progress-fill-out").css("width", data.progress_percent + "%");
                     $(".lh-progress-val-out").text(data.progress_percent + "%");
                 }
 
-                // تحديث الدوائر + الكارد
                 if (data.coursePathDataJSON) {
                     const parsed = JSON.parse(data.coursePathDataJSON);
 
@@ -1218,10 +1217,10 @@ function refreshCourseStatus() {
 function rebuildCircles() {
     console.log("🔄 Rebuilding circles path...");
 
-    circlesWrapper.innerHTML = "";   // حذف كامل للدوائر القديمة
-    circleElements = [];             // إعادة ضبط المصفوفة
+    circlesWrapper.innerHTML = "";     
+    circleElements = [];         
 
-    initializeScene();               // إعادة بناء الدوائر من جديد
+    initializeScene();              
 }
 document.body.addEventListener('click', function(e) {
     const lockedCircle = e.target.closest('.circle-item--locked');
