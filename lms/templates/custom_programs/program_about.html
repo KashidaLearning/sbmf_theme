@@ -63,7 +63,7 @@
     line-height: 1;
     /* Ensures vertical centering of the unicode character */
 }
-.locked-message {
+/* .locked-message {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -84,7 +84,7 @@
 }
 .locked-message.show {
     opacity: 1;
-}
+} */
 .start-icon-overlay {
     position: absolute;
     top: 10px; /* Adjust as needed */
@@ -1166,7 +1166,9 @@ document.body.addEventListener('click', function(e) {
         const msg = document.createElement('div');
         msg.className = 'locked-message';
         msg.textContent = "لطفًا، أكمل التحدي المتاح أولًا لتتمكّن من فتح التحديات المقفلة.";
-        lockedCircle.appendChild(msg);
+
+        const iconArea = lockedCircle.querySelector('.state-icon, .state-icon2');
+        iconArea.appendChild(msg);
 
         void msg.offsetWidth;
         msg.classList.add('show');
@@ -1174,7 +1176,7 @@ document.body.addEventListener('click', function(e) {
         setTimeout(() => {
             msg.classList.remove('show');
             setTimeout(() => msg.remove(), 300);
-        }, 6000);
+        }, 7000);
     }
 });
 
