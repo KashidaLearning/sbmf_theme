@@ -220,12 +220,15 @@
            
         </div>
         % endif
+    % if user_is_enrolled:
         <div class="yellow-icon-alone">
-            <div class="icon-item yellow-icon">
+            <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
                 <img src="${static.url('images/home-icon.png')}" alt="home">
                 <div class="icon-label">المغامرات</div>
-            </div>
+            </a>
         </div>
+    % endif
+
         % if user_is_enrolled:
             <div class="lh-progress-out">
                 <div class="lh-progress-val-out"></div> 
