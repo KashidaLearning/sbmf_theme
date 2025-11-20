@@ -28,7 +28,20 @@ const STATE_CONFIG = {
         text: "Locked"
     }
 };
+function getAmplitude() {
+    const screenWidth = window.innerWidth;
 
+    if (screenWidth < 480) {
+        return 60; // smaller zigzag
+    }
+    return Math.min((screenWidth / 2) - 120, 100);
+}
+function getVerticalSpacing() {
+    return window.innerWidth < 480 ? 260 : CONFIG.verticalSpacing;
+}
+function getPatternMultiplier(base) {
+    return window.innerWidth < 480 ? base / 2 : base;
+}
 function createCircle(data, index) {
     const state = data.state || "locked";
     const stateInfo = STATE_CONFIG[state];
@@ -103,12 +116,12 @@ function calculatePosition(index) {
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
     const centerX = containerWidth / 2;
 
-    const amplitude = Math.min(centerX - 120, 100);
+    const amplitude = getAmplitude();
 
-    let y = 100 + (index * CONFIG.verticalSpacing);
-
+    let y = 100 + (index * getVerticalSpacing());   
     const patternIndex = index % CONFIG.positionPattern.length;
-    const multiplier = CONFIG.positionPattern[patternIndex];
+    const multiplier = getPatternMultiplier(CONFIG.positionPattern[patternIndex]);
+
 
     const x = centerX + (multiplier * amplitude);
 

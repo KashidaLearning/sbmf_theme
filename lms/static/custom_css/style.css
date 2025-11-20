@@ -275,7 +275,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     bottom: 30px;
     right: 50%;
     transform: translateX(50%) translateY(20px);
-    background: rgba(0,0,0,0.8);
+    background: #100E4A;
     color: white;
     padding: 14px 24px;
     border-radius: 12px;
@@ -342,22 +342,103 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
 
 .locked-message {
-    position: fixed;
-    bottom: 30px;
+    position: absolute;
+    bottom: -65px;             
     right: 50%;
-    transform: translateX(50%) translateY(20px);
-    background: rgba(0, 0, 0, 0.8);
+    transform: translateX(50%);
+    background: #100E4A;        /* ← your main color */
     color: #fff;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-size: 16px;
-    z-index: 9999999;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+    z-index: 999999;
     opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    backdrop-filter: blur(6px);
+    white-space: nowrap;
+    transition: opacity .25s ease, transform .25s ease;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.25);
 }
 
 .locked-message.show {
     opacity: 1;
-    transform: translateX(50%) translateY(0);
+    transform: translateX(50%) translateY(-6px);
+}
+
+.locked-message::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    right: 50%;
+    transform: translateX(50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #100E4A transparent; /* ← Same color */
+}
+
+
+
+
+@media (max-width: 600px) {
+
+    .circle-item {
+        position: absolute !important;
+        width: 160px !important;
+        transform: translate(-50%, -50%) !important;
+    }
+
+    #circlesWrapper {
+        position: relative !important;
+        display: block !important;
+        height: auto !important;
+    }
+
+    .circle-item:not(.circle-item--special-layout) .circle-content {
+        width: 130px !important;
+        height: 130px !important;
+        padding: 4px !important;
+        border-radius: 50% !important;
+        flex-direction: column !important;
+    }
+
+    .circle-text-block2 {
+        width: 140px !important;
+        margin-top: 8px;
+    }
+
+    .circle-title {
+        font-size: 18px !important;
+    }
+
+    .circle-description {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+
+    .circle-item--special-layout .circle-content {
+        width: 260px !important;
+        height: 110px !important;
+        border-radius: 60px !important;
+        padding: 10px !important;
+    }
+
+    .circle-item--special-layout .circle-text-content {
+        margin-right: 5% !important;
+        width: 55% !important;
+    }
+
+    .circle-image {
+        width: 110px !important;
+        height: 110px !important;
+    }
+
+    .state-icon,
+    .state-icon2 {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .state-icon img,
+    .state-icon2 img {
+        width: 22px !important;
+    }
 }
