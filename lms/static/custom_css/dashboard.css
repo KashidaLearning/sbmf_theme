@@ -1,12 +1,13 @@
 .dashboard {
-   background: radial-gradient(circle at top, #3f7ed4 0%, #183a70 40%, #0a1450 100%) !important;
-}
+    background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);
+  }
 
 
 .programs-section.leader-dashboard {
   padding: 80px 0 120px;
   text-align: center;
   color: #ffffff;
+  min-height: 500px;
 }
 
 .leader-dashboard__title {
