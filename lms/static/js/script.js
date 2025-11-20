@@ -174,11 +174,11 @@ function initializeScene() {
     updatePositions();
 }
 
-let resizeTimeout;
+/* let resizeTimeout;
 window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(updatePositions, 120);
-});
+}); */
 
 window.addEventListener("scroll", () => {
     updatePositions();
