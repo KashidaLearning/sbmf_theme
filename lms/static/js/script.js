@@ -1,5 +1,4 @@
-const dataSource = window.coursePathData || [];
-const numCircles = dataSource.length;
+let numCircles = 0;   // ← بدل const dataSource
 
 const CONFIG = {
     positionPattern: [0, -1.5, -3, -1.5, 0, 1.5, 3, 1.5],
@@ -31,9 +30,7 @@ const STATE_CONFIG = {
 
 function getAmplitude() {
     const screenWidth = window.innerWidth;
-    if (screenWidth < 600) {
-        return 60;
-    }
+    if (screenWidth < 600) return 60;
     return Math.min((screenWidth / 2) - 120, 100);
 }
 
@@ -60,10 +57,8 @@ function createCircle(data, index) {
         ? window.FIRST_COMPLETED_BADGE
         : stateInfo.icon;
 
-
     if (isSpecial) {
         circleItem.classList.add("circle-item--special-layout");
-
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon state-icon--${state}">
@@ -80,7 +75,6 @@ function createCircle(data, index) {
             </div>
         `;
     } else {
-
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
@@ -97,7 +91,6 @@ function createCircle(data, index) {
                 <div class="circle-description">${data.description || ""}</div>
             </div>
         `;
-
         if (state === "active") {
             circleItem.classList.add("circle-item--active");
         }
@@ -158,6 +151,9 @@ function updateContainerHeight() {
 }
 
 function initializeScene() {
+    const dataSource = window.coursePathData || [];  // ← dynamic
+    numCircles = dataSource.length;                  // ← update count
+
     if (!dataSource.length) {
         console.warn("⚠ No dataSource found");
         return;
@@ -174,14 +170,45 @@ function initializeScene() {
     updatePositions();
 }
 
-/* let resizeTimeout;
-window.addEventListener("resize", () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(updatePositions, 120);
-}); */
+async function refreshCourseStatus() {
+    console.log("🔄 Refreshing course status...");
 
+    try {
+        const response = await fetch(window.location.pathname + "?ajax=1");
+        const data = await response.json();
+
+        if (data.coursePathDataJSON) {
+            const parsed = JSON.parse(data.coursePathDataJSON);
+            window.coursePathData = parsed.items;
+            window.coursePathConfig.initialActiveIndex = parsed.initialActiveIndex;
+        }
+
+        initializeScene();
+
+        if (data.progress_percent !== undefined) {
+            document.querySelector(".lh-progress-fill-out").style.width =
+                data.progress_percent + "%";
+
+            document.querySelector(".lh-progress-val-out").textContent =
+                data.progress_percent + "%";
+        }
+
+        if (data.badges_html) {
+            const grid = document.querySelector("#my-badges-content .badge-grid");
+            if (grid) grid.innerHTML = data.badges_html;
+        }
+
+        console.log(" Course UI updated successfully");
+
+    } catch (err) {
+        console.error(" Failed to refresh course status:", err);
+    }
+}
+
+let scrollTimeout;
 window.addEventListener("scroll", () => {
-    updatePositions();
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(updatePositions, 20);
 });
 
 document.addEventListener("DOMContentLoaded", () => {

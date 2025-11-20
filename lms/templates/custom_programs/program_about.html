@@ -139,6 +139,40 @@
         my_badges = []
 
     %>
+% if request.GET.get("ajax"):
+    <% 
+        # Recalculate badges
+        my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
+    %>
+
+    <% 
+        # prepare badges html
+        badges_html = "".join(
+            f'<div class="badge-item"><img src="{badge.badge.icon.url}"></div>'
+            for badge in my_badges
+        )
+    %>
+
+    <% 
+        # progress recalculation
+        completed_count = sum(1 for c in courses if UserBadge.get_my_course_badges(request.user, c.course.course_key))
+        progress_percent = int((completed_count / len(courses)) * 100)
+    %>
+
+    <% 
+        response = {
+            "badges_html": badges_html,
+            "progress_percent": progress_percent,
+            "progress_html": f"{progress_percent}%",
+            "coursePathDataJSON": json.dumps({
+                "items": coursePathItems,
+                "initialActiveIndex": active_index
+            }),
+        }
+    %>
+    ${json.dumps(response) | n}
+    <% return %>
+% endif
 
     <div class="container">
         <section class="hero">
@@ -1121,7 +1155,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-            
+                   refreshCourseStatus();
+
 
             });
             // Optional: Close modal when clicking outside modal content
@@ -1129,12 +1164,47 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
+                         refreshCourseStatus();
 
 
                 }
             });
         });
 
+function refreshCourseStatus() {
+    console.log("Refreshing status...");
+
+    $.ajax({
+        url: window.location.pathname + "?ajax=1",
+        type: "GET",
+        success: function (data) {
+            try {
+                if (data.badges_html) {
+                    $("#my-badges-content .badge-grid").html(data.badges_html);
+                }
+
+                if (data.progress_html) {
+                    $(".lh-progress-fill-out").css("width", data.progress_percent + "%");
+                    $(".lh-progress-val-out").text(data.progress_percent + "%");
+                }
+
+                if (data.coursePathDataJSON) {
+                    window.coursePathData = JSON.parse(data.coursePathDataJSON).items;
+                    window.coursePathConfig.initialActiveIndex =
+                        JSON.parse(data.coursePathDataJSON).initialActiveIndex;
+
+                    if (typeof rebuildCircles === "function") {
+                        rebuildCircles(); 
+                    }
+                }
+
+                console.log("Updated successfully");
+            } catch (e) {
+                console.error("Error updating:", e);
+            }
+        }
+    });
+}
 
 document.body.addEventListener('click', function(e) {
     const lockedCircle = e.target.closest('.circle-item--locked');
