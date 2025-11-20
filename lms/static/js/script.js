@@ -3,7 +3,7 @@ const numCircles = dataSource.length;
 
 const CONFIG = {
     positionPattern: [0, -1.5, -3, -1.5, 0, 1.5, 3, 1.5],
-    verticalSpacing: 270,
+    verticalSpacing: 340,
     specialVerticalSpacing: 100,
 };
 
@@ -45,7 +45,7 @@ function createCircle(data, index) {
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon state-icon--${state}">
-                    <img width="45" src="${stateInfo.icon}">
+                    <img width="60px" height="60px" src="${stateInfo.icon}">
                 </div>
                 <div class="circle-text-content">
                     <div class="circle-title">${data.title}</div>
@@ -62,15 +62,15 @@ function createCircle(data, index) {
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
-                    <img width="45" src="${stateInfo.icon}">
+                    <img width="60px" height="60px" src="${stateInfo.icon}">
                 </div>
-                <div class="circle-image-wrapper">
+                <div class="circle-image-wrapper2">
                     <div class="circle-image-container2">
                         <img src="${data.icon}" class="circle-image">
                     </div>
                 </div>
             </div>
-            <div class="circle-text-block">
+            <div class="circle-text-block2">
                 <div class="circle-title">${data.title}</div>
                 <div class="circle-description">${data.description || ""}</div>
             </div>
