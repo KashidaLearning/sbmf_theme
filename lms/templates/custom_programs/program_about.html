@@ -304,6 +304,7 @@
                 course_link = start_block['lms_web_url']
 
             is_special = (course.display_layout == "horizontal" or course.order == 1)
+            is_first_course = bool(course.order == 1)
 
             coursePathItems.append({
                 "id": int(course.id),
@@ -317,6 +318,7 @@
                 ),
                 "link": course_link,
                 "is_special": is_special,
+                "is_first_course": is_first_course,
             })
 
             idx += 1
@@ -1023,7 +1025,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 <%block name="js_extra">
 <script>
     window.STATE_ICONS = {
-        completed: "${static.url('images/tickicon.png')}",
+        completed: "${static.url('images/badge112.png')}",
         active: "${static.url('images/active00.png')}",
         locked: "${static.url('images/Locked001.png')}"
     };

@@ -28,20 +28,23 @@ const STATE_CONFIG = {
         text: "Locked"
     }
 };
+
 function getAmplitude() {
     const screenWidth = window.innerWidth;
-
     if (screenWidth < 480) {
-        return 60; // smaller zigzag
+        return 60;
     }
     return Math.min((screenWidth / 2) - 120, 100);
 }
+
 function getVerticalSpacing() {
     return window.innerWidth < 480 ? 260 : CONFIG.verticalSpacing;
 }
+
 function getPatternMultiplier(base) {
     return window.innerWidth < 480 ? base / 2 : base;
 }
+
 function createCircle(data, index) {
     const state = data.state || "locked";
     const stateInfo = STATE_CONFIG[state];
@@ -50,15 +53,20 @@ function createCircle(data, index) {
     circleItem.className = `circle-item circle-item--${state}`;
 
     const isSpecial = !!data.is_special;
+    const isFirst = data.is_first_course === true;
+    const isCompleted = state === "completed";
 
-   
+    const iconToUse = (isFirst && isCompleted)
+        ? "/static/images/tickicon.png"
+        : stateInfo.icon;
+
     if (isSpecial) {
         circleItem.classList.add("circle-item--special-layout");
 
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon state-icon--${state}">
-                    <img width="60px"  src="${stateInfo.icon}">
+                    <img width="60px" src="${iconToUse}">
                 </div>
                 <div class="circle-text-content">
                     <div class="circle-title">${data.title}</div>
@@ -71,11 +79,11 @@ function createCircle(data, index) {
             </div>
         `;
     } else {
-      
+
         circleItem.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
-                    <img width="60px"  src="${stateInfo.icon}">
+                    <img width="60px" src="${iconToUse}">
                 </div>
                 <div class="circle-image-wrapper2">
                     <div class="circle-image-container2">
@@ -118,10 +126,9 @@ function calculatePosition(index) {
 
     const amplitude = getAmplitude();
 
-    let y = 100 + (index * getVerticalSpacing());   
+    let y = 100 + (index * getVerticalSpacing());
     const patternIndex = index % CONFIG.positionPattern.length;
     const multiplier = getPatternMultiplier(CONFIG.positionPattern[patternIndex]);
-
 
     const x = centerX + (multiplier * amplitude);
 
