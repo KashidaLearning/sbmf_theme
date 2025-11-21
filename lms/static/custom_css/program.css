@@ -411,7 +411,7 @@ text-align: right;
     /*background-color: #e6f7ff;  Light blue */
     /*border: 1px solid #b3e0ff;*/
     position: relative;
-    display: none;
+
 }
 
 
@@ -428,7 +428,7 @@ text-align: right;
     /*background-color: #fff0e6;  Light orange */
     /*border: 1px solid #ffe0b3;*/
     text-align: -webkit-left;
-    display: none;
+    
 }
 
 .column-right span img {
@@ -1374,6 +1374,8 @@ flex: unset !important;
   background: white;
   border-radius: 50px;
   overflow: hidden;
+  max-width: 1240px;
+  margin: auto;
   
 }
 
