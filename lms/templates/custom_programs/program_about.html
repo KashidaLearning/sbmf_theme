@@ -241,7 +241,6 @@
                         <div class="cat-name" style="background-color:${program.css_single_color};" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
                     <p>${program.short_description}</p>
-                    <p><b>هنا تبدأ قصتك كصانع</b></p>
                     % if not user_is_enrolled:
                         <div class="enrollment-info">
                             % if program.enrollment_start >  timezone.now():
@@ -1247,15 +1246,18 @@ function refreshCourseStatus() {
                     $(".lh-progress-val-out").text(data.progress_percent + "%");
                 }
 
-                if (data.coursePathDataJSON) {
+               if (data.coursePathDataJSON) {
                     const parsed = JSON.parse(data.coursePathDataJSON);
 
                     window.coursePathData = parsed.items;
                     window.coursePathConfig.initialActiveIndex = parsed.initialActiveIndex;
 
                     rebuildCircles();
-                }
 
+                    if (typeof window.initializeScene === "function") {
+                        window.initializeScene();
+                    }
+                }
                 console.log("Updated successfully");
             } catch (e) {
                 console.error("Error updating:", e);
@@ -1266,13 +1268,16 @@ function refreshCourseStatus() {
 
 
 function rebuildCircles() {
-    console.log("🔄 Rebuilding circles path...");
+    console.log("Rebuilding circles path...");
 
-    circlesWrapper.innerHTML = "";     
-    circleElements = [];         
+    circlesWrapper.innerHTML = "";
+    circleElements = [];
 
-    initializeScene();              
+    if (typeof initializeScene === "function") {
+        initializeScene();
+    }
 }
+
 document.body.addEventListener('click', function(e) {
     const lockedCircle = e.target.closest('.circle-item--locked');
 
