@@ -68,6 +68,9 @@ header.global-header .header-logo a .logo {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
+.icon-item * {
+    pointer-events: none;
+}
 
 /* Circular purple icon background */
 
@@ -445,9 +448,54 @@ text-align: right;
     position: absolute;
     width: 340px;
 }
+.icons-container {
+  display: flex;
+  flex-direction: row;
+  max-width: 1240px;
+  margin: 49px auto;
+  position: relative;
+
+}
+
+/* === Purple icons column (center) === */
+.purple-icon-row {
+ width: 100%;
+  flex: 0 0 100%;            /* المسافة بينهم */
+}
+
+
+/* === Yellow icon (right column) === */
+.yellow-icon-alone {
+  position: absolute;
+  right: 57px;
+  top: -7px;
+}
+
+
+.y-container{
+  position: relative;
+
+}
+/* === Generic icon style (optional based on your UI) === */
+.icon-item {
+    text-align: center;
+    cursor: pointer;
+}
+
+.icon-circle img {
+    width: 55px;
+    
+}
 
 /* --- Responsive Design (Optional but Recommended) --- */
 @media (max-width: 768px) {
+     .icon-item.yellow {
+        display: flex !important;
+    }
+
+    .yellow-icon-alone {
+        display: none !important;
+    }
     .row {
         flex-direction: column;
         /* Stack columns vertically on smaller screens */
@@ -1368,13 +1416,13 @@ flex: unset !important;
 }
 
 .lh-progress-track-out {
-  position: relative;
+   position: relative;
   width: 100%;
   height: 12px;
   background: white;
   border-radius: 50px;
   overflow: hidden;
-  max-width: 1240px;
+  max-width: 1124px;
   margin: auto;
   
 }
@@ -1590,13 +1638,7 @@ max-width: 50px;
     margin: 0 0 25px 0;
     padding-right: 20px;
 }
-.yellow-icon-alone {
-    display: flex;
-    justify-content: flex-end; 
-    margin-bottom: 15px; 
-    margin-top: -110px;
-    padding-left: 1050px;
-}
+
 #control-blur-wrapper {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -1610,10 +1652,11 @@ max-width: 50px;
 
 }
 .yellow-icon img {
-    width: 110px;
+  width: 100%;
   height: 110px;
-    border-radius: 50%;
-position: inherit;
+  border-radius: 50%;
+  position: inherit;
+  max-width: 100%;
 }
 
 .yellow-icon .icon-label {
@@ -1621,6 +1664,13 @@ position: inherit;
     font-size: 16px;
     color: #fff;
     text-align: center;
+}
+.icon-item.yellow {
+    display: none !important;
+}
+
+.yellow-icon-alone {
+    display: block !important;
 }
 .icon-item.yellow-icon {
  padding-left: 135px;

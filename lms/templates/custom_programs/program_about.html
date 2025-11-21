@@ -276,7 +276,10 @@
     <!-- This will be the rightmost column (Column 1) -->
 
         % if user_is_enrolled:
-        <div class="purple-icon-row">
+        <div class="icons-container">
+    
+        
+         <div class="purple-icon-row">
            
             <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
                 <div class="icon-circle">
@@ -303,17 +306,29 @@
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
-           
-        </div>
-        % endif
-    % if user_is_enrolled:
-        <div class="yellow-icon-alone">
-            <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
+            <div class="icon-item yellow" id="control" role="button" tabindex="0" data-target="control-content" >
+                <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
+                <div class="icon-circle" >
+                    <img src="${static.url('images/home-icon.png')}" alt="لوحةالتحكم">
+
+                </div>
+                <p> المغامرات </p>
+                </a>
+            </div>
+           <div class="yellow-icon-alone">
+            <div class="y-container">
+                <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
                 <img src="${static.url('images/home-icon.png')}" alt="home">
                 <div class="icon-label">المغامرات</div>
             </a>
+            </div>
+            
+            
         </div>
-    % endif
+        </div>
+        
+         % endif
+         </div>
 
         % if user_is_enrolled:
             <div class="lh-progress-out">
