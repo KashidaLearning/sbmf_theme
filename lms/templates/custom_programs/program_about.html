@@ -1228,56 +1228,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         });
 
 
-function refreshCourseStatus() {
-    console.log("Refreshing status...");
-
-    $.ajax({
-       url: window.PROGRAM_PAGE_URL + "?ajax=1",
-
-        type: "GET",
-        success: function (data) {
-            try {
-                if (data.badges_html) {
-                    $("#my-badges-content .badge-grid").html(data.badges_html);
-                }
-
-                if (data.progress_percent !== undefined) {
-                    $(".lh-progress-fill-out").css("width", data.progress_percent + "%");
-                    $(".lh-progress-val-out").text(data.progress_percent + "%");
-                }
-
-               if (data.coursePathDataJSON) {
-                    const parsed = JSON.parse(data.coursePathDataJSON);
-
-                    window.coursePathData = parsed.items;
-                    window.coursePathConfig.initialActiveIndex = parsed.initialActiveIndex;
-
-                    rebuildCircles();
-
-                    if (typeof window.initializeScene === "function") {
-                        window.initializeScene();
-                    }
-                }
-                console.log("Updated successfully");
-            } catch (e) {
-                console.error("Error updating:", e);
-            }
-        }
-    });
-}
-
-
-function rebuildCircles() {
-    console.log("Rebuilding circles path...");
-
-    circlesWrapper.innerHTML = "";
-    circleElements = [];
-
-    if (typeof initializeScene === "function") {
-        initializeScene();
-    }
-}
-
 document.body.addEventListener('click', function(e) {
     const lockedCircle = e.target.closest('.circle-item--locked');
 

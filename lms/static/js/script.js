@@ -185,10 +185,22 @@ async function refreshCourseStatus() {
         }
 
         initializeScene();
+
         console.log("✔ Course UI updated successfully");
 
     } catch (err) {
         console.error("❌ Failed to refresh course status:", err);
+    }
+}
+
+function rebuildCircles() {
+    console.log("Rebuilding circles path...");
+
+    circlesWrapper.innerHTML = "";
+    circleElements = [];
+
+    if (typeof initializeScene === "function") {
+        initializeScene();
     }
 }
 
