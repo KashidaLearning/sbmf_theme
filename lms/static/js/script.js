@@ -180,8 +180,6 @@ async function refreshCourseStatus() {
             document.querySelector(".lh-progress-fill-out")
                 .style.width = `${data.progress_percent}%`;
 
-            const val = document.querySelector(".lh-progress-val-out");
-            if (val) val.textContent = `${data.progress_percent}%`;
         }
 
         if (data.leaderboard_html) {
