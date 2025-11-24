@@ -135,29 +135,100 @@ function initializeScene() {
 async function refreshCourseStatus() {
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
+
+        if (!response.ok) {
+            console.error("Server error:", response.status);
+            return;
+        }
+
         const raw = await response.text();
-        if (raw.trim().startsWith("<")) return;
 
-        const data = JSON.parse(raw);
+        if (raw.trim().startsWith("<")) {
+            console.error("HTML returned instead of JSON");
+            return;
+        }
 
+        let data;
+        try {
+            data = JSON.parse(raw);
+        } catch (jsonErr) {
+            console.error("JSON parse error:", jsonErr);
+            return;
+        }
+
+        /* =======================
+            1) UPDATE CIRCLES PATH
+        ========================*/
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
-            window.coursePathConfig = { initialActiveIndex: parsed.initialActiveIndex };
+            window.coursePathConfig = {
+                initialActiveIndex: parsed.initialActiveIndex
+            };
             initializeScene();
         }
 
+        /* =======================
+            2) UPDATE PROGRESS BAR
+        ========================*/
         if (typeof data.progress_percent !== "undefined") {
-            const barOut = document.querySelector(".lh-progress-fill-out");
-            if (barOut) barOut.style.width = `${data.progress_percent}%`;
+            const barFill = document.querySelector(".lh-progress-fill-out");
+            if (barFill) {
+                barFill.style.width = `${data.progress_percent}%`;
+            }
+            const barVal = document.querySelector(".lh-progress-val-out");
+            if (barVal) {
+                barVal.textContent = `${data.progress_percent}%`;
+            }
         }
 
-        if (data.badges) updateBadgesPopup(data.badges);
-        if (data.leaderboard) updateLeaderboardPopup(data.leaderboard);
+        /* =======================
+            3) UPDATE BADGES POPUP
+        ========================*/
+        if (data.badges) {
+            const wrapper = document.querySelector("#my-badges-content .badge-grid");
+            if (wrapper) {
+                wrapper.innerHTML = "";
+                data.badges.forEach(b => {
+                    wrapper.innerHTML += `
+                        <div class="badge-item">
+                            <img src="${b.icon}">
+                        </div>
+                    `;
+                });
+            }
+        }
 
-        rebindPopupTabs();
-    } catch (err) {}
+        /* =======================
+            4) UPDATE LEADERBOARD
+        ========================*/
+        if (data.leaderboard) {
+            const list = document.querySelector("#leaderboard-content .leaderboard");
+            if (list) {
+                list.innerHTML = "";
+
+                data.leaderboard.forEach((u, index) => {
+                    list.innerHTML += `
+                        <div class="leaderboard-row">
+                            <div class="lb-rank">${index + 1}</div>
+                            <div class="lb-name">${u.name}</div>
+                            <div class="lb-progress">
+                                <div class="lb-progress-fill" style="width:${u.progress}%"></div>
+                            </div>
+                            <div class="lb-xp">${u.xp} XP</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        console.log("UI updated successfully");
+
+    } catch (err) {
+        console.error("refreshCourseStatus failed:", err);
+    }
 }
+
 
 function rebuildCircles() {
     if (!circlesWrapper) return;
