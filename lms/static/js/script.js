@@ -157,7 +157,6 @@ async function refreshCourseStatus() {
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
 
-        // NEW: detect backend errors
         if (!response.ok) {
             console.error("❌ Server responded with error:", response.status);
             return;
@@ -165,7 +164,6 @@ async function refreshCourseStatus() {
 
         const raw = await response.text();
 
-        // NEW: detect HTML response
         if (raw.trim().startsWith("<")) {
             console.error("❌ SERVER RETURNED HTML INSTEAD OF JSON:", raw);
             return;
@@ -175,25 +173,19 @@ async function refreshCourseStatus() {
         try {
             data = JSON.parse(raw);
         } catch (jsonErr) {
-            console.error("❌ JSON parsing failed:", jsonErr, raw);
+            console.error("❌ JSON parsing failed:", jsonErr);
             return;
         }
 
-        // ----- Updates -----
-
+    
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
-
             window.coursePathData = parsed.items;
+            window.coursePathConfig = {
+                initialActiveIndex: parsed.initialActiveIndex
+            };
 
-            // FIX: protect against undefined
-            window.coursePathConfig = window.coursePathConfig || {};
-            window.coursePathConfig.initialActiveIndex = parsed.initialActiveIndex;
-        }
-
-        if (data.badges_html) {
-            const grid = document.querySelector("#my-badges-content .badge-grid");
-            if (grid) grid.innerHTML = data.badges_html;
+            initializeScene();
         }
 
         if (typeof data.progress_percent !== "undefined") {
@@ -201,13 +193,40 @@ async function refreshCourseStatus() {
             if (bar) bar.style.width = `${data.progress_percent}%`;
         }
 
-        if (data.leaderboard_html) {
-            const lb = document.querySelector("#leaderboard-content");
-            if (lb) lb.innerHTML = data.leaderboard_html;
-            rebindPopupTabs();
+        if (data.badges) {
+            const grid = document.querySelector("#my-badges-content .badge-grid");
+            if (grid) {
+                grid.innerHTML = data.badges.map(b => `
+                    <div class="badge-item">
+                        <img src="${b.icon}" alt="${b.title}">
+                    </div>
+                `).join('');
+            }
         }
 
-        initializeScene();
+        if (data.leaderboard) {
+            const lb = document.querySelector("#leaderboard-content .leaderboard");
+
+            lb.innerHTML = data.leaderboard.map((u, idx) => `
+                <div class="leaderboard-row">
+                    <div class="rank-box">${idx+1}</div>
+
+                    <div class="icon">
+                        <img src="/static/images/image-profile-blue.png">
+                    </div>
+
+                    <div class="row-right">
+                        <div class="name">${u.name}</div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:${u.progress}%"></div>
+                        </div>
+
+                        <div class="pt1">XP <b>${u.xp}</b></div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         console.log("✔ Course UI updated successfully");
 
@@ -215,7 +234,6 @@ async function refreshCourseStatus() {
         console.error("❌ Failed to refresh course status:", err);
     }
 }
-
 
 function rebindPopupTabs() {
     const popupContent = document.getElementById("popup-dynamic-content");
