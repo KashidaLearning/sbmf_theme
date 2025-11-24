@@ -158,14 +158,14 @@ async function refreshCourseStatus() {
         const response = await fetch(window.location.pathname + "?ajax=1");
 
         if (!response.ok) {
-            console.error("❌ Server responded with error:", response.status);
+            console.error("Server responded with error:", response.status);
             return;
         }
 
         const raw = await response.text();
 
         if (raw.trim().startsWith("<")) {
-            console.error("❌ SERVER RETURNED HTML INSTEAD OF JSON:", raw);
+            console.error("SERVER RETURNED HTML INSTEAD OF JSON:", raw);
             return;
         }
 
@@ -173,11 +173,11 @@ async function refreshCourseStatus() {
         try {
             data = JSON.parse(raw);
         } catch (jsonErr) {
-            console.error("❌ JSON parsing failed:", jsonErr);
+            console.error("JSON parsing failed:", jsonErr);
             return;
         }
 
-    
+        
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
@@ -185,14 +185,16 @@ async function refreshCourseStatus() {
                 initialActiveIndex: parsed.initialActiveIndex
             };
 
-            initializeScene();
+            initializeScene(); // Rebuild circles
         }
 
+      
         if (typeof data.progress_percent !== "undefined") {
             const bar = document.querySelector(".lh-progress-fill-out");
             if (bar) bar.style.width = `${data.progress_percent}%`;
         }
 
+        
         if (data.badges) {
             const grid = document.querySelector("#my-badges-content .badge-grid");
             if (grid) {
@@ -204,36 +206,21 @@ async function refreshCourseStatus() {
             }
         }
 
-        if (data.leaderboard) {
-            const lb = document.querySelector("#leaderboard-content .leaderboard");
-
-            lb.innerHTML = data.leaderboard.map((u, idx) => `
-                <div class="leaderboard-row">
-                    <div class="rank-box">${idx+1}</div>
-
-                    <div class="icon">
-                        <img src="/static/images/image-profile-blue.png">
-                    </div>
-
-                    <div class="row-right">
-                        <div class="name">${u.name}</div>
-
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width:${u.progress}%"></div>
-                        </div>
-
-                        <div class="pt1">XP <b>${u.xp}</b></div>
-                    </div>
-                </div>
-            `).join('');
+       
+        if (data.leaderboard_html) {
+            const lbContainer = document.querySelector("#leaderboard-content");
+            if (lbContainer) {
+                lbContainer.innerHTML = data.leaderboard_html;
+            }
         }
 
-        console.log("✔ Course UI updated successfully");
+        console.log("Course UI updated successfully");
 
     } catch (err) {
-        console.error("❌ Failed to refresh course status:", err);
+        console.error("Failed to refresh course status:", err);
     }
 }
+
 
 function rebindPopupTabs() {
     const popupContent = document.getElementById("popup-dynamic-content");
@@ -269,4 +256,12 @@ window.addEventListener("resize", updatePositions);
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
+});
+window.addEventListener("message", function(event) {
+    if (!event.data) return;
+
+    if (event.data.event === "progress" || event.data.event === "completion") {
+        console.log(" Progress event received → refreshing UI...");
+        refreshCourseStatus();       //  update UI immediately
+    }
 });
