@@ -231,9 +231,14 @@
         <section class="hero">
             <div class="row">
                 <!-- This will be the leftmost column (Column 3) -->
+                
+
+                 % if top_left_background_image:
                 <div class="column column-left">
-                    <div><img src="${static.url('images/internetd-icon.png')}" alt="img" class="hero-img"></div>
+                    <div><img src="${top_left_background_image}" alt="img" class="hero-img"></div>
                 </div>
+                % endif
+
                 <!-- This will be the middle column (Column 2) -->
                 <div class="column column-middle">
                     <h2>${program.name}</h2>
