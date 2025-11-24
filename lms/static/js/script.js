@@ -159,7 +159,7 @@ function initializeScene() {
 
 
 async function refreshCourseStatus() {
-    console.log("🔄 Refreshing course status...");
+    console.log("Refreshing course status...");
 
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
@@ -180,8 +180,17 @@ async function refreshCourseStatus() {
             document.querySelector(".lh-progress-fill-out")
                 .style.width = `${data.progress_percent}%`;
 
-            document.querySelector(".lh-progress-val-out")
-                .textContent = `${data.progress_percent}%`;
+            const val = document.querySelector(".lh-progress-val-out");
+            if (val) val.textContent = `${data.progress_percent}%`;
+        }
+
+        if (data.leaderboard_html) {
+            const lb = document.querySelector("#leaderboard-content");
+            if (lb) {
+                lb.innerHTML = data.leaderboard_html;
+            }
+
+            rebindPopupTabs();
         }
 
         initializeScene();
@@ -191,6 +200,26 @@ async function refreshCourseStatus() {
     } catch (err) {
         console.error("❌ Failed to refresh course status:", err);
     }
+}
+
+function rebindPopupTabs() {
+    const popupContent = document.getElementById("popup-dynamic-content");
+
+    if (!popupContent) return;
+
+    popupContent.querySelectorAll(".icon-item-tab").forEach(tab => {
+        tab.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            const contentDiv = document.getElementById(targetId);
+
+            if (!contentDiv) return;
+
+            // Replace popup content
+            popupContent.innerHTML =
+                document.getElementById("popup-purple-icons-template").innerHTML +
+                contentDiv.innerHTML;
+        });
+    });
 }
 
 function rebuildCircles() {

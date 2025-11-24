@@ -204,7 +204,12 @@
   border-radius: 16px;
   border: 2px dashed rgba(255, 255, 255, 0.4);
 }
-
+.no-programs-message {
+    font-size: 25px;
+}
+a.go-to-journeys {
+    color: #0d0529 !important;
+}
 /* Responsive tweaks */
 @media (max-width: 768px) {
   .leader-dashboard__title {
