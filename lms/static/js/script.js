@@ -5,7 +5,7 @@ const circlesWrapper = document.getElementById("circlesWrapper");
 const coursescontainer = document.getElementById("coursescontainer");
 
 if (!circlesWrapper) {
-    console.error("❌ circlesWrapper not found");
+    console.error(" circlesWrapper not found");
 }
 
 const CONFIG = {
@@ -30,6 +30,7 @@ function getVerticalSpacing() {
 function getPatternMultiplier(base) {
     return window.innerWidth < 600 ? base / 2 : base;
 }
+
 
 function createCircle(data, index) {
     const state = data.state || "locked";
@@ -75,17 +76,16 @@ function createCircle(data, index) {
             </div>
             <div class="circle-text-block2">
                 <div class="circle-title">${data.title}</div>
-                <div class="circle-description">${data.description || ""}</div>
             </div>
         `;
     }
 
+    // CLICK
     circle.addEventListener("click", () => {
         if (state === "locked") {
             document.body.dispatchEvent(new Event("lockedCourseClick"));
             return;
         }
-
         $('#courseFrame').attr('src', data.link);
         $('#courseModal').css('display', 'block');
     });
@@ -98,7 +98,6 @@ function createCircle(data, index) {
     });
 }
 
-
 function calculatePosition(index) {
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
     const centerX = containerWidth / 2;
@@ -109,7 +108,6 @@ function calculatePosition(index) {
     const multiplier = getPatternMultiplier(CONFIG.positionPattern[patternIndex]);
 
     const x = centerX + (multiplier * amplitude);
-
     return { x, y };
 }
 
@@ -149,8 +147,6 @@ function initializeScene() {
 }
 
 
-
-
 async function refreshCourseStatus() {
     console.log("Refreshing course status...");
 
@@ -158,14 +154,14 @@ async function refreshCourseStatus() {
         const response = await fetch(window.location.pathname + "?ajax=1");
 
         if (!response.ok) {
-            console.error("Server responded with error:", response.status);
+            console.error("Error from server:", response.status);
             return;
         }
 
         const raw = await response.text();
 
         if (raw.trim().startsWith("<")) {
-            console.error("SERVER RETURNED HTML INSTEAD OF JSON:", raw);
+            console.error(" HTML received instead of JSON");
             return;
         }
 
@@ -173,51 +169,30 @@ async function refreshCourseStatus() {
         try {
             data = JSON.parse(raw);
         } catch (jsonErr) {
-            console.error("JSON parsing failed:", jsonErr);
+            console.error(" JSON error:", jsonErr);
             return;
         }
 
-        
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
-            window.coursePathConfig = {
-                initialActiveIndex: parsed.initialActiveIndex
-            };
-
-            initializeScene(); // Rebuild circles
+            window.coursePathConfig = { initialActiveIndex: parsed.initialActiveIndex };
+            initializeScene();
         }
 
-      
         if (typeof data.progress_percent !== "undefined") {
             const bar = document.querySelector(".lh-progress-fill-out");
             if (bar) bar.style.width = `${data.progress_percent}%`;
         }
 
-        
-        if (data.badges) {
-            const grid = document.querySelector("#my-badges-content .badge-grid");
-            if (grid) {
-                grid.innerHTML = data.badges.map(b => `
-                    <div class="badge-item">
-                        <img src="${b.icon}" alt="${b.title}">
-                    </div>
-                `).join('');
-            }
-        }
+        if (data.badges) updateBadgesPopup(data.badges);
 
-       
-        if (data.leaderboard_html) {
-            const lbContainer = document.querySelector("#leaderboard-content");
-            if (lbContainer) {
-                lbContainer.innerHTML = data.leaderboard_html;
-            }
-        }
+        if (data.leaderboard) updateLeaderboardPopup(data.leaderboard);
 
-        console.log("Course UI updated successfully");
+        console.log("UI updated successfully");
 
     } catch (err) {
-        console.error("Failed to refresh course status:", err);
+        console.error("❌ refreshCourseStatus failed:", err);
     }
 }
 
@@ -231,7 +206,6 @@ function rebindPopupTabs() {
         tab.addEventListener("click", function () {
             const targetId = this.getAttribute("data-target");
             const contentDiv = document.getElementById(targetId);
-
             if (!contentDiv) return;
 
             popupContent.innerHTML =
@@ -243,25 +217,63 @@ function rebindPopupTabs() {
 
 function rebuildCircles() {
     console.log("Rebuilding circles path...");
-
     circlesWrapper.innerHTML = "";
     circleElements = [];
+    initializeScene();
+}
 
-    if (typeof initializeScene === "function") {
-        initializeScene();
+
+function updateBadgesPopup(badges) {
+    const container = document.querySelector("#popup-dynamic-content .badge-grid");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    badges.forEach(badge => {
+        const div = document.createElement("div");
+        div.className = "badge-item";
+
+        div.innerHTML = `
+            <img src="${badge.icon}" alt="${badge.title}">
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+
+function updateLeaderboardPopup(leaderboard) {
+    const list = document.querySelector("#popup-leaderboard-users");
+    if (list) {
+        list.innerHTML = "";
+
+        leaderboard.forEach((u, index) => {
+            list.innerHTML += `
+                <div class="leaderboard-user">
+                    <div class="lb-rank">${index + 1}</div>
+                    <div class="lb-name">${u.name}</div>
+                    <div class="lb-progress-bar">
+                        <div class="lb-progress-fill" style="width:${u.progress}%"></div>
+                    </div>
+                    <div class="lb-xp">${u.xp} XP</div>
+                </div>
+            `;
+        });
     }
 }
+
 
 window.addEventListener("resize", updatePositions);
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
 });
+
 window.addEventListener("message", function(event) {
     if (!event.data) return;
 
     if (event.data.event === "progress" || event.data.event === "completion") {
-        console.log(" Progress event received → refreshing UI...");
-        refreshCourseStatus();       //  update UI immediately
+        console.log("📢 iframe progress → UI refresh");
+        refreshCourseStatus();
     }
 });
