@@ -11,8 +11,8 @@ const CONFIG = {
 
 const STATE_CONFIG = {
     completed: { icon: window.STATE_ICONS.completed },
-    active: { icon: window.STATE_ICONS.active },
-    locked: { icon: window.STATE_ICONS.locked }
+    active:    { icon: window.STATE_ICONS.active },
+    locked:    { icon: window.STATE_ICONS.locked }
 };
 
 function getAmplitude() {
@@ -27,6 +27,9 @@ function getPatternMultiplier(base) {
     return window.innerWidth < 600 ? base / 2 : base;
 }
 
+/* =========================
+   CREATE COURSE CIRCLES
+   ========================= */
 function createCircle(data, index) {
     const state = data.state || "locked";
     const circle = document.createElement("div");
@@ -132,111 +135,9 @@ function initializeScene() {
     updatePositions();
 }
 
-async function refreshCourseStatus() {
-    try {
-        const response = await fetch(window.location.pathname + "?ajax=1");
-
-        if (!response.ok) {
-            console.error("Server error:", response.status);
-            return;
-        }
-
-        const raw = await response.text();
-
-        if (raw.trim().startsWith("<")) {
-            console.error("HTML returned instead of JSON");
-            return;
-        }
-
-        let data;
-        try {
-            data = JSON.parse(raw);
-        } catch (jsonErr) {
-            console.error("JSON parse error:", jsonErr);
-            return;
-        }
-
-        /* =======================
-            1) UPDATE CIRCLES PATH
-        ========================*/
-        if (data.coursePathDataJSON) {
-            const parsed = JSON.parse(data.coursePathDataJSON);
-            window.coursePathData = parsed.items;
-            window.coursePathConfig = {
-                initialActiveIndex: parsed.initialActiveIndex
-            };
-            initializeScene();
-        }
-
-        /* =======================
-            2) UPDATE PROGRESS BAR
-        ========================*/
-        if (typeof data.progress_percent !== "undefined") {
-            const barFill = document.querySelector(".lh-progress-fill-out");
-            if (barFill) {
-                barFill.style.width = `${data.progress_percent}%`;
-            }
-            const barVal = document.querySelector(".lh-progress-val-out");
-            if (barVal) {
-                barVal.textContent = `${data.progress_percent}%`;
-            }
-        }
-
-        /* =======================
-            3) UPDATE BADGES POPUP
-        ========================*/
-        if (data.badges) {
-            const wrapper = document.querySelector("#my-badges-content .badge-grid");
-            if (wrapper) {
-                wrapper.innerHTML = "";
-                data.badges.forEach(b => {
-                    wrapper.innerHTML += `
-                        <div class="badge-item">
-                            <img src="${b.icon}">
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        /* =======================
-            4) UPDATE LEADERBOARD
-        ========================*/
-        if (data.leaderboard) {
-            const list = document.querySelector("#leaderboard-content .leaderboard");
-            if (list) {
-                list.innerHTML = "";
-
-                data.leaderboard.forEach((u, index) => {
-                    list.innerHTML += `
-                        <div class="leaderboard-row">
-                            <div class="lb-rank">${index + 1}</div>
-                            <div class="lb-name">${u.name}</div>
-                            <div class="lb-progress">
-                                <div class="lb-progress-fill" style="width:${u.progress}%"></div>
-                            </div>
-                            <div class="lb-xp">${u.xp} XP</div>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        console.log("UI updated successfully");
-
-    } catch (err) {
-        console.error("refreshCourseStatus failed:", err);
-    }
-}
-
-
-function rebuildCircles() {
-    if (!circlesWrapper) return;
-    circlesWrapper.innerHTML = "";
-    circleElements = [];
-    initializeScene();
-}
-
+/* =========================
+   POPUP CONTENT HELPERS
+   ========================= */
 function updateBadgesPopup(badges) {
     const wrapper = document.querySelector("#my-badges-content .badge-grid");
     if (!wrapper) return;
@@ -251,38 +152,122 @@ function updateBadgesPopup(badges) {
 }
 
 function updateLeaderboardPopup(leaderboard) {
-    const wrapper = document.querySelector("#leaderboard-content");
-    if (!wrapper) return;
+    const container = document.querySelector("#leaderboard-content .leaderboard");
+    if (!container) return;
 
-    wrapper.querySelectorAll(".leaderboard-row").forEach(el => el.remove());
-    const noBadge = wrapper.querySelector(".no-badge");
-    if (noBadge) noBadge.remove();
+    // Remove previous Mako rows
+    container.querySelectorAll(".leaderboard-row").forEach(el => el.remove());
 
     leaderboard.forEach((u, index) => {
+        let colorClass;
+        if (index === 0) colorClass = "gold";
+        else if (index === 1) colorClass = "silver";
+        else if (index === 2) colorClass = "bronze";
+        else if (index === 3) colorClass = "blue1";
+        else colorClass = "blue2";
+
         const row = document.createElement("div");
         row.className = "leaderboard-row";
+
         row.innerHTML = `
-            <div class="lb-rank">${index + 1}</div>
-            <div class="lb-name">${u.name}</div>
-            <div class="lb-progress">
-                <div class="lb-progress-fill" style="width:${u.progress}%"></div>
+            <div class="rank-box">${index + 1}</div>
+            <div class="icon">
+                <img src="${window.LEADERBOARD_AVATAR || '/static/images/image-profile-blue.png'}" alt="">
             </div>
-            <div class="lb-xp">${u.xp} XP</div>
+            <div class="row-right ${colorClass}">
+                <div class="name pt0">${u.name}</div>
+                <div class="pt2">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:${u.progress}%"></div>
+                    </div>
+                </div>
+                <div class="pt1">XP <b>${u.xp}</b></div>
+            </div>
         `;
-        wrapper.appendChild(row);
+
+        container.appendChild(row);
     });
 }
+
+/* =========================
+   AJAX REFRESH
+   ========================= */
+async function refreshCourseStatus() {
+    try {
+        const response = await fetch(window.location.pathname + "?ajax=1");
+
+        const raw = await response.text();
+        if (raw.trim().startsWith("<")) return;
+
+        const data = JSON.parse(raw);
+
+        /* Update circles */
+        if (data.coursePathDataJSON) {
+            const parsed = JSON.parse(data.coursePathDataJSON);
+            window.coursePathData = parsed.items;
+            initializeScene();
+        }
+
+        /* Update global progress */
+        if (typeof data.progress_percent !== "undefined") {
+            document.querySelector(".lh-progress-fill-out").style.width = `${data.progress_percent}%`;
+            document.querySelector(".lh-progress-val-out").textContent = `${data.progress_percent}%`;
+        }
+
+        /* BADGES */
+        if (Array.isArray(data.badges)) {
+            window.lastBadgesData = data.badges;
+            updateBadgesPopup(data.badges);
+        }
+
+        /* LEADERBOARD */
+        if (Array.isArray(data.leaderboard)) {
+            window.lastLeaderboardData = data.leaderboard;
+            updateLeaderboardPopup(data.leaderboard);
+        }
+
+    } catch (err) {
+        console.error("refreshCourseStatus failed:", err);
+    }
+}
+
+/* =========================
+   EVENT: OPEN POPUP → REFRESH CONTENT
+   ========================= */
+document.getElementById("leaderboard").addEventListener("click", function () {
+    const container = document.querySelector("#leaderboard-content .leaderboard");
+    if (!container) return;
+
+    container.querySelectorAll(".leaderboard-row").forEach(el => el.remove());
+
+    if (Array.isArray(window.lastLeaderboardData)) {
+        updateLeaderboardPopup(window.lastLeaderboardData);
+    }
+});
+
+document.getElementById("my-badges").addEventListener("click", function () {
+    const wrapper = document.querySelector("#my-badges-content .badge-grid");
+    wrapper.innerHTML = "";
+
+    if (Array.isArray(window.lastBadgesData)) {
+        updateBadgesPopup(window.lastBadgesData);
+    }
+});
+
+/* =========================
+   INIT
+   ========================= */
+document.addEventListener("DOMContentLoaded", () => {
+    initializeScene();
+    refreshCourseStatus();
+});
 
 window.addEventListener("resize", () => {
     if (!circleElements.length) return;
     updatePositions();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    initializeScene();
-});
-
-window.addEventListener("message", function(event) {
+window.addEventListener("message", (event) => {
     if (!event.data) return;
     if (event.data.event === "progress" || event.data.event === "completion") {
         refreshCourseStatus();
