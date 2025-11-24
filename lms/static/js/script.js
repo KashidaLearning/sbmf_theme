@@ -1,4 +1,3 @@
-
 let numCircles = 0;
 let circleElements = [];
 
@@ -20,8 +19,6 @@ const STATE_CONFIG = {
     locked: { icon: window.STATE_ICONS.locked }
 };
 
-
-
 function getAmplitude() {
     return window.innerWidth < 600 ? 60 : Math.min((window.innerWidth / 2) - 120, 100);
 }
@@ -33,8 +30,6 @@ function getVerticalSpacing() {
 function getPatternMultiplier(base) {
     return window.innerWidth < 600 ? base / 2 : base;
 }
-
-
 
 function createCircle(data, index) {
     const state = data.state || "locked";
@@ -85,7 +80,6 @@ function createCircle(data, index) {
         `;
     }
 
-  
     circle.addEventListener("click", () => {
         if (state === "locked") {
             document.body.dispatchEvent(new Event("lockedCourseClick"));
@@ -140,8 +134,6 @@ function updateContainerHeight() {
     coursescontainer.style.minHeight = `${last.y + 120}px`;
 }
 
-
-
 function initializeScene() {
     const data = window.coursePathData || [];
 
@@ -158,16 +150,44 @@ function initializeScene() {
 
 
 
+
 async function refreshCourseStatus() {
     console.log("Refreshing course status...");
 
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
-        const data = await response.json();
+
+        // NEW: detect backend errors
+        if (!response.ok) {
+            console.error("❌ Server responded with error:", response.status);
+            return;
+        }
+
+        const raw = await response.text();
+
+        // NEW: detect HTML response
+        if (raw.trim().startsWith("<")) {
+            console.error("❌ SERVER RETURNED HTML INSTEAD OF JSON:", raw);
+            return;
+        }
+
+        let data = {};
+        try {
+            data = JSON.parse(raw);
+        } catch (jsonErr) {
+            console.error("❌ JSON parsing failed:", jsonErr, raw);
+            return;
+        }
+
+        // ----- Updates -----
 
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
+
             window.coursePathData = parsed.items;
+
+            // FIX: protect against undefined
+            window.coursePathConfig = window.coursePathConfig || {};
             window.coursePathConfig.initialActiveIndex = parsed.initialActiveIndex;
         }
 
@@ -176,18 +196,14 @@ async function refreshCourseStatus() {
             if (grid) grid.innerHTML = data.badges_html;
         }
 
-        if (data.progress_percent !== undefined) {
-            document.querySelector(".lh-progress-fill-out")
-                .style.width = `${data.progress_percent}%`;
-
+        if (typeof data.progress_percent !== "undefined") {
+            const bar = document.querySelector(".lh-progress-fill-out");
+            if (bar) bar.style.width = `${data.progress_percent}%`;
         }
 
         if (data.leaderboard_html) {
             const lb = document.querySelector("#leaderboard-content");
-            if (lb) {
-                lb.innerHTML = data.leaderboard_html;
-            }
-
+            if (lb) lb.innerHTML = data.leaderboard_html;
             rebindPopupTabs();
         }
 
@@ -199,6 +215,7 @@ async function refreshCourseStatus() {
         console.error("❌ Failed to refresh course status:", err);
     }
 }
+
 
 function rebindPopupTabs() {
     const popupContent = document.getElementById("popup-dynamic-content");
@@ -212,7 +229,6 @@ function rebindPopupTabs() {
 
             if (!contentDiv) return;
 
-            // Replace popup content
             popupContent.innerHTML =
                 document.getElementById("popup-purple-icons-template").innerHTML +
                 contentDiv.innerHTML;
@@ -230,8 +246,6 @@ function rebuildCircles() {
         initializeScene();
     }
 }
-
-
 
 window.addEventListener("resize", updatePositions);
 
