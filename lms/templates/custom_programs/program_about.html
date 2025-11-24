@@ -466,7 +466,6 @@
     </div>
    --> 
 <div id="leaderboard-content" style="display: none;"> 
-      <div id="popup-leaderboard-users"></div>
   <div class="leaderboard">
     <!-- <div class="title-leaderboard">
       <img src="${static.url('images/leaderboard-popup.png')}" alt="img">
@@ -880,23 +879,23 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت. أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
     </div>
 
-    <div class="badge-grid" id="popup-badge-grid">
+   <div class="badge-grid">
 
-        % for badge in my_badges:
+    % for badge in my_badges:
+        <div class="badge-item" >
+            <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
+        </div>
+    % endfor
+
+    % if missing_badges > 0:
+        % for i in range(missing_badges):
             <div class="badge-item">
-                <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
+                <img src="${placeholder_badge.placeholder_icon.url}" alt="placeholder">
             </div>
         % endfor
+    % endif %
 
-        % if missing_badges > 0:
-            % for i in range(missing_badges):
-                <div class="badge-item">
-                    <img src="${placeholder_badge.placeholder_icon.url}" alt="placeholder">
-                </div>
-            % endfor
-        % endif
-
-    </div>
+</div>
 
 
 

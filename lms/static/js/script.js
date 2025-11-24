@@ -4,10 +4,6 @@ let circleElements = [];
 const circlesWrapper = document.getElementById("circlesWrapper");
 const coursescontainer = document.getElementById("coursescontainer");
 
-if (!circlesWrapper) {
-    console.error(" circlesWrapper not found");
-}
-
 const CONFIG = {
     positionPattern: [0, -1.5, -3, -1.5, 0, 1.5, 3, 1.5],
     verticalSpacing: 340,
@@ -31,26 +27,21 @@ function getPatternMultiplier(base) {
     return window.innerWidth < 600 ? base / 2 : base;
 }
 
-
 function createCircle(data, index) {
     const state = data.state || "locked";
     const circle = document.createElement("div");
-
     circle.className = `circle-item circle-item--${state}`;
 
     const isFirst = data.is_first_course === true;
     const isCompleted = (state === "completed");
-
-    const iconToUse = (isFirst && isCompleted)
-        ? window.FIRST_COMPLETED_BADGE
-        : STATE_CONFIG[state].icon;
+    const iconToUse = (isFirst && isCompleted) ? window.FIRST_COMPLETED_BADGE : STATE_CONFIG[state].icon;
 
     if (data.is_special) {
         circle.classList.add("circle-item--special-layout");
         circle.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon state-icon--${state}">
-                    <img width="60px" src="${iconToUse}">
+                    <img width="60" src="${iconToUse}">
                 </div>
                 <div class="circle-text-content">
                     <div class="circle-title">${data.title}</div>
@@ -66,7 +57,7 @@ function createCircle(data, index) {
         circle.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
-                    <img width="60px" src="${iconToUse}">
+                    <img width="60" src="${iconToUse}">
                 </div>
                 <div class="circle-image-wrapper2">
                     <div class="circle-image-container2">
@@ -80,7 +71,6 @@ function createCircle(data, index) {
         `;
     }
 
-    // CLICK
     circle.addEventListener("click", () => {
         if (state === "locked") {
             document.body.dispatchEvent(new Event("lockedCourseClick"));
@@ -101,12 +91,10 @@ function createCircle(data, index) {
 function calculatePosition(index) {
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
     const centerX = containerWidth / 2;
-
     const amplitude = getAmplitude();
     const y = 100 + (index * getVerticalSpacing());
     const patternIndex = index % CONFIG.positionPattern.length;
     const multiplier = getPatternMultiplier(CONFIG.positionPattern[patternIndex]);
-
     const x = centerX + (multiplier * amplitude);
     return { x, y };
 }
@@ -118,24 +106,22 @@ function updatePositions() {
         element.style.top = `${y}px`;
         element.style.transform = "translate(-50%, -50%)";
     });
-
     updateContainerHeight();
 }
 
 function updateContainerHeight() {
+    if (!coursescontainer) return;
     if (circleElements.length === 0) {
         coursescontainer.style.minHeight = "600px";
         return;
     }
-
     const last = calculatePosition(circleElements.length - 1);
     coursescontainer.style.minHeight = `${last.y + 120}px`;
 }
 
 function initializeScene() {
     const data = window.coursePathData || [];
-
-    if (!data.length) return;
+    if (!data.length || !circlesWrapper) return;
 
     numCircles = data.length;
 
@@ -146,32 +132,13 @@ function initializeScene() {
     updatePositions();
 }
 
-
 async function refreshCourseStatus() {
-    console.log("Refreshing course status...");
-
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
-
-        if (!response.ok) {
-            console.error("Error from server:", response.status);
-            return;
-        }
-
         const raw = await response.text();
+        if (raw.trim().startsWith("<")) return;
 
-        if (raw.trim().startsWith("<")) {
-            console.error(" HTML received instead of JSON");
-            return;
-        }
-
-        let data = {};
-        try {
-            data = JSON.parse(raw);
-        } catch (jsonErr) {
-            console.error(" JSON error:", jsonErr);
-            return;
-        }
+        const data = JSON.parse(raw);
 
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
@@ -181,89 +148,64 @@ async function refreshCourseStatus() {
         }
 
         if (typeof data.progress_percent !== "undefined") {
-            const bar = document.querySelector(".lh-progress-fill-out");
-            if (bar) bar.style.width = `${data.progress_percent}%`;
+            const barOut = document.querySelector(".lh-progress-fill-out");
+            if (barOut) barOut.style.width = `${data.progress_percent}%`;
         }
 
         if (data.badges) updateBadgesPopup(data.badges);
-
         if (data.leaderboard) updateLeaderboardPopup(data.leaderboard);
 
-        console.log("UI updated successfully");
-
-    } catch (err) {
-        console.error("❌ refreshCourseStatus failed:", err);
-    }
-}
-
-
-function rebindPopupTabs() {
-    const popupContent = document.getElementById("popup-dynamic-content");
-
-    if (!popupContent) return;
-
-    popupContent.querySelectorAll(".icon-item-tab").forEach(tab => {
-        tab.addEventListener("click", function () {
-            const targetId = this.getAttribute("data-target");
-            const contentDiv = document.getElementById(targetId);
-            if (!contentDiv) return;
-
-            popupContent.innerHTML =
-                document.getElementById("popup-purple-icons-template").innerHTML +
-                contentDiv.innerHTML;
-        });
-    });
+        rebindPopupTabs();
+    } catch (err) {}
 }
 
 function rebuildCircles() {
-    console.log("Rebuilding circles path...");
+    if (!circlesWrapper) return;
     circlesWrapper.innerHTML = "";
     circleElements = [];
     initializeScene();
 }
 
-
 function updateBadgesPopup(badges) {
-    const container = document.querySelector("#popup-dynamic-content .badge-grid");
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    badges.forEach(badge => {
-        const div = document.createElement("div");
-        div.className = "badge-item";
-
-        div.innerHTML = `
-            <img src="${badge.icon}" alt="${badge.title}">
+    const wrapper = document.querySelector("#my-badges-content .badge-grid");
+    if (!wrapper) return;
+    wrapper.innerHTML = "";
+    badges.forEach(b => {
+        wrapper.innerHTML += `
+            <div class="badge-item">
+                <img src="${b.icon}">
+            </div>
         `;
-
-        container.appendChild(div);
     });
 }
 
-
 function updateLeaderboardPopup(leaderboard) {
-    const list = document.querySelector("#popup-leaderboard-users");
-    if (list) {
-        list.innerHTML = "";
+    const wrapper = document.querySelector("#leaderboard-content");
+    if (!wrapper) return;
 
-        leaderboard.forEach((u, index) => {
-            list.innerHTML += `
-                <div class="leaderboard-user">
-                    <div class="lb-rank">${index + 1}</div>
-                    <div class="lb-name">${u.name}</div>
-                    <div class="lb-progress-bar">
-                        <div class="lb-progress-fill" style="width:${u.progress}%"></div>
-                    </div>
-                    <div class="lb-xp">${u.xp} XP</div>
-                </div>
-            `;
-        });
-    }
+    wrapper.querySelectorAll(".leaderboard-row").forEach(el => el.remove());
+    const noBadge = wrapper.querySelector(".no-badge");
+    if (noBadge) noBadge.remove();
+
+    leaderboard.forEach((u, index) => {
+        const row = document.createElement("div");
+        row.className = "leaderboard-row";
+        row.innerHTML = `
+            <div class="lb-rank">${index + 1}</div>
+            <div class="lb-name">${u.name}</div>
+            <div class="lb-progress">
+                <div class="lb-progress-fill" style="width:${u.progress}%"></div>
+            </div>
+            <div class="lb-xp">${u.xp} XP</div>
+        `;
+        wrapper.appendChild(row);
+    });
 }
 
-
-window.addEventListener("resize", updatePositions);
+window.addEventListener("resize", () => {
+    if (!circleElements.length) return;
+    updatePositions();
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
@@ -271,9 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("message", function(event) {
     if (!event.data) return;
-
     if (event.data.event === "progress" || event.data.event === "completion") {
-        console.log("📢 iframe progress → UI refresh");
         refreshCourseStatus();
     }
 });
