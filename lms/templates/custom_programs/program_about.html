@@ -198,12 +198,12 @@
         my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
     %>
 
-    <% 
+  <!--   <% 
         badges_html = "".join(
             f'<div class="badge-item"><img src="{badge.badge.icon.url}"></div>'
             for badge in my_badges
         )
-    %>
+    %> -->
 
     <% 
         completed_count = sum(

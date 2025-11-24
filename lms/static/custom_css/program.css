@@ -1769,6 +1769,11 @@ font-size: 60px;
     position: static;
     width: 180px;
     margin: 0 auto 10px;
+            display: none;
+  }
+  .top_left_background_image .bg-img {
+
+    display: none;
   }
 }
 
