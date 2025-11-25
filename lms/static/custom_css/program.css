@@ -111,7 +111,7 @@ max-width: 50px;
 /*leaderboard css styles*/
 
 .leaderboard {
-   max-width: 100%;
+   max-width: 90%;
     margin: auto;
     /* background: #fff; */
     border-radius: 12px;
@@ -940,13 +940,18 @@ text-align: right;
 
 
 #popup-dynamic-content .badge-grid {
-   display: grid;
+      display: grid;
     grid-template-columns: repeat(4, auto);
     gap: 0px;
     margin-top: 20px;
     justify-items: center;
     max-width: 870px;
     margin: 0 auto;
+    /* display: inline-flex; */
+    padding-bottom: 4px;
+    /* flex-direction: column; */
+    align-items: center;
+    gap: 20px;
 }
 
 #popup-dynamic-content .badge-item {
@@ -968,21 +973,25 @@ text-align: right;
 
 #popup-dynamic-content .download-btn {
     display: inline-block;
-    background-color: var(--accent);
-    color: #242184;
-    /* Dark blue for button text */
-    padding: 12px 25px;
-    border-radius: 26px;
+    padding: 18px 40px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #292589;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 0 20px rgba(123, 97, 255, 0.5), 0 0 40px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.25), inset 0 0 40px rgba(255, 255, 255, 0.8);
+    border: 3px solid rgba(160, 140, 255, 0.6);
     text-decoration: none;
-    font-weight: bold;
-    margin-top: 25px;
-    font-family: 'Cairo', sans-serif !important;
-    transition: background-color 0.2s ease;
+    transition: 0.3s 
+ease;
 }
 
-#popup-dynamic-content .download-btn:hover {
-    background-color: #fdd835;
-    /* Slightly darker accent on hover */
+
+.certificate-logo img {
+    width: 110px; 
+    margin: 0 auto 15px auto;
+    display: block;
+    filter: drop-shadow(0px 0px 15px rgba(120, 105, 255, 0.45));
 }
 .enrollment-info{
     padding-top: 1em;
@@ -1272,8 +1281,13 @@ text-align: right;
 }
 
 .eval-item .label {
-    /* Styles for the text like الواجب, التقييم القبلي */
-    color: #EDEBFF;
+ color: var(--White, #FFF);
+    text-align: right;
+    font-family: "IBM Plex Sans";
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 37px;
 }
 
 .eval-icon {
@@ -1374,7 +1388,23 @@ text-align: right;
     
 }
 div#certificate-status {
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.50);
+    background: linear-gradient(86deg, rgba(255, 255, 255, 0.50) 11.14%, rgba(255, 255, 255, 0.05) 113.29%);
+    background-blend-mode: overlay;
+    backdrop-filter: blur(35px);
+    margin: 0 auto;
+}
+#certificate-status h1
+ {
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "IBM Plex Sans";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: capitalize;
 }
 /* ============================================== */
 /* ====== Responsive Adjustments ====== */
@@ -1697,16 +1727,16 @@ max-width: 50px;
  position: inherit;
 }
 .sharati-intro-text {
-    text-align: center;
-    color: #ffffff;
-    font-family: "Cairo", sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    margin-top: 13px;
-    margin-bottom: 35px;
-    line-height: 1.8;
-    width: 50%;
-    padding-right: 225px;
+        color: #FFF;
+    text-align: right;
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-family: "IBM Plex Sans";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    width: 445px;
+    padding-right: 300px;
 }
 .rank-box {
  display: flex;
