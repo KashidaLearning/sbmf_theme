@@ -1356,7 +1356,9 @@ text-align: right;
     color: white; /* Gold/yellow for XP numbers */
     
 }
-
+div#certificate-status {
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+}
 /* ============================================== */
 /* ====== Responsive Adjustments ====== */
 /* ============================================== */
@@ -1667,11 +1669,11 @@ max-width: 50px;
     text-align: center;
 }
 .icon-item.yellow {
-    display: none !important;
+    display: none ;
 }
 
 .yellow-icon-alone {
-    display: block !important;
+    display: block ;
 }
 .icon-item.yellow-icon {
  padding-left: 135px;
@@ -1936,11 +1938,16 @@ font-size: 60px;
     justify-content: center;
     margin-top: 15px;
     padding-left: 0;
+    display: none;
   }
 
   .icon-item.yellow-icon {
     padding-left: 0;
   }
+  .icon-item.yellow {
+        display: flex !important;
+    }
+
 
   .sharati-intro-text {
     width: 100%;
