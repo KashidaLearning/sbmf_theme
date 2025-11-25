@@ -590,7 +590,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 <div class="leaderboard-header">
     <div class="lh-left">
         <ul class="eval-grid">
-            <li class="eval-item">
+            <li class="eval-item eval-assignment">
                 <span class="label">الواجب</span>
                 % if assignment_completed:
                 <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
@@ -600,7 +600,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
                 % endif
             </li>
-            <li class="eval-item">
+            <li class="eval-item eval-pre" >
                 <span class="label">التقييم القبلي</span>
                 % if pre_completed:
                 <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
@@ -610,7 +610,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
                 % endif
             </li>
-            <li class="eval-item">
+            <li class="eval-item eval-post">
                 <span class="label">التقييم النهائي</span>
                 % if post_completed:
                 <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
@@ -620,7 +620,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
                 % endif
             </li>
-            <li class="eval-item">
+            <li class="eval-item eval-challenges">
                 <span class="label">${completed_challenges}/${total_challenges}</span>
                 <span class="label">التحديات</span>
                 % if total_challenges == 0:
@@ -892,6 +892,17 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         completed: "${static.url('images/badge112.png')}",
         active: "${static.url('images/active00.png')}",
         locked: "${static.url('images/Locked001.png')}"
+    };
+</script>
+<script>
+    window.CURRENT_USER_ID = ${request.user.id};
+    window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
+
+    window.EVAL_ICONS = {
+        completed: "${static.url('images/tick-icon.png')}",
+        locked: "${static.url('images/lockedstatus.png')}",
+        in_progress: "${static.url('images/hourglass-icon.png')}",
+        no_challenges: "${static.url('images/lockedstatus.png')}"
     };
 </script>
 <script>
