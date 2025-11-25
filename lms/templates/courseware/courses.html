@@ -33,14 +33,14 @@
           <iframe src="${program.spline_url}" frameborder="0"></iframe>
            % endif
  
-            <div class="progress-badge" style="background-color:${program.css_single_color};">
+            <div class="progress-badge" >
               % if program.age_range:
                   ${program.age_range}
               % endif  
             </div>
             <div class="program-info">
               <h3 class="program-title">${program.name}</h3>
-              <div class="program-subject" style="background-color:${program.css_single_color};">
+              <div class="program-subject" >
                <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
               </div>
             </div>
@@ -95,17 +95,10 @@
   border-radius: 26px;
   overflow: hidden;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 15px 45px rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+ 
 }
  
-.program-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(255,203,5,0.4);
-}
- 
+
  
 .spline-bg {
   position: relative;
@@ -136,6 +129,7 @@
     padding-top: 12px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
+    display: none;
 }
  
  
@@ -149,6 +143,7 @@
     padding-right: 10px;
     font-family: 'Cairo', sans-serif !important;
     z-index: 10;
+    display: none;
 }
 .program-title {
   color: #fff;
@@ -158,6 +153,7 @@
     margin-bottom: 17px;
     align-content: right;
     font-family: 'Cairo', sans-serif !important;
+    display: none;
 
 }
  
@@ -171,11 +167,10 @@
     color:  #110D7C;;
     font-size: 16px;
     font-family: 'Cairo', sans-serif !important;
+    display: none;
 }
   
-.program-subject:hover {
-  background: #3b36a5;
-}
+
  
  
 

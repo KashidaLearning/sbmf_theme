@@ -1525,8 +1525,10 @@ flex: unset !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 11px; 
-    flex: 1; 
+    gap: 11px;
+    flex: 1;
+    margin-top: 22px;
+    position: relative;
 }
 
 .popup-purple-icons .icon-circle {
@@ -1733,7 +1735,7 @@ max-width: 50px;
  position: inherit;
 }
 .sharati-intro-text {
-        color: #FFF;
+      color: #FFF;
     text-align: right;
     font-feature-settings: 'liga' off, 'clig' off;
     font-family: "IBM Plex Sans";
@@ -1741,8 +1743,13 @@ max-width: 50px;
     font-style: normal;
     font-weight: 700;
     line-height: 24px;
-    width: 445px;
-    padding-right: 300px;
+    /* width: 445px; */
+    /* padding-right: 300px; */
+    display: block;
+    margin: 16px auto;
+    max-width: 870px;
+    text-align: center;
+    /* margin-top: 16px; */
 }
 .rank-box {
  display: flex;
@@ -1923,8 +1930,11 @@ max-width: 50px;
   }
 
   .popup-purple-icons .popup-left {
+  display: flex;
     justify-content: center;
-    margin-bottom: 6px;
+    align-items: center;
+    position: absolute;
+    left: 0;
   }
 
   .popup-purple-icons .popup-center {

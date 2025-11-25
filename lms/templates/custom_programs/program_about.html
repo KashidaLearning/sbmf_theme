@@ -790,7 +790,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
   <div id="my-badges-content" style="display: none;">
 
     <div class="sharati-intro-text">
-        كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت. أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
+        كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
+    <br>
+        أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
     </div>
 
    <div class="badge-grid">
@@ -840,8 +842,10 @@ for index, data in enumerate(sorted_leaderboard, start=1):
      
 
 
-    <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
-        <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden;">
+    <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);">
+        <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden; position: relative;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255, 255, 255, 0.12), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
             <iframe allowfullscreen="" frameborder="0" height="100%" id="courseFrame" width="100%"></iframe>
         </div>
@@ -853,7 +857,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         <!-- LEFT -->
         <div class="popup-left">
 
-            <div class="icon-item-tab no-color" data-target="certificate-content" style="padding-left:50px">
+            <div class="icon-item-tab no-color" data-target="certificate-content" >
                 <div class="icon-circle-tab">
                     <img src="${static.url('images/cert-icon-new.png')}">
                 </div>
