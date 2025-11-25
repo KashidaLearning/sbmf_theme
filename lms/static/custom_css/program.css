@@ -1335,7 +1335,7 @@ text-align: right;
 /* Rank Text Styling */
 .lh-rank-title  {
     margin: 0px 12px 0px;
-    font-size: 22px;
+        font-size: 21px;
     font-weight: 700;
     color: white;
 }
@@ -1443,8 +1443,8 @@ flex: unset !important;
  width: 350px;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
   display: block;
-  margin: -207px -194px -183px;
-  padding-right: 750px;
+  left: 136px;
+  top: -182px;
   pointer-events: none;
   position: fixed;
 }
@@ -1678,16 +1678,16 @@ max-width: 50px;
  position: inherit;
 }
 .sharati-intro-text {
-text-align: center;
-  color: #ffffff;
-  font-family: "Cairo", sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  margin-top: 13px;
-  margin-bottom: 35px;
-  line-height: 1.8;
-  width: 50%;
-      padding-right: 264px;;
+    text-align: center;
+    color: #ffffff;
+    font-family: "Cairo", sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 13px;
+    margin-bottom: 35px;
+    line-height: 1.8;
+    width: 50%;
+    padding-right: 225px;
 }
 .rank-box {
  font-family: "Cairo", sans-serif;
