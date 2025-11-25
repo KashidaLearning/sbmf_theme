@@ -818,24 +818,25 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 </div>
 
 
-   <div id="certificate-content" style="display: none;">
-    <div id="certificate-status">
-
-        <div class="certificate-logo">
-            <img src="${static.url('images/SBMFLogoDark.png.png')}" alt="logo">
+    <div id="certificate-content" style="display: none;">
+         <!-- <div class="title-certificatecontent">
+                <img src="${static.url('images/cert-popup.png')}" alt="img">
+                <h2>شهاداتي </h2>
+            </div>      -->
+        <div id="certificate-status">
+            % if cert_url:
+                <h1>شهــــــادة إنجــــــاز</h1>
+                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة</a>
+            % else:
+                <h1>شهــــــادة إنجــــــاز</h1>
+                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+                <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+            % endif
+                <div class="certificate-logo">
+                    <img src="${static.url('images/sbmf-logo.png')}" alt="logo">
+                </div>
         </div>
-
-        % if cert_url:
-            <h1>شهــــــادة إنجــــــاز</h1>
-            <a href="${cert_url}" class="download-btn">تنزيل الشهادة</a>
-        % else:
-            <h1>شهــــــادة إنجــــــاز</h1>
-            <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
-            <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
-        % endif
-
     </div>
-</div>
      
 
 

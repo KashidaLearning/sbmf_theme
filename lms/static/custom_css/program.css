@@ -972,7 +972,7 @@ text-align: right;
 
 
 #popup-dynamic-content .download-btn {
-    display: inline-block;
+       display: inline-block;
     padding: 18px 40px;
     font-size: 22px;
     font-weight: 600;
@@ -984,6 +984,8 @@ text-align: right;
     text-decoration: none;
     transition: 0.3s 
 ease;
+    width: 938px;
+    height: 152px;
 }
 
 
@@ -1394,6 +1396,8 @@ div#certificate-status {
     background-blend-mode: overlay;
     backdrop-filter: blur(35px);
     margin: 0 auto;
+    margin: 0 auto;
+    width: 90%;
 }
 #certificate-status h1
  {
