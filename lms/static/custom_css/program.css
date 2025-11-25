@@ -111,7 +111,7 @@ max-width: 50px;
 /*leaderboard css styles*/
 
 .leaderboard {
-    max-width: 100%;
+   max-width: 100%;
     margin: auto;
     /* background: #fff; */
     border-radius: 12px;
@@ -120,23 +120,34 @@ max-width: 50px;
     color: #fff;
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-
     border-radius: 20px;
     padding: 25px;
     position: relative;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+    padding: 13px 0 12px 31px;
+    align-items: center;
 }
 /*leaderboard new css  styles*/
    .leaderboard-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-radius: 12px;
-      
-      max-width: 82%;
-      transition: transform 0.2s ease;
-      margin-right: 13px;
-      padding-right: 103px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px;
+    max-width: 82%;
+    transition: transform 0.2s 
+ease;
+    margin-right: 13px;
+    padding-right: 103px;
+    display: flex;
+    width: 998px;
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
+    gap: 32px;
+    display: flex;
+    width: 1012px;
+    /* flex-direction: column; */
+    /* align-items: flex-end; */
+    gap: 30px;
 
     }
  
@@ -183,6 +194,7 @@ max-width: 50px;
     }
    .icon img{
     max-width: 73px;
+    fill: var(--Royal-Indigo, #110D7C);
     }
     /* === Row Colors === */
     .gold { background: #D16CFF; color: #222; }
@@ -865,8 +877,8 @@ text-align: right;
     color: #000;
     padding: 30px;
     border-radius: 20px;
-    width: 90%;
-    max-width: 70%;
+    width: 100%;
+    max-width: 1334px;
     overflow-y: auto;
     position: relative;
     text-align: center;
@@ -1247,13 +1259,16 @@ text-align: right;
 }
 
 .eval-item {
-    align-items: center;
-    gap: 12px;
-    font-weight: 700;
+ font-weight: 700;
     font-size: 18px;
     white-space: nowrap;
-    /* Use specific colors for text labels/statuses */
-    color: #EDEBFF; /* Light purple/white for labels */
+    color: #EDEBFF;
+    display: flex;
+    height: 47px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
 .eval-item .label {
@@ -1315,7 +1330,9 @@ text-align: right;
 /* ============================================== */
 .lh-right {
     display: flex;
-    align-items: center;
+    width: 362px;
+    align-items: flex-end;
+    gap: 11px;
    
 }
 
@@ -1692,15 +1709,20 @@ max-width: 50px;
     padding-right: 225px;
 }
 .rank-box {
+ display: flex;
+    width: 38px;
  font-family: "Cairo", sans-serif;
-font-size: 60px;
-  font-weight: bold;
-  line-height: 1.5;
-  text-align: center;
-  font-family: Arial, sans-serif;
-  color: #fff0;
-  text-shadow: -1px -1px 1px rgba(255, 255, 255, 0.4), 1px 1px 1px rgba(0, 0, 0, 0.7);
-  padding-left: 54px;
+    justify-content: center;
+    color: var(--Royal-Indigo, #110D7C);
+    text-align: right;
+    text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
+    font-size: 61px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: capitalize;
+    opacity: 0.2;
+
 }
 .bottom_left_background_image {
   position: absolute;
