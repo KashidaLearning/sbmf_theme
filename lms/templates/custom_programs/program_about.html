@@ -208,7 +208,7 @@
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon 1.png')}" alt="شاراتي" >
+                    <img src="${static.url('images/badges-icon-1.png')}" alt="شاراتي" >
                 </div>
                 <p> شاراتي</p>
             </div>
@@ -221,7 +221,7 @@
             </div>  -->
              <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon 2.png')}" alt="لوحة الصدارة">
+                    <img src="${static.url('images/leaderboard-icon-2.png')}" alt="لوحة الصدارة">
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
@@ -885,46 +885,48 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     <div class="popup-purple-icons">
 
         <!-- LEFT -->
-        <div class="popup-left">
+   
 
-            <div class="icon-item-tab no-color" data-target="certificate-content" >
+        <!-- CENTER -->
+        <div class="popup-center">
+            <div class="icon-item-tab" data-target="control-content"  data-img="${static.url('images/dashboard-icon.png')}"data-img-active="${static.url('images/dashboard-icon-active.png')}">
                 <div class="icon-circle-tab">
-                    <img src="${static.url('images/cert-icon-new.png')}">
+                    <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
+                </div>
+                <p class="tab-label">لوحة التحكم</p>
+            </div>
+          
+
+            <div class="icon-item-tab no-color" data-target="my-badges-content"  data-img="${static.url('images/badges-icon-1.png')}" data-img-active="${static.url('images/badges-icon-active.png')}">
+                <div class="icon-circle-tab">
+                    <img class="icon-img" src="${static.url('images/badges-icon-1.png')}">
+                </div>
+                <p class="tab-label">شاراتي</p>
+            </div>
+           <div class="icon-item-tab" data-target="leaderboard-content"  data-img="${static.url('images/leaderboard-icon-2.png')}"data-img-active="${static.url('images/leaderboard-icon-active.png')}">
+                <div class="icon-circle-tab">
+                    <img class="icon-img" src="${static.url('images/leaderboard-icon-2.png')}">
+                </div>
+                <p class="tab-label">لوحة الصدارة</p>
+            </div>
+                    <div class="popup-left">
+
+            <div class="icon-item-tab no-color" data-target="certificate-content"  data-img="${static.url('images/shhadatiicon.png')}" data-img-active="${static.url('images/shahadati-icon-active.png')}" >
+                <div class="icon-circle-tab">
+                    <img  class="icon-img" src="${static.url('images/shhadatiicon.png')}">
                 </div>
                 <p class="tab-label" >شهاداتي</p>
             </div>
         </div>
-
-        <!-- CENTER -->
-        <div class="popup-center">
-            <div class="icon-item-tab" data-target="leaderboard-content">
-                <div class="icon-circle-tab">
-                    <img src="${static.url('images/leaderboard-icon.png')}">
-                </div>
-                <p class="tab-label">لوحة الصدارة</p>
-            </div>
-
-            <div class="icon-item-tab no-color" data-target="my-badges-content">
-                <div class="icon-circle-tab">
-                    <img src="${static.url('images/sharati.png')}">
-                </div>
-                <p class="tab-label">شاراتي</p>
-            </div>
-            <div class="icon-item-tab" data-target="control-content">
-                <div class="icon-circle-tab">
-                    <img src="${static.url('images/law7atta7akom.png')}">
-                </div>
-                <p class="tab-label">لوحة التحكم</p>
-            </div>
         </div>
 
     </div>
-       <div class="course-sidebar">
-            <div class="inner-wrapper">${HTML(program.addition_info)}</div>
-        </div>
+     
 </div>
 
-
+  <div class="course-sidebar">
+            <div class="inner-wrapper">${HTML(program.addition_info)}</div>
+        </div>
 <%block name="js_extra">
 <script>
     window.STATE_ICONS = {
@@ -954,7 +956,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 <script src="${static.url('js/script.js')}"></script>
 
 <script>
-    
+   
    document.addEventListener("DOMContentLoaded", function () {
 
     const popupOverlay = document.getElementById("global-popup-overlay");
@@ -999,13 +1001,37 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
         popupTitle.textContent = title;
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
-
+        setupIconTabEvents();
         activateIcon(targetId);
 
         popupOverlay.classList.add("visible");
         document.body.style.overflow = "hidden";
     }
+ function setupIconTabEvents() {
+    popupContent.querySelectorAll('.icon-item-tab').forEach(item => {
+        item.addEventListener('click', () => {
 
+            // reset all to original images
+            popupContent.querySelectorAll('.icon-item-tab').forEach(el => {
+                el.classList.remove('active');
+                const original = el.getAttribute('data-img');
+                const imgEl = el.querySelector('.icon-img');
+                if (original && imgEl) {
+                    imgEl.src = original;
+                }
+            });
+
+            // activate clicked one
+            item.classList.add('active');
+            const activeImg = item.getAttribute('data-img-active');
+            const imgEl = item.querySelector('.icon-img');
+
+            if (activeImg && imgEl) {
+                imgEl.src = activeImg;
+            }
+        });
+    });
+}
     popupContent.addEventListener("click", function(e){
         const icon = e.target.closest(".icon-item-tab");
         if (!icon || !popupContent.contains(icon)) return;
@@ -1016,7 +1042,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         if (!contentDiv) return;
 
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
-
+       setupIconTabEvents();
         activateIcon(targetId);
 
         popupTitle.textContent = icon.querySelector(".tab-label").textContent.trim();
@@ -1042,6 +1068,8 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         document.body.style.overflow = "";
     }
 });
+
+
 </script>
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags

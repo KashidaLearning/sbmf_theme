@@ -1516,41 +1516,37 @@ flex: unset !important;
 
 
 .controller-header-img {
- width: 350px;
+  width: 350px;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
   display: block;
-  left: 136px;
-  top: -20%;
+  left: 60px;
+  top: -22%;
   pointer-events: none;
   position: fixed;
+
 }
 
 /* MAIN CONTAINER — horizontal layout */
 .popup-purple-icons {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    padding: 0 40px;
-    direction: ltr;
-        margin-top: -75px;
-        position: relative;
-  z-index: 5;
+display: flex;
+  font-family: 'Cairo', sans-serif;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+
 
 }
-
-.popup-purple-icons .popup-left {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+.popup-left {
+  position: absolute;
+  left: 70px;
 }
 
 .popup-purple-icons .popup-center {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 11px;
     flex: 1;
-    margin-top: 22px;
+    margin-top: -72px;
     position: relative;
 }
 
@@ -1578,20 +1574,15 @@ flex: unset !important;
   transition: transform 0.3s ease;
 }
 .icon-circle-tab{
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #416A9E;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     transition: all 0.3s 
 ease;
 }
 .icon-circle-tab img {
-max-width: 50px;
-}
+max-width:120px;
+width: 100%;}
 .icon-item-tab p {
   margin-top: 12px;
   font-size: 16px;
@@ -1607,19 +1598,10 @@ max-width: 50px;
     font-size: 16px !important;
     font-family: 'Cairo', sans-serif !important;
 }
-/* Active Circle */
-.icon-item-tab.active .icon-circle-tab {
-    background: #ffffff;
-    transform: translateY(-6px);
-    box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.20);
-}
+
 
 /* Convert image color to #416A9E */
-.icon-item-tab.active .icon-circle-tab img {
-    filter: brightness(0) saturate(100%) invert(34%) sepia(20%) saturate(940%) hue-rotate(178deg) brightness(93%) contrast(90%);
-    /* This produces EXACT #416A9E */
-    transition: 0.25s ease;
-}
+
 .icon-item-tab.no-color.active .icon-circle-tab img {
     filter: none !important;
 }
@@ -1759,7 +1741,7 @@ max-width: 50px;
     text-align: right;
     font-feature-settings: 'liga' off, 'clig' off;
     font-family: "IBM Plex Sans";
-    font-size: 18px;
+    font-size: 25px;
     font-style: normal;
     font-weight: 700;
     line-height: 24px;
