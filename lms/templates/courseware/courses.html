@@ -26,11 +26,16 @@
     <div class="programs-grid">
       % for index, program in enumerate(programs):
         <% program_progress = get_program_progress(program, user) %>
-        <a href="${reverse('custom_programs:program_about', args=[program.id])}" class="program-card">
-          
+        <div  class="program-card">
           <div class="spline-bg">
            % if program.spline_url:
-          <iframe src="${program.spline_url}" frameborder="0"></iframe>
+          <a href="${reverse('custom_programs:program_about', args=[program.id])}" target="_blank" class="external-link">
+
+          <iframe src="${program.spline_url}" frameborder="0" >
+
+         
+          </iframe>
+           </a>
            % endif
  
             <div class="progress-badge" >
@@ -45,12 +50,12 @@
               </div>
             </div>
           </div>
-        </a>
+        </div>
       % endfor
     </div>
   </section>
 </main>
- 
+
 <style>
   
 .program-subject img {
@@ -143,11 +148,11 @@
     padding-right: 10px;
     font-family: 'Cairo', sans-serif !important;
     z-index: 10;
-    display: none;
+     display: none;
 }
 .program-title {
   color: #fff;
-    font-size: 35px;
+    font-size: 46px;
     font-weight: bold;
     padding-left: 170px;
     margin-bottom: 17px;
@@ -204,21 +209,5 @@ header.global-header .header-logo a .logo {
 div#content {
     padding: 0px !important;
     margin: 0px !important;
-}
-.program-card {
-    display: block;
-    cursor: pointer;
-}
-
-.program-card * {
-    pointer-events: none;
-}
-
-.program-card {
-    pointer-events: auto;
-}
-
-.spline-bg iframe {
-    pointer-events: none !important;
 }
 </style>
