@@ -160,10 +160,8 @@ function updateBadgesPopup(badges) {
 function updateEvalStatus(evalData) {
     if (!evalData) return;
 
-    // update in main leaderboard section (hidden template)
     updateEvalStatusInRoot(document.getElementById("leaderboard-content"), evalData);
 
-    // update inside popup (cloned content)
     updateEvalStatusInRoot(document.querySelector("#popup-dynamic-content"), evalData);
 }
 
@@ -172,7 +170,6 @@ function updateEvalStatusInRoot(root, evalData) {
 
     const icons = window.EVAL_ICONS || {};
 
-    // helper to update assignment / pre / post li
     function setSimpleEvalIcon(selector, statusKey) {
         const li = root.querySelector(selector);
         if (!li) return;
@@ -190,17 +187,14 @@ function updateEvalStatusInRoot(root, evalData) {
         img.alt = status;
     }
 
-    // assignment / pre / post
     setSimpleEvalIcon(".eval-assignment", "assignment");
     setSimpleEvalIcon(".eval-pre", "pre");
     setSimpleEvalIcon(".eval-post", "post");
 
-    // challenges (special structure)
     const chLi = root.querySelector(".eval-challenges");
     if (chLi && evalData.challenges) {
         const { completed, total, status } = evalData.challenges;
 
-        // أول label فيها العدد N/N
         const labels = chLi.querySelectorAll(".label");
         if (labels.length > 0) {
             labels[0].textContent = `${completed}/${total}`;
@@ -209,14 +203,11 @@ function updateEvalStatusInRoot(root, evalData) {
         let statusText = chLi.querySelector(".status-text");
         let img = chLi.querySelector("img.eval-icon");
 
-        // إذا ما في تحديات
         if (status === "no_challenges") {
-            // شيل أي icon موجود
             if (img) {
                 img.remove();
                 img = null;
             }
-            // حافظ/أنشئ status-text = "0/0"
             if (!statusText) {
                 statusText = document.createElement("span");
                 statusText.className = "status-text";
@@ -224,7 +215,6 @@ function updateEvalStatusInRoot(root, evalData) {
             }
             statusText.textContent = "0/0";
         } else {
-            // في تحديات → لازم icon، وما بدنا status-text
             if (statusText) {
                 statusText.remove();
                 statusText = null;
@@ -371,12 +361,11 @@ async function refreshCourseStatus() {
             updateLeaderboardPopup(data.leaderboard);
         }
 
-        // 5) eval header icons + challenges count
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
 
-        console.log("✅ Program UI refreshed from AJAX");
+        console.log(" Program UI refreshed from AJAX");
     } catch (err) {
         console.error("refreshCourseStatus failed:", err);
     }
