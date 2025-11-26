@@ -6,49 +6,50 @@
 %>
 <%inherit file="../main.html" />
 <%namespace name='static' file='../static_content.html'/>
- 
+
 <%
     user = request.user
     programs = list(Program.objects.all()[:4])
- 
+
     def get_program_progress(program, user):
-      enrollment = ProgramEnrollment.objects.filter(user=user, program=program).first()
-      if enrollment:
-          return getattr(enrollment, "progress", 0)
-      return 0
- 
+        enrollment = ProgramEnrollment.objects.filter(user=user, program=program).first()
+        if enrollment:
+            return getattr(enrollment, "progress", 0)
+        return 0
 %>
- 
+
 <main id="main" aria-label="Content" tabindex="-1" dir="rtl">
   <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
- 
+
     <div class="programs-grid">
       % for index, program in enumerate(programs):
         <% program_progress = get_program_progress(program, user) %>
-        <div  class="program-card">
+        <div class="program-card">
           <div class="spline-bg">
-           % if program.spline_url:
-          <a href="${reverse('custom_programs:program_about', args=[program.id])}" target="_blank" class="external-link">
 
-          <iframe src="${program.spline_url}" frameborder="0" >
+            % if program.spline_url:
+            <!-- Spline iframe (FULL interactivity, no layers above it) -->
+            <iframe src="${program.spline_url}" frameborder="0"></iframe>
+            % endif
 
          
-          </iframe>
-           </a>
-           % endif
- 
-            <div class="progress-badge" >
+
+            <!-- Hidden elements (if needed later) -->
+            <div class="progress-badge">
               % if program.age_range:
-                  ${program.age_range}
-              % endif  
+                ${program.age_range}
+              % endif
             </div>
+
             <div class="program-info">
               <h3 class="program-title">${program.name}</h3>
-              <div class="program-subject" >
-               <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
+              <div class="program-subject">
+                <img src="${static.url('images/cat-icon.png')}">
+                ${program.subject if hasattr(program, 'subject') else 'المهارة'}
               </div>
             </div>
+
           </div>
         </div>
       % endfor
@@ -57,22 +58,23 @@
 </main>
 
 <style>
-  
+
 .program-subject img {
     margin-left: 12px;
     width: 24px;
     height: 24px;
     margin-top: -9px;
 }
- 
+
+/* Section background */
 .programs-section {
-  background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);  
+  background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);
   text-align: center;
   padding: 80px 0 120px;
   overflow-x: hidden;
 }
- 
- 
+
+/* Title */
 .section-title {
     color: #FFFFFF;
     font-size: 64px;
@@ -81,8 +83,8 @@
     margin-bottom: 70px;
     text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
 }
- 
- 
+
+/* Grid */
 .programs-grid {
   display: flex;
   flex-wrap: wrap;
@@ -91,8 +93,8 @@
   max-width: 1300px;
   margin: 0 auto;
 }
- 
- 
+
+/* Cards */
 .program-card {
   width: 420px;
   height: 560px;
@@ -100,25 +102,50 @@
   border-radius: 26px;
   overflow: hidden;
   text-decoration: none;
- 
 }
- 
 
- 
+/* Spline container */
 .spline-bg {
   position: relative;
   width: 100%;
   height: 100%;
 }
- 
+
+/* Spline iframe (no overlay above it to keep interactivity) */
 .spline-bg iframe {
   width: 100%;
   height: 100%;
   border: none;
   object-fit: cover;
 }
- 
- 
+
+/* Button wrapper */
+.open-program-btn-wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 50; /* Above iframe but small area only */
+}
+
+/* Button style */
+.open-program-btn {
+    background: rgba(255,255,255,0.85);
+    padding: 10px 22px;
+    border-radius: 12px;
+    color: #110D7C;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.open-program-btn:hover {
+    background: rgba(255,255,255,1);
+    transform: scale(1.05);
+}
+
+/* Hidden info (if needed later) */
 .progress-badge {
     position: absolute;
     top: -4px;
@@ -127,19 +154,14 @@
     color: #110D7C;
     font-size: 15px;
     font-weight: 800;
-    padding: 5px 20px;
+    padding: 12px 20px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     z-index: 10;
-    min-width: 75px;
-    padding-top: 12px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     display: none;
 }
- 
- 
- 
- 
+
 .program-info {
     position: absolute;
     bottom: 25px;
@@ -148,47 +170,33 @@
     padding-right: 10px;
     font-family: 'Cairo', sans-serif !important;
     z-index: 10;
-     display: none;
+    display: none;
 }
+
 .program-title {
-  color: #fff;
+    color: #fff;
     font-size: 46px;
     font-weight: bold;
     padding-left: 170px;
     margin-bottom: 17px;
-    align-content: right;
-    font-family: 'Cairo', sans-serif !important;
-
 }
- 
-  
+
 .program-subject {
-    display: inline-block;
-    border-radius: 10px;
-    padding: 10px 40px 12px 50px;
-    margin-bottom: -6px;
-    padding-right: 25px;
-    color:  #110D7C;;
-    font-size: 16px;
-    font-family: 'Cairo', sans-serif !important;
     display: none;
 }
-  
 
- 
- 
-
+/* Footer fix */
 .wrapper.wrapper-footer {
   background-color: #110D7C !important;
 }
- 
- 
+
+/* Responsive */
 @media (max-width: 1200px) {
   .program-card {
     width: 45%;
   }
 }
- 
+
 @media (max-width: 768px) {
   .program-card {
     width: 90%;
@@ -199,15 +207,16 @@
   }
   .program-title {
     font-size: 22px;
-    
   }
 }
- 
+
 header.global-header .header-logo a .logo {
   height: 42px;
 }
+
 div#content {
-    padding: 0px !important;
-    margin: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
+
 </style>
