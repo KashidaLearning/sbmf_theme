@@ -149,7 +149,15 @@ function updateBadgesPopup(badges) {
 
 function updateEvalStatus(evalData) {
     if (!evalData) return;
-    const root = document.getElementById("leaderboard-content");
+
+    // update in main leaderboard section
+    updateEvalStatusInRoot(document.getElementById("leaderboard-content"), evalData);
+
+    // update inside popup (dynamic content)
+    updateEvalStatusInRoot(document.querySelector("#popup-dynamic-content"), evalData);
+}
+
+function updateEvalStatusInRoot(root, evalData) {
     if (!root) return;
 
     const icons = window.EVAL_ICONS || {};
@@ -186,9 +194,11 @@ function updateEvalStatus(evalData) {
     if (chLi && evalData.challenges) {
         const img = chLi.querySelector("img");
         const cnt = chLi.querySelector(".challenges-count");
+
         if (cnt) {
             cnt.textContent = `${evalData.challenges.completed}/${evalData.challenges.total}`;
         }
+
         if (img && icons[evalData.challenges.status]) {
             img.src = icons[evalData.challenges.status];
         }

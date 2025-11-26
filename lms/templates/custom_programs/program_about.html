@@ -202,13 +202,13 @@
            
             <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/law7atta7akom.png')}" alt="لوحةالتحكم">
+                     <img src="${static.url('images/dashboard-icon.png')}" alt="لوحةالتحكم">
                 </div>
                 <p> لوحة التحكم</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/sharati.png')}" alt="شاراتي" >
+                    <img src="${static.url('images/badges-icon 1.png')}" alt="شاراتي" >
                 </div>
                 <p> شاراتي</p>
             </div>
@@ -221,32 +221,61 @@
             </div>  -->
              <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon.png')}" alt="لوحة الصدارة">
+                    <img src="${static.url('images/leaderboard-icon 2.png')}" alt="لوحة الصدارة">
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
-            <div class="icon-item yellow" id="control" role="button" tabindex="0" data-target="mo8amarat-content" >
-                <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
-                <div class="y-container" >
-                    <img src="${static.url('images/home-icon.png')}" alt="home">
-                   <div class="icon-label">المغامرات</div>
+          
+        <div class="icon-item" id="yellowicon" role="button" tabindex="0" data-target="home-content">
+                <div class="icon-circle">
+                   <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item " style="text-decoration:none;">
+                <img src="${static.url('images/home-icon-popup.png')}" alt="home">
                 </div>
-                
-                </a>
-            </div>
-           <div class="yellow-icon-alone">
-            <div class="y-container">
-                <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item yellow-icon" style="text-decoration:none;">
-                <img src="${static.url('images/home-icon.png')}" alt="home">
-                <div class="icon-label">المغامرات</div>
             </a>
+                <p>  المغامرات</p>
             </div>
-            
-            
-        </div>
-        </div>
+       
         
          </div>
+          <div class="purple-icon-row-mobile">
+              <div class="icon-item"  role="button" tabindex="0" data-target="home-content">
+                <div class="icon-circle">
+                   <a href="https://teak-lms.kashida-learning.co/courses" class="icon-item " style="text-decoration:none;">
+                <img src="${static.url('images/home-icon-popup.png')}" alt="home">
+                </div>
+                </a>
+                <p>  المغامرات</p>
+            </div>
+            <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
+                <div class="icon-circle">
+                     <img src="${static.url('images/dashboard-icon.png')}" alt="لوحةالتحكم">
+                </div>
+                <p> لوحة التحكم</p>
+            </div>
+            <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/badges-icon 1.png')}" alt="شاراتي" >
+                </div>
+                <p> شاراتي</p>
+            </div>
+
+          <!--   <div class="icon-item" id="certificate" role="button" tabindex="0" data-target="certificate-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/cert-icon.png')}" alt="شهاداتي">
+                </div>
+                <p>شهاداتي</p>
+            </div>  -->
+             <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
+                <div class="icon-circle">
+                    <img src="${static.url('images/leaderboard-icon 2.png')}" alt="لوحة الصدارة">
+                </div>
+                <p> لوحة الصدارة</p>
+            </div>
+          
+       
+        
+         </div>
+          </div>
          % endif
         % if user_is_enrolled:
             <div class="lh-progress-out">
@@ -346,7 +375,7 @@
     </script>
 
 
-    </div>
+            </div>
     <!-- Popup HTML Structure -->
     <div id="global-popup-overlay" class="popup-overlay" role="dialog" aria-modal="true" aria-labelledby="popup-title">
         <div class="popup-content">
@@ -588,6 +617,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 %>
 
 <div class="leaderboard-header">
+    <div class="center">
     <div class="lh-left">
         <ul class="eval-grid">
             <li class="eval-item eval-assignment">
@@ -648,7 +678,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             % endif
 
     </div>
-    <div class="lh-divider"></div>
     <div class="lh-right">
         <div class="lh-rank-text">
             <h2 class="lh-rank-title">مركزك الحالي: <span>المرتبة ${current_user_rank}</span></h2>
@@ -658,6 +687,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         <div class="lh-avatar">
             <img src="${static.url('images/image-profile.png')}">
         </div>
+    </div>
     </div>
 </div>
 
@@ -700,10 +730,10 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
 <div id="control-content" style="display:none;">
-
+   
+   
     <div id="control-blur-wrapper">
-
-        <div class="control-header">
+  <div class="control-header">
             <img src="${static.url('images/game-controller.png')}" class="controller-header-img">
         </div>
     <div class="control-intro-text">
@@ -843,7 +873,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
     <div id="courseModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);">
+    backdrop-filter: blur(50px);">
         <div style="position:relative; width:90%; height:90%; margin:2% auto; background:#ffffff00; border-radius:8px; overflow:hidden; position: relative;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255, 255, 255, 0.12), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);">
             <button class="close-button" role="button" aria-label="Close popup" tabindex="0">&times;</button>
@@ -889,6 +919,9 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
 
     </div>
+       <div class="course-sidebar">
+            <div class="inner-wrapper">${HTML(program.addition_info)}</div>
+        </div>
 </div>
 
 
