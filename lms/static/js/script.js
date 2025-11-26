@@ -27,7 +27,6 @@ function getPatternMultiplier(base) {
     return window.innerWidth < 600 ? base / 2 : base;
 }
 
-
 function createCircle(data, index) {
     const state = data.state || "locked";
     const circle = document.createElement("div");
@@ -132,7 +131,6 @@ function initializeScene() {
     updatePositions();
 }
 
-
 function updateBadgesPopup(badges) {
     const wrapper = document.querySelector("#my-badges-content .badge-grid");
     if (!wrapper) return;
@@ -146,14 +144,26 @@ function updateBadgesPopup(badges) {
     });
 }
 
-
+/**
+ * evalData structure from backend:
+ * {
+ *   pre: "completed" | "locked" | "in_progress",
+ *   assignment: "completed" | "locked" | "in_progress",
+ *   post: "completed" | "locked" | "in_progress",
+ *   challenges: {
+ *     status: "completed" | "locked" | "in_progress" | "no_challenges",
+ *     completed: Number,
+ *     total: Number
+ *   }
+ * }
+ */
 function updateEvalStatus(evalData) {
     if (!evalData) return;
 
-    // update in main leaderboard section
+    // update in main leaderboard section (hidden template)
     updateEvalStatusInRoot(document.getElementById("leaderboard-content"), evalData);
 
-    // update inside popup (dynamic content)
+    // update inside popup (cloned content)
     updateEvalStatusInRoot(document.querySelector("#popup-dynamic-content"), evalData);
 }
 
@@ -162,45 +172,74 @@ function updateEvalStatusInRoot(root, evalData) {
 
     const icons = window.EVAL_ICONS || {};
 
-    // assignment
-    const assignmentLi  = root.querySelector(".eval-assignment");
-    if (assignmentLi) {
-        const img = assignmentLi.querySelector("img");
-        if (img && icons[evalData.assignment]) {
-            img.src = icons[evalData.assignment];
+    // helper to update assignment / pre / post li
+    function setSimpleEvalIcon(selector, statusKey) {
+        const li = root.querySelector(selector);
+        if (!li) return;
+        const status = evalData[statusKey];
+        const src = icons[status];
+        if (!src) return;
+
+        let img = li.querySelector("img.eval-icon");
+        if (!img) {
+            img = document.createElement("img");
+            img.className = "eval-icon";
+            li.appendChild(img);
         }
+        img.src = src;
+        img.alt = status;
     }
 
-    // pre
-    const preLi = root.querySelector(".eval-pre");
-    if (preLi) {
-        const img = preLi.querySelector("img");
-        if (img && icons[evalData.pre]) {
-            img.src = icons[evalData.pre];
-        }
-    }
+    // assignment / pre / post
+    setSimpleEvalIcon(".eval-assignment", "assignment");
+    setSimpleEvalIcon(".eval-pre", "pre");
+    setSimpleEvalIcon(".eval-post", "post");
 
-    // post
-    const postLi = root.querySelector(".eval-post");
-    if (postLi) {
-        const img = postLi.querySelector("img");
-        if (img && icons[evalData.post]) {
-            img.src = icons[evalData.post];
-        }
-    }
-
-    // challenges
+    // challenges (special structure)
     const chLi = root.querySelector(".eval-challenges");
     if (chLi && evalData.challenges) {
-        const img = chLi.querySelector("img");
-        const cnt = chLi.querySelector(".challenges-count");
+        const { completed, total, status } = evalData.challenges;
 
-        if (cnt) {
-            cnt.textContent = `${evalData.challenges.completed}/${evalData.challenges.total}`;
+        // أول label فيها العدد N/N
+        const labels = chLi.querySelectorAll(".label");
+        if (labels.length > 0) {
+            labels[0].textContent = `${completed}/${total}`;
         }
 
-        if (img && icons[evalData.challenges.status]) {
-            img.src = icons[evalData.challenges.status];
+        let statusText = chLi.querySelector(".status-text");
+        let img = chLi.querySelector("img.eval-icon");
+
+        // إذا ما في تحديات
+        if (status === "no_challenges") {
+            // شيل أي icon موجود
+            if (img) {
+                img.remove();
+                img = null;
+            }
+            // حافظ/أنشئ status-text = "0/0"
+            if (!statusText) {
+                statusText = document.createElement("span");
+                statusText.className = "status-text";
+                chLi.appendChild(statusText);
+            }
+            statusText.textContent = "0/0";
+        } else {
+            // في تحديات → لازم icon، وما بدنا status-text
+            if (statusText) {
+                statusText.remove();
+                statusText = null;
+            }
+
+            const src = icons[status];
+            if (src) {
+                if (!img) {
+                    img = document.createElement("img");
+                    img.className = "eval-icon";
+                    chLi.appendChild(img);
+                }
+                img.src = src;
+                img.alt = status;
+            }
         }
     }
 }
@@ -279,7 +318,6 @@ function renderLeaderboardInContainer(container, leaderboard) {
     });
 }
 
-
 function updateLeaderboardPopup(leaderboard) {
     const baseContainer = document.querySelector("#leaderboard-content .leaderboard");
     renderLeaderboardInContainer(baseContainer, leaderboard);
@@ -333,7 +371,7 @@ async function refreshCourseStatus() {
             updateLeaderboardPopup(data.leaderboard);
         }
 
-        // 5) eval header icons
+        // 5) eval header icons + challenges count
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
@@ -343,7 +381,6 @@ async function refreshCourseStatus() {
         console.error("refreshCourseStatus failed:", err);
     }
 }
-
 
 const leaderboardIcon = document.getElementById("leaderboard");
 if (leaderboardIcon) {
@@ -362,7 +399,6 @@ if (myBadgesIcon) {
         }
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
