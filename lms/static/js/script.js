@@ -235,36 +235,30 @@ function setSimpleEvalIcon(selector, statusKey) {
             labels[0].textContent = `${completed}/${total}`;
         }
 
-        let statusText = chLi.querySelector(".status-text");
-        let img = chLi.querySelector("img.eval-icon");
+        // Clean ALL old content (important!)
+        chLi.querySelectorAll("img, .statusicon, .status-text").forEach(el => el.remove());
 
         if (status === "no_challenges") {
-            if (img) {
-                img.remove();
-                img = null;
-            }
-            if (!statusText) {
-                statusText = document.createElement("span");
-                statusText.className = "status-text";
-                chLi.appendChild(statusText);
-            }
-            statusText.textContent = "0/0";
+            const st = document.createElement("span");
+            st.className = "status-text";
+            st.textContent = "0/0";
+            chLi.appendChild(st);
         } else {
-            if (statusText) {
-                statusText.remove();
-                statusText = null;
+            const wrapper = document.createElement("div");
+            wrapper.className = "statusicon";
+
+            const img = document.createElement("img");
+
+            if (status === "completed") {
+                img.src = COMPLETED_ICON;
+                img.className = "statuscomplete";
+            } else {
+                img.src = icons[status];
+                img.className = "eval-icon";
             }
 
-            const src = icons[status];
-            if (src) {
-                if (!img) {
-                    img = document.createElement("img");
-                    img.className = "eval-icon";
-                    chLi.appendChild(img);
-                }
-                img.src = src;
-                img.alt = status;
-            }
+            wrapper.appendChild(img);
+            chLi.appendChild(wrapper);
         }
     }
 }
