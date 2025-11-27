@@ -1590,6 +1590,8 @@ width: 100%;}
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  align-content: center;
+  margin-right: -7px;
 }
 .tab-label{
    margin-bottom: 1em !important;
@@ -1735,6 +1737,16 @@ width: 100%;}
 .icon-item.yellow-icon {
  padding-left: 135px;
  position: inherit;
+}
+.icon-img-active{
+  display: none;
+}
+
+.active .locked{
+  display: none ;
+}
+.active .show{
+  display: block ;
 }
 .sharati-intro-text {
       color: #FFF;

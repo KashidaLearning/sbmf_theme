@@ -889,31 +889,38 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
         <!-- CENTER -->
         <div class="popup-center">
-            <div class="icon-item-tab" data-target="control-content"  data-img="${static.url('images/dashboard-icon.png')}"data-img-active="${static.url('images/dashboard-icon-active.png')}">
+            <div class="icon-item-tab" data-target="control-content" >
                 <div class="icon-circle-tab">
                     <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
+                     <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}" >
+
                 </div>
                 <p class="tab-label">لوحة التحكم</p>
             </div>
           
 
-            <div class="icon-item-tab no-color" data-target="my-badges-content"  data-img="${static.url('images/badges-icon-1.png')}" data-img-active="${static.url('images/badges-icon-active.png')}">
+            <div class="icon-item-tab no-color" data-target="my-badges-content" >
                 <div class="icon-circle-tab">
                     <img class="icon-img" src="${static.url('images/badges-icon-1.png')}">
+                     <img class="icon-img-active" src="${static.url('images/badges-icon-active.png')}" >
                 </div>
                 <p class="tab-label">شاراتي</p>
             </div>
-           <div class="icon-item-tab" data-target="leaderboard-content"  data-img="${static.url('images/leaderboard-icon-2.png')}"data-img-active="${static.url('images/leaderboard-icon-active.png')}">
+           <div class="icon-item-tab" data-target="leaderboard-content" data-img-active="${static.url('images/leaderboard-icon-active.png')}">
                 <div class="icon-circle-tab">
                     <img class="icon-img" src="${static.url('images/leaderboard-icon-2.png')}">
+                    <img class="icon-img-active" src="${static.url('images/leaderboard-icon-active.png')}" >
+
                 </div>
                 <p class="tab-label">لوحة الصدارة</p>
             </div>
         <div class="popup-left">
 
-            <div class="icon-item-tab no-color" data-target="certificate-content"  data-img="${static.url('images/shhadatiicon.png')}" data-img-active="${static.url('images/shahadati-icon-active.png')}" >
+            <div class="icon-item-tab no-color" data-target="certificate-content"  >
                 <div class="icon-circle-tab">
                     <img  class="icon-img" src="${static.url('images/shhadatiicon.png')}">
+                     <img class="icon-img-active" src="${static.url('images/shahadati-icon-active.png')}" >
+
                 </div>
                 <p class="tab-label" >شهاداتي</p>
             </div>
@@ -1001,37 +1008,13 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
         popupTitle.textContent = title;
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
-        setupIconTabEvents();
         activateIcon(targetId);
 
         popupOverlay.classList.add("visible");
         document.body.style.overflow = "hidden";
     }
- function setupIconTabEvents() {
-    popupContent.querySelectorAll('.icon-item-tab').forEach(item => {
-        item.addEventListener('click', () => {
-
-            // reset all to original images
-            popupContent.querySelectorAll('.icon-item-tab').forEach(el => {
-                el.classList.remove('active');
-                const original = el.getAttribute('data-img');
-                const imgEl = el.querySelector('.icon-img');
-                if (original && imgEl) {
-                    imgEl.src = original;
-                }
-            });
-
-            // activate clicked one
-            item.classList.add('active');
-            const activeImg = item.getAttribute('data-img-active');
-            const imgEl = item.querySelector('.icon-img');
-
-            if (activeImg && imgEl) {
-                imgEl.src = activeImg;
-            }
-        });
-    });
-}
+ 
+  
     popupContent.addEventListener("click", function(e){
         const icon = e.target.closest(".icon-item-tab");
         if (!icon || !popupContent.contains(icon)) return;
@@ -1042,7 +1025,6 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         if (!contentDiv) return;
 
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
-       setupIconTabEvents();
         activateIcon(targetId);
 
         popupTitle.textContent = icon.querySelector(".tab-label").textContent.trim();
@@ -1055,6 +1037,14 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 i.classList.add("active");
             }
         });
+         popupContent.querySelectorAll(".icon-img").forEach(i=>{
+            i.classList.add("locked");
+            i.classList.remove("show");
+         });
+        popupContent.querySelectorAll(".icon-img-active").forEach(i=>{
+            i.classList.add("show");
+             i.classList.remove("locked");
+         });
     }
 
     const closeBtn = popupOverlay.querySelector(".close-button");
@@ -1069,7 +1059,53 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     }
 });
 
-
+document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".icon-item-tab");
+ 
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function () {
+ 
+            // Remove active from all tabs and reset images
+            tabs.forEach(item => {
+                item.classList.remove("active");
+ 
+                const iconImg = item.querySelector(".icon-img");
+                const iconImgActive = item.querySelector(".icon-img-active");
+ 
+                if (iconImg) iconImg.style.display = "block";
+                if (iconImgActive) iconImgActive.style.display = "none";
+            });
+ 
+            // Add active to clicked tab
+            this.classList.add("active");
+ 
+            const clickedImg = this.getAttribute("data-img");
+            const clickedImgActive = this.getAttribute("data-img-active");
+ 
+            const iconImg = this.querySelector(".icon-img");
+            const iconImgActive = this.querySelector(".icon-img-active");
+ 
+            // If active image tag doesn't exist, create it
+            if (!iconImgActive) {
+                const newActiveImg = document.createElement("img");
+                newActiveImg.classList.add("icon-img-active");
+                newActiveImg.style.display = "none";
+                this.querySelector(".icon-circle-tab").appendChild(newActiveImg);
+            }
+ 
+            // Update and toggle visibility
+            if (iconImg) {
+                iconImg.src = iconImg;
+                iconImg.style.display = "none";
+            }
+ 
+            if (iconImgActive) {
+                iconImgActive.src = newActiveImg;
+                iconImgActive.style.display = "block";
+            }
+        });
+    });
+});
 </script>
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
