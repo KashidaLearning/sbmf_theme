@@ -1142,6 +1142,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
+                   refreshCourseStatus();
 
 
             });
@@ -1150,6 +1151,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
+                         refreshCourseStatus();
 
 
                 }
