@@ -205,11 +205,34 @@ ease;
     fill: var(--Royal-Indigo, #110D7C);
     }
     /* === Row Colors === */
-    .gold { background: #D16CFF; color: #222; }
-    .silver { background: #E5ACFF; color: #222; }
-    .bronze { background: #F3D9FF; color: #222; }
-    .blue1 { background: #E6E5FC; color: #222; }
-    .blue2 { background: #E6E5FC; color: #222; }
+   .gold {
+    background: color-mix(in srgb, var(--program-main-color) 85%, black);
+    color: var(--Royal-Indigo, #110D7C);
+}
+
+/* Rank 2 */
+.silver {
+    background: color-mix(in srgb, var(--program-main-color) 70%, white);
+    color: var(--Royal-Indigo, #110D7C);
+}
+
+/* Rank 3 */
+.bronze {
+    background: color-mix(in srgb, var(--program-main-color) 50%, white);
+    color: var(--Royal-Indigo, #110D7C);
+}
+
+/* Rank 4 */
+.blue1 {
+    background: color-mix(in srgb, var(--program-main-color) 30%, white);
+    color: var(--Royal-Indigo, #110D7C);
+}
+
+/* Rank 5 */
+.blue2 {
+    background: color-mix(in srgb, var(--program-main-color) 10%, white);
+    color: var(--Royal-Indigo, #110D7C);
+}
  
     .rank-icon {
       font-size: 1.3rem;
@@ -227,7 +250,7 @@ ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     justify-content: space-between;
     border-radius: 10px;
-    background: var(--Vibe-Violet, #D16CFF);
+    background: var(--program-main-color);
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
     }
     .row-right .pt2{
@@ -315,7 +338,7 @@ ease;
 
 .name {
     font-weight: 600;
-    color: #333;
+    color: var(--Royal-Indigo, #110D7C);
 }
 
 .badges {
@@ -1340,7 +1363,7 @@ ease;
     padding: 0;
     justify-content: end;
     align-items: center;
-    gap: 0px;
+    gap: 10px;
 }
 
 .eval-item .label {
