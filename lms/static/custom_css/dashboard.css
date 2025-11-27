@@ -240,10 +240,21 @@ a.go-to-journeys {
   }
 
   .program-card {
-    padding: 24px 20px 20px;
+    width: 100%;
+    margin: 0px 10px ;
+    
   }
+ .course-row__title{
+  padding:7px 20px;
+ }
+ .course-row__status{
+  left:25px;
+ }
 
   .program-card__title {
     font-size: 20px;
+    margin-top: 42px;
+    margin-bottom: 12px;
+
   }
 }
