@@ -1,6 +1,6 @@
 let numCircles = 0;
 let circleElements = [];
-const COMPLETED_ICON = "/static/sbmf_theme/images/tick-icon.png"; 
+
 const circlesWrapper   = document.getElementById("circlesWrapper");
 const coursescontainer = document.getElementById("coursescontainer");
 
@@ -196,15 +196,16 @@ function updateEvalStatusInRoot(root, evalData) {
 
     const icons = window.EVAL_ICONS || {};
 
-    function setSimpleEvalIcon(selector, statusKey) {
+function setSimpleEvalIcon(selector, statusKey) {
     const li = root.querySelector(selector);
     if (!li) return;
 
     const status = evalData[statusKey];
 
-    // إزالة أيقونات قديمة
-    const old = li.querySelector("img");
-    if (old) old.remove();
+    li.querySelectorAll("img, .statusicon").forEach(el => el.remove());
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "statusicon";
 
     const img = document.createElement("img");
 
@@ -216,8 +217,9 @@ function updateEvalStatusInRoot(root, evalData) {
         img.className = "eval-icon";
     }
 
-        li.appendChild(img);
-    }
+    wrapper.appendChild(img);
+    li.appendChild(wrapper);
+}
 
 
     setSimpleEvalIcon(".eval-assignment", "assignment");
@@ -253,25 +255,15 @@ function updateEvalStatusInRoot(root, evalData) {
                 statusText = null;
             }
 
-            if (status === "completed") {
+            const src = icons[status];
+            if (src) {
                 if (!img) {
                     img = document.createElement("img");
+                    img.className = "eval-icon";
                     chLi.appendChild(img);
                 }
-                img.src = COMPLETED_ICON;
-                img.className = "statuscomplete";
-            } else {
-                const src = icons[status];
-                if (src) {
-                    if (!img) {
-                        img = document.createElement("img");
-                        img.className = "eval-icon";
-                        chLi.appendChild(img);
-                    }
-                    img.src = src;
-                    img.className = "eval-icon";
-                    img.alt = status;
-                }
+                img.src = src;
+                img.alt = status;
             }
         }
     }
