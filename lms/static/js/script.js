@@ -1,6 +1,6 @@
 let numCircles = 0;
 let circleElements = [];
-
+const COMPLETED_ICON = "/static/sbmf_theme/images/tick-icon.png"; 
 const circlesWrapper   = document.getElementById("circlesWrapper");
 const coursescontainer = document.getElementById("coursescontainer");
 
@@ -197,21 +197,28 @@ function updateEvalStatusInRoot(root, evalData) {
     const icons = window.EVAL_ICONS || {};
 
     function setSimpleEvalIcon(selector, statusKey) {
-        const li = root.querySelector(selector);
-        if (!li) return;
-        const status = evalData[statusKey];
-        const src = icons[status];
-        if (!src) return;
+    const li = root.querySelector(selector);
+    if (!li) return;
 
-        let img = li.querySelector("img.eval-icon");
-        if (!img) {
-            img = document.createElement("img");
-            img.className = "eval-icon";
-            li.appendChild(img);
-        }
-        img.src = src;
-        img.alt = status;
+    const status = evalData[statusKey];
+
+    // إزالة أيقونات قديمة
+    const old = li.querySelector("img");
+    if (old) old.remove();
+
+    const img = document.createElement("img");
+
+    if (status === "completed") {
+        img.src = COMPLETED_ICON;
+        img.className = "statuscomplete";
+    } else {
+        img.src = icons[status];
+        img.className = "eval-icon";
     }
+
+        li.appendChild(img);
+    }
+
 
     setSimpleEvalIcon(".eval-assignment", "assignment");
     setSimpleEvalIcon(".eval-pre", "pre");
@@ -246,15 +253,25 @@ function updateEvalStatusInRoot(root, evalData) {
                 statusText = null;
             }
 
-            const src = icons[status];
-            if (src) {
+            if (status === "completed") {
                 if (!img) {
                     img = document.createElement("img");
-                    img.className = "eval-icon";
                     chLi.appendChild(img);
                 }
-                img.src = src;
-                img.alt = status;
+                img.src = COMPLETED_ICON;
+                img.className = "statuscomplete";
+            } else {
+                const src = icons[status];
+                if (src) {
+                    if (!img) {
+                        img = document.createElement("img");
+                        img.className = "eval-icon";
+                        chLi.appendChild(img);
+                    }
+                    img.src = src;
+                    img.className = "eval-icon";
+                    img.alt = status;
+                }
             }
         }
     }
