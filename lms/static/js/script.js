@@ -71,27 +71,30 @@ function createCircle(data, index) {
         `;
     }
 
-   circle.addEventListener("click", () => {
-    if (state === "locked") {
-        document.body.dispatchEvent(new Event("lockedCourseClick"));
-        return;
-    }
+    circle.addEventListener("click", () => {
+        if (state === "locked") {
+            document.body.dispatchEvent(new Event("lockedCourseClick"));
+            return;
+        }
 
-    $('#courseFrame').attr('src', data.link);
-    $('#courseModal').css('display', 'block');
+        // OPEN MODAL
+        $('#courseFrame').attr('src', data.link);
+        $('#courseModal').css('display', 'block');
 
-    document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
+        // REMOVE OLD BADGES
+        document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
 
-    if (state === "completed" && data.badgeIcon) {
-        const modal = document.querySelector("#courseModal > div");
-        if (modal) {
+        // FIND THE CORRECT PLACE TO INSERT BADGE
+        const modalInner = document.querySelector("#courseModal > div");
+
+        if (modalInner && data.state === "completed" && data.badgeIcon) {
             const badgeDiv = document.createElement("div");
             badgeDiv.className = "course-badge-top-left";
             badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
-            modal.appendChild(badgeDiv);
+
+            modalInner.prepend(badgeDiv);  // ⭐ The key line (prepend/append works)
         }
-    }
-});
+    });
     circlesWrapper.appendChild(circle);
 
     circleElements.push({
