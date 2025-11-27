@@ -244,7 +244,7 @@ ease;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: "IBM Plex Sans";
 }
    .title-leaderboard img {
     /* margin-left: 20px; */
@@ -262,7 +262,7 @@ ease;
         color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: "IBM Plex Sans";
 }
 .title-badgescontent img{
       /* margin-left: 20px; */
@@ -278,7 +278,7 @@ ease;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: "IBM Plex Sans";
 }
 .title-certificatecontent img{
       /* margin-left: 20px; */
@@ -761,7 +761,7 @@ text-align: right;
     box-shadow: 0 10px 18px rgba(20, 35, 136, 0.25);
     width: 83%;
     font-size: 15px;
-    font-family: 'Cairo';
+    font-family: "IBM Plex Sans";
     margin-top: 10px;
 }
 
@@ -1111,7 +1111,7 @@ ease;
     clear: both;
 }
 /* .program_progress {float: left;width: 7%;text-align: right;} */
-.program_progress h4{font-size: 34px;font-weight: bold;font-family: 'Open Sans', sans-serif !important;    color: #fff;}
+.program_progress h4{font-size: 34px;font-weight: bold;font-family: "IBM Plex Sans";    color: #fff;}
 .meter {
     height: 20px;
     position: relative;
