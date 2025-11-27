@@ -245,7 +245,61 @@ a.form-toggle:hover {
     margin-left: 10px !important;
 }
 
+/* =========================
+   RESPONSIVE STYLES
+   ========================= */
 
+@media (max-width: 1200px) {
+
+    .two-column-container {
+        flex-direction: column-reverse; /* puts image ABOVE the form */
+        align-items: center;
+    }
+
+    #login-and-registration-container {
+        min-width: unset;
+    }
+
+    .image-column {
+        display: flex;
+        justify-content: center;
+    }
+
+    .image-column-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .login-register {
+        width: 100%;
+        padding: 40px;
+    }
+}
+
+@media (max-width: 991.89px){
+    .login-register-content {
+        margin-top: unset;
+    }
+}
+
+
+@media (max-width: 576px) {
+    .login-register-content {
+        padding-top: 40px;
+    }
+
+    .login-img-2 {
+    margin-top: -50px;
+    z-index: 2;
+}
+
+.two-column-container{
+    gap: unset;
+}
+
+#login-and-registration-container {
+    width: 70%;
+}
 
     </style>
 </%block>
