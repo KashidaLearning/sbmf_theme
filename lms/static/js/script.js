@@ -80,10 +80,10 @@ function createCircle(data, index) {
         $('#courseFrame').attr('src', data.link);
         $('#courseModal').css('display', 'block');
 
-        document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
-
-        const wrapper = document.querySelector("#courseModal .iframe-wrapper");
-
+/*         document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
+ */
+/*         const wrapper = document.querySelector("#courseModal .iframe-wrapper");
+ */
         if (wrapper) {
             wrapper.classList.remove("course-completed");
 
@@ -92,12 +92,12 @@ function createCircle(data, index) {
             }
         }
 
-        if (wrapper && data.state === "completed" && data.badgeIcon) {
+       /*  if (wrapper && data.state === "completed" && data.badgeIcon) {
             const badgeDiv = document.createElement("div");
             badgeDiv.className = "course-badge-top-left";
             badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
             wrapper.prepend(badgeDiv);
-        }
+        } */
     });
 
     circlesWrapper.appendChild(circle);
