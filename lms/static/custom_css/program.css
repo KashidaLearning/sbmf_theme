@@ -6,7 +6,7 @@
     --radius: 22px;
 }
 body{
-    font-family: 'Cairo', sans-serif;
+     font-family: "IBM Plex Sans";
 }
 header.global-header {
     background-color: #110D7C;
@@ -21,7 +21,7 @@ header.global-header .header-logo a .logo {
 /* end of 3 columns styles*/
 .program-about {
     margin: 0;
-    font-family: 'Cairo', sans-serif;
+     font-family: "IBM Plex Sans";
     color: #fff;
     background: linear-gradient(169.12deg,
     #F0C4DB 0%,
@@ -36,7 +36,7 @@ header.global-header .header-logo a .logo {
 }
 
 .container {
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
     max-width: 1240px;
     margin: 0 auto;
     padding: 48px 20px 12px;
@@ -47,7 +47,7 @@ header.global-header .header-logo a .logo {
 /* Horizontal container */
 .purple-icon-row {
   display: flex;
-   font-family: 'Cairo', sans-serif;
+    font-family: "IBM Plex Sans";
   justify-content: center;
   align-items: flex-start;
  position: relative;
@@ -55,7 +55,7 @@ header.global-header .header-logo a .logo {
 }
 .purple-icon-row-mobile{
   display: none;
-    font-family: 'Cairo', sans-serif;
+     font-family: "IBM Plex Sans";
   justify-content: center;
   align-items: flex-start;
  position: relative;
@@ -63,7 +63,7 @@ header.global-header .header-logo a .logo {
   width: 100%;
 }
 .purple-icon-row p {
-   font-family: 'Cairo', sans-serif;
+    font-family: "IBM Plex Sans";
 
 }
 #yellowicon {
@@ -109,7 +109,7 @@ width: 100%;
 .icon-item p {
   margin-top: -2px;
   font-size: 16px;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -349,7 +349,7 @@ hr {
 
 
 #certificate-content p{
- font-family: 'Cairo', sans-serif !important;
+    font-family: "IBM Plex Sans" !important;
 margin-bottom: 1em;
 text-align: right;
  color: #fff;
@@ -361,7 +361,7 @@ text-align: right;
 .row .cat-name {
     border-radius: 8px;
     padding: 8px 16px;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
     display: inline-block;
     vertical-align: middle;
     font-size: 16px;
@@ -407,7 +407,7 @@ text-align: right;
 .column h2 {
     margin-top: 0;
     color: #fff;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
     display: block;
     font-size: 48px;
     margin-block-start: 10px;
@@ -421,7 +421,7 @@ text-align: right;
 .column p {
     color: #fff;
     display: block;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
     margin-block-start: 1em;
     margin-block-end: 1em;
     margin-inline-start: 0px;
@@ -446,7 +446,7 @@ text-align: right;
 
 .column-middle {
     flex-basis: 55%;
-   font-family: 'Cairo', sans-serif;
+    font-family: "IBM Plex Sans";
 
 }
 
@@ -768,7 +768,7 @@ text-align: right;
 .card .btn a{
     color: #242184;
     font-weight: normal;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
 
 
 }
@@ -841,7 +841,7 @@ text-align: right;
 .wide-cta .pill a{
     color: #242184;
     text-decoration: none;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
     font-size: 15px;
 
 }
@@ -919,7 +919,7 @@ ease-in-out;
     font-size: 19px;
     line-height: 1.7;
     margin-top: 15px;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
 
 }
 
@@ -928,7 +928,7 @@ ease-in-out;
     text-align: right;
     padding-right: 60px;
     font-size: 19px;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
 }
 
 #popup-dynamic-content ul {
@@ -976,7 +976,7 @@ ease-in-out;
     font-size: 0.9em;
     color: white;
     margin: 0;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
 }
 @media (max-width: 992px) {
   .sharati-intro-text {
@@ -1002,9 +1002,7 @@ ease-in-out;
   }
 }
 
-/* ===============================
-   Responsive — Badge Grid
-================================ */
+
 @media (max-width: 992px) {
   #popup-dynamic-content .badge-grid {
     grid-template-columns: repeat(3, auto); /* 3 badges per row */
@@ -1246,7 +1244,7 @@ ease;
   list-style: none;
   padding: 0;
   margin: 10px 0;
-  font-family: 'Cairo', sans-serif;
+   font-family: "IBM Plex Sans";
   color: #fff;
 }
 .evaluation-list li {
@@ -1291,9 +1289,7 @@ ease;
   color: #fff;
 }
 
-/* ============================================== */
-/* ====== Leaderboard Header Container (Main) ====== */
-/* ============================================== */
+
 .leaderboard-header {
   display: flex;
     /* align-items: center; */
@@ -1308,9 +1304,7 @@ ease;
     /* flex-direction: row; */
 }
 
-/* ============================================== */
-/* ====== Left Side: Stages & Progress ====== */
-/* ============================================== */
+
 .center{
   display: flex;
     width: 100%;
@@ -1592,7 +1586,7 @@ flex: unset !important;
 /* MAIN CONTAINER — horizontal layout */
 .popup-purple-icons {
 display: flex;
-  font-family: 'Cairo', sans-serif;
+   font-family: "IBM Plex Sans";
   justify-content: center;
   align-items: flex-start;
   position: relative;
@@ -1649,7 +1643,7 @@ width: 100%;}
 .icon-item-tab p {
  margin-top: -12px;
   font-size: 16px;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans" !important;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -1661,7 +1655,7 @@ width: 100%;}
     text-align: right !important;
     padding-right: 20px !important;
     font-size: 16px !important;
-    font-family: 'Cairo', sans-serif !important;
+       font-family: "IBM Plex Sans"!important;
 }
 @media (max-width: 768px) {
 
@@ -1759,7 +1753,7 @@ width: 100%;}
     flex: 1;
     text-align: right;
     color: white;
-    font-family: "Cairo", sans-serif;
+       font-family: "IBM Plex Sans";
 }
 
 .control-text-box h3 {
@@ -1768,7 +1762,7 @@ width: 100%;}
   margin-bottom: 18px;
   visibility: visible;
   color: white;
-  font-family: "Cairo", sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
 }
 
 .control-text-box ul {
@@ -1782,7 +1776,7 @@ width: 100%;}
     margin-bottom: 10px;
     position: relative;
     padding-right: 18px;
-    font-family: "Cairo", sans-serif !important;
+       font-family: "IBM Plex Sans"!important;
 }
 
 /* Custom bullet point */
