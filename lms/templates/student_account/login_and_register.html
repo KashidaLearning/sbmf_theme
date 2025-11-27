@@ -40,11 +40,12 @@
        .login-register-content {
             background: linear-gradient(153.66deg, #416A9E 34.21%, #110D7C 102.84%);
              min-height: calc(100vh - 140px);
-    display: flex;
-    align-items: center;              
-    justify-content: center;          
-     padding-top: 120px;          
-    padding-bottom: 40px;        
+            display: flex;
+            align-items: center;              
+            justify-content: center;          
+            padding-top: 120px;          
+            padding-bottom: 40px;
+            max-width: 100% !important;        
         }
 
         .two-column-container {
@@ -112,7 +113,8 @@
 
         .toggle-form {
     border-bottom: .5px solid #110D7C;
-    padding-bottom: 10px;
+    display: flex;
+    gap: 30px;
 }
 
 .toggle-form a {
@@ -126,6 +128,8 @@
 
 a.form-toggle:hover {
     border-bottom: 3px solid #110D7C;
+    padding-bottom: 11px;
+    color: #110D7C !important;
 }
 
 .form-fields {
@@ -155,6 +159,63 @@ a.form-toggle:hover {
 
 .login-register .form-field label.focus-out {
     position: relative !important;
+}
+
+.login-register .form-field .tip {
+    color: #110D7C !important; 
+    font-weight: 400;
+    font-size: 14px !important;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: right;
+    margin-top: 8px;
+}
+
+.login-help {
+    color: #110D7C !important;
+    font-weight: 400;
+    font-size: 18px !important;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: right;
+    margin-top: 30px;
+}
+
+.login-register .submission-error, .financial-assistance-wrapper .financial-assistance-form .submission-error, .login-register .system-error, .financial-assistance-wrapper .financial-assistance-form .system-error {
+    box-shadow: unset !important;
+    border-bottom: none;
+    background: #100E4A !important;
+    border-radius: 8px;
+    border: none !important;
+    color: #ffff !important;
+    list-style: none !important;
+}
+
+.login-register .submission-error .message-title {
+    color: #ffff !important;
+}
+
+.login-register .status .message-copy{
+    list-style: none !important;
+}
+
+.submission-error {
+    position: relative;
+    padding-right: 40px; /* space for the icon on the right */
+}
+
+/* Add the caution icon */
+.submission-error::before {
+    content: "";
+    position: absolute;
+    right: 10px;          /* RTL: icon stays on the right */
+    top: 10px;
+    width: 24px;
+    height: 24px;
+    background-image: url('/static/images/login-error.png'); /* UPDATE the path */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 
