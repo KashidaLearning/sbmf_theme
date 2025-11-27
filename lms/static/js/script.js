@@ -82,7 +82,7 @@ function createCircle(data, index) {
 
     document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
 
-    const modalInner = document.querySelector("#courseModal .popup-content");
+    const modalInner = document.querySelector("#courseModal .iframe-wrapper");
     const iframe = document.getElementById("courseFrame");
 
     if (modalInner) {
