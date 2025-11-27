@@ -92,7 +92,7 @@ function createCircle(data, index) {
             badgeDiv.className = "course-badge-top-left";
             badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
 
-            modalInner.prepend(badgeDiv);  // ⭐ The key line (prepend/append works)
+            modalInner.prepend(badgeDiv);  
         }
     });
     circlesWrapper.appendChild(circle);
