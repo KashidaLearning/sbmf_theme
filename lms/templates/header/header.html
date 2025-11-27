@@ -30,9 +30,41 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
         display: flex !important;
         height: auto;
     }
+
+    header.global-header .nav-links .secondary{
+        display: none !important;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+  /* styles for mobile only */
+
+
+#mobile-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Center the entire menu horizontally */
+  gap: 8px;                 /* Optional spacing between items */
+  padding: 16px;
+  top: unset !important;
+  left: unset !important;
+  background-color: #100E4A !important;
+  right: 0 !important;
+
 }
 
+    .mobile-menu .mobile-nav-link a {
+      background-color: unset !important;
+      width: unset !important;
+      color: white !important;
+    }
 
+        .mobile-menu .mobile-nav-link a::after {
+        content: none !important;
+    }
+
+  }
+  
 header.global-header .main-header {
         display: flex !important;
         height: auto;
