@@ -349,6 +349,8 @@
                 "title": text_type(overview.display_name_with_default),
                 "description": text_type(overview.short_description or ""),
                 "icon": overview.course_image_url,
+                "badgeIcon": course_badges[0].badge.icon.url if course_badges else None,
+
                 "state": (
                     "completed" if is_completed
                     else "active" if is_active

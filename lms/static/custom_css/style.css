@@ -455,3 +455,18 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
   }
 
 }
+.course-badge-top-left {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 9999;
+    width: 90px;
+    height: 90px;
+}
+
+.course-badge-top-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}

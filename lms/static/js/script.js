@@ -71,15 +71,27 @@ function createCircle(data, index) {
         `;
     }
 
-    circle.addEventListener("click", () => {
-        if (state === "locked") {
-            document.body.dispatchEvent(new Event("lockedCourseClick"));
-            return;
-        }
-        $('#courseFrame').attr('src', data.link);
-        $('#courseModal').css('display', 'block');
-    });
+   circle.addEventListener("click", () => {
+    if (state === "locked") {
+        document.body.dispatchEvent(new Event("lockedCourseClick"));
+        return;
+    }
 
+    $('#courseFrame').attr('src', data.link);
+    $('#courseModal').css('display', 'block');
+
+    document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
+
+    if (state === "completed" && data.badgeIcon) {
+        const modal = document.querySelector("#courseModal > div");
+        if (modal) {
+            const badgeDiv = document.createElement("div");
+            badgeDiv.className = "course-badge-top-left";
+            badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
+            modal.appendChild(badgeDiv);
+        }
+    }
+});
     circlesWrapper.appendChild(circle);
 
     circleElements.push({
