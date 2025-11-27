@@ -72,34 +72,36 @@ function createCircle(data, index) {
     }
 
     circle.addEventListener("click", () => {
-        if (state === "locked") {
-            document.body.dispatchEvent(new Event("lockedCourseClick"));
-            return;
+    if (state === "locked") {
+        document.body.dispatchEvent(new Event("lockedCourseClick"));
+        return;
+    }
+
+    $('#courseFrame').attr('src', data.link);
+    $('#courseModal').css('display', 'block');
+
+    document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
+
+    const modalInner = document.querySelector("#courseModal .popup-content");
+    const iframe = document.getElementById("courseFrame");
+
+    if (modalInner) {
+        modalInner.classList.remove("course-completed");
+
+        if (data.state === "completed") {
+            modalInner.classList.add("course-completed");
         }
+    }
+    // ADD BADGE
+    if (modalInner && data.state === "completed" && data.badgeIcon) {
+        const badgeDiv = document.createElement("div");
+        badgeDiv.className = "course-badge-top-left";
+        badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
 
-        // OPEN MODAL
-        $('#courseFrame').attr('src', data.link);
-        $('#courseModal').css('display', 'block');
+        modalInner.prepend(badgeDiv);
+    }
 
-        // REMOVE OLD BADGES
-        document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
 
-        // FIND THE CORRECT PLACE TO INSERT BADGE
-        const modalInner = document.querySelector("#courseModal > div");
-        const iframe = document.getElementById("courseFrame");
-         if (data.state === "completed") {
-        iframe.style.border = "6px solid var(--program-main-color)";
-        iframe.style.borderRadius = "12px";
-        } else {
-            iframe.style.border = "none";
-        }
-        if (modalInner && data.state === "completed" && data.badgeIcon) {
-            const badgeDiv = document.createElement("div");
-            badgeDiv.className = "course-badge-top-left";
-            badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
-
-            modalInner.prepend(badgeDiv);  
-        }
     });
     circlesWrapper.appendChild(circle);
 
@@ -356,6 +358,8 @@ async function refreshCourseStatus() {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
             initializeScene();
+           document.dispatchEvent(new Event("circlesRebuilt"));
+
         }
 
         // 2) global program progress bar (outside popup)
