@@ -470,12 +470,12 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     object-fit: contain;
     filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
 }
-.frame-wrapper.course-completed {
+.iframe-wrapper.course-completed {
     border: 6px solid var(--program-main-color);
     border-radius: 16px;
     box-shadow: 0 0 25px rgba(255,255,255,0.3);
 }
-.frame-wrapper{
+.iframe-wrapper{
    position:relative; 
    width:90%;
     height:90%; 
