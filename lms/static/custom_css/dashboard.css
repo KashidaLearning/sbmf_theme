@@ -11,11 +11,12 @@
 }
 
 .leader-dashboard__title {
-  font-size: 64px;
+  font-size: 60px;
   font-weight: 800;
-  margin-bottom: 100px;
+  margin-bottom: 60px;
   text-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
   color: #ffffff !important;
+   font-family: 'Cairo', sans-serif !important;
 }
 
 .programs-grid {
@@ -23,36 +24,42 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
+  width: 100%;
+  max-width: 1440px;
 }
 
 /* Program card */
 
 .program-card {
-  background: linear-gradient(180deg, #416A9E80 0%, transparent 100%);
-  border-radius: 25px;
-  padding: 40px 40px 28px;
-  width: 580px;
-  box-shadow: 6.89px 6.89px 20.67px 0px #221A372E,
-        -6.89px -6.89px 20.67px 0px #FFFFFF1F,
-        0px 4px 4px 0px #00000040;
-  text-align: right;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+    height: 100%;
+    flex-direction: column;
+    border-radius: 25px;
+    padding: 0;
+    width: 45%;
+    text-align: right;
+    position: relative;
+    display: inline-block;
+    max-width: 570px;
+    background: rgba(65, 106, 158, 0.10);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
-
+.card-container{
+display: block;
+padding:20px 25px;
+}
 .program-card__header {
   margin-bottom: 24px;
 }
 
 .program-card__title a , .program-card__title {
-  font-size: 25px !important;
-  font-weight: 700 !important;
-  margin: 0;
-  color: #ffffff !important;
-  text-decoration: none;
-  text-align: center;
-  margin: 30px auto;
+ font-size: 25px !important;
+    font-weight: 700 !important;
+    margin: 0;
+    color: #ffffff !important;
+    text-decoration: none;
+    text-align: center;
+    margin: 30px auto;
+    margin-bottom: 10px;
 }
 
 .program-card__body {
@@ -84,33 +91,46 @@
 /* Courses list */
 
 .program-courses {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  flex: 1 1 auto;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1 1 auto;
+    align-items: center;
+    overflow: auto;
+    overflow-x: hidden;
+    padding-top: 20px;
+    scrollbar-width: none;
+    min-height: 200px;
+    max-height: 400px;
+    
 }
 
 .course-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 30px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-size: 15px;
-  line-height: 30px;
-  height: 32px;
-  width: 460px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
-  box-shadow:
-        6.89px 6.89px 20.67px 0px #221A372E,
-        -6.89px -6.89px 20.67px 0px #FFFFFF1F,
-        0px 4px 4px 0px #00000040;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    line-height: 30px;
+    width: 90%;
+    transition: transform 0.15s 
+ease, box-shadow 0.15s 
+ease, background-color 0.15s 
+ease;
+    box-shadow: 6.89px 6.89px 20.67px 0px #221A372E, -6.89px -6.89px 20.67px 0px #FFFFFF1F, 0px 4px 4px 0px #00000040;
+    justify-content: space-between;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
-
+.row-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    margin: 0 auto;
+    position: relative;
+}
 /* Completed course – uses program accent color */
 .course-row--done {
   background-color: var(--program-accent, transparent);
@@ -135,30 +155,31 @@
 }
 
 .course-row__status {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  border-radius: 999px;
-  background: var(--program-accent, transparent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 3.8px 3.8px 11.4px 0px #221A372E,
-    -3.8px -3.8px 11.4px 0px #FFFFFF1F,
-    0px 2.21px 2.21px 0px #00000040;
-;
-  b
+ flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 999px;
+    background: var(--program-accent, transparent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* box-shadow: 3.8px 3.8px 11.4px 0px #221A372E, -3.8px -3.8px 11.4px 0px #FFFFFF1F, 0px 2.21px 2.21px 0px #00000040; */
+    position: absolute;
+    left: 0;
+    box-shadow: 2px 2px 4px 0 rgb(0 0 0 / 76%), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+
 }
 
 .course-row__title {
-  flex: 1 1 auto;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  text-align: right;
-  font-size: 18px;
-  color: #100E4A !important;
-  font-weight: 700;
+ flex: 1 1 auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: right;
+    font-size: 18px;
+    color: #100E4A !important;
+    font-weight: 700;
+    padding: 7px 0px;
 }
 
 .course-row__progress {
@@ -176,14 +197,14 @@
 /* Badges strip */
 
 .program-badges {
-  flex-shrink: 0;
-  margin-top: 60px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  align-content: center;
-  margin: 60px auto 0 auto;
+    flex-shrink: 0;
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    flex-wrap: wrap;
+    align-content: center;
+    margin: 20px auto 0 auto;
 }
 
 .program-badge {
@@ -210,6 +231,7 @@
 a.go-to-journeys {
     color: #0d0529 !important;
 }
+
 /* Responsive tweaks */
 @media (max-width: 768px) {
   .leader-dashboard__title {

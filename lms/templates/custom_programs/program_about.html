@@ -34,14 +34,7 @@
 :root {
     --program-main-color: ${program.css_single_color or "#6C2BD9"};
 }
-.eval-icon[src*="tick-icon"] {
-     background: var(--program-main-color);
-    width: 35px;
-    height: 35px;
-    box-shadow: 0 2.207px 2.207px 0 rgba(0, 0, 0, 0.25), -3.802px -3.802px 11.405px 0 rgba(255, 255, 255, 0.12), 3.802px 3.802px 11.405px 0 rgba(34, 26, 55, 0.18);
-    border-radius: 50%;
-    
-}
+
 </style>
 <%block name="pagetitle">${program.name}</%block>
 <style>
@@ -634,31 +627,50 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             <li class="eval-item eval-assignment">
                 <span class="label">الواجب</span>
                 % if assignment_completed:
-                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                <div class="statusicon">
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="statuscomplete">
+                </div>
                 % elif assignment_locked:
+                 <div class="statusicon">
                 <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                </div>
                 % else:
+                 <div class="statusicon">
+
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                </div>
                 % endif
             </li>
             <li class="eval-item eval-pre" >
                 <span class="label">التقييم القبلي</span>
                 % if pre_completed:
-                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                <div class="statusicon">
+                <img src="${static.url('images/tick-icon.png')}" alt="تم"  class="statuscomplete">
+                </div>
                 % elif pre_locked:
+               <div class="statusicon">
                 <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                </div>
                 % else:
+                <div class="statusicon">
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                </div>
                 % endif
             </li>
             <li class="eval-item eval-post">
                 <span class="label">التقييم النهائي</span>
                 % if post_completed:
-                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                <div class="statusicon">
+                <img src="${static.url('images/tick-icon.png')}" alt="تم" class="statuscomplete">
+                </div>
                 % elif post_locked:
+              <div class="statusicon">
                 <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                </div>
                 % else:
+                <div class="statusicon">
                 <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                </div>
                 % endif
             </li>
             <li class="eval-item eval-challenges">
@@ -668,11 +680,17 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 <span class="status-text">0/0</span>
                 % else:
                 % if completed_challenges == total_challenges:
-                    <img src="${static.url('images/tick-icon.png')}" alt="تم" class="eval-icon">
+                 <div class="statusicon">
+                    <img src="${static.url('images/tick-icon.png')}" alt="تم" class="statuscomplete">
+                </div>
                 % elif completed_challenges == 0:
+                 <div class="statusicon">
                     <img src="${static.url('images/lockedstatus.png')}" alt="مغلق" class="eval-icon">
+                 </div>
                 % else:
+                 <div class="statusicon">
                     <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                  </div>
                 % endif
                 
 

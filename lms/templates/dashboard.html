@@ -286,7 +286,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
-                    
+                <div class="card-container">
                 <!-- Progress pill (centered on top of card) -->
                 <div class="program-card__progress-pill">
                     <span>${program_progress_average}%</span>
@@ -332,10 +332,12 @@ cert_name_long = settings.CERT_NAME_LONG
 
 
                                           <div class="course-row ${course_state_class}">
+                                            <div class="row-container">
                                               <span class="course-row__title">${course['name']}</span>
                                               <span class="course-row__status">
                                                   <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
                                               </span>
+                                              </div>
                                           </div>
 
                                       % endfor
@@ -366,6 +368,7 @@ cert_name_long = settings.CERT_NAME_LONG
                     </div>
 
                 </div>
+             </div>
             </article>
 
         % endfor  ## end programs loop

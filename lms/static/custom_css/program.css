@@ -6,7 +6,7 @@
     --radius: 22px;
 }
 body{
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
 }
 header.global-header {
     background-color: #110D7C;
@@ -21,7 +21,7 @@ header.global-header .header-logo a .logo {
 /* end of 3 columns styles*/
 .program-about {
     margin: 0;
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
     color: #fff;
     background: linear-gradient(169.12deg,
     #F0C4DB 0%,
@@ -36,7 +36,7 @@ header.global-header .header-logo a .logo {
 }
 
 .container {
-       font-family: "IBM Plex Sans" !important;
+    font-family: 'Cairo', sans-serif !important;
     max-width: 1240px;
     margin: 0 auto;
     padding: 48px 20px 12px;
@@ -47,7 +47,7 @@ header.global-header .header-logo a .logo {
 /* Horizontal container */
 .purple-icon-row {
   display: flex;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
   justify-content: center;
   align-items: flex-start;
  position: relative;
@@ -55,7 +55,7 @@ header.global-header .header-logo a .logo {
 }
 .purple-icon-row-mobile{
   display: none;
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
   justify-content: center;
   align-items: flex-start;
  position: relative;
@@ -63,7 +63,7 @@ header.global-header .header-logo a .logo {
   width: 100%;
 }
 .purple-icon-row p {
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
 
 }
 #yellowicon {
@@ -76,7 +76,7 @@ header.global-header .header-logo a .logo {
   flex-direction: column;
   align-items: center;
   text-align: center;
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -109,7 +109,7 @@ width: 100%;
 .icon-item p {
   margin-top: -2px;
   font-size: 16px;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -198,7 +198,6 @@ ease;
       justify-content: center;
       font-size: 18px;
       color: #fff;
-      margin-left: 45px
     }
    .icon img{
     max-width: 73px;
@@ -266,7 +265,7 @@ ease;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
 }
    .title-leaderboard img {
     /* margin-left: 20px; */
@@ -284,7 +283,7 @@ ease;
         color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
 }
 .title-badgescontent img{
       /* margin-left: 20px; */
@@ -300,7 +299,7 @@ ease;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
 }
 .title-certificatecontent img{
       /* margin-left: 20px; */
@@ -371,7 +370,7 @@ hr {
 
 
 #certificate-content p{
-    font-family: "IBM Plex Sans" !important;
+     font-family: 'Cairo', sans-serif !important;
 margin-bottom: 1em;
 text-align: right;
  color: #fff;
@@ -383,7 +382,7 @@ text-align: right;
 .row .cat-name {
     border-radius: 8px;
     padding: 8px 16px;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
     display: inline-block;
     vertical-align: middle;
     font-size: 16px;
@@ -429,7 +428,7 @@ text-align: right;
 .column h2 {
     margin-top: 0;
     color: #fff;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
     display: block;
     font-size: 48px;
     margin-block-start: 10px;
@@ -443,7 +442,7 @@ text-align: right;
 .column p {
     color: #fff;
     display: block;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
     margin-block-start: 1em;
     margin-block-end: 1em;
     margin-inline-start: 0px;
@@ -468,7 +467,7 @@ text-align: right;
 
 .column-middle {
     flex-basis: 55%;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
 
 }
 
@@ -783,14 +782,14 @@ text-align: right;
     box-shadow: 0 10px 18px rgba(20, 35, 136, 0.25);
     width: 83%;
     font-size: 15px;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
     margin-top: 10px;
 }
 
 .card .btn a{
     color: #242184;
     font-weight: normal;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
 
 
 }
@@ -863,7 +862,7 @@ text-align: right;
 .wide-cta .pill a{
     color: #242184;
     text-decoration: none;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
     font-size: 15px;
 
 }
@@ -941,7 +940,7 @@ ease-in-out;
     font-size: 19px;
     line-height: 1.7;
     margin-top: 15px;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
 
 }
 
@@ -950,7 +949,7 @@ ease-in-out;
     text-align: right;
     padding-right: 60px;
     font-size: 19px;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
 }
 
 #popup-dynamic-content ul {
@@ -998,7 +997,7 @@ ease-in-out;
     font-size: 0.9em;
     color: white;
     margin: 0;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
 }
 @media (max-width: 992px) {
   .sharati-intro-text {
@@ -1133,7 +1132,7 @@ ease;
     clear: both;
 }
 /* .program_progress {float: left;width: 7%;text-align: right;} */
-.program_progress h4{font-size: 34px;font-weight: bold;font-family: "IBM Plex Sans";    color: #fff;}
+.program_progress h4{font-size: 34px;font-weight: bold; font-family: 'Cairo', sans-serif;    color: #fff;}
 .meter {
     height: 20px;
     position: relative;
@@ -1266,7 +1265,7 @@ ease;
   list-style: none;
   padding: 0;
   margin: 10px 0;
-   font-family: "IBM Plex Sans";
+   font-family: 'Cairo', sans-serif;
   color: #fff;
 }
 .evaluation-list li {
@@ -1368,7 +1367,7 @@ ease;
 .eval-item .label {
  color: var(--White, #FFF);
     text-align: right;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
     font-size: 25px;
     font-style: normal;
     font-weight: 700;
@@ -1376,10 +1375,7 @@ ease;
     margin-left: 9px;
 }
 
-.eval-icon {
-    width: 70px; 
-    height: 70px;
-}
+
 
 /* Progress Bar Styling */
 .lh-progress {
@@ -1494,7 +1490,7 @@ div#certificate-status {
  {
     color: var(--White, #FFF);
     text-align: center;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
     font-size: 48px;
     font-style: normal;
     font-weight: 700;
@@ -1549,7 +1545,7 @@ flex: unset !important;
   width: 100%;
   margin: 20px auto;
   text-align: center;
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
   max-width: 95%
 }
 
@@ -1608,7 +1604,7 @@ flex: unset !important;
 /* MAIN CONTAINER — horizontal layout */
 .popup-purple-icons {
 display: flex;
-   font-family: "IBM Plex Sans";
+   font-family: 'Cairo', sans-serif;
   justify-content: center;
   align-items: flex-start;
   position: relative;
@@ -1648,7 +1644,7 @@ display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-     font-family: "IBM Plex Sans";
+     font-family: 'Cairo', sans-serif;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -1665,7 +1661,7 @@ width: 100%;}
 .icon-item-tab p {
  margin-top: -12px;
   font-size: 16px;
-       font-family: "IBM Plex Sans" !important;
+        font-family: 'Cairo', sans-serif !important;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -1677,7 +1673,7 @@ width: 100%;}
     text-align: right !important;
     padding-right: 20px !important;
     font-size: 16px !important;
-       font-family: "IBM Plex Sans"!important;
+       font-family: 'Cairo', sans-serif!important;
 }
 @media (max-width: 768px) {
 
@@ -1775,7 +1771,7 @@ width: 100%;}
     flex: 1;
     text-align: right;
     color: white;
-       font-family: "IBM Plex Sans";
+       font-family: 'Cairo', sans-serif;
 }
 
 .control-text-box h3 {
@@ -1784,7 +1780,7 @@ width: 100%;}
   margin-bottom: 18px;
   visibility: visible;
   color: white;
-     font-family: "IBM Plex Sans" !important;
+      font-family: 'Cairo', sans-serif !important;
 }
 
 .control-text-box ul {
@@ -1798,7 +1794,7 @@ width: 100%;}
     margin-bottom: 10px;
     position: relative;
     padding-right: 18px;
-       font-family: "IBM Plex Sans"!important;
+    font-family: 'Cairo', sans-serif!important;
 }
 
 /* Custom bullet point */
@@ -1815,7 +1811,7 @@ width: 100%;}
     color: white;
     font-size: 20px;
     font-weight: 600;
-      font-family: "IBM Plex Sans";
+      font-family: 'Cairo', sans-serif;
     margin: 0 0 25px 0;
     padding-right: 20px;
 }
@@ -1874,7 +1870,7 @@ width: 100%;}
       color: #FFF;
     text-align: right;
     font-feature-settings: 'liga' off, 'clig' off;
-    font-family: "IBM Plex Sans";
+    font-family: 'Cairo', sans-serif;
     font-size: 25px;
     font-style: normal;
     font-weight: 700;
@@ -1888,23 +1884,53 @@ width: 100%;}
     /* margin-top: 16px; */
 }
 .rank-box {
- display: flex;
+
+    display: flex;
+
     width: 38px;
-    font-family: "IBM Plex Sans";
+
+    font-family: 'Cairo', sans-serif;
+
     justify-content: center;
+
     text-align: right;
+
     text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
+
     font-size: 61px;
+
     font-style: normal;
+
     font-weight: 700;
+
     line-height: normal;
+
     text-transform: capitalize;
-    opacity: 0.2;
-    color: #00000000 !important;
+
+    opacity: 0.3;
+
+    color: #000 !important;
+
     font-size: 72px;
-    text-shadow: 2px -2px 0px rgb(255 255 255 / 36%), 0px -1px 0px rgb(0 0 0 / 67%) !important;
+
+    text-shadow: 2px -2px 0px rgb(255 255 255 / 36%), 0px -1px 0px rgb(0 0 0) !important;
 
 }
+ .statusicon{
+ background: var(--program-main-color);
+  border-radius: 55%;
+  width: 35px;
+  height: 35px;
+  text-align: center;
+ }
+ .statuscomplete{
+  max-width: 28px;
+  margin-top: 4px;
+ }
+ 
+ .statusicon img{
+ width: 100%;
+ }
 .bottom_left_background_image {
   position: absolute;
   top: 48%;
