@@ -9,7 +9,7 @@
  
 <%
     user = request.user
-    programs = list(Program.objects.all()[:4])
+    programs = list(Program.objects.all()[:10])
  
     def get_program_progress(program, user):
       enrollment = ProgramEnrollment.objects.filter(user=user, program=program).first()
