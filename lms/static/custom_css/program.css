@@ -252,6 +252,7 @@ ease;
     max-width: 90px;
 }
 
+
 .title-badgescontent{
   display: flex;    align-items: center;
    gap:15px;
@@ -977,7 +978,58 @@ ease-in-out;
     margin: 0;
     font-family: 'Cairo', sans-serif !important;
 }
+@media (max-width: 992px) {
+  .sharati-intro-text {
+    font-size: 22px;
+    line-height: 28px;
+    max-width: 700px;
+  }
+}
 
+@media (max-width: 768px) {
+  .sharati-intro-text {
+    font-size: 18px;
+    line-height: 26px;
+    padding: 0 20px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sharati-intro-text {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+/* ===============================
+   Responsive — Badge Grid
+================================ */
+@media (max-width: 992px) {
+  #popup-dynamic-content .badge-grid {
+    grid-template-columns: repeat(3, auto); /* 3 badges per row */
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  #popup-dynamic-content .badge-grid {
+    grid-template-columns: repeat(2, auto); /* 2 badges per row */
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #popup-dynamic-content .badge-grid {
+    grid-template-columns: repeat(2, auto);
+    gap: 16px;
+  }
+
+  #popup-dynamic-content .badge-item img {
+    width: 187px !important;   /* smaller icons */
+    height: auto;
+  }
+}
 
 #popup-dynamic-content .download-btn {
        display: inline-block;
@@ -1526,6 +1578,17 @@ flex: unset !important;
 
 }
 
+
+
+
+
+
+@media (max-width: 900px) {
+  .controller-header-img {
+   display: none;
+  }
+}
+
 /* MAIN CONTAINER — horizontal layout */
 .popup-purple-icons {
 display: flex;
@@ -1600,7 +1663,50 @@ width: 100%;}
     font-size: 16px !important;
     font-family: 'Cairo', sans-serif !important;
 }
+@media (max-width: 768px) {
 
+    .popup-purple-icons {
+        display: flex;
+        flex-direction: row !important;  /* KEEP ROW */
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 25px;
+        flex-wrap: wrap; /* icons wrap to next line if needed */
+    }
+
+    /* remove absolute so it joins the row */
+    .popup-left {
+        position: static !important;
+        left: unset;
+        margin-top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-center {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 25px !important;
+        margin-top: 0 !important;
+    }
+
+    /* icon resizing */
+    .icon-circle-tab img {
+        width: 75px !important;
+        max-width: 75px !important;
+    }
+
+    .icon-item-tab p,
+    .tab-label {
+        font-size: 14px !important;
+        margin-top: 5px !important;
+        padding-right: 0 !important;
+        text-align: center !important;
+    }
+}
 
 /* Convert image color to #416A9E */
 
@@ -2040,128 +2146,9 @@ width: 100%;}
     margin-bottom: 20px;
   }
 }
-@media (max-width: 992px) {
-  .leaderboard-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 24px;
-    padding: 20px 20px 28px;
-    width: 100%;
-  }
 
-  .lh-left {
-    order: 2;
-  }
 
-  .lh-right {
-    order: 1;
-    justify-content: center;
-    padding-left: 0;
-  }
 
-  .lh-divider {
-    display: none;
-  }
-
-  .lh-rank-text {
-    text-align: center;
-  }
-
-  .lh-rank-title {
-    margin: 0 0 6px;
-    font-size: 20px;
-  }
-
-  .lh-p {
-    padding-right: 0 !important;
-    font-size: 13px;
-    text-align: center;
-  }
-
-  .eval-grid {
-    justify-content: center;
-    column-gap: 30px;
-  }
-
-  .eval-item {
-    font-size: 16px;
-  }
-
-  .eval-icon {
-    width: 56px;
-    height: 56px;
-  }
-
-  .lh-progress {
-    max-width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .leaderboard {
-    padding: 18px 12px;
-  }
-
-  .leaderboard-header {
-    padding: 10px 10px 18px;
-    gap: 18px;
-  }
-
-  .eval-grid {
-    grid-template-columns: 1fr;
-    row-gap: 10px;
-    text-align: center;
-  }
-
-  .eval-item {
-    justify-content: center;
-    font-size: 14px;
-  }
-
-  .eval-icon {
-    width: 48px;
-    height: 48px;
-  }
-
-  .lh-progress-val {
-    font-size: 13px;
-  }
-
-  .lh-progress-track {
-    height: 10px;
-  }
-
-  .lh-rank-title {
-    font-size: 18px;
-  }
-
-  .lh-p {
-    font-size: 12px;
-  }
-
-  .leaderboard-row {
-    max-width: 100%;
-    padding: 12px 10px;
-    margin-right: 0;
-    padding-right: 16px;
-  }
-
-  .row-right {
-    padding: 10px 12px;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .progress-bar {
-    width: 150px;
-  }
-
-  .rank-box {
-    font-size: 42px;
-    padding-left: 16px;
-  }
-}
 @media (max-width: 992px) {
   .bottom_left_background_image {
     top: 55%;
@@ -2226,5 +2213,127 @@ width: 100%;}
         max-width: 170px !important;
         top: 25px !important;
         left: 20px !important;
+    }
+}
+@media (max-width: 768px) {
+
+    .leaderboard-header .center {
+        display: flex !important;
+        flex-direction: column !important; 
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        gap: 25px !important;
+    }
+
+    .lh-left {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 18px !important;
+    }
+
+    .lh-right {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+    }
+
+    .lh-avatar img {
+        width: 85px !important;
+        height: 85px !important;
+    }
+
+    ul.eval-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 20px !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    ul.eval-grid:before {
+        display: none !important;
+    }
+    .leaderboard-row,
+    .leaderboard-row.mako-row {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 12px !important;
+        padding: 12px !important;
+        width: 100% !important;
+    }
+
+    .leaderboard-row .rank-box {
+        flex-shrink: 0 !important;
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 20px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .leaderboard-row .icon img {
+        width: 50px !important;
+        height: 50px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .leaderboard-row .row-right {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        gap: 4px !important;
+    }
+
+    .row-right .name {
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .row-right .progress-bar {
+        width: 100% !important;
+        height: 8px !important;
+        margin: 0 !important;
+    }
+
+    .row-right .pt1 {
+        font-size: 14px !important;
+        align-self: flex-end !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+@media (max-width: 768px) {
+    #popup-dynamic-content .download-btn {
+        width: 100% !important;      
+        height: auto !important;     
+        padding: 16px 25px !important;
+        font-size: 18px !important;
+        border-radius: 14px !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #popup-dynamic-content .download-btn {
+        padding: 14px 20px !important;
+        font-size: 16px !important;
+        border-radius: 12px !important;
     }
 }

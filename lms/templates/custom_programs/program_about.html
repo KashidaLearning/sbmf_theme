@@ -254,7 +254,7 @@
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon 1.png')}" alt="شاراتي" >
+                    <img src="${static.url('images/badges-icon-1.png')}" alt="شاراتي" >
                 </div>
                 <p> شاراتي</p>
             </div>
@@ -267,7 +267,7 @@
             </div>  -->
              <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon 2.png')}" alt="لوحة الصدارة">
+                    <img src="${static.url('images/leaderboard-icon-2.png')}" alt="لوحة الصدارة">
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
@@ -997,7 +997,16 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             showPopup(title, target);
         });
     });
+    document.querySelectorAll(".purple-icon-row-mobile .icon-item").forEach(item => {
+        item.addEventListener("click", function () {
+            const id = this.id;
+            const target = map[id];
+            if (!target) return;
 
+            const title = this.querySelector("p").textContent.trim();
+            showPopup(title, target);
+        });
+    });
     function showPopup(title, targetId) {
 
         const contentDiv = document.getElementById(targetId);
