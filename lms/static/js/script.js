@@ -80,26 +80,29 @@ function createCircle(data, index) {
     $('#courseFrame').attr('src', data.link);
     $('#courseModal').css('display', 'block');
 
+    
     document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
 
-    const modalInner = document.querySelector("#courseModal .iframe-wrapper");
-    const iframe = document.getElementById("courseFrame");
+    const wrapper = document.querySelector("#courseModal .iframe-wrapper");
 
-    if (modalInner) {
-        modalInner.classList.remove("course-completed");
+    if (wrapper) {
+        wrapper.classList.remove("course-completed");
 
         if (data.state === "completed") {
-            modalInner.classList.add("course-completed");
+            wrapper.classList.add("course-completed");
         }
     }
-    // ADD BADGE
-    if (modalInner && data.state === "completed" && data.badgeIcon) {
+
+    
+    if (wrapper && data.state === "completed" && data.badgeIcon) {
         const badgeDiv = document.createElement("div");
         badgeDiv.className = "course-badge-top-left";
         badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
 
-        modalInner.prepend(badgeDiv);
+        wrapper.prepend(badgeDiv);
     }
+
+
 
 
     });
