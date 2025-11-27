@@ -72,40 +72,34 @@ function createCircle(data, index) {
     }
 
     circle.addEventListener("click", () => {
-    if (state === "locked") {
-        document.body.dispatchEvent(new Event("lockedCourseClick"));
-        return;
-    }
-
-    $('#courseFrame').attr('src', data.link);
-    $('#courseModal').css('display', 'block');
-
-    
-    document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
-
-    const wrapper = document.querySelector("#courseModal .iframe-wrapper");
-
-    if (wrapper) {
-        wrapper.classList.remove("course-completed");
-
-        if (data.state === "completed") {
-            wrapper.classList.add("course-completed");
+        if (state === "locked") {
+            document.body.dispatchEvent(new Event("lockedCourseClick"));
+            return;
         }
-    }
 
-    
-    if (wrapper && data.state === "completed" && data.badgeIcon) {
-        const badgeDiv = document.createElement("div");
-        badgeDiv.className = "course-badge-top-left";
-        badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
+        $('#courseFrame').attr('src', data.link);
+        $('#courseModal').css('display', 'block');
 
-        wrapper.prepend(badgeDiv);
-    }
+        document.querySelectorAll(".course-badge-top-left").forEach(el => el.remove());
 
+        const wrapper = document.querySelector("#courseModal .iframe-wrapper");
 
+        if (wrapper) {
+            wrapper.classList.remove("course-completed");
 
+            if (data.state === "completed") {
+                wrapper.classList.add("course-completed");
+            }
+        }
 
+        if (wrapper && data.state === "completed" && data.badgeIcon) {
+            const badgeDiv = document.createElement("div");
+            badgeDiv.className = "course-badge-top-left";
+            badgeDiv.innerHTML = `<img src="${data.badgeIcon}" alt="Course Badge">`;
+            wrapper.prepend(badgeDiv);
+        }
     });
+
     circlesWrapper.appendChild(circle);
 
     circleElements.push({
@@ -170,19 +164,6 @@ function updateBadgesPopup(badges) {
     });
 }
 
-/**
- * evalData structure from backend:
- * {
- *   pre: "completed" | "locked" | "in_progress",
- *   assignment: "completed" | "locked" | "in_progress",
- *   post: "completed" | "locked" | "in_progress",
- *   challenges: {
- *     status: "completed" | "locked" | "in_progress" | "no_challenges",
- *     completed: Number,
- *     total: Number
- *   }
- * }
- */
 function updateEvalStatus(evalData) {
     if (!evalData) return;
 
@@ -196,31 +177,30 @@ function updateEvalStatusInRoot(root, evalData) {
 
     const icons = window.EVAL_ICONS || {};
 
-function setSimpleEvalIcon(selector, statusKey) {
-    const li = root.querySelector(selector);
-    if (!li) return;
+    function setSimpleEvalIcon(selector, statusKey) {
+        const li = root.querySelector(selector);
+        if (!li) return;
 
-    const status = evalData[statusKey];
+        const status = evalData[statusKey];
 
-    li.querySelectorAll("img, .statusicon").forEach(el => el.remove());
+        li.querySelectorAll("img, .statusicon").forEach(el => el.remove());
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "statusicon";
+        const wrapper = document.createElement("div");
+        wrapper.className = "statusicon";
 
-    const img = document.createElement("img");
+        const img = document.createElement("img");
 
-    if (status === "completed") {
-        img.src = COMPLETED_ICON;
-        img.className = "statuscomplete";
-    } else {
-        img.src = icons[status];
-        img.className = "eval-icon";
+        if (status === "completed") {
+            img.src = icons.completed;
+            img.className = "statuscomplete";
+        } else {
+            img.src = icons[status];
+            img.className = "eval-icon";
+        }
+
+        wrapper.appendChild(img);
+        li.appendChild(wrapper);
     }
-
-    wrapper.appendChild(img);
-    li.appendChild(wrapper);
-}
-
 
     setSimpleEvalIcon(".eval-assignment", "assignment");
     setSimpleEvalIcon(".eval-pre", "pre");
@@ -235,7 +215,6 @@ function setSimpleEvalIcon(selector, statusKey) {
             labels[0].textContent = `${completed}/${total}`;
         }
 
-        // Clean ALL old content (important!)
         chLi.querySelectorAll("img, .statusicon, .status-text").forEach(el => el.remove());
 
         if (status === "no_challenges") {
@@ -250,7 +229,7 @@ function setSimpleEvalIcon(selector, statusKey) {
             const img = document.createElement("img");
 
             if (status === "completed") {
-                img.src = COMPLETED_ICON;
+                img.src = icons.completed;
                 img.className = "statuscomplete";
             } else {
                 img.src = icons[status];
@@ -279,7 +258,6 @@ function renderLeaderboardInContainer(container, leaderboard) {
         }
     });
 
-    // header: rank + XP + progress
     const rankSpan = container.querySelector(".lh-rank-title span");
     if (rankSpan && currentUserRank !== null) {
         rankSpan.textContent = "المرتبة " + currentUserRank;
@@ -301,10 +279,8 @@ function renderLeaderboardInContainer(container, leaderboard) {
         }
     }
 
-    // remove old rows
     container.querySelectorAll(".leaderboard-row").forEach(row => row.remove());
 
-    // add new rows
     leaderboard.forEach((u, index) => {
         let colorClass;
         if (index === 0)      colorClass = "gold";
@@ -353,22 +329,18 @@ async function refreshCourseStatus() {
         const raw = await response.text();
 
         if (raw.trim().startsWith("<")) {
-            console.error("HTML returned instead of JSON");
             return;
         }
 
         const data = JSON.parse(raw);
 
-        // 1) circles
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
             initializeScene();
-           document.dispatchEvent(new Event("circlesRebuilt"));
-
+            document.dispatchEvent(new Event("circlesRebuilt"));
         }
 
-        // 2) global program progress bar (outside popup)
         if (typeof data.progress_percent !== "undefined") {
             const barFillOut = document.querySelector(".lh-progress-fill-out");
             const barValOut  = document.querySelector(".lh-progress-val-out");
@@ -380,13 +352,11 @@ async function refreshCourseStatus() {
             }
         }
 
-        // 3) badges
         if (Array.isArray(data.badges)) {
             window.lastBadgesData = data.badges;
             updateBadgesPopup(data.badges);
         }
 
-        // 4) leaderboard
         if (Array.isArray(data.leaderboard)) {
             window.lastLeaderboardData = data.leaderboard;
             updateLeaderboardPopup(data.leaderboard);
@@ -395,11 +365,7 @@ async function refreshCourseStatus() {
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
-
-        console.log(" Program UI refreshed from AJAX");
-    } catch (err) {
-        console.error("refreshCourseStatus failed:", err);
-    }
+    } catch (err) {}
 }
 
 const leaderboardIcon = document.getElementById("leaderboard");
