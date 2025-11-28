@@ -53,20 +53,7 @@ header.global-header .header-logo a .logo {
  position: relative;
   direction: rtl;
 }
-.sticky-icons-wrapper {
-    position: relative;      
-    z-index: 50;
-    padding: 20px 0;
-    background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(31.25px);
-    -webkit-backdrop-filter: blur(31.25px);
-}
 
-.sticky-icons-wrapper.is-sticky {
-    position: fixed;
-    left: 0;
-    right: 0;
-}
 .purple-icon-row-mobile{
   display: none;
      font-family: 'IBM Plex Sans', sans-serif;

@@ -112,34 +112,34 @@
             bottom_right_background_image = background_image.image.url
 %>
 <div class="program-about">
-    <%
+   <%
+from achievements.models import UserBadge
 
-    def _course_completed_for(user, course_obj):
-        try:
-            return bool(UserBadge.get_my_course_badges(user, course_obj.course.course_key))
-        except:
-            return False
-
+def _course_completed_for(user, course_obj):
     try:
-        _total_courses = len(courses)
-    except Exception:
-        _total_courses = courses.count() if hasattr(courses, "count") else 0
+        return bool(UserBadge.get_my_course_badges(user, course_obj.course.course_key))
+    except:
+        return False
 
-    _completed_courses = 0
-    if _total_courses:
-        for _c in courses:
-            if _course_completed_for(request.user, _c):
-                _completed_courses += 1
+_total_courses = courses.count() if courses else 0
 
-    current_user_progress = int((_completed_courses / _total_courses) * 100) if _total_courses else 0
-    try:
-        # Fetch all badges earned by the current user, newest first
-        my_badges = UserBadge.objects.filter(user=request.user).order_by("-created")
-    except Exception:
-        # Fallback in case of any unexpected error
-        my_badges = []
 
-    %>
+_completed_courses = 0
+if _total_courses:
+    for _c in courses:
+        if _course_completed_for(request.user, _c):
+            _completed_courses += 1
+
+current_user_progress = int((_completed_courses / _total_courses) * 100) if _total_courses else 0
+
+
+try:
+    my_badges = UserBadge.get_my_program_badges(request.user, program.id).order_by("-created")
+except:
+    my_badges = []
+
+%>
+
 
 
     <div class="container">
@@ -196,7 +196,7 @@
     <!-- This will be the rightmost column (Column 1) -->
 
         % if user_is_enrolled:
-    <div class="sticky-icons-wrapper">
+    
         <div class="icons-container">
     
         
@@ -277,7 +277,7 @@
        
         
          </div>
-          </div>
+       </div>
           
          % endif
         % if user_is_enrolled:
@@ -287,7 +287,6 @@
                     <div class="lh-progress-fill-out" style="width: ${current_user_progress}% ; background-color:${program.css_single_color};"></div>
                 </div>
             </div>
-    </div>
             % endif
          <div class="courses-container" id="coursescontainer" >
          
@@ -840,17 +839,19 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 <%
 program_courses = program.program_courses.all().order_by("order")
 
-# Map badges by actual related courses
+my_program_badges = UserBadge.get_my_program_badges(request.user, program.id)
+
 badge_map = {}
-for b in my_badges:
-    courses_for_badge = b.badge.specific_courses.all()
-    for c in courses_for_badge:
+
+for b in my_program_badges:
+    for c in b.badge.specific_courses.all():
         badge_map[str(c.id)] = b
 
-# Build ordered list of badges (same order as program courses)
 ordered_badges = []
 for pc in program_courses:
-    ck = str(pc.course.course_key)
+    overview = CourseOverview.get_from_id(pc.course.course_key)
+    ck = str(overview.id)
+
     if ck in badge_map:
         ordered_badges.append(badge_map[ck])
 
@@ -858,26 +859,28 @@ total_courses = program_courses.count()
 earned_badges = len(ordered_badges)
 missing_badges = total_courses - earned_badges
 
-
 from achievements.models import Badge
-
 placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
 
-if placeholder_badge:
-    program_placeholder = placeholder_badge.placeholder_icon.url
-else:
-    program_placeholder = static.url('images/default-placeholder.png')
-
+program_placeholder = (
+    placeholder_badge.placeholder_icon.url
+    if placeholder_badge else static.url('images/default-placeholder.png')
+)
 %>
 
 
-<div class="sharati-intro-text">
+
+
+
+  <div id="my-badges-content" style="display: none;">
+
+  <div class="sharati-intro-text">
     كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
     <br>
     أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
 </div>
 
-<div class="badge-grid">
+<div class="badge-grid" >
 
     % for badge in ordered_badges:
         <div class="badge-item">
@@ -894,38 +897,6 @@ else:
     % endif %
 
 </div>
-
-
-
-  <div id="my-badges-content" style="display: none;">
-
-    <div class="sharati-intro-text">
-        كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
-    <br>
-        أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
-    </div>
-
-   <div class="badge-grid">
-
-   % for badge in ordered_badges:
-        <div class="badge-item" >
-            <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-        </div>
-    % endfor
-
-    % if missing_badges > 0:
-        % for i in range(missing_badges):
-            <div class="badge-item">
-                <img src="${program_placeholder}" alt="placeholder">
-
-            </div>
-        % endfor
-    % endif %
-
-</div>
-
-
-
 
     <p>هناك المزيد من الشارات بانتظارك!</p>
 </div>
@@ -1257,39 +1228,6 @@ document.body.addEventListener('click', function(e) {
 
 
     </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const sticky = document.querySelector(".sticky-icons-wrapper");
-    if (!sticky) return;
 
-    const placeholder = document.createElement("div");
-    placeholder.style.height = sticky.offsetHeight + "px";
-    placeholder.style.display = "none";
-    sticky.parentNode.insertBefore(placeholder, sticky);
-
-    const startOffset = sticky.offsetTop;
-
-    function updateSticky() {
-        const header = document.querySelector("header.global-header");
-        const headerHeight = header ? header.offsetHeight : 0;
-
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-
-        if (scrollY + headerHeight >= startOffset) {
-            sticky.classList.add("is-sticky");
-            sticky.style.top = "2px";
-            placeholder.style.display = "block";
-        } else {
-            sticky.classList.remove("is-sticky");
-            sticky.style.top = "0px";
-            placeholder.style.display = "none";
-        }
-    }
-
-    updateSticky();
-    window.addEventListener("scroll", updateSticky);
-    window.addEventListener("resize", updateSticky);
-});
-</script>
 
 </%block>
