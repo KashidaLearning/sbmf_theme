@@ -63,6 +63,16 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
         content: none !important;
     }
 
+
+    .global-header .hamburger-menu .line {
+        background: white !important;
+    }
+
+    header.global-header .hamburger-menu {
+      top: 30px !important;
+
+    }
+
   }
   
 header.global-header .main-header {
@@ -80,6 +90,10 @@ header.global-header .main-header {
   }
 
  
+header.global-header {
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
 
   .header-container {
     max-width: 1440px;
@@ -97,22 +111,13 @@ header.global-header .main-header {
     cursor: pointer;
   }
 
-  .hamburger-menu .line {
-    width: 25px;
-    height: 3px;
-    background: #333;
-    margin: 4px 0;
-    border-radius: 2px;
-  }
-
-
   .global-header .header-logo {
     margin: 0 !important;
   }
 
   header.global-header .nav-links .main .nav-tab a
   {
-    font-family:'Cairo', sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
   }
 
 </style>

@@ -14,7 +14,7 @@
     background-color: #110D7C;
     color: #ffffff;
     padding: 15px 20px;
-   font-family: 'Cairo', sans-serif !important;
+    font-family: "IBM Plex Sans" !important;
     direction: rtl;
     border: none !important;
   }
@@ -45,7 +45,7 @@
 
   .footer-title {
     font-size: 30px;
-    font-family: 'Cairo', sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
     font-weight: 700;
     color: #ffffff;
     white-space: nowrap;
@@ -68,7 +68,7 @@
     color: #ffffff;
     text-decoration: none;
     font-weight: 500;
-    font-family: 'Cairo', sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
   }
 
   .footer-top-links a:hover {
@@ -78,20 +78,21 @@
   /* Second row right links */
   .footer-policy-links {
     font-size: 14px;
+    display: flex;
   }
 
   .footer-policy-links span {
     font-size: 14px;
     font-weight: 400;
     color:#F09C59 !important;
-    font-family: 'Cairo', sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
   }
 
   .footer-policy-links a {
     color: #ffffff;
     text-decoration: none;
     margin: 0 10px;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: "IBM Plex Sans" !important;
   }
 
   .footer-policy-links a:hover {
@@ -143,9 +144,21 @@
       flex-wrap: wrap;
     }
 
+
+    .footer-top-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .footer-policy-links {
       text-align: center;
+      flex-direction: column-reverse;
+      gap: 20px;
+      margin-top: 20px;
     }
+
+    
   }
 </style>
 
@@ -178,9 +191,10 @@
         <!-- Right: Privacy / Terms -->
         <div class="footer-policy-links">
           <span>معلومات حقوق النشر تعود لمؤسسة سالم بن محفوظ</span>
+          <div class="tos">
           <a href="/privacy">سياسة الخصوصية</a>
           <a href="/tos">شروط الخدمة</a>
-           
+           </div>
         </div>
 
         <!-- Left: Social Icons -->
