@@ -30,9 +30,51 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
         display: flex !important;
         height: auto;
     }
+
+  }
+
+  @media (max-width: 991.98px) {
+  /* styles for mobile only */
+
+    header.global-header .nav-links .secondary{
+        display: none !important;
+    }
+
+#mobile-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Center the entire menu horizontally */
+  gap: 8px;                 /* Optional spacing between items */
+  padding: 16px;
+  top: unset !important;
+  left: unset !important;
+  background-color: #100E4A !important;
+  right: 0 !important;
+
 }
 
+    .mobile-menu .mobile-nav-link a {
+      background-color: unset !important;
+      width: unset !important;
+      color: white !important;
+    }
 
+        .mobile-menu .mobile-nav-link a::after {
+        content: none !important;
+    }
+
+
+    .global-header .hamburger-menu .line {
+        background: white !important;
+    }
+
+    header.global-header .hamburger-menu {
+      top: 30px !important;
+
+    }
+
+  }
+  
 header.global-header .main-header {
         display: flex !important;
         height: auto;
@@ -48,6 +90,10 @@ header.global-header .main-header {
   }
 
  
+header.global-header {
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
 
   .header-container {
     max-width: 1440px;
@@ -65,22 +111,13 @@ header.global-header .main-header {
     cursor: pointer;
   }
 
-  .hamburger-menu .line {
-    width: 25px;
-    height: 3px;
-    background: #333;
-    margin: 4px 0;
-    border-radius: 2px;
-  }
-
-
   .global-header .header-logo {
     margin: 0 !important;
   }
 
   header.global-header .nav-links .main .nav-tab a
   {
-    font-family:'Cairo', sans-serif !important;
+     font-family: "IBM Plex Sans" !important;
   }
 
 </style>

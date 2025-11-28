@@ -1,20 +1,12 @@
-<%page expression_filter="h"/>
-<%!
-  from django.urls import reverse
-  from django.utils.translation import gettext as _
-  from lms.djangoapps.branding.api import get_footer
-  from openedx.core.djangoapps.lang_pref.api import footer_language_selector_is_enabled
-%>
-<% footer = get_footer(is_secure=is_secure) %>
-<% icp_license_info = getattr(settings, 'ICP_LICENSE_INFO', {})%>
-<%namespace name='static' file='static_content.html'/>
+{# footer_django.html #}
+{% load static i18n %}
 
 <style>
   .wrapper-footer {
     background-color: #110D7C;
     color: #ffffff;
-    padding: 15px 20px;
-    font-family: "IBM Plex Sans" !important;
+    padding: 15px 0 20px;
+    font-family: 'Cairo', sans-serif !important;
     direction: rtl;
     border: none !important;
   }
@@ -27,7 +19,6 @@
     gap: 10px;
   }
 
-  /* ROW LAYOUTS */
   .footer-row {
     display: flex;
     justify-content: space-between;
@@ -35,7 +26,6 @@
     flex-wrap: wrap;
   }
 
-  /* Right section (brand + title) */
   .footer-brand {
     display: flex;
     align-items: center;
@@ -45,7 +35,7 @@
 
   .footer-title {
     font-size: 30px;
-     font-family: "IBM Plex Sans" !important;
+    font-family: 'Cairo', sans-serif !important;
     font-weight: 700;
     color: #ffffff;
     white-space: nowrap;
@@ -56,7 +46,6 @@
     height: auto;
   }
 
-  /* Left section (top links) */
   .footer-top-links {
     display: flex;
     justify-content: flex-start;
@@ -68,38 +57,35 @@
     color: #ffffff;
     text-decoration: none;
     font-weight: 500;
-     font-family: "IBM Plex Sans" !important;
+    font-family: 'Cairo', sans-serif !important;
   }
 
   .footer-top-links a:hover {
     text-decoration: underline;
   }
 
-  /* Second row right links */
   .footer-policy-links {
     font-size: 14px;
-    display: flex;
   }
 
   .footer-policy-links span {
     font-size: 14px;
     font-weight: 400;
     color:#F09C59 !important;
-     font-family: "IBM Plex Sans" !important;
+    font-family: 'Cairo', sans-serif !important;
   }
 
   .footer-policy-links a {
     color: #ffffff;
     text-decoration: none;
     margin: 0 10px;
-    font-family: "IBM Plex Sans" !important;
+    font-family: 'Cairo', sans-serif !important;
   }
 
   .footer-policy-links a:hover {
     text-decoration: underline;
   }
 
-  /* Social icons */
   .social-icons ul {
     list-style: none;
     display: flex;
@@ -124,9 +110,7 @@
     filter: brightness(0);
   }
 
-
-  /* Responsive */
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     .footer-row {
       flex-direction: column;
       gap: 20px;
@@ -135,7 +119,6 @@
 
     .footer-brand {
       justify-content: center;
-      flex-direction: column;
     }
 
     .footer-top-links,
@@ -144,41 +127,23 @@
       flex-wrap: wrap;
     }
 
-
-    .footer-top-links {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
     .footer-policy-links {
       text-align: center;
-      flex-direction: column-reverse;
-      gap: 20px;
-      margin-top: 20px;
     }
-
-    
   }
 </style>
 
 <div class="wrapper wrapper-footer">
-  <footer
-      % if bidi:
-      dir=${bidi}
-      % endif
-  >
+  <footer dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr' }}">
     <div class="footer-container">
 
-      <!-- 🔹 First Row -->
+      {# 🔹 First Row #}
       <div class="footer-row">
-        <!-- Right: Title + Logo -->
         <div class="footer-brand">
           <div class="footer-title">مهارات المستقبل</div>
-          <img src="${static.url('images/sbmf-logo.png')}" alt="Salem Bin Mahfouz Foundation Logo">
+          <img src="{% static 'images/sbmf-logo.png' %}" alt="Salem Bin Mahfouz Foundation Logo">
         </div>
 
-        <!-- Left: Top Links -->
         <div class="footer-top-links">
           <a href="#">الأسئلة الشائعة</a>
           <a href="#">تواصل معنا</a>
@@ -186,42 +151,27 @@
         </div>
       </div>
 
-      <!-- 🔹 Second Row -->
+      {# 🔹 Second Row #}
       <div class="footer-row">
-        <!-- Right: Privacy / Terms -->
         <div class="footer-policy-links">
           <span>معلومات حقوق النشر تعود لمؤسسة سالم بن محفوظ</span>
-          <div class="tos">
           <a href="/privacy">سياسة الخصوصية</a>
           <a href="/tos">شروط الخدمة</a>
-           </div>
         </div>
 
-        <!-- Left: Social Icons -->
         <div class="social-icons">
           <ul>
-            <li><a href="#"><img src="${static.url('images/facebook.png')}" alt="Facebook"></a></li>
-            <li><a href="#"><img src="${static.url('images/x.png')}" alt="X"></a></li>
-            <li><a href="#"><img src="${static.url('images/instagram.png')}" alt="Instagram"></a></li>
-            <li><a href="#"><img src="${static.url('images/youtube.png')}" alt="YouTube"></a></li>
-            <li><a href="#"><img src="${static.url('images/linkedin.png')}" alt="LinkedIn"></a></li>
-            <li><a href="#"><img src="${static.url('images/tiktok.png')}" alt="TikTok"></a></li>
-            <li><a href="#"><img src="${static.url('images/snapchat.png')}" alt="Snapchat"></a></li>
+            <li><a href="#"><img src="{% static 'images/facebook.png' %}" alt="Facebook"></a></li>
+            <li><a href="#"><img src="{% static 'images/x.png' %}" alt="X"></a></li>
+            <li><a href="#"><img src="{% static 'images/instagram.png' %}" alt="Instagram"></a></li>
+            <li><a href="#"><img src="{% static 'images/youtube.png' %}" alt="YouTube"></a></li>
+            <li><a href="#"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn"></a></li>
+            <li><a href="#"><img src="{% static 'images/tiktok.png' %}" alt="TikTok"></a></li>
+            <li><a href="#"><img src="{% static 'images/snapchat.png' %}" alt="Snapchat"></a></li>
           </ul>
         </div>
       </div>
+
     </div>
   </footer>
 </div>
-
-% if include_dependencies:
-  <%static:js group='base_vendor'/>
-  <%static:css group='style-vendor'/>
-  <%include file="widgets/segment-io.html" />
-  <%include file="widgets/segment-io-footer.html" />
-% endif
-% if footer_css_urls:
-  % for url in footer_css_urls:
-    <link rel="stylesheet" type="text/css" href="${url}"></link>
-  % endfor
-% endif

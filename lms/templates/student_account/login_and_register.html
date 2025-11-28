@@ -134,7 +134,7 @@ a.form-toggle:hover {
 }
 
 .form-fields {
-    margin-top: 30px;
+    margin-top: 65px;
 }
 
 .login-register .action-primary{
@@ -228,18 +228,7 @@ a.form-toggle:hover {
 }
 
 /* Add the caution icon */
-.submission-error::before {
-    content: "";
-    position: absolute;
-    right: 10px;          /* RTL: icon stays on the right */
-    top: 10px;
-    width: 24px;
-    height: 24px;
-    background-image: url("${static.url('images/login-error.png')}");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+
 
 .login-register .form-field .field-link>i {
     margin-left: 10px !important;
@@ -255,12 +244,40 @@ a.form-toggle:hover {
 
 .login-register .section-title {
     font-weight: 700 !important;
-    font-size: 32px !important;
+    font-size: 20px !important;
     line-height: 40px !important;
     color: #110D7C !important;
     margin-bottom: 10px !important;
     font-family: "IBM Plex Sans" !important;
-    text-align: right !important;
+}
+
+.login-register .section-title.lines::after, .financial-assistance-wrapper .financial-assistance-form .section-title.lines::after {
+    background: #110D7C !important;
+}
+
+.login-register .section-title.lines .text, 
+.financial-assistance-wrapper .financial-assistance-form .section-title.lines .text {
+    background: unset !important;
+    font-size: 18px !important;
+    color: #110D7C !important;
+    font-family: "IBM Plex Sans" !important;
+    top: 35px !important;
+}
+
+.login-register .custom-section-title.lines .text {
+    background: unset !important;
+    font-size: 18px !important;
+    color: #110D7C !important;
+    font-family: "IBM Plex Sans" !important;
+}
+
+.custom-section-title {
+ margin-top: 35px !important;
+}
+
+ 
+.login-register .login-provider.button-oa2-google-oauth2 {
+    margin-top: 40px;
 }
 
 /* =========================
@@ -320,6 +337,8 @@ a.form-toggle:hover {
 }
 
 }
+
+
 
     </style>
 </%block>
