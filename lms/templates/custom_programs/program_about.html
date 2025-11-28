@@ -833,25 +833,25 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     </div>
 
 </div>
-
-
-
 <%
+from achievements.models import Badge
+
 program_courses = program.program_courses.all().order_by("order")
 
 my_program_badges = UserBadge.get_my_program_badges(request.user, program.id)
 
 badge_map = {}
 
+# ربط كل badge بالكورس الصحيح
 for b in my_program_badges:
     for c in b.badge.specific_courses.all():
-        badge_map[str(c.id)] = b
+        badge_map[str(c.course_key)] = b
 
+# ترتيب البادجات حسب ترتيب الكورسات
 ordered_badges = []
-for pc in program_courses:
-    overview = CourseOverview.get_from_id(pc.course.course_key)
-    ck = str(overview.id)
 
+for pc in program_courses:
+    ck = str(pc.course.course_key)
     if ck in badge_map:
         ordered_badges.append(badge_map[ck])
 
@@ -859,7 +859,6 @@ total_courses = program_courses.count()
 earned_badges = len(ordered_badges)
 missing_badges = total_courses - earned_badges
 
-from achievements.models import Badge
 placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
 
 program_placeholder = (
@@ -867,8 +866,6 @@ program_placeholder = (
     if placeholder_badge else static.url('images/default-placeholder.png')
 )
 %>
-
-
 
 
 
@@ -983,9 +980,9 @@ program_placeholder = (
      
 </div>
 
-  <div class="course-sidebar">
+  <!-- <div class="course-sidebar">
             <div class="inner-wrapper">${HTML(program.addition_info)}</div>
-        </div>
+        </div> -->
 <%block name="js_extra">
 <script>
     window.STATE_ICONS = {
