@@ -143,16 +143,16 @@ function initializeScene() {
 }
 
 function updateBadgesPopup(badges) {
-    const wrapper = document.querySelector("#my-badges-content .badge-grid");
-    if (!wrapper) return;
-    wrapper.innerHTML = "";
-    badges.forEach(b => {
-        wrapper.innerHTML += `
-            <div class="badge-item">
-                <img src="${b.icon}" alt="">
-            </div>
-        `;
+    const items = document.querySelectorAll("#my-badges-content .badge-item img");
+    if (!items || !items.length) return;
+
+    badges.forEach((b, i) => {
+        if (!items[i]) return;
+        if (b.icon && b.icon !== "") {
+            items[i].src = b.icon;
+        }
     });
+
 }
 
 function updateEvalStatus(evalData) {
