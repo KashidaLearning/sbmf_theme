@@ -50,9 +50,7 @@
     backdrop-filter: blur(10px);
 }
 
-/* =========================================
-   LAYOUT 1 — NORMAL CIRCLES
-========================================= */
+
 .circle-item:not(.circle-item--special-layout) .circle-content {
     width: 185px;
     height: 185px;
@@ -363,8 +361,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-item:not(.circle-item--special-layout) .circle-content {
-      width: 179px !important;
-        height: 158px !important;
+      width: 160px !important;
+        height: 160px !important;
         padding: 4px !important;
         border-radius: 50% !important;
         flex-direction: column !important;
@@ -456,21 +454,20 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
   width: 38%;
 }
 
-
+.course-wrapper main {
+    padding: 47px !important;
 }
-.course-badge-top-left {
-    position: absolute;
-  top: -6px;
-  left: -19px;
-  z-index: 9999;
-  width: 200px;
-  height: 200px;
+.iframe-wrapper{
+    width: 98% !important;
+    height: 97% !important;
 }
-
-.course-badge-top-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}
+#courseModal .iframe-wrapper {
+    transition: all 0.35s ease;
 }
 
+#courseModal .iframe-wrapper.completed-frame {
+    border: 5px solid var(--program-main-color) !important;
+    background: var(--MIDNIGHT, #100E4A) !important;
+  
+}
