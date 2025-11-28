@@ -2267,7 +2267,6 @@ width: 100%;}
      .lh-right .lh-avatar img {
     width: 50px !important;
     height: 50px !important;
-    padding: 5px 51px 4px 0px;
   }
 
     .lh-right .lh-rank-title {
@@ -2304,6 +2303,9 @@ display: none;
         gap: 10px;
         padding: 1px 1px;
   }
+  .eval-grid li{
+    padding-right: 0px;
+  }
 .rank-box {
   display: block;
   font-family: 'Cairo', sans-serif;
@@ -2311,10 +2313,39 @@ display: none;
   text-align: right;
   opacity: 0.3;
   color: #000 !important;
-  font-size: 48px;
+  font-size: 40px;
   text-shadow: 2px -2px 0px rgb(255 255 255 / 36%), 0px -1px 0px rgb(0 0 0) !important;
 }
 .icon img {
   max-width: 48px;
 }
+.leaderboard-row{
+  gap:11px;
+}
+.leaderboard {
+  max-width: 100%;}
+#popup-dynamic-content li {
+  padding-right: 0px;
+}
+}
+@media (max-width: 768px) {
+    #popup-dynamic-content .download-btn {
+        width: 100% !important;      
+        height: auto !important;     
+        padding: 16px 25px !important;
+        font-size: 18px !important;
+        border-radius: 14px !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #popup-dynamic-content .download-btn {
+        padding: 14px 20px !important;
+        font-size: 16px !important;
+        border-radius: 12px !important;
+    }
 }
