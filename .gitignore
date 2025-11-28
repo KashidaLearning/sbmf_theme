@@ -48,3 +48,5 @@ Thumbs.db
 *.mov
 *.wmv
 
+
+lms/static/images/*.Zone.Identifier
