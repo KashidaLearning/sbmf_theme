@@ -840,12 +840,14 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 <%
 program_courses = program.program_courses.all().order_by("order")
 
-# Map badges by course key
+# Map badges by actual related courses
 badge_map = {}
 for b in my_badges:
-    badge_map[str(b.course_key)] = b
+    courses_for_badge = b.badge.specific_courses.all()
+    for c in courses_for_badge:
+        badge_map[str(c.id)] = b
 
-# Build ordered badges
+# Build ordered list of badges (same order as program courses)
 ordered_badges = []
 for pc in program_courses:
     ck = str(pc.course.course_key)
@@ -856,12 +858,18 @@ total_courses = program_courses.count()
 earned_badges = len(ordered_badges)
 missing_badges = total_courses - earned_badges
 
-# program-specific placeholder
-try:
-    program_placeholder = program.placeholder_icon.url
-except:
+
+from achievements.models import Badge
+
+placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
+
+if placeholder_badge:
+    program_placeholder = placeholder_badge.placeholder_icon.url
+else:
     program_placeholder = static.url('images/default-placeholder.png')
+
 %>
+
 
 <div class="sharati-intro-text">
     كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
