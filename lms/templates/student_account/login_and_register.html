@@ -287,8 +287,9 @@ a.form-toggle:hover {
 @media (max-width: 1200px) {
 
     .two-column-container {
-        flex-direction: column-reverse; /* puts image ABOVE the form */
+        flex-direction: column;
         align-items: center;
+        gap: 40px !important;
     }
 
     #login-and-registration-container {
@@ -333,11 +334,30 @@ a.form-toggle:hover {
 }
 
 #login-and-registration-container {
-    width: 70%;
+    width: 85%;
+}
+
+.toggle-form a {
+    font-size: 14px;
+}
+
+.login-register .form-field label {
+    font-size: 14px !important;
+}
+
+.login-register .form-wrapper{
+    padding: unset;
+}
+
+.login-register {
+    padding: 20px;
+}
+
+.login-register {
+    border-radius: 20px;
 }
 
 }
-
 
 
     </style>

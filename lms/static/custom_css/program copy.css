@@ -6,7 +6,7 @@
     --radius: 22px;
 }
 body{
-    font-family: 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
 }
 header.global-header {
     background-color: #110D7C;
@@ -21,7 +21,7 @@ header.global-header .header-logo a .logo {
 /* end of 3 columns styles*/
 .program-about {
     margin: 0;
-    font-family: 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
     color: #fff;
     background: linear-gradient(169.12deg,
     #F0C4DB 0%,
@@ -36,7 +36,7 @@ header.global-header .header-logo a .logo {
 }
 
 .container {
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
     max-width: 1240px;
     margin: 0 auto;
     padding: 48px 20px 12px;
@@ -47,14 +47,14 @@ header.global-header .header-logo a .logo {
 /* Horizontal container */
 .purple-icon-row {
   display: flex;
-   font-family: 'Cairo', sans-serif;
+   font-family: 'IBM Plex Sans', sans-serif;
   justify-content: center;
   align-items: flex-start;
   gap: 16px;
   direction: rtl;
 }
 .purple-icon-row p {
-   font-family: 'Cairo', sans-serif;
+   font-family: 'IBM Plex Sans', sans-serif;
 
 }
 
@@ -64,7 +64,7 @@ header.global-header .header-logo a .logo {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-family: "Cairo", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -99,7 +99,7 @@ max-width: 50px;
 .icon-item p {
   margin-top: 12px;
   font-size: 16px;
-    font-family: 'Cairo', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
   font-weight: 500;
   color: #ffffff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
@@ -208,7 +208,7 @@ max-width: 50px;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: 'IBM Plex Sans' !important;
 }
    .title-leaderboard img {
     /* margin-left: 20px; */
@@ -225,7 +225,7 @@ max-width: 50px;
         color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: 'IBM Plex Sans' !important;
 }
 .title-badgescontent img{
       /* margin-left: 20px; */
@@ -241,7 +241,7 @@ max-width: 50px;
     color: white !important;
     margin: 0;
     font-size: 30px;
-    font-family: 'Cairo' !important;
+    font-family: 'IBM Plex Sans' !important;
 }
 .title-certificatecontent img{
       /* margin-left: 20px; */
@@ -312,7 +312,7 @@ hr {
 
 
 #certificate-content p{
- font-family: 'Cairo', sans-serif !important;
+ font-family: 'IBM Plex Sans', sans-serif !important;
 margin-bottom: 1em;
 text-align: right;
  color: #fff;
@@ -324,7 +324,7 @@ text-align: right;
 .row .cat-name {
     border-radius: 7px;
     padding: 7px 17px;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
     display: inline-block;
     vertical-align: middle;
     font-size: 17px;
@@ -367,7 +367,7 @@ span {
 .column h2 {
     margin-top: 0;
     color: #181471;
-   font-family: 'Cairo', sans-serif !important;
+   font-family: 'IBM Plex Sans', sans-serif !important;
     display: block;
     font-size: 2.5em;
     margin-block-start: 10px;
@@ -380,7 +380,7 @@ span {
 .column p {
     color: #181471;
     display: block;
-   font-family: 'Cairo', sans-serif !important;
+   font-family: 'IBM Plex Sans', sans-serif !important;
     margin-block-start: 1em;
     margin-block-end: 1em;
     margin-inline-start: 0px;
@@ -405,7 +405,7 @@ span {
 
 .column-middle {
     flex-basis: 80%;
-   font-family: 'Cairo', sans-serif;
+   font-family: 'IBM Plex Sans', sans-serif;
 
 }
 
@@ -675,14 +675,14 @@ span {
     box-shadow: 0 10px 18px rgba(20, 35, 136, 0.25);
     width: 83%;
     font-size: 15px;
-    font-family: 'Cairo';
+    font-family: 'IBM Plex Sans';
     margin-top: 10px;
 }
 
 .card .btn a{
     color: #242184;
     font-weight: normal;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
 
 
 }
@@ -755,7 +755,7 @@ span {
 .wide-cta .pill a{
     color: #242184;
     text-decoration: none;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
     font-size: 15px;
 
 }
@@ -828,7 +828,7 @@ span {
     font-size: 19px;
     line-height: 1.7;
     margin-top: 15px;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
 
 }
 
@@ -837,7 +837,7 @@ span {
     text-align: right;
     padding-right: 60px;
     font-size: 19px;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 #popup-dynamic-content ul {
@@ -887,7 +887,7 @@ span {
     font-size: 0.9em;
     color: white;
     margin: 0;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
 }
 
 
@@ -901,7 +901,7 @@ span {
     text-decoration: none;
     font-weight: bold;
     margin-top: 25px;
-    font-family: 'Cairo', sans-serif !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
     transition: background-color 0.2s ease;
 }
 
