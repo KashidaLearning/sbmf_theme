@@ -838,66 +838,50 @@ from achievements.models import Badge, UserBadge
 
 program_courses = program.program_courses.all().order_by("order")
 
-# Get all badges earned by the user
-user_badges = UserBadge.objects.filter(user=request.user).select_related("badge")
+user_badges = UserBadge.objects.filter(
+    user=request.user
+).select_related("badge")
 
-# Map: course_id → badge
-badge_by_courseid = {}
-
+badge_by_coursekey = {}
 for ub in user_badges:
-    # Some badges do NOT belong to a course (program badges)
-    course_id = getattr(ub.badge, "course_id", None)
-    if course_id:
-        badge_by_courseid[str(course_id)] = ub
-
-ordered_badges = []
-
-# Build ordered badge list following the program's courses
-for pc in program_courses:
-    course_id_str = str(pc.course.id)
-    if course_id_str in badge_by_courseid:
-        ordered_badges.append(badge_by_courseid[course_id_str])
-
-total_courses = program_courses.count()
-earned_badges = len(ordered_badges)
-missing_badges = total_courses - earned_badges
-
-# Get placeholder badge icon
-placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
-
-program_placeholder = (
-    placeholder_badge.placeholder_icon.url
-    if placeholder_badge
-    else static.url('images/default-placeholder.png')
-)
+    for c in ub.badge.specific_courses.all():
+        badge_by_coursekey[str(c.id)] = ub
 %>
 
+<div id="my-badges-content" style="display: none;">
 
-  <div id="my-badges-content" style="display: none;">
+    <div class="sharati-intro-text">
+        كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
+        <br>
+        أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
+    </div>
 
-  <div class="sharati-intro-text">
-    كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
-    <br>
-    أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
-</div>
+    <div class="badge-grid">
 
-<div class="badge-grid" >
+        % for pc in program_courses:
+            <%
+                course_key_str = str(pc.course.course_key)
+                user_badge = badge_by_coursekey.get(course_key_str)
 
-    % for badge in ordered_badges:
-        <div class="badge-item">
-            <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
-        </div>
-    % endfor
+                course_placeholder = Badge.objects.filter(
+                    specific_courses__id=pc.course.course_key,
+                    placeholder_icon__isnull=False
+                ).first()
+            %>
 
-    % if missing_badges > 0:
-        % for i in range(missing_badges):
             <div class="badge-item">
-                <img src="${program_placeholder}" alt="placeholder">
+                % if user_badge:
+                    <img src="${user_badge.badge.icon.url}">
+                % elif course_placeholder:
+                    <img src="${course_placeholder.placeholder_icon.url}">
+                % else:
+                    <div style="width:120px;height:120px;"></div>
+                % endif
             </div>
-        % endfor
-    % endif %
 
-</div>
+        % endfor
+
+    </div>
 
     <p>هناك المزيد من الشارات بانتظارك!</p>
 </div>
