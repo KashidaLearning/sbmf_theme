@@ -838,17 +838,55 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 
 <%
-    program_courses = program.program_courses.all().order_by("order")
-    total_courses = program_courses.count()
-    earned_badges = my_badges.count()
-    missing_badges = total_courses - earned_badges
-%>
-<%
+program_courses = program.program_courses.all().order_by("order")
+
+# Map badges by course key
+badge_map = {}
+for b in my_badges:
+    badge_map[str(b.course_key)] = b
+
+# Build ordered badges
+ordered_badges = []
+for pc in program_courses:
+    ck = str(pc.course.course_key)
+    if ck in badge_map:
+        ordered_badges.append(badge_map[ck])
+
+total_courses = program_courses.count()
+earned_badges = len(ordered_badges)
+missing_badges = total_courses - earned_badges
+
+# program-specific placeholder
 try:
     program_placeholder = program.placeholder_icon.url
 except:
-    program_placeholder = static.url('images/default-placeholder.png')  # fallback
+    program_placeholder = static.url('images/default-placeholder.png')
 %>
+
+<div class="sharati-intro-text">
+    كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
+    <br>
+    أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
+</div>
+
+<div class="badge-grid">
+
+    % for badge in ordered_badges:
+        <div class="badge-item">
+            <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
+        </div>
+    % endfor
+
+    % if missing_badges > 0:
+        % for i in range(missing_badges):
+            <div class="badge-item">
+                <img src="${program_placeholder}" alt="placeholder">
+            </div>
+        % endfor
+    % endif %
+
+</div>
+
 
 
   <div id="my-badges-content" style="display: none;">
@@ -861,7 +899,7 @@ except:
 
    <div class="badge-grid">
 
-    % for badge in my_badges:
+   % for badge in ordered_badges:
         <div class="badge-item" >
             <img src="${badge.badge.icon.url}" alt="${badge.badge.title}">
         </div>
