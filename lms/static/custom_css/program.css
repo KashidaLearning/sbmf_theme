@@ -53,6 +53,20 @@ header.global-header .header-logo a .logo {
  position: relative;
   direction: rtl;
 }
+.sticky-icons-wrapper {
+    position: relative;      
+    z-index: 50;
+    padding: 20px 0;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(31.25px);
+    -webkit-backdrop-filter: blur(31.25px);
+}
+
+.sticky-icons-wrapper.is-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+}
 .purple-icon-row-mobile{
   display: none;
      font-family: 'Cairo', sans-serif;
@@ -68,7 +82,7 @@ header.global-header .header-logo a .logo {
 }
 #yellowicon {
   position: absolute;
-  right: 0px;
+  right:40px;
 }
 /* Each item block */
 .icon-item {
@@ -499,14 +513,14 @@ text-align: right;
   flex-direction: row;
   max-width: 1240px;
   margin: 49px auto;
-  position: relative;
+  position: static;
 
 }
 
 /* === Purple icons column (center) === */
 .purple-icon-row {
  width: 100%;
-  flex: 0 0 100%;            /* المسافة بينهم */
+  flex: 0 0 160%;            
 }
 
 
