@@ -218,17 +218,15 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     transform: none;
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-@media (max-width: 600px) {
+
+@media (max-width: 700px) {
     .circle-item--special-layout .circle-content {
         width: 290px;
         height: 80px;
     }
     .circle-item--special-layout .circle-image-container {
-        width: 55px;
-        height: 55px;
+        width: 57px;
+        height: 191px;
     }
     .circle-item:not(.circle-item--special-layout) .circle-content {
         width: 90px;
@@ -350,7 +348,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
 
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
 
     .circle-item {
         position: absolute !important;
@@ -365,8 +363,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-item:not(.circle-item--special-layout) .circle-content {
-        width: 130px !important;
-        height: 130px !important;
+      width: 179px !important;
+        height: 158px !important;
         padding: 4px !important;
         border-radius: 50% !important;
         flex-direction: column !important;
@@ -378,7 +376,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-title {
-        font-size: 18px !important;
+        font-size: 25px !important;
     }
 
     .circle-description {
@@ -387,10 +385,10 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-item--special-layout .circle-content {
-        width: 260px !important;
-        height: 110px !important;
-        border-radius: 60px !important;
-        padding: 10px !important;
+      width: 335px !important;
+    height: 111px !important;
+    border-radius: 60px !important;
+    padding: 10px !important;
     }
 
     .circle-item--special-layout .circle-text-content {
@@ -399,8 +397,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-image {
-        width: 110px !important;
-        height: 110px !important;
+      width: 154px !important;
+    height: 185px !important;
     }
 
     .state-icon,
@@ -409,13 +407,10 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
         height: 40px !important;
     }
 
-    .state-icon img,
-    .state-icon2 img {
-       width: 100% !important;
-    }
+    
  .circle-item--active:not(.circle-item--special-layout) .circle-content {
-    width: 213px !important;
-    height: 82px !important;
+    width: 233px !important;
+    height: 111px !important;
     border-radius: 90px !important;
     flex-direction: row !important;
     justify-content: center !important;
@@ -425,13 +420,16 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     transform: scale(1.05) !important;
   
   }
-
+.circle-image-wrapper2 {
+  position: relative;
+  width: 52%;
+}
   /* ACTIVE image inside the capsule */
   .circle-item--active .circle-image {
-      width: 110px !important;
-      height: 110px !important;
-      object-fit: contain;
-      border-radius: 50%;
+      width: 170px !important;
+    height: 178px !important;
+    object-fit: contain;
+    border-radius: 50%;
   }
 
   .circle-item--active .circle-image-container2 {
@@ -453,6 +451,11 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
       width: 50px !important;
       height: 50px !important;
   }
+  .circle-image-wrapper {
+  position: relative;
+  width: 38%;
+}
+
 
 }
 .course-badge-top-left {

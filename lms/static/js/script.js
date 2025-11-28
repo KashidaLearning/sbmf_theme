@@ -16,15 +16,15 @@ const STATE_CONFIG = {
 };
 
 function getAmplitude() {
-    return window.innerWidth < 600 ? 60 : Math.min((window.innerWidth / 2) - 120, 100);
+    return window.innerWidth < 700 ? 60 : Math.min((window.innerWidth / 2) - 120, 100);
 }
 
 function getVerticalSpacing() {
-    return window.innerWidth < 600 ? 260 : CONFIG.verticalSpacing;
+    return window.innerWidth < 700 ? 260 : CONFIG.verticalSpacing;
 }
 
 function getPatternMultiplier(base) {
-    return window.innerWidth < 600 ? base / 2 : base;
+    return window.innerWidth < 700 ? base / 2 : base;
 }
 
 function createCircle(data, index) {
