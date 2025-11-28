@@ -834,39 +834,43 @@ for index, data in enumerate(sorted_leaderboard, start=1):
 
 </div>
 <%
-from achievements.models import Badge
+from achievements.models import Badge, UserBadge
 
 program_courses = program.program_courses.all().order_by("order")
 
-my_program_badges = UserBadge.get_my_program_badges(request.user, program.id)
+# Get all badges earned by the user
+user_badges = UserBadge.objects.filter(user=request.user).select_related("badge")
 
-badge_map = {}
+# Map: course_id → badge
+badge_by_courseid = {}
 
-# ربط كل badge بالكورس الصحيح
-for b in my_program_badges:
-    for c in b.badge.specific_courses.all():
-        badge_map[str(c.course_key)] = b
+for ub in user_badges:
+    # Some badges do NOT belong to a course (program badges)
+    course_id = getattr(ub.badge, "course_id", None)
+    if course_id:
+        badge_by_courseid[str(course_id)] = ub
 
-# ترتيب البادجات حسب ترتيب الكورسات
 ordered_badges = []
 
+# Build ordered badge list following the program's courses
 for pc in program_courses:
-    ck = str(pc.course.course_key)
-    if ck in badge_map:
-        ordered_badges.append(badge_map[ck])
+    course_id_str = str(pc.course.id)
+    if course_id_str in badge_by_courseid:
+        ordered_badges.append(badge_by_courseid[course_id_str])
 
 total_courses = program_courses.count()
 earned_badges = len(ordered_badges)
 missing_badges = total_courses - earned_badges
 
+# Get placeholder badge icon
 placeholder_badge = Badge.objects.filter(placeholder_icon__isnull=False).first()
 
 program_placeholder = (
     placeholder_badge.placeholder_icon.url
-    if placeholder_badge else static.url('images/default-placeholder.png')
+    if placeholder_badge
+    else static.url('images/default-placeholder.png')
 )
 %>
-
 
 
   <div id="my-badges-content" style="display: none;">
