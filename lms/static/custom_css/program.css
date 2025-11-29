@@ -2488,6 +2488,7 @@ text-transform: capitalize;
     max-width: 222px;
     top: 11%;
 }  
+    }
 
 .mobile {
     display: none !important;
@@ -2503,5 +2504,5 @@ text-transform: capitalize;
     html body .container {
         display: none !important;
     }
-}
+
     }
