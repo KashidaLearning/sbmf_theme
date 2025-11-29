@@ -2481,16 +2481,15 @@ text-transform: capitalize;
     margin: 0 auto;
 } 
     @media (max-width:768px){
-      .mobile .top_left_background_image {
+      .top_left_background_image .bg-img {
     position: absolute;
     left: -38px;
     width: 100%;
     max-width: 222px;
     top: 11%;
 }  
-    } 
 
-html body .mobile {
+.mobile {
     display: none !important;
 }
 
@@ -2505,3 +2504,4 @@ html body .mobile {
         display: none !important;
     }
 }
+    }
