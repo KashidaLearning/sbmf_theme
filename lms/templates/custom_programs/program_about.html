@@ -141,7 +141,64 @@ except:
 %>
 
 
+<div class="mobile">
+    <section class="hero">
+        <div class="row">
 
+            <div class="title">${program.name}</div>
+
+            <div class="column column-middle">
+
+                % if program.subject:
+                    <div class="cat-name" style="background-color:${program.css_single_color};">
+                        <img src="${static.url('images/cat-icon.png')}">
+                        <span>${program.subject.name}</span>
+                    </div>
+                % endif
+
+                <p>${program.short_description}</p>
+
+                % if not user_is_enrolled:
+                    <div class="enrollment-info">
+                        % if program.enrollment_start >  timezone.now():
+                            <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Not Started Yet")}</span>
+
+                        % elif program.enrollment_end <  timezone.now():
+                            <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Closed")}</span>
+
+                        % elif not program.self_enrollment:
+
+                            % if request.user.is_authenticated and ProgramEnrollmentRequest.get_active_request(program.id, request.user.id):
+                                <span class="btn btn-cta one-click-purchase-btn disabled">طلب التسجيل الخاص بك قيد المراجعة</span>
+                            % else:
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
+                                   class="btn btn-cta one-click-purchase-btn active">
+                                   طلب التسجيل في المسار
+                                </a>
+                            % endif
+
+                        % else:
+                            <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
+                               class="btn btn-cta one-click-purchase-btn active">
+                               ${_("التحق في الرحلة")}
+                            </a>
+                        % endif
+                    </div>
+                % endif
+
+            </div>
+
+            <div class="column column-right">
+                % if top_left_background_image:
+                    <div class="top_left_background_image">
+                        <img src="${top_left_background_image}" class="bg-img">
+                    </div>
+                % endif
+            </div>
+
+        </div>
+    </section>
+</div>
     <div class="container">
         <section class="hero">
             <div class="row">
