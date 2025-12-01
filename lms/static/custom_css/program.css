@@ -1630,8 +1630,8 @@ display: flex;
 ease;
 }
 .icon-circle-tab img {
-max-width:120px;
-width: 100%;}
+max-width: 115px;
+}
 .icon-item-tab p {
  margin-top: -12px;
   font-size: 16px;
