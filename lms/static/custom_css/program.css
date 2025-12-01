@@ -1095,19 +1095,6 @@ ease;
 }
 
 
-.close-button {
-    position: sticky !important;
-    top: 15px !important;
-    right: 20px !important;
-    left: unset !important;
-    font-size: 42px;
-    cursor: pointer;
-    color: white !important;
-    background: none !important;
-    border: none !important;
-    z-index: 99999 !important;
-    pointer-events: auto !important;
-}
 .close-button:hover,
 .close-button:focus {
     color: var(--accent);
@@ -1498,12 +1485,11 @@ div#certificate-status {
 
 
 button.close-button {
-right: -15px !important;
-  top: -9px !important;
+    right: 0px !important;
+    top: 6px !important;
     left: unset !important;
     color: white !important;
 }
-
 @media (max-width: 600px) {
 .d-flex .unit-navigation {
 display: flex !important;
@@ -2507,14 +2493,20 @@ text-transform: capitalize;
 }
 
 .close-button {
-    position: sticky !important;
+    position: absolute !important;
     display: block !important;
    right: -13px !important;
   top: -30px !important;
   left: unset !important;
-    margin-left: auto !important; /* THIS removes centering */
+    margin-left: auto !important; 
     z-index: 99999 !important;
     box-shadow: none !important;
+     font-size: 45px;
+    cursor: pointer;
+    color: white !important;
+    background: none !important;
+    border: none !important;
+    pointer-events: auto !important;
 }
 @media (max-width: 600px) {
     .popup-content {
