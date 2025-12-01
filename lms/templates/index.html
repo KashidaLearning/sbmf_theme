@@ -1,108 +1,83 @@
 <%page expression_filter="h"/>
 <%inherit file="main.html" />
 <%namespace name='static' file='static_content.html'/>
-
-<%block name="body">
-
-<%
-from django.utils.translation import gettext as _
-from django.urls import reverse
-from openedx.core.djangolib.markup import HTML, Text
-from django.contrib.auth.models import AnonymousUser
-from custom_programs.models import Program, ProgramEnrollment
-
-# Safely resolve user even if it's a SimpleLazyObject
-user = request.user if hasattr(request, "user") else AnonymousUser()
-if hasattr(user, "_wrapped"):
-    user = user._wrapped if user._wrapped is not None else AnonymousUser()
-
-def get_program_progress(program, user):
-    """Safely fetch program progress or return 0 for guests."""
-    if not getattr(user, "is_authenticated", False):
-        return 0
-    try:
-        enrollment = ProgramEnrollment.objects.filter(user_id=user.id, program=program).first()
-        if enrollment:
-            return getattr(enrollment, "progress", 0)
-    except Exception:
-        return 0
-    return 0
-
-programs = list(Program.objects.all()[:4])
+<%!
+    from django.urls import reverse
+    from custom_programs.models import Program, ProgramEnrollment
+    from django.utils.translation import gettext as _
 %>
 
-<main id="main" aria-label="Content" tabindex="-1">
-
-  <section class="programs-section" dir="rtl">
+ 
+<%
+    user = request.user
+    programs = list(Program.objects.all()[:100])
+%>
+ 
+<main id="main" aria-label="Content" tabindex="-1" dir="rtl">
+  <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
-
+ 
     <div class="programs-grid">
       % for index, program in enumerate(programs):
-        <% progress = get_program_progress(program, user) %>
-        <a href="${reverse('custom_programs:program_about', args=[program.id])}" class="program-card">
-
+        <div  class="program-card">
           <div class="spline-bg">
            % if program.spline_url:
-          <iframe src="${program.spline_url}" frameborder="0"></iframe>
+          <a href="${reverse('custom_programs:program_about', args=[program.id])}" target="_blank" class="external-link">
+
+          <iframe src="${program.spline_url}" frameborder="0" >
+
+         
+          </iframe>
+          
+           </a>
            % endif
-
-            <div class="progress-badge">
-               % if program.age_range:
+           <!--
+            <div class="progress-badge" >
+              % if program.age_range:
                   ${program.age_range}
-               % endif  
+              % endif  
             </div>
-
+            -->
             <div class="program-info">
               <h3 class="program-title">${program.name}</h3>
-              <div class="program-subject">
-                <img src="${static.url('images/Frame.png')}" alt="subject icon">
-                ${program.subject if hasattr(program, 'subject') else 'المهارة'}
+              <div class="program-subject" >
+               <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
               </div>
             </div>
           </div>
-        </a>
+        </div>
       % endfor
     </div>
   </section>
-
 </main>
 
-<%block name="js_extra">
-  <script type="text/javascript">
-    $(window).on('load', function() {
-      if (getParameterByName('next')) {
-        $('#login').trigger("click");
-      }
-    });
-  </script>
-</%block>
-
 <style>
-/* === Kashida Programs Section Styling === */
-
+  
 .program-subject img {
-  margin-left: 12px;
-  width: 24px;
-  height: 24px;
-  margin-top: -9px;
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
 }
-
+ 
 .programs-section {
-  background: linear-gradient(to bottom, #1A0E32 0%, #3A2F82 40%, #6C52B9 100%);
+  background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);  
   text-align: center;
   padding: 80px 0 120px;
   overflow-x: hidden;
 }
-
+ 
+ 
 .section-title {
-  color: #FFFFFF;
-  font-size: 64px;
-  font-weight: 800;
-  font-family: 'IBM Plex Sans', sans-serif !important;
-  margin-bottom: 70px;
-  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    font-size: 64px;
+    font-weight: 800;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    margin-bottom: 70px;
+    text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
 }
-
+ 
+ 
 .programs-grid {
   display: flex;
   flex-wrap: wrap;
@@ -111,7 +86,8 @@ programs = list(Program.objects.all()[:4])
   max-width: 1300px;
   margin: 0 auto;
 }
-
+ 
+ 
 .program-card {
   width: 420px;
   height: 560px;
@@ -119,97 +95,95 @@ programs = list(Program.objects.all()[:4])
   border-radius: 26px;
   overflow: hidden;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 15px 45px rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+ 
 }
+ 
 
-.program-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(255,203,5,0.4);
-}
-
+ 
 .spline-bg {
   position: relative;
   width: 100%;
   height: 100%;
 }
-
+ 
 .spline-bg iframe {
   width: 100%;
   height: 100%;
   border: none;
   object-fit: cover;
 }
-
+ 
+ 
 .progress-badge {
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #fff;
-  color: #110D7C;
-  font-size: 15px;
-  font-weight: 800;
-  padding: 5px 20px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  min-width: 75px;
-  padding-top: 12px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #110D7C;
+    font-size: 15px;
+    font-weight: 800;
+    padding: 5px 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    min-width: 75px;
+    padding-top: 12px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: none;
 }
-
+ 
+ 
+ 
+ 
 .program-info {
-  position: absolute;
-  bottom: 25px;
-  width: 100%;
-  text-align: right;
-  padding-right: 10px;
-  font-family: 'IBM Plex Sans', sans-serif !important;
-  z-index: 10;
+    position: absolute;
+    bottom: 25px;
+    width: 100%;
+    text-align: right;
+    padding-right: 10px;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    z-index: 10;
+     display: none;
 }
-
 .program-title {
   color: #fff;
-  font-size: 46px;
-  font-weight: bold;
-  padding-left: 170px;
-  margin-bottom: 17px;
-  font-family: 'IBM Plex Sans', sans-serif !important;
-}
+    font-size: 46px;
+    font-weight: bold;
+    padding-left: 170px;
+    margin-bottom: 17px;
+    align-content: right;
+    font-family: 'IBM Plex Sans', sans-serif !important;
 
+}
+ 
+  
 .program-subject {
-  display: inline-block;
-  background: #292589;
-  border-radius: 10px;
-  padding: 10px 40px 12px 50px;
-  margin-bottom: -6px;
-  padding-right: 25px;
-  color: #fff;
-  font-size: 16px;
-  font-family: 'IBM Plex Sans', sans-serif !important;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 40px 12px 50px;
+    margin-bottom: -6px;
+    padding-right: 25px;
+    color:  #110D7C;;
+    font-size: 16px;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    display: none;
 }
+  
 
-.program-subject:hover {
-  background: #3b36a5;
-}
-
-header.global-header {
-  background-color: #110D7C !important;
-}
+ 
+ 
 
 .wrapper.wrapper-footer {
   background-color: #110D7C !important;
 }
-
+ 
+ 
 @media (max-width: 1200px) {
   .program-card {
     width: 45%;
   }
 }
-
+ 
 @media (max-width: 768px) {
   .program-card {
     width: 90%;
@@ -220,17 +194,15 @@ header.global-header {
   }
   .program-title {
     font-size: 22px;
+    
   }
 }
-
+ 
 header.global-header .header-logo a .logo {
   height: 42px;
 }
-
 div#content {
-  padding: 0 !important;
-  margin: 0 !important;
+    padding: 0px !important;
+    margin: 0px !important;
 }
 </style>
-
-</%block>
