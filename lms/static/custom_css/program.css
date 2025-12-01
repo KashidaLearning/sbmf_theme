@@ -1131,7 +1131,7 @@ ease;
 /* Responsive adjustments for popup */
 @media (max-width: 600px) {
     .popup-content {
-        padding: 20px;
+        padding: 18px 0px;
         border-radius: 15px;
     }
 
@@ -1906,6 +1906,9 @@ max-width: 90px;
     top: -63px;
     width: 395px;
 }
+.mobilex{
+  display: none !important;
+}
 
 @media (max-width: 992px) {
   .hero {
@@ -2023,7 +2026,7 @@ max-width: 90px;
     max-width: 100%;
     height: auto;
     max-height: 85vh;
-    padding: 18px 14px 22px;
+    padding: 18px 0px;
   }
 
   #popup-dynamic-content {
@@ -2072,6 +2075,7 @@ max-width: 90px;
 
   #control-blur-wrapper {
     padding: 18px 14px;
+    width: 92%;
   }
 
   .control-section {
@@ -2134,6 +2138,7 @@ max-width: 90px;
     font-size: 17px;
     margin-bottom: 20px;
   }
+
 }
 
 
@@ -2168,12 +2173,20 @@ max-width: 90px;
     top: 0%;
     right: -10%;
   }
+ .mobilex{
+    display: initial !important;
+  }
+  .bigscreenx{
+    display: none !important;
+  }
 }
 @media (max-width: 992px) {
   #popup-dynamic-content .badge-grid {
     grid-template-columns: repeat(3, auto);
     gap: 10px;
   }
+ 
+
 }
 
 @media (max-width: 600px) {
@@ -2275,7 +2288,6 @@ display: none;
   }
 .rank-box {
   display: block;
-  font-family: 'IBM Plex Sans', sans-serif;
   justify-content: center;
   text-align: right;
   opacity: 0.3;
@@ -2290,6 +2302,7 @@ display: none;
   gap:11px;
   padding-bottom: 15px;
   width: 100%;
+  max-width: 92%;
 
 }
 .leaderboard {
@@ -2493,8 +2506,8 @@ text-transform: capitalize;
 }
 
 .close-button {
-    position: absolute !important;
-    display: block !important;
+    position: absolute ;
+    display: block;
    right: -13px !important;
   top: -30px !important;
   left: unset !important;
