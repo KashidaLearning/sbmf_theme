@@ -249,7 +249,10 @@ a.go-to-journeys {
   padding:7px 20px;
  }
  .course-row__status{
-  left:25px;
+  left:-12px;
+ }
+ .course-row__title {
+  font-size: 16px;
  }
 
   .program-card__title {
@@ -258,4 +261,11 @@ a.go-to-journeys {
     margin-bottom: 12px;
 
   }
+  .card-container{
+    padding: 20px 0px;
+  }
+  .course-row{
+    width: 92%;
+  }
+  
 }
