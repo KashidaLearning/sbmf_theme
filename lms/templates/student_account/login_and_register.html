@@ -84,11 +84,13 @@
 
         .login-img-1 {
             z-index: 1;
+            width: 60%;
         }
 
         .login-img-2 {
-            margin-top: -200px; 
+            margin-top: -130px; 
             z-index: 2;
+            width: 60%;
         }
 
         .login-register {
@@ -127,7 +129,8 @@
     color: #110D7C
 }
 
-a.form-toggle:hover {
+a.form-toggle:hover,
+a.form-toggle.active {
     border-bottom: 3px solid #110D7C;
     padding-bottom: 11px;
     color: #110D7C !important;
@@ -355,6 +358,10 @@ a.form-toggle:hover {
 
 .login-register {
     border-radius: 20px;
+}
+
+.image-column-container {
+    display: flex;
 }
 
 }
