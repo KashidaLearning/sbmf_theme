@@ -419,9 +419,9 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
         height: auto !important;
     }
 
-    .circle-item:not(.circle-item--special-layout) .circle-content {
-      width: 160px !important;
-        height: 160px !important;
+    .circle-item:not(.circle-item--special-layout) .circle-content, .circle-item--special-layout .circle-content{
+      width: 155px !important;
+        height: 155px !important;
         padding: 4px !important;
         border-radius: 50% !important;
         flex-direction: column !important;
@@ -433,7 +433,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-title {
-        font-size: 25px !important;
+        font-size: 18px !important;
     }
 
     .circle-description {
@@ -442,7 +442,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-item--special-layout .circle-content {
-      width: 335px !important;
+      width: 250px !important;
     height: 111px !important;
     border-radius: 60px !important;
     padding: 10px !important;
@@ -454,8 +454,8 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-image {
-      width: 154px !important;
-    height: 185px !important;
+      width: 160px !important;
+  
     }
 
     .state-icon,
@@ -483,8 +483,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 }
   /* ACTIVE image inside the capsule */
   .circle-item--active .circle-image {
-      width: 170px !important;
-    height: 178px !important;
+      width: 160px !important;
     object-fit: contain;
     border-radius: 50%;
   }
