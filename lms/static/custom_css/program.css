@@ -2522,3 +2522,15 @@ text-transform: capitalize;
         padding-right: 0px !important;
     }
 }
+
+@media (max-width: 1300px) {
+    .controller-header-img {
+        width: 350px;
+      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+      display: block;
+      left: 60px;
+      top: -44%;
+      pointer-events: none;
+      position: absolute;
+    }
+}
