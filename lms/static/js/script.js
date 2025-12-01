@@ -259,12 +259,12 @@ function renderLeaderboardInContainer(container, leaderboard) {
         xpBold.textContent = "XP " + currentUserXp;
     }
 
-    const headerProgVal  = container.querySelector(".lh-progress-val");
+   // const headerProgVal  = container.querySelector(".lh-progress-val");
     const headerProgFill = container.querySelector(".lh-progress-fill");
     if (currentUserRank !== null) {
-        if (headerProgVal) {
+       /*  if (headerProgVal) {
             headerProgVal.textContent = currentUserProgress + "%";
-        }
+        } */
         if (headerProgFill) {
             headerProgFill.style.width = currentUserProgress + "%";
         }
