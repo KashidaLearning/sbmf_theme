@@ -2152,7 +2152,7 @@ max-width: 90px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .bottom_left_background_image,
   .bottom_right_background_image {
     transform: scale(0.6);
