@@ -1096,26 +1096,18 @@ ease;
 
 
 .close-button {
-    position: absolute;
-    top: 35px;
-    left: 30px;
+    position: sticky !important;
+    top: 15px !important;
+    right: 20px !important;
+    left: unset !important;
     font-size: 42px;
     cursor: pointer;
-    color: #000;
-    background: none;
-    border: none;
-    line-height: 1;
-    padding: 0;
-    outline: none;
-    transition: color 0.2s ease, transform 0.2s ease;
+    color: white !important;
+    background: none !important;
     border: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    position: absolute;
     z-index: 99999 !important;
     pointer-events: auto !important;
 }
-
 .close-button:hover,
 .close-button:focus {
     color: var(--accent);
@@ -1165,7 +1157,7 @@ ease;
     }
 
     .close-button {
-        font-size: 30px;
+        font-size:45px;
         top: 10px;
         right: 15px;
     }
@@ -1506,8 +1498,8 @@ div#certificate-status {
 
 
 button.close-button {
-right: 30px !important;
-    top: 15px !important;
+right: -15px !important;
+  top: -9px !important;
     left: unset !important;
     color: white !important;
 }
@@ -1848,11 +1840,8 @@ width: 100%;}
 .sharati-intro-text {
       color: #FFF;
     text-align: right;
-    font-feature-settings: 'liga' off, 'clig' off;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 25px;
+    font-size: 18px;
     font-style: normal;
-    font-weight: 700;
     line-height: 24px;
     /* width: 445px; */
     /* padding-right: 300px; */
@@ -2093,9 +2082,6 @@ width: 100%;}
 
   .controller-header-img {
     width: 230px;
-    margin: -40px auto 10px !important;
-    padding-right: 0;
-    display: block;
   }
 
   #control-blur-wrapper {
@@ -2105,7 +2091,7 @@ width: 100%;}
   .control-section {
     flex-direction: column-reverse;
     align-items: center;
-    gap: 18px;
+    gap: 0px;
     padding: 0 10px;
     text-align: center;
   }
@@ -2159,7 +2145,7 @@ width: 100%;}
   .sharati-intro-text {
     width: 100%;
     padding-right: 0;
-    font-size: 16px;
+    font-size: 17px;
     margin-bottom: 20px;
   }
 }
@@ -2515,3 +2501,24 @@ text-transform: capitalize;
     }
 
     }
+.popup-content {
+ padding-top: 22px !important;
+  padding-right: 30px !important;
+}
+
+.close-button {
+    position: sticky !important;
+    display: block !important;
+   right: -13px !important;
+  top: -30px !important;
+  left: unset !important;
+    margin-left: auto !important; /* THIS removes centering */
+    z-index: 99999 !important;
+    box-shadow: none !important;
+}
+@media (max-width: 600px) {
+    .popup-content {
+        padding-top: 0px !important;
+        padding-right: 0px !important;
+    }
+}
