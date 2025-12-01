@@ -1,27 +1,207 @@
 <%page expression_filter="h"/>
-<%inherit file="main.html" />
-<%namespace name='static' file='static_content.html'/>
-
 <%!
-from django.utils.translation import gettext as _
-from django.urls import reverse
-from openedx.core.djangolib.markup import HTML, Text
+    from django.urls import reverse
+    from custom_programs.models import Program, ProgramEnrollment
+    from django.utils.translation import gettext as _
 %>
+<%inherit file="../main.html" />
+<%namespace name='static' file='../static_content.html'/>
+ 
+<%
+    user = request.user
+    programs = list(Program.objects.all()[:100])
+%>
+ 
+<main id="main" aria-label="Content" tabindex="-1" dir="rtl">
+  <section class="programs-section">
+    <h1 class="section-title">المغامرات في البرنامج</h1>
+ 
+    <div class="programs-grid">
+      % for index, program in enumerate(programs):
+        <div  class="program-card">
+          <div class="spline-bg">
+           % if program.spline_url:
+          <a href="${reverse('custom_programs:program_about', args=[program.id])}" target="_blank" class="external-link">
 
-<%block name="content">
-  <main id="main" aria-label="Content" tabindex="-1">
-    <section class="home">
-     <%include file="courseware/courses.html" />
-    </section>
-  </main>
-</%block>
+          <iframe src="${program.spline_url}" frameborder="0" >
 
-<%block name="js_extra">
-  <script type="text/javascript">
-    $(window).on('load', function() {
-      if (getParameterByName('next')) {
-        $('#login').trigger("click");
-      }
-    });
-  </script>
-</%block>
+         
+          </iframe>
+          
+           </a>
+           % endif
+           <!--
+            <div class="progress-badge" >
+              % if program.age_range:
+                  ${program.age_range}
+              % endif  
+            </div>
+            -->
+            <div class="program-info">
+              <h3 class="program-title">${program.name}</h3>
+              <div class="program-subject" >
+               <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
+              </div>
+            </div>
+          </div>
+        </div>
+      % endfor
+    </div>
+  </section>
+</main>
+
+<style>
+  
+.program-subject img {
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
+}
+ 
+.programs-section {
+  background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);  
+  text-align: center;
+  padding: 80px 0 120px;
+  overflow-x: hidden;
+}
+ 
+ 
+.section-title {
+    color: #FFFFFF;
+    font-size: 64px;
+    font-weight: 800;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    margin-bottom: 70px;
+    text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+}
+ 
+ 
+.programs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+ 
+ 
+.program-card {
+  width: 420px;
+  height: 560px;
+  position: relative;
+  border-radius: 26px;
+  overflow: hidden;
+  text-decoration: none;
+ 
+}
+ 
+
+ 
+.spline-bg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+ 
+.spline-bg iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+}
+ 
+ 
+.progress-badge {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #110D7C;
+    font-size: 15px;
+    font-weight: 800;
+    padding: 5px 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    min-width: 75px;
+    padding-top: 12px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    display: none;
+}
+ 
+ 
+ 
+ 
+.program-info {
+    position: absolute;
+    bottom: 25px;
+    width: 100%;
+    text-align: right;
+    padding-right: 10px;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    z-index: 10;
+     display: none;
+}
+.program-title {
+  color: #fff;
+    font-size: 46px;
+    font-weight: bold;
+    padding-left: 170px;
+    margin-bottom: 17px;
+    align-content: right;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+
+}
+ 
+  
+.program-subject {
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 40px 12px 50px;
+    margin-bottom: -6px;
+    padding-right: 25px;
+    color:  #110D7C;;
+    font-size: 16px;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    display: none;
+}
+  
+
+ 
+ 
+
+.wrapper.wrapper-footer {
+  background-color: #110D7C !important;
+}
+ 
+ 
+@media (max-width: 1200px) {
+  .program-card {
+    width: 45%;
+  }
+}
+ 
+@media (max-width: 768px) {
+  .program-card {
+    width: 90%;
+    height: 480px;
+  }
+  .section-title {
+    font-size: 36px;
+  }
+  .program-title {
+    font-size: 22px;
+    
+  }
+}
+ 
+header.global-header .header-logo a .logo {
+  height: 42px;
+}
+div#content {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+</style>
