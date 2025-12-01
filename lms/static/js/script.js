@@ -41,7 +41,7 @@ function createCircle(data, index) {
         circle.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon state-icon--${state}">
-                    <img width="60" src="${iconToUse}">
+                    <img width="100%" src="${iconToUse}">
                 </div>
                 <div class="circle-text-content">
                     <div class="circle-title">${data.title}</div>
@@ -57,7 +57,7 @@ function createCircle(data, index) {
         circle.innerHTML = `
             <div class="circle-content">
                 <div class="state-icon2 state-icon--${state}">
-                    <img width="60" src="${iconToUse}">
+                    <img width="100%" src="${iconToUse}">
                 </div>
                 <div class="circle-image-wrapper2">
                     <div class="circle-image-container2">

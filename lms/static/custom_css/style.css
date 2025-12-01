@@ -281,10 +281,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
         width: 290px;
         height: 80px;
     }
-    .circle-item--special-layout .circle-image-container {
-        width: 57px;
-        height: 191px;
-    }
+   
     .circle-item:not(.circle-item--special-layout) .circle-content {
         width: 90px;
         height: 90px;
@@ -419,12 +416,13 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
         height: auto !important;
     }
 
-    .circle-item:not(.circle-item--special-layout) .circle-content, .circle-item--special-layout .circle-content{
+    .circle-item:not(.circle-item--special-layout) .circle-content{
       width: 155px !important;
         height: 155px !important;
         padding: 4px !important;
         border-radius: 50% !important;
         flex-direction: column !important;
+        
     }
 
     .circle-text-block2 {
@@ -442,15 +440,25 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     }
 
     .circle-item--special-layout .circle-content {
-      width: 250px !important;
+    width: 250px !important;
     height: 111px !important;
     border-radius: 60px !important;
     padding: 10px !important;
+    display: block;
+    position: relative;
     }
 
     .circle-item--special-layout .circle-text-content {
         margin-right: 5% !important;
         width: 55% !important;
+        display: block;
+        margin-top: 30px;
+
+
+
+    }
+    .state-icon state-icon--active img {
+        width: 37.5px !important;
     }
 
     .circle-image {
@@ -502,14 +510,23 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
   /* Play icon */
   .circle-item--active .state-icon2 {
-      top: -10px !important;
-      right: -5px !important;
-      width: 50px !important;
-      height: 50px !important;
+    top: -5px !important;
+    right: 10px !important;
+      width: 40px !important;
+      height: 40px !important;
   }
   .circle-image-wrapper {
-  position: relative;
+  position: absolute;
   width: 38%;
+  left: 39px;
+  top:0px;
+
+
+}
+.state-icon.state-icon--active img {
+  width: 37.5px !important;
+  top: -10px;
+    right: 5px;
 }
 
 .course-wrapper main {
