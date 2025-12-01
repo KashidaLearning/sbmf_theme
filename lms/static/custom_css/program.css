@@ -1535,6 +1535,7 @@ flex: unset !important;
   color: #fff;
   margin-bottom: 6px;
   direction: rtl;
+  display: none;
 }
 
 .lh-progress-track-out {
@@ -2319,6 +2320,7 @@ display: none;
 }
 .leaderboard-row{
   gap:11px;
+  padding-bottom: 15px;
 }
 .leaderboard {
   max-width: 100%;}

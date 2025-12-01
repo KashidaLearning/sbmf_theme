@@ -1032,6 +1032,11 @@ for ub in user_badges:
         </div> -->
 <%block name="js_extra">
 <script>
+    window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
+</script>
+
+
+<script>
     window.STATE_ICONS = {
         completed: "${static.url('images/badge112.png')}",
         active: "${static.url('images/active00.png')}",
@@ -1255,8 +1260,11 @@ document.body.addEventListener('click', function(e) {
 
         const msg = document.createElement('div');
         msg.className = 'locked-message';
-        msg.textContent = "لطفًا، أكمل التحدي المتاح أولًا لتتمكّن من فتح التحديات المقفلة.";
-
+        if (window.USER_IS_ENROLLED === "true") {
+            msg.textContent = "لطفًا، أكمل التحدي المتاح أولًا لتتمكّن من فتح التحديات المقفلة.";
+        } else {
+            msg.textContent = "يجب الالتحاق في الرحلة أولًا لتتمكّن من بدء المغامرات.";
+        }
         const iconArea = lockedCircle.querySelector('.state-icon, .state-icon2');
         iconArea.appendChild(msg);
 
