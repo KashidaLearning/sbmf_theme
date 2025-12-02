@@ -1159,8 +1159,9 @@ for ub in user_badges:
          });
     }
 
-    const closeBtn = popupOverlay.querySelector(".close-button");
-    closeBtn.addEventListener("click", closePopup);
+    popupOverlay.querySelectorAll(".close-button").forEach(btn => {
+    btn.addEventListener("click", closePopup);
+        });
     popupOverlay.addEventListener("click", e => {
         if(e.target === popupOverlay) closePopup();
     });

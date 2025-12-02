@@ -1615,8 +1615,10 @@ display: flex;
     transition: all 0.3s 
 ease;
 }
-.icon-circle-tab img {
-max-width: 90px;
+
+.icon-circle-tab img{
+  max-width: 110px;
+
 }
 .icon-item-tab p {
  margin-top: -12px;
@@ -1636,7 +1638,9 @@ max-width: 90px;
        font-family: 'IBM Plex Sans', sans-serif!important;
 }
 @media (max-width: 768px) {
-
+.icon-circle-tab img {
+max-width: 90px;
+}
     .popup-purple-icons {
         display: flex;
         flex-direction: row !important;  /* KEEP ROW */
