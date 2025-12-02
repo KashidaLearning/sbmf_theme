@@ -32,6 +32,8 @@ function createCircle(data, index) {
     const circle = document.createElement("div");
     circle.className = `circle-item circle-item--${state}`;
     circle.setAttribute("data-course-id", data.id);
+    circle.setAttribute("data-state", state);
+
     const isFirst = data.is_first_course === true;
     const isCompleted = (state === "completed");
     const iconToUse = (isFirst && isCompleted) ? window.FIRST_COMPLETED_BADGE : STATE_CONFIG[state].icon;
@@ -72,24 +74,23 @@ function createCircle(data, index) {
     }
 
     circle.addEventListener("click", () => {
-    if (state === "locked") {
-        document.body.dispatchEvent(new Event("lockedCourseClick"));
-        return;
-    }
-
-    $('#courseFrame').attr('src', data.link);
-    $('#courseModal').css('display', 'block');
-
-    const wrapper = document.querySelector("#courseModal .iframe-wrapper");
-
-    if (wrapper) {
-        wrapper.classList.remove("completed-frame");
-
-        if (data.state === "completed") {
-            wrapper.classList.add("completed-frame");
+        if (state === "locked") {
+            document.body.dispatchEvent(new Event("lockedCourseClick"));
+            return;
         }
-    }
-});
+
+        $('#courseFrame').attr('src', data.link);
+        $('#courseModal').css('display', 'block');
+
+        const wrapper = document.querySelector("#courseModal .iframe-wrapper");
+
+        if (wrapper) {
+            wrapper.classList.remove("completed-frame");
+            if (data.state === "completed") {
+                wrapper.classList.add("completed-frame");
+            }
+        }
+    });
 
     circlesWrapper.appendChild(circle);
 
@@ -142,24 +143,70 @@ function initializeScene() {
     updatePositions();
 }
 
+/* -------------------------------------------------------------
+    UPDATE ONLY CHANGED COURSES (DOM UPDATE)
+------------------------------------------------------------- */
+
+function updateOnlyChangedCourses(newItems) {
+    newItems.forEach(newItem => {
+        const el = document.querySelector(`[data-course-id="${newItem.id}"]`);
+        if (!el) return;
+
+        const oldState = el.getAttribute("data-state");
+        const newState = newItem.state;
+
+        // If state changed → we rebuild the entire circle
+        if (oldState !== newState) {
+            rebuildCircleElement(el, newItem);
+            return;
+        }
+
+        // Otherwise: update icon & text only
+        const img = el.querySelector(".state-icon img, .state-icon2 img");
+        if (img) img.src = window.STATE_ICONS[newItem.state];
+
+        const titleEl = el.querySelector(".circle-title");
+        if (titleEl) titleEl.textContent = newItem.title;
+    });
+}
+
+/* -------------------------------------------------------------
+    REBUILD A SINGLE CIRCLE IF STATE CHANGED
+------------------------------------------------------------- */
+
+function rebuildCircleElement(oldEl, data) {
+    const index = [...circlesWrapper.children].indexOf(oldEl);
+    if (index < 0) return;
+
+    const newEl = document.createElement("div");
+    circlesWrapper.replaceChild(newEl, oldEl);
+
+    // Overwrite item in coursePathData to ensure consistency
+    window.coursePathData[index] = data;
+
+    // Clear and rebuild scene positions but keep layout stable
+    circlesWrapper.innerHTML = "";
+    circleElements = [];
+    window.coursePathData.forEach((item, i) => createCircle(item, i));
+    updatePositions();
+}
+
+/* -------------------------------------------------------------
+    BADGES & EVAL & LEADERBOARD
+------------------------------------------------------------- */
+
 function updateBadgesPopup(badges) {
     const items = document.querySelectorAll("#my-badges-content .badge-item img");
-    if (!items || !items.length) return;
+    if (!items.length) return;
 
     badges.forEach((b, i) => {
-        if (!items[i]) return;
-        if (b.icon && b.icon !== "") {
-            items[i].src = b.icon;
-        }
+        if (items[i] && b.icon) items[i].src = b.icon;
     });
-
 }
 
 function updateEvalStatus(evalData) {
     if (!evalData) return;
-
     updateEvalStatusInRoot(document.getElementById("leaderboard-content"), evalData);
-
     updateEvalStatusInRoot(document.querySelector("#popup-dynamic-content"), evalData);
 }
 
@@ -180,14 +227,8 @@ function updateEvalStatusInRoot(root, evalData) {
         wrapper.className = "statusicon";
 
         const img = document.createElement("img");
-
-        if (status === "completed") {
-            img.src = icons.completed;
-            img.className = "statuscomplete";
-        } else {
-            img.src = icons[status];
-            img.className = "eval-icon";
-        }
+        img.src = (status === "completed") ? icons.completed : icons[status];
+        img.className = (status === "completed" ? "statuscomplete" : "eval-icon");
 
         wrapper.appendChild(img);
         li.appendChild(wrapper);
@@ -196,41 +237,6 @@ function updateEvalStatusInRoot(root, evalData) {
     setSimpleEvalIcon(".eval-assignment", "assignment");
     setSimpleEvalIcon(".eval-pre", "pre");
     setSimpleEvalIcon(".eval-post", "post");
-
-    const chLi = root.querySelector(".eval-challenges");
-    if (chLi && evalData.challenges) {
-        const { completed, total, status } = evalData.challenges;
-
-        const labels = chLi.querySelectorAll(".label");
-        if (labels.length > 0) {
-            labels[0].textContent = `${completed}/${total}`;
-        }
-
-        chLi.querySelectorAll("img, .statusicon, .status-text").forEach(el => el.remove());
-
-        if (status === "no_challenges") {
-            const st = document.createElement("span");
-            st.className = "status-text";
-            st.textContent = "0/0";
-            chLi.appendChild(st);
-        } else {
-            const wrapper = document.createElement("div");
-            wrapper.className = "statusicon";
-
-            const img = document.createElement("img");
-
-            if (status === "completed") {
-                img.src = icons.completed;
-                img.className = "statuscomplete";
-            } else {
-                img.src = icons[status];
-                img.className = "eval-icon";
-            }
-
-            wrapper.appendChild(img);
-            chLi.appendChild(wrapper);
-        }
-    }
 }
 
 function renderLeaderboardInContainer(container, leaderboard) {
@@ -259,155 +265,79 @@ function renderLeaderboardInContainer(container, leaderboard) {
         xpBold.textContent = "XP " + currentUserXp;
     }
 
-   // const headerProgVal  = container.querySelector(".lh-progress-val");
     const headerProgFill = container.querySelector(".lh-progress-fill");
-    if (currentUserRank !== null) {
-       /*  if (headerProgVal) {
-            headerProgVal.textContent = currentUserProgress + "%";
-        } */
-        if (headerProgFill) {
-            headerProgFill.style.width = currentUserProgress + "%";
-        }
+    if (headerProgFill && currentUserRank !== null) {
+        headerProgFill.style.width = currentUserProgress + "%";
     }
 
     container.querySelectorAll(".leaderboard-row").forEach(row => row.remove());
 
     leaderboard.forEach((u, index) => {
-        let colorClass;
-        if (index === 0)      colorClass = "gold";
-        else if (index === 1) colorClass = "silver";
-        else if (index === 2) colorClass = "bronze";
-        else if (index === 3) colorClass = "blue1";
-        else                  colorClass = "blue2";
-
         const row = document.createElement("div");
         row.className = "leaderboard-row";
 
         row.innerHTML = `
             <div class="rank-box">${index + 1}</div>
             <div class="icon">
-                <img src="${window.LEADERBOARD_AVATAR || ''}" alt="avatar">
+                <img src="${window.LEADERBOARD_AVATAR || ''}">
             </div>
-            <div class="row-right ${colorClass}">
+            <div class="row-right">
                 <div class="name pt0">${u.name}</div>
                 <div class="pt2">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${u.progress}%"></div>
                     </div>
-                    <div class="xp"><h4></h4></div>
                 </div>
                 <div class="pt1">XP <b>${u.xp}</b></div>
             </div>
         `;
-
         container.appendChild(row);
     });
 }
 
 function updateLeaderboardPopup(leaderboard) {
-    const baseContainer = document.querySelector("#leaderboard-content .leaderboard");
-    renderLeaderboardInContainer(baseContainer, leaderboard);
-
-    const popupContainer = document.querySelector("#popup-dynamic-content .leaderboard");
-    if (popupContainer) {
-        renderLeaderboardInContainer(popupContainer, leaderboard);
-    }
+    renderLeaderboardInContainer(document.querySelector("#leaderboard-content .leaderboard"), leaderboard);
+    renderLeaderboardInContainer(document.querySelector("#popup-dynamic-content .leaderboard"), leaderboard);
 }
 
-async function refreshCourseStatus() {
-    if (window.__isRefreshing) return;
-    window.__isRefreshing = true;
+/* -------------------------------------------------------------
+    REFRESH COURSE STATUS — FINAL VERSION
+------------------------------------------------------------- */
 
+async function refreshCourseStatus() {
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
         const raw = await response.text();
 
-        if (!raw || raw.trim().startsWith("<")) {
-            window.__isRefreshing = false;
-            return;
-        }
+        if (!raw || raw.trim().startsWith("<")) return;
 
         const data = JSON.parse(raw);
 
-        // 1) UPDATE ONLY CHANGED COURSE ITEMS
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
-
             updateOnlyChangedCourses(parsed.items);
-
             window.coursePathData = parsed.items;
         }
 
-        // 2) UPDATE PROGRESS BAR
         if (typeof data.progress_percent !== "undefined") {
             const barFillOut = document.querySelector(".lh-progress-fill-out");
             const barValOut  = document.querySelector(".lh-progress-val-out");
-
             if (barFillOut) barFillOut.style.width = `${data.progress_percent}%`;
-            if (barValOut)  barValOut.textContent  = `${data.progress_percent}%`;
+            if (barValOut)  barValOut.textContent = `${data.progress_percent}%`;
         }
 
-        // 3) UPDATE BADGES
-        if (Array.isArray(data.badges)) {
-            updateBadgesPopup(data.badges);
-        }
-
-        // 4) UPDATE LEADERBOARD
-        if (Array.isArray(data.leaderboard)) {
-            updateLeaderboardPopup(data.leaderboard);
-        }
-
-        // 5) UPDATE EVALUATION STATUS
-        if (data.eval) {
-            updateEvalStatus(data.eval);
-        }
+        if (Array.isArray(data.badges)) updateBadgesPopup(data.badges);
+        if (Array.isArray(data.leaderboard)) updateLeaderboardPopup(data.leaderboard);
+        if (data.eval) updateEvalStatus(data.eval);
 
     } catch (err) {
         console.error("refreshCourseStatus error:", err);
     }
-
-    window.__isRefreshing = false;
-}
-function updateOnlyChangedCourses(newItems) {
-    newItems.forEach(newItem => {
-        const el = document.querySelector(`[data-course-id="${newItem.id}"]`);
-        if (!el) return;
-
-        // Update icon
-        const iconEl = el.querySelector(".state-icon img, .state-icon2 img");
-        if (iconEl) iconEl.src = window.STATE_ICONS[newItem.state];
-
-        // Update text / title
-        const titleEl = el.querySelector(".circle-title");
-        if (titleEl) titleEl.textContent = newItem.title;
-
-        // Update description if needed
-        const descEl = el.querySelector(".circle-description");
-        if (descEl) descEl.textContent = newItem.description;
-
-        // Update classes (active/locked/completed)
-        el.classList.remove("circle-item--active", "circle-item--completed", "circle-item--locked");
-        el.classList.add(`circle-item--${newItem.state}`);
-    });
 }
 
-const leaderboardIcon = document.getElementById("leaderboard");
-if (leaderboardIcon) {
-    leaderboardIcon.addEventListener("click", function () {
-        if (Array.isArray(window.lastLeaderboardData)) {
-            updateLeaderboardPopup(window.lastLeaderboardData);
-        }
-    });
-}
-
-const myBadgesIcon = document.getElementById("my-badges");
-if (myBadgesIcon) {
-    myBadgesIcon.addEventListener("click", function () {
-        if (Array.isArray(window.lastBadgesData)) {
-            updateBadgesPopup(window.lastBadgesData);
-        }
-    });
-}
+/* -------------------------------------------------------------
+    EVENT LISTENERS
+------------------------------------------------------------- */
 
 document.addEventListener("DOMContentLoaded", () => {
     initializeScene();
