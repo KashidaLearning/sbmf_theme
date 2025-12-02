@@ -501,6 +501,7 @@ text-align: right;
   flex-direction: row;
   max-width: 1240px;
   margin: 49px auto;
+  margin-top: 25px;
   position: static;
 
 }
