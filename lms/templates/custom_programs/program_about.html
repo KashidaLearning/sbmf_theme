@@ -1060,7 +1060,17 @@ for ub in user_badges:
 <script>
     window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
 </script>
+<script>window.addEventListener("message", function (event) {
+    if (!event.data) return;
 
+    if (event.data.type === "course_completed") {
+        console.log("Course completed message received:", event.data.course_id);
+
+        setTimeout(() => {
+            refreshCourseStatus();
+        }, 700);
+    }
+});</script>
 <script src="${static.url('js/script.js')}"></script>
 
 <script>
@@ -1171,53 +1181,7 @@ for ub in user_badges:
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const tabs = document.querySelectorAll(".icon-item-tab");
- 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", function () {
- 
-            // Remove active from all tabs and reset images
-            tabs.forEach(item => {
-                item.classList.remove("active");
- 
-                const iconImg = item.querySelector(".icon-img");
-                const iconImgActive = item.querySelector(".icon-img-active");
- 
-                if (iconImg) iconImg.style.display = "block";
-                if (iconImgActive) iconImgActive.style.display = "none";
-            });
- 
-            // Add active to clicked tab
-            this.classList.add("active");
- 
-            const clickedImg = this.getAttribute("data-img");
-            const clickedImgActive = this.getAttribute("data-img-active");
- 
-            const iconImg = this.querySelector(".icon-img");
-            const iconImgActive = this.querySelector(".icon-img-active");
- 
-            // If active image tag doesn't exist, create it
-            if (!iconImgActive) {
-                const newActiveImg = document.createElement("img");
-                newActiveImg.classList.add("icon-img-active");
-                newActiveImg.style.display = "none";
-                this.querySelector(".icon-circle-tab").appendChild(newActiveImg);
-            }
- 
-            // Update and toggle visibility
-            if (iconImg) {
-                iconImg.src = iconImg;
-                iconImg.style.display = "none";
-            }
- 
-            if (iconImgActive) {
-                iconImgActive.src = newActiveImg;
-                iconImgActive.style.display = "block";
-            }
-        });
-    });
-});
+
 </script>
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
@@ -1233,7 +1197,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $('.close-button').on('click', function() {
                 $('#courseFrame').attr('src', '');
                 $('#courseModal').css('display', 'none');
-                   refreshCourseStatus();
+                
 
 
             });
@@ -1242,7 +1206,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (event.target === this) {
                     $('#courseFrame').attr('src', '');
                     $('#courseModal').css('display', 'none');
-                         refreshCourseStatus();
+                 
 
 
                 }

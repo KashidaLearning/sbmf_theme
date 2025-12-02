@@ -501,7 +501,7 @@ text-align: right;
   flex-direction: row;
   max-width: 1240px;
   margin: 49px auto;
-  margin-top: 25px;
+  margin-top: 15px;
   position: static;
 
 }
@@ -1618,7 +1618,7 @@ ease;
 }
 
 .icon-circle-tab img{
-  max-width: 110px;
+  max-width: 130px;
 
 }
 .icon-item-tab p {
@@ -1640,7 +1640,7 @@ ease;
 }
 @media (max-width: 768px) {
 .icon-circle-tab img {
-max-width: 90px;
+max-width: 110px;
 }
     .popup-purple-icons {
         display: flex;
@@ -1677,7 +1677,7 @@ max-width: 90px;
     .tab-label {
         font-size: 14px !important;
         margin-top: 5px !important;
-        padding-right: 0 !important;
+        padding-right: 19px !important;
         text-align: center !important;
     }
 }
@@ -2026,7 +2026,7 @@ max-width: 90px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .popup-content {
     max-width: 100%;
     height: auto;
@@ -2071,7 +2071,7 @@ max-width: 90px;
 
   .icon-item-tab p,
   .tab-label {
-    font-size: 14px !important;
+    font-size: 15px !important;
   }
 
   .controller-header-img {
