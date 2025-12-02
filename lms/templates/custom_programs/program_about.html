@@ -847,49 +847,50 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
 
         <!-- SECTION 2 -->
-        <div class="control-section">
-            <div class="control-image-box">
-                <img src="${static.url('images/control-evaluation.png')}" alt="">
-            </div>
-
-            <div class="control-text-box">
-                <h3>التقييمات والواجبات</h3>
-                <ul>
-                    <li>هل أنتم مستعدون؟ ابدأوا باختبار مهاراتكم قبل الانطلاق.</li>
-                    <li>تساعدكم التقييمات المستمرة على قياس تقدمكم وتطوير مهاراتكم.</li>
-                    <li>هل تجاوزتم التحدي الأخير؟ أحسنتم واجمعوا نقاطكم نحو الشهادة.</li>
-                </ul>
-            </div>
+    <div class="control-section">
+        <div class="control-image-box">
+            <img src="${static.url('images/control-evaluation.png')}" alt="">
         </div>
 
-        <div class="control-section">
-            <div class="control-image-box">
-                <img src="${static.url('images/tickinlaw7atta7akom.png')}" alt="">
-            </div>
-            
-            <div class="control-text-box">
-                <h3>أدوات الاستمرارية</h3>
-                <ul>
-                    <li>مع إكمال كل تمرين تدريبي، تحصلون على أداة من حقيبة الاستمرارية.</li>
-                    <li>عند إتمام جمع الأدوات، تصبحون مؤهلين للحصول على الشهادة النهائية.</li>
-                </ul>
-            </div>
+        <div class="control-text-box">
+            <h3>التقييمات والواجبات</h3>
+            <ul>
+                <li>في هذه المغامرة، تبدؤون بالتحدّي الأول: التقييم القبلي لقياس مهاراتكم قبل الانطلاق.</li>
+                <li>خلال بقية التحديات، ستواجهون اختبارات معرفية قصيرة تساعدكم على التحقق من فهمكم للمهارات المطروحة.</li>
+                <li>تنتهي رحلتكم بـ التحدّي الأخير: التقييم النهائي لقياس مدى التطور الذي حققتموه.</li>
+                <li>كما ستعملون على واجب متعدد الوسائط تطبّقون فيه كل ما اكتسبتموه، وتقومون برفع مخرجاتكم لتقييمها.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="control-section">
+        <div class="control-image-box">
+            <img src="${static.url('images/tickinlaw7atta7akom.png')}" alt="">
+        </div>
+        
+        <div class="control-text-box">
+            <h3>الشارات</h3>
+            <ul>
+                <li>بعد إكمال كل تحدٍّ، تحصلون على شارة تقديرًا لإنجازكم.</li>
+                <li>عند جمع كل الشارات، تصبحون مؤهّلين للحصول على الشهادة النهائية.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="control-section">
+        <div class="control-image-box">
+            <img src="${static.url('images/ka2es.png')}" alt="">
         </div>
 
-        <div class="control-section">
-            <div class="control-image-box">
-                <img src="${static.url('images/ka2es.png')}" alt="">
-            </div>
-
-            <div class="control-text-box">
-                <h3>لوحة الصدارة</h3>
-                <ul>
-                    <li>تعرض موقعكم في الترتيب مقارنة بالمشاركين الآخرين.</li>
-                    <li>تظهر مجموع نقاط الخبرة (XP) التي حصلتم عليها.</li>
-                    <li>توضح تقدمكم في التحديات والتقييمات والواجبات.</li>
-                </ul>
-            </div>
+        <div class="control-text-box">
+            <h3>لوحة الصدارة</h3>
+            <ul>
+                <li>تعرض لكم ترتيبكم بين المشاركين الآخرين.</li>
+                <li>تعكس مدى تقدمكم في التحديات والتقييمات والواجبات على مدار الرحلة.</li>
+            </ul>
         </div>
+    </div>
+
 
     </div>
 
@@ -1171,53 +1172,7 @@ for ub in user_badges:
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const tabs = document.querySelectorAll(".icon-item-tab");
- 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", function () {
- 
-            // Remove active from all tabs and reset images
-            tabs.forEach(item => {
-                item.classList.remove("active");
- 
-                const iconImg = item.querySelector(".icon-img");
-                const iconImgActive = item.querySelector(".icon-img-active");
- 
-                if (iconImg) iconImg.style.display = "block";
-                if (iconImgActive) iconImgActive.style.display = "none";
-            });
- 
-            // Add active to clicked tab
-            this.classList.add("active");
- 
-            const clickedImg = this.getAttribute("data-img");
-            const clickedImgActive = this.getAttribute("data-img-active");
- 
-            const iconImg = this.querySelector(".icon-img");
-            const iconImgActive = this.querySelector(".icon-img-active");
- 
-            // If active image tag doesn't exist, create it
-            if (!iconImgActive) {
-                const newActiveImg = document.createElement("img");
-                newActiveImg.classList.add("icon-img-active");
-                newActiveImg.style.display = "none";
-                this.querySelector(".icon-circle-tab").appendChild(newActiveImg);
-            }
- 
-            // Update and toggle visibility
-            if (iconImg) {
-                iconImg.src = iconImg;
-                iconImg.style.display = "none";
-            }
- 
-            if (iconImgActive) {
-                iconImgActive.src = newActiveImg;
-                iconImgActive.style.display = "block";
-            }
-        });
-    });
-});
+
 </script>
     <script>
         // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
@@ -1262,7 +1217,7 @@ document.body.addEventListener('click', function(e) {
         const msg = document.createElement('div');
         msg.className = 'locked-message';
         if (window.USER_IS_ENROLLED === "true") {
-            msg.textContent = "لطفًا، أكمل التحدي المتاح أولًا لتتمكّن من فتح التحديات المقفلة.";
+            msg.textContent = "لطفًا، أكملوا التحدّي المتاح أولًا للتمكّن من فتح التحديات المقفلة.";
         } else {
             msg.textContent = "يجب الالتحاق في الرحلة أولًا لتتمكّن من بدء المغامرات.";
         }

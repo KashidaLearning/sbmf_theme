@@ -527,7 +527,7 @@ text-align: right;
 }
  
 /* --- Responsive Design (Optional but Recommended) --- */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
    .purple-icon-row {
     display: none;
   
@@ -1034,14 +1034,14 @@ ease-in-out;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   #popup-dynamic-content .badge-grid {
     grid-template-columns: repeat(2, auto); /* 2 badges per row */
     gap: 20px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 992px) {
   #popup-dynamic-content .badge-grid {
     grid-template-columns: repeat(2, auto);
     gap: 16px;
@@ -1130,7 +1130,7 @@ ease;
 .meter > span {display: block;background-color: #346A67;border-radius: 10px;height: 19px;}
 .meter > p{font-weight: bold;font-size: 18px;padding-top: 5px;}
 /* Responsive adjustments for popup */
-@media (max-width: 600px) {
+@media (max-width: 992px) {
     .popup-content {
         padding: 18px 0px;
         border-radius: 15px;
@@ -1491,7 +1491,7 @@ button.close-button {
     left: unset !important;
     color: white !important;
 }
-@media (max-width: 600px) {
+@media (max-width: 800px) {
 .d-flex .unit-navigation {
 display: flex !important;
 flex-direction: row;
@@ -1556,7 +1556,7 @@ flex: unset !important;
 
 
 
-@media (max-width: 900px) {
+@media (max-width: 992px) {
   .controller-header-img {
    display: none;
   }
@@ -1638,7 +1638,7 @@ ease;
     font-size: 16px !important;
        font-family: 'IBM Plex Sans', sans-serif!important;
 }
-@media (max-width: 768px) {
+@media (max-width: 992px) {
 .icon-circle-tab img {
 max-width: 110px;
 }
@@ -1761,12 +1761,12 @@ max-width: 110px;
 
 /* Custom bullet point */
 .control-text-box ul li::before {
-    content: "•";
-    position: absolute;
-    right: 0;
-    top: 4px;
-    font-size: 18px;
-    color: #ffffff
+   content: "•";
+  position: absolute;
+  right: 0;
+  top: -8px;
+  font-size: 30px;
+  color: #ffffff;
 }
 .control-intro-text {
     text-align: right;
@@ -2026,7 +2026,7 @@ max-width: 110px;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 992px) {
   .popup-content {
     max-width: 100%;
     height: auto;
@@ -2104,11 +2104,11 @@ max-width: 110px;
   }
 
   .control-text-box h3 {
-    font-size: 20px;
+    font-size: 25px;
   }
 
   .control-text-box ul li {
-    font-size: 15px;
+    font-size: 18px;
     padding-right: 0;
   }
 
@@ -2162,7 +2162,7 @@ max-width: 110px;
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 992px) {
   .bottom_left_background_image,
   .bottom_right_background_image {
     transform: scale(0.6);
