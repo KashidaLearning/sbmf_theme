@@ -31,7 +31,7 @@ function createCircle(data, index) {
     const state = data.state || "locked";
     const circle = document.createElement("div");
     circle.className = `circle-item circle-item--${state}`;
-
+    circle.setAttribute("data-course-id", data.id);
     const isFirst = data.is_first_course === true;
     const isCompleted = (state === "completed");
     const iconToUse = (isFirst && isCompleted) ? window.FIRST_COMPLETED_BADGE : STATE_CONFIG[state].icon;
@@ -315,48 +315,80 @@ function updateLeaderboardPopup(leaderboard) {
 }
 
 async function refreshCourseStatus() {
+    if (window.__isRefreshing) return;
+    window.__isRefreshing = true;
+
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
         const raw = await response.text();
 
-        if (raw.trim().startsWith("<")) {
+        if (!raw || raw.trim().startsWith("<")) {
+            window.__isRefreshing = false;
             return;
         }
 
         const data = JSON.parse(raw);
 
+        // 1) UPDATE ONLY CHANGED COURSE ITEMS
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
+
+            updateOnlyChangedCourses(parsed.items);
+
             window.coursePathData = parsed.items;
-            initializeScene();
-            document.dispatchEvent(new Event("circlesRebuilt"));
         }
 
+        // 2) UPDATE PROGRESS BAR
         if (typeof data.progress_percent !== "undefined") {
             const barFillOut = document.querySelector(".lh-progress-fill-out");
             const barValOut  = document.querySelector(".lh-progress-val-out");
-            if (barFillOut) {
-                barFillOut.style.width = `${data.progress_percent}%`;
-            }
-            if (barValOut) {
-                barValOut.textContent = `${data.progress_percent}%`;
-            }
+
+            if (barFillOut) barFillOut.style.width = `${data.progress_percent}%`;
+            if (barValOut)  barValOut.textContent  = `${data.progress_percent}%`;
         }
 
+        // 3) UPDATE BADGES
         if (Array.isArray(data.badges)) {
-            window.lastBadgesData = data.badges;
             updateBadgesPopup(data.badges);
         }
 
+        // 4) UPDATE LEADERBOARD
         if (Array.isArray(data.leaderboard)) {
-            window.lastLeaderboardData = data.leaderboard;
             updateLeaderboardPopup(data.leaderboard);
         }
 
+        // 5) UPDATE EVALUATION STATUS
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
-    } catch (err) {}
+
+    } catch (err) {
+        console.error("refreshCourseStatus error:", err);
+    }
+
+    window.__isRefreshing = false;
+}
+function updateOnlyChangedCourses(newItems) {
+    newItems.forEach(newItem => {
+        const el = document.querySelector(`[data-course-id="${newItem.id}"]`);
+        if (!el) return;
+
+        // Update icon
+        const iconEl = el.querySelector(".state-icon img, .state-icon2 img");
+        if (iconEl) iconEl.src = window.STATE_ICONS[newItem.state];
+
+        // Update text / title
+        const titleEl = el.querySelector(".circle-title");
+        if (titleEl) titleEl.textContent = newItem.title;
+
+        // Update description if needed
+        const descEl = el.querySelector(".circle-description");
+        if (descEl) descEl.textContent = newItem.description;
+
+        // Update classes (active/locked/completed)
+        el.classList.remove("circle-item--active", "circle-item--completed", "circle-item--locked");
+        el.classList.add(`circle-item--${newItem.state}`);
+    });
 }
 
 const leaderboardIcon = document.getElementById("leaderboard");
