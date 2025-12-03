@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap');
 
 
 $primary: #15376D;
 $primary-light: #F2F7F8;
 
 // Theme fonts
-$font-family-title: 'IBM Plex Sans', sans-serif;
+$font-family-title: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif !important;
 $serif: Crimson;
 $f-sans-serif: Crimson, 'Open Sans','Helvetica Neue', Helvetica, Arial, sans-serif;
 // Initialize the Open edX Bootstrap theme
@@ -14,7 +14,7 @@ $f-sans-serif: Crimson, 'Open Sans','Helvetica Neue', Helvetica, Arial, sans-ser
 
 
 body {
-  font-family: 'IBM Plex Sans';
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif !important;
 }
 // Introducing new variables
 
