@@ -1144,21 +1144,11 @@ ease;
         font-size: 16px;
     }
 
-    .close-button {
-        font-size:45px;
-        top: 10px;
-        right: 15px;
-    }
+    
 
  
 }
-@media (max-width: 600px) {
-  button.close-button {
-    right: -17px !important;
-    top: 0px !important;
-   
-}
-}
+
 
 /* NEW CSS FOR LOCKED CARDS */
 .card.locked {
@@ -1494,12 +1484,7 @@ div#certificate-status {
 
 
 
-button.close-button {
-   right: -17px !important;
-  top: 0px !important;
-    left: unset !important;
-    color: white !important;
-}
+
 @media (max-width: 800px) {
 .d-flex .unit-navigation {
 display: flex !important;
@@ -1920,8 +1905,9 @@ max-width: 110px;
     top: -63px;
     width: 395px;
 }
-.mobilex{
+.close-button.mobilex{
   display: none !important;
+
 }
 
 @media (max-width: 992px) {
@@ -2187,12 +2173,18 @@ max-width: 110px;
     top: 0%;
     right: -10%;
   }
- .mobilex{
+  
+ .close-button.mobilex{
     display: initial !important;
+    right: -17px !important;
+    top: 0px !important;
+    left: unset !important;
+    color: white !important;
   }
-  .bigscreenx{
+  .close-button.bigscreenx {
     display: none !important;
   }
+  
 }
 @media (max-width: 992px) {
   #popup-dynamic-content .badge-grid {
@@ -2519,18 +2511,19 @@ text-transform: capitalize;
   padding-right: 30px !important;
 }
 
+
 .close-button {
     position: absolute ;
     display: block;
-   right: -13px !important;
-  top: -30px !important;
-  left: unset !important;
+     right: -10px !important;
+    top: 5px !important;
+    left: unset !important;
+    color: white !important;
     margin-left: auto !important; 
     z-index: 99999 !important;
     box-shadow: none !important;
      font-size: 45px;
     cursor: pointer;
-    color: white !important;
     background: none !important;
     border: none !important;
     pointer-events: auto !important;
