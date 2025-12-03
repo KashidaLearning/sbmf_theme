@@ -228,6 +228,7 @@ ease;
 }
 .no-programs-message {
     font-size: 25px;
+    line-height: normal;
 }
 a.go-to-journeys {
     color: #0d0529 !important;
@@ -267,5 +268,10 @@ a.go-to-journeys {
   .course-row{
     width: 92%;
   }
+
+  .no-programs-message {
+    font-size: 18px;
+    line-height: normal;
+}
   
 }
