@@ -1,13 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700");
 /* line 16, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_variables.scss */
 body {
-  font-family: 'IBM Plex Sans'; }
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif !important; }
 
 /* line 3, /openedx/edx-platform/node_modules/bootstrap/scss/utilities/_align.scss */
 .align-baseline {
@@ -3061,7 +3061,7 @@ a.text-darkest:hover, a.text-darkest:focus {
  */
 /* line 16, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_variables.scss */
 body {
-  font-family: 'IBM Plex Sans'; }
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif !important; }
 
 /* stylelint-disable-line */
 /* stylelint-disable-line */
@@ -3596,7 +3596,7 @@ td {
 
 /* line 16, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_variables.scss */
 body {
-  font-family: 'IBM Plex Sans'; }
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif !important; }
 
 /* line 11, common/static/sass/edx-pattern-library-shims/_buttons.scss */
 .btn-default, .btn-primary, .btn-brand, .btn-upgrade {
