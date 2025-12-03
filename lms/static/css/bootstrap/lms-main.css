@@ -13923,6 +13923,36 @@ body.indigo-dark-theme.view-student-notes .tab-panel.note-group .note footer.ref
 .open-response-assessment-block .open-response-assessment-main-table th button:focus {
   outline: revert; }
 
+/* line 1716, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_extras.scss */
+.xmodule_display.xmodule_ProblemBlock div.problem .action .submit-attempt-container .submit {
+  width: 213px;
+  height: 47px;
+  opacity: 1;
+  border-radius: 56px;
+  padding: 8PX 16px;
+  background: #FFCB05;
+  font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  color: #110D7C;
+  box-shadow: 4.88px 4.88px 14.63px 0px rgba(34, 26, 55, 0.18), -4.88px -4.88px 14.63px 0px rgba(255, 255, 255, 0.12), 0px 2.83px 2.83px 0px rgba(0, 0, 0, 0.25); }
+
+/* line 1732, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_extras.scss */
+.xmodule_display.xmodule_ProblemBlock div.problem .choicegroup input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #3A3690;
+  border-radius: 2px;
+  display: inline-block;
+  cursor: pointer;
+  background: #fff; }
+
+/* line 1745, /openedx/themes/sbmf_theme/lms/static/sass/partials/lms/theme/_extras.scss */
+.xmodule_display.xmodule_ProblemBlock div.problem .choicegroup input[type="radio"]:checked {
+  background-color: #15AEA0; }
+
 /* line 2, /openedx/themes/sbmf_theme/lms/static/sass/extra/_footer.scss */
 .wrapper-footer {
   padding: 25px 0;

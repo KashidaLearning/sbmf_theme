@@ -1495,8 +1495,8 @@ div#certificate-status {
 
 
 button.close-button {
-    right: 0px ;
-    top: 6px ;
+   right: -17px !important;
+  top: 0px !important;
     left: unset !important;
     color: white !important;
 }
