@@ -189,9 +189,33 @@ ease;
     }
  
     .name {
-      font-weight: 600;
+     color: #FFF;
+    text-align: center;
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 37px;
     }
- 
+ #certificate-status {
+    position: relative; 
+}
+
+.certificate-characters-right {
+position: absolute;
+  right: 68px;
+  top: 20%;
+  transform: translateY(-50%);
+  width: 281px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.certificate-characters-right img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
     .icon {
      
       border-radius: 50%;
@@ -336,10 +360,7 @@ ease;
     align-items: flex-start;
 }
 
-.name {
-    font-weight: 600;
-    color: var(--Royal-Indigo, #110D7C);
-}
+
 
 .badges {
     font-size: 14px;
@@ -950,7 +971,7 @@ ease-in-out;
 #popup-dynamic-content p {
     margin-bottom: 1em;
     text-align: right;
-    padding-right: 60px;
+    padding-right: 293px;
     font-size: 19px;
         font-family: 'IBM Plex Sans', sans-serif !important;
 }
@@ -1053,22 +1074,7 @@ ease-in-out;
   }
 }
 
-#popup-dynamic-content .download-btn {
-       display: inline-block;
-    padding: 18px 40px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #292589;
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 0 20px rgba(123, 97, 255, 0.5), 0 0 40px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.25), inset 0 0 40px rgba(255, 255, 255, 0.8);
-    border: 3px solid rgba(160, 140, 255, 0.6);
-    text-decoration: none;
-    transition: 0.3s 
-ease;
-    width: 80%;
-    height: 152px;
-}
+
 
 
 .certificate-logo img {
@@ -1495,6 +1501,24 @@ justify-content: center;
 flex: unset !important;
 }
 }
+.sticky-icons-wrapper {
+    width: 100%;
+    z-index: 9999;
+    padding: 20px 0;
+   background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(31.25px);
+}
+
+/* لما تصير sticky */
+.sticky-icons-wrapper.is-sticky {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+
+
 .lh-progress-out {
   width: 100%;
   margin: 20px auto;

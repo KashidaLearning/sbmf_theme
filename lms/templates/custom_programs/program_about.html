@@ -38,6 +38,21 @@
 </style>
 <%block name="pagetitle">${program.name}</%block>
 <style>
+    #popup-dynamic-content .download-btn {
+      display: inline-block;
+  padding: 18px 40px;
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+  background-image: url("/static/sbmf_theme/images/downloadbutton.png");
+  border-radius: 18px;
+  box-shadow: 0 0 20px rgba(123, 97, 255, 0.5), 0 0 40px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.25), inset 0 0 40px rgba(255, 255, 255, 0.8);
+  border: 3px solid rgba(160, 140, 255, 0.6);
+  text-decoration: none;
+  transition: 0.3s ease;
+  width: 73%;
+  height: 125px;
+}
 .card.locked::after ,.wide-cta.locked::after{
     content: url("${static.url('images/Locked00.png')}");
     /* Unicode lock icon */
@@ -340,11 +355,15 @@ except:
           
          % endif
         % if user_is_enrolled:
+        <div class="sticky-icons-wrapper">
+
+
             <div class="lh-progress-out">
                 <div class="lh-progress-val-out"></div> 
                 <div class="lh-progress-track-out">
                     <div class="lh-progress-fill-out" style="width: ${current_user_progress}% ; background-color:${program.css_single_color};"></div>
                 </div>
+            </div>
             </div>
             % endif
          <div class="courses-container" id="coursescontainer" >
@@ -953,14 +972,28 @@ for ub in user_badges:
                 <img src="${static.url('images/cert-popup.png')}" alt="img">
                 <h2>شهاداتي </h2>
             </div>      -->
+ 
         <div id="certificate-status">
             % if cert_url:
                 <h1>شهــــــادة إنجــــــاز</h1>
-                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة</a>
+                  <div class="name">${user.profile.name or user.username}</div>
+            <div class="certificate-characters-right">
+        <img src="${static.url('images/cert-characters.png')}" alt="characters">
+            </div>
+                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة
+                 <p style="font-size: 0.9em; margin-top: 20px;">مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح، ونلتم شهادتكم بجدارة.</p>
+
+                </a>
+              
             % else:
                 <h1>شهــــــادة إنجــــــاز</h1>
-                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">تنزيل الشهادة</a>
+                <div class="name">${user.profile.name or user.username}</div>
+                   <div class="certificate-characters-right">
+            <img src="${static.url('images/cert-characters.png')}" alt="characters">
+                </div>
+                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">
                 <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+                </a>
             % endif
                 <div class="certificate-logo">
                     <img src="${static.url('images/sbmf-logo.png')}" alt="logo">
@@ -1237,6 +1270,34 @@ document.body.addEventListener('click', function(e) {
 
 
     </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sticky = document.querySelector(".sticky-icons-wrapper");
+    if (!sticky) return;
+
+    let lastScroll = 0;
+    const startOffset = sticky.offsetTop;
+
+    function updateSticky() {
+        const scrollY = window.scrollY || 0;
+
+        // direction check → down only
+        const isScrollingDown = scrollY > lastScroll;
+        lastScroll = scrollY;
+
+        if (scrollY >= startOffset && isScrollingDown) {
+            sticky.classList.add("is-sticky");
+            sticky.style.top = "0px";
+        } else if (scrollY < startOffset) {
+            sticky.classList.remove("is-sticky");
+        }
+    }
+
+    updateSticky();
+    window.addEventListener("scroll", updateSticky);
+    window.addEventListener("resize", updateSticky);
+});
+</script>
 
 
 </%block>
