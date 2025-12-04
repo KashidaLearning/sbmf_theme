@@ -975,6 +975,8 @@ for ub in user_badges:
         <div id="certificate-status">
             % if cert_url:
                 <h1>شهــــــادة إنجــــــاز</h1>
+              <div class="name ">${user_data['name'] or user_data['username']}</div>
+
             <div class="certificate-characters-right">
         <img src="${static.url('images/cert-characters.png')}" alt="characters">
             </div>
@@ -985,9 +987,8 @@ for ub in user_badges:
               
             % else:
                 <h1>شهــــــادة إنجــــــاز</h1>
-        
                 <a href="#" class="download-btn" style="background-color: var(--program-main-color);" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">
-                <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
+                <p style="font-size: 0.9em; margin-top: 20px;">الرابط سيصبح فعالاً بعد إتمام الدورة</p>
                 </a>
             % endif
                 <div class="certificate-logo">
