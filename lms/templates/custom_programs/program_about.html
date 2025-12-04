@@ -44,7 +44,6 @@
   font-size: 22px;
   font-weight: 600;
   color: white;
-  background-image: url("/static/sbmf_theme/images/downloadbutton.png");
   border-radius: 18px;
   box-shadow: 0 0 20px rgba(123, 97, 255, 0.5), 0 0 40px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.25), inset 0 0 40px rgba(255, 255, 255, 0.8);
   border: 3px solid rgba(160, 140, 255, 0.6);
@@ -976,22 +975,18 @@ for ub in user_badges:
         <div id="certificate-status">
             % if cert_url:
                 <h1>شهــــــادة إنجــــــاز</h1>
-                  <div class="name">${user.profile.name or user.username}</div>
             <div class="certificate-characters-right">
         <img src="${static.url('images/cert-characters.png')}" alt="characters">
             </div>
-                <a href="${cert_url}" class="download-btn" >تنزيل الشهادة
+                <a href="${cert_url}" class="download-btn"style="background-image: url('${static.url('sbmf_theme/images/downloadbutton.png')}');">
                  <p style="font-size: 0.9em; margin-top: 20px;">مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح، ونلتم شهادتكم بجدارة.</p>
 
                 </a>
               
             % else:
                 <h1>شهــــــادة إنجــــــاز</h1>
-                <div class="name">${user.profile.name or user.username}</div>
-                   <div class="certificate-characters-right">
-            <img src="${static.url('images/cert-characters.png')}" alt="characters">
-                </div>
-                <a href="#" class="download-btn" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">
+        
+                <a href="#" class="download-btn" style="background-color: var(--program-main-color);" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">
                 <p style="font-size: 0.9em; margin-top: 20px;">(الرابط سيصبح فعالاً بعد إتمام الدورة)</p>
                 </a>
             % endif
