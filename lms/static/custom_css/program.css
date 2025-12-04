@@ -216,6 +216,16 @@ position: absolute;
     height: auto;
     display: block;
 }
+#courseModal {
+    z-index: 999999 !important;
+    position: fixed;
+}
+
+.sticky-hidden {
+    display: none !important;  /* hide it */
+    z-index: 0 !important;     /* send it behind everything */
+    pointer-events: none;       /* prevent clicks */
+}
     .icon {
      
       border-radius: 50%;

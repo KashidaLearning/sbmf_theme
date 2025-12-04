@@ -1276,8 +1276,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateSticky() {
         const scrollY = window.scrollY || 0;
-
-        // direction check → down only
         const isScrollingDown = scrollY > lastScroll;
         lastScroll = scrollY;
 
@@ -1289,11 +1287,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    updateSticky();
     window.addEventListener("scroll", updateSticky);
     window.addEventListener("resize", updateSticky);
+    updateSticky();
+
+    function hideSticky() {
+        sticky.classList.remove("is-sticky"); 
+        sticky.style.zIndex = "-1";           
+        sticky.style.opacity = "0";           
+        sticky.style.pointerEvents = "none";  
+    }
+
+    function showSticky() {
+        sticky.style.opacity = "1";
+        sticky.style.zIndex = "999";          
+        sticky.style.pointerEvents = "auto";
+        updateSticky();                       
+    }
+
+    // Open modal
+    $(document).on('click', '.open-course-modal-link', function(e) {
+        e.preventDefault();
+        $('#courseFrame').attr('src', $(this).attr('href'));
+        $('#courseModal').css('display', 'block');
+        hideSticky();   
+    });
+
+    // Close modal
+    $('.close-button, #courseModal').on('click', function(event) {
+        if (event.target === this || $(this).hasClass('close-button')) {
+            $('#courseFrame').attr('src', '');
+            $('#courseModal').css('display', 'none');
+            showSticky(); 
+            refreshCourseStatus();
+        }
+    });
 });
+
+
+
 </script>
+
 
 
 </%block>
