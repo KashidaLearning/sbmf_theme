@@ -1001,6 +1001,12 @@ for ub in user_badges:
                     specific_courses__id=pc.course.course_key,
                     placeholder_icon__isnull=False
                 ).first()
+                badge_title = ""
+                if user_badge:
+                    badge_title = user_badge.badge.title
+                elif course_placeholder:
+                    badge_title = course_placeholder.title
+                
             %>
 
             <div class="badge-item">
@@ -1011,6 +1017,7 @@ for ub in user_badges:
                 % else:
                     <div style="width:120px;height:120px;"></div>
                 % endif
+                <div class="badge-title">${badge_title}</div>
             </div>
 
         % endfor

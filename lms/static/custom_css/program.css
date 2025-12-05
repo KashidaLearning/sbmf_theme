@@ -2579,3 +2579,15 @@ text-transform: capitalize;
       position: absolute;
     }
 }
+.badge-title{
+  color: #FFF;
+  text-align: center;
+  text-shadow: 1.13px 1.13px 1.13px rgba(0, 0, 0, 0.15);
+  font-family: "IBM Plex Sans";
+  font-size: 16.406px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: capitalize;
+  margin-top: -17px;
+}
