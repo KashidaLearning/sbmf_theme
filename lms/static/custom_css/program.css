@@ -2354,7 +2354,7 @@ display: none;
 }
 }
 @media (max-width: 768px) {
-    #popup-dynamic-content .download-btn {
+    .certificate-case {
         width: 100% !important;      
         height: auto !important;     
         padding: 16px 25px !important;
@@ -2368,7 +2368,7 @@ display: none;
 }
 
 @media (max-width: 480px) {
-    #popup-dynamic-content .download-btn {
+    .certificate-case {
         padding: 14px 20px !important;
         font-size: 16px !important;
         border-radius: 12px !important;

@@ -38,15 +38,13 @@
 </style>
 <%block name="pagetitle">${program.name}</%block>
 <style>
-    #popup-dynamic-content .download-btn {
+   .certificate-case {
       display: inline-block;
   padding: 18px 40px;
   font-size: 22px;
   font-weight: 600;
   color: white;
   border-radius: 18px;
-  box-shadow: 0 0 20px rgba(123, 97, 255, 0.5), 0 0 40px rgba(123, 97, 255, 0.35), 0 0 60px rgba(123, 97, 255, 0.25), inset 0 0 40px rgba(255, 255, 255, 0.8);
-  border: 3px solid rgba(160, 140, 255, 0.6);
   text-decoration: none;
   transition: 0.3s ease;
   width: 73%;
@@ -101,6 +99,62 @@
     height: 100%;
     object-fit: contain;
 }
+.download-btn {
+   display: inline-flex;
+  border-radius: 56px;
+  background: var(--Cyber-Yellow, #FFCB05);
+  box-shadow: 0 2.832px 2.832px rgba(0, 0, 0, 0.25), -4.878px -4.878px 14.634px rgba(255, 255, 255, 0.12), 4.878px 4.878px 14.634px rgba(34, 26, 55, 0.18);
+  margin-top: 20px;
+  direction: ltr;
+  width: 180px;
+  height: 47px;
+  padding: 2px 4px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+}
+
+.download-btn.disabled {
+    opacity: .4;
+    pointer-events: none;
+}
+
+.download-btn .icon {
+    width: 20px;
+    height: 20px;
+    background-image: url("${static.url('images/download-icon.png')}");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.download-btn .text {
+    color: var(--Royal-Indigo, #110D7C);
+text-align: center;
+font-family: "IBM Plex Sans Arabic";
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+text-transform: capitalize;
+}
+
+@media (max-width: 779px) {
+
+    .download-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    .download-btn {
+        width: auto;
+        max-width: 300px;
+    }
+}
+
 </style>
 % if program.css_color:
     <style>
@@ -966,36 +1020,58 @@ for ub in user_badges:
 </div>
 
 
-    <div id="certificate-content" style="display: none;">
-         <!-- <div class="title-certificatecontent">
-                <img src="${static.url('images/cert-popup.png')}" alt="img">
-                <h2>شهاداتي </h2>
-            </div>      -->
- 
-        <div id="certificate-status">
-            % if cert_url:
-                <h1>شهــــــادة إنجــــــاز</h1>
-              <div class="name ">${user_data['name'] or user_data['username']}</div>
+<div id="certificate-content" style="display: none;">
+
+    <div id="certificate-status">
+        % if cert_url:
+            <h1>شهــــــادة إنجــــــاز</h1>
+            <div class="name ">${user_data['name'] or user_data['username']}</div>
 
             <div class="certificate-characters-right">
-        <img src="${static.url('images/cert-characters.png')}" alt="characters">
+                <img src="${static.url('images/cert-characters.png')}" alt="characters">
             </div>
-                <a href="${cert_url}" class="download-btn"style="background-image: url('${static.url('sbmf_theme/images/downloadbutton.png')}');">
-                 <p style="font-size: 0.9em; margin-top: 20px;">مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح، ونلتم شهادتكم بجدارة.</p>
 
-                </a>
-              
-            % else:
-                <h1>شهــــــادة إنجــــــاز</h1>
-                <a href="#" class="download-btn" style="background-color: var(--program-main-color);" onclick="alert('لم يتم استكمال الدورة بعد، لا توجد شهادة لتنزيلها.'); return false;">
+            <div class="certificate-case" style="background-image: url('${static.url('sbmf_theme/images/downloadbutton.png')}');">
+                <p style="font-size: 0.9em; margin-top: 20px;">
+                    مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح،
+                    ونلتم شهادتكم بجدارة.
+                </p>
+            </div>
+
+            <div class="certificate-logo">
+                <img src="${static.url('images/sbmf-logo.png')}" alt="logo">
+            </div>
+
+        % else:
+            <h1>شهــــــادة إنجــــــاز</h1>
+
+            <div class="certificate-case" style="background-color: var(--program-main-color);">
                 <p style="font-size: 0.9em; margin-top: 20px;">الرابط سيصبح فعالاً بعد إتمام الدورة</p>
-                </a>
-            % endif
-                <div class="certificate-logo">
-                    <img src="${static.url('images/sbmf-logo.png')}" alt="logo">
-                </div>
-        </div>
+            </div>
+
+            <div class="certificate-logo">
+                <img src="${static.url('images/sbmf-logo.png')}" alt="logo">
+            </div>
+        % endif
     </div>
+<div class="download-wrapper">
+
+    % if cert_url:
+
+        <a href="${cert_url}" class="download-btn active">
+            <span class="icon"></span>
+            <span class="text">تنزيل الشهادة</span>
+        </a>
+    % else:
+        <a href="#" class="download-btn disabled" onclick="return false;">
+            <span class="icon"></span>
+            <span class="text">تنزيل الشهادة</span>
+        </a>
+    % endif
+    </div>
+
+</div>
+
      
 
 
