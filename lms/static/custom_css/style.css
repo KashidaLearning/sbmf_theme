@@ -233,7 +233,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
 .state-icon--completed img,
 .state-icon2--completed img {
-    width: 32px;
+    width: 40px;
 }
 
 .state-icon--active,
@@ -442,7 +442,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     .circle-item--special-layout .circle-content {
     width: 250px !important;
     height: 111px !important;
-    border-radius: 60px !important;
+    border-radius: 95px !important;
     padding: 10px !important;
     display: block;
     position: relative;

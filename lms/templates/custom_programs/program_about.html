@@ -1017,7 +1017,9 @@ for ub in user_badges:
                 % else:
                     <div style="width:120px;height:120px;"></div>
                 % endif
-                <div class="badge-title">${badge_title}</div>
+               % if pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
+                    <div class="badge-title">${badge_title}</div>
+                % endif
             </div>
 
         % endfor
@@ -1364,7 +1366,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (scrollY >= startOffset && isScrollingDown) {
             sticky.classList.add("is-sticky");
-            sticky.style.top = "83px";
+            sticky.style.top = "80px";
         } else if (scrollY < startOffset) {
             sticky.classList.remove("is-sticky");
         }

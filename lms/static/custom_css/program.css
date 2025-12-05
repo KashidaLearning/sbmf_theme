@@ -2075,7 +2075,7 @@ max-width: 110px;
     flex-direction: column;
     align-items: center;
     gap: 14px;
-    padding: 0 10px;
+    padding: 20px 10px;
     margin-top: -20px;
   }
 
@@ -2111,35 +2111,35 @@ max-width: 110px;
     width: 92%;
   }
 
-  .control-section {
-    flex-direction: column-reverse;
-    align-items: center;
-    gap: 0px;
-    padding: 0 10px;
-    text-align: center;
-  }
+    .control-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px !important;
+        text-align: center;
+    }
 
-  .control-image-box {
-    width: 180px;
-  }
+    .control-image-box {
+        order: 1;
+    }
 
-  .control-image-box img {
-    width: 170px;
-  }
+    .control-text-box {
+        order: 2;
+    }
 
-  .control-text-box {
-    text-align: center;
-  }
+    .control-image-box img {
+        width: 150px;
+        margin-bottom: 10px;
+    }
 
-  .control-text-box h3 {
-    font-size: 25px;
-  }
+    .control-text-box h3 {
+        font-size: 20px;
+    }
 
-  .control-text-box ul li {
-    font-size: 18px;
-    padding-right: 0;
-  }
-
+    .control-text-box ul li {
+        font-size: 16px;
+        line-height: 1.6;
+    }
   .control-text-box ul li::before {
     display: none;
   }
@@ -2149,6 +2149,28 @@ max-width: 110px;
     padding-right: 0;
     text-align: center;
   }
+    .control-text-box {
+        width: 80% !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+
+    .control-text-box h3 {
+        width: 100% !important;
+        text-align: center !important;
+        display: block !important;
+    }
+
+    .control-text-box ul {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+    .sticky-icons-wrapper.is-sticky{
+      display: none;
+    }
+
 
   .yellow-icon-alone {
     justify-content: center;
@@ -2172,8 +2194,8 @@ max-width: 110px;
     margin-bottom: 20px;
   }
 
-}
 
+}
 
 
 @media (max-width: 992px) {
@@ -2589,4 +2611,21 @@ text-transform: capitalize;
   line-height: normal;
   text-transform: capitalize;
   margin-top: -17px;
+}
+@media (max-width: 992px) {
+    .popup-content {
+        width: 90% !important;        /* fixed width */
+        height: 75vh !important;      /* fixed height */
+        max-height: 75vh !important;  /* prevent resizing */
+        overflow-y: auto !important;  /* scroll inside */
+        overflow-x: hidden !important;
+        border-radius: 18px !important;
+        padding: 20px !important;
+    }
+
+    #popup-dynamic-content {
+        height: auto !important;
+        max-height: 68vh !important;  /* ensures content scrolls */
+        overflow-y: auto !important;
+    }
 }

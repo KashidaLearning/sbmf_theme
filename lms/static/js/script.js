@@ -16,7 +16,7 @@ const STATE_CONFIG = {
 };
 
 function getAmplitude() {
-    return window.innerWidth < 700 ? 60 : Math.min((window.innerWidth / 2) - 120, 100);
+    return window.innerWidth < 860 ? 40 : Math.min((window.innerWidth / 2) - 120, 100);
 }
 
 function getVerticalSpacing() {
@@ -115,7 +115,11 @@ function updatePositions() {
         const { x, y } = calculatePosition(index);
         element.style.left = `${x}px`;
         element.style.top  = `${y}px`;
-        element.style.transform = "translate(-50%, -50%)";
+        if (window.innerWidth < 700) {
+                    element.style.transform = "translateX(-50%)";
+                } else {
+                    element.style.transform = "translate(-50%, -50%)";
+                }    
     });
     updateContainerHeight();
 }
