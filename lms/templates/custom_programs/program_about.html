@@ -319,6 +319,7 @@ except:
        
 
     <!-- This will be the rightmost column (Column 1) -->
+        <div class="sticky-icons-wrapper">
 
         % if user_is_enrolled:
     
@@ -408,7 +409,6 @@ except:
           
          % endif
         % if user_is_enrolled:
-        <div class="sticky-icons-wrapper">
 
 
             <div class="lh-progress-out">
@@ -1366,7 +1366,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (scrollY >= startOffset && isScrollingDown) {
             sticky.classList.add("is-sticky");
-            sticky.style.top = "80px";
+            sticky.style.top = "0px";
         } else if (scrollY < startOffset) {
             sticky.classList.remove("is-sticky");
         }

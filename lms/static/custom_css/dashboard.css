@@ -11,12 +11,13 @@
 }
 
 .leader-dashboard__title {
-  font-size: 60px;
+  font-size: 40px;
   font-weight: 800;
   margin-bottom: 60px;
   text-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
   color: #ffffff !important;
-   font-family: 'IBM Plex Sans', sans-serif !important;
+  font-family: "IBM Plex Sans Arabic";
+
 }
 
 .programs-grid {
@@ -44,7 +45,14 @@
     background: rgba(65, 106, 158, 0.10);
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
-
+.dashboard-description{
+  color: #FFF;
+font-family: "IBM Plex Sans Arabic";
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+}
 .card-container{
 display: block;
 padding:20px 25px;
