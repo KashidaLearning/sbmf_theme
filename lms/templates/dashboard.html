@@ -67,13 +67,15 @@ cert_name_long = settings.CERT_NAME_LONG
   </script>
 <style>
     .program-card__header {
-    background-image: url("${static.url('images/dash-back1.png')}");
+    background-image: url("${static.url('images/dashboard-back-1.png')}");
      background-size: cover;     
     background-position: center; 
     background-repeat: no-repeat;
     padding: 10px 0px 14px 0px;
     border-radius: 10px;
-        margin-top: 20px;
+    margin-top: 20px;
+     box-shadow: 0 4px 4px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
+
 }
 </style>
   <%static:webpack entry="UnenrollmentFactory">
