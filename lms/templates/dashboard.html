@@ -65,6 +65,20 @@ cert_name_long = settings.CERT_NAME_LONG
       });
     });
   </script>
+  <style>
+    .program-card__title a , .program-card__title {
+ font-size: 25px !important;
+    font-weight: 700 !important;
+    margin: 0;
+    color: #ffffff !important;
+    text-decoration: none;
+    text-align: center;
+    margin: 30px auto;
+    background-image: url("${static.url('images/dash-back1.png')}");
+    margin-bottom: 10px;
+}
+
+  </style>
 
   <%static:webpack entry="UnenrollmentFactory">
     UnenrollmentFactory({

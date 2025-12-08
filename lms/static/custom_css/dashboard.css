@@ -66,38 +66,6 @@ padding:20px 25px;
   margin-bottom: 24px;
 }
 
-.program-card__title {
-    position: relative;
-    padding: 15px 20px !important;
-    border-radius: 18px;
-    overflow: hidden;
-    display: inline-block;
-    width: 90%;
-    margin: 20px auto 10px auto !important;
-
-    background-image: url("${static.url('images/dash-back1.png')}");
-    background-size: cover;
-    background-position: center;
-}
-
-.program-card__title::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(130, 55, 180, 0.35); 
-    backdrop-filter: blur(8px);
-    border-radius: inherit;
-    z-index: 0;
-}
-
-.program-card__title a {
-    position: relative;
-    z-index: 1;
-    color: #fff !important;
-    text-decoration: none;
-    display: block;
-}
-
 
 .program-card__body {
   flex: 1 1 auto;
