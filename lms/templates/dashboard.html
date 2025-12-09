@@ -293,13 +293,7 @@ cert_name_long = settings.CERT_NAME_LONG
     # -----------------------------
     program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
 %>
-<%
-    header_img = program.header_image.url if program.header_image else static.url("images/dashboard-back-1.png")
-%>
-
-
-
-
+   <% header_img = program.header_image.url if program.header_image else static.url("images/dashboard-back-1.png") %>
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
                 <div class="card-container">
@@ -307,7 +301,7 @@ cert_name_long = settings.CERT_NAME_LONG
                 <div class="program-card__progress-pill">
                     <span>${program_progress_average}%</span>
                 </div>
-
+              
                 <!-- Header -->
               <header class="program-card__header" style="background-image: url('${header_img}');">
                     <h2 class="program-card__title">
