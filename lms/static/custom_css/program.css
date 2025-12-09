@@ -1521,12 +1521,7 @@ justify-content: center;
 flex: unset !important;
 }
 }
-.sticky-icons-wrapper {
-    width: 100%;
-    z-index: 9999;
-   background: rgba(255, 255, 255, 0.01);
-  backdrop-filter: blur(31.25px);
-}
+
 
 .sticky-icons-wrapper.is-sticky {
     position: fixed !important;
@@ -1983,6 +1978,25 @@ max-width: 110px;
   display: none !important;
 
 }
+body.sticky-active .icon-circle img {
+    max-width: 90px !important;
+    height: auto !important;
+}
+
+body.sticky-active .icon-item p {
+    display: none !important;
+}
+
+body.sticky-active .lh-progress-track-out {
+    margin-top: -45px !important;
+    margin-left: 273px !important;
+}
+body.sticky-active .sticky-icons-wrapper {
+  width: 100%;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(31.25px);
+}
 
 @media (max-width: 992px) {
   .hero {
@@ -2414,7 +2428,7 @@ display: none;
 }
 @media (max-width: 768px) {
     .certificate-case {
-        width: 100% !important;      
+        width: 80% !important;      
         height: auto !important;     
         padding: 16px 25px !important;
         font-size: 18px !important;

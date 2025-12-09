@@ -998,7 +998,7 @@ for ub in user_badges:
                     badge_title = user_badge.badge.title
                 elif course_placeholder:
                     badge_title = course_placeholder.title
-                
+                course_locked = pc.state == "locked" if hasattr(pc, 'state') else False
             %>
 
             <div class="badge-item">
@@ -1009,7 +1009,7 @@ for ub in user_badges:
                 % else:
                     <div style="width:120px;height:120px;"></div>
                 % endif
-               % if pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
+                % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
                     <div class="badge-title">${badge_title}</div>
                 % endif
             </div>
@@ -1400,17 +1400,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const startOffset = sticky.offsetTop;
 
     function updateSticky() {
-        const scrollY = window.scrollY || 0;
-        const isScrollingDown = scrollY > lastScroll;
-        lastScroll = scrollY;
+    const scrollY = window.scrollY || 0;
+    const isScrollingDown = scrollY > lastScroll;
+    lastScroll = scrollY;
 
-        if (scrollY >= startOffset && isScrollingDown) {
-            sticky.classList.add("is-sticky");
-            sticky.style.top = "0px";
-        } else if (scrollY < startOffset) {
-            sticky.classList.remove("is-sticky");
-        }
+    if (scrollY >= startOffset && isScrollingDown) {
+        sticky.classList.add("is-sticky");
+        document.body.classList.add("sticky-active");   
+        sticky.style.top = "0px";
+    } else if (scrollY < startOffset) {
+        sticky.classList.remove("is-sticky");
+        document.body.classList.remove("sticky-active"); 
     }
+}
 
     window.addEventListener("scroll", updateSticky);
     window.addEventListener("resize", updateSticky);

@@ -294,7 +294,10 @@ cert_name_long = settings.CERT_NAME_LONG
     program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
 %>
 <%
-header_bg = program.header_image.url if program.header_image else static.url('images/dashboard-back-1.png')
+    if program.header_image:
+        header_bg = program.header_image.url
+    else:
+        header_bg = static.url("images/dashboard-back-1.png")
 %>
 
 
