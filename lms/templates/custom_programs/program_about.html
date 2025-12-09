@@ -38,18 +38,7 @@
 </style>
 <%block name="pagetitle">${program.name}</%block>
 <style>
-   .certificate-case {
-      display: inline-block;
-  padding: 18px 40px;
-  font-size: 22px;
-  font-weight: 600;
-  color: white;
-  border-radius: 18px;
-  text-decoration: none;
-  transition: 0.3s ease;
-  width: 73%;
-  height: 125px;
-}
+  
 .card.locked::after ,.wide-cta.locked::after{
     content: url("${static.url('images/Locked00.png')}");
     /* Unicode lock icon */
@@ -330,13 +319,15 @@ except:
            
             <div class="icon-item" id="control" role="button" tabindex="0" data-target="control-content">
                 <div class="icon-circle">
-                     <img src="${static.url('images/dashboard-icon.png')}" alt="لوحةالتحكم">
+                    <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
+                    <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}">
                 </div>
                 <p> لوحة التحكم</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/badges-icon-1.png')}" alt="شاراتي" >
+                  <img class="icon-img" src="${static.url('images/badges-icon-1.png')}">
+                    <img class="icon-img-active" src="${static.url('images/badges-icon-active.png')}">
                 </div>
                 <p> شاراتي</p>
             </div>
@@ -349,7 +340,8 @@ except:
             </div>  -->
              <div class="icon-item" id="leaderboard" role="button" tabindex="0" data-target="leaderboard-content">
                 <div class="icon-circle">
-                    <img src="${static.url('images/leaderboard-icon-2.png')}" alt="لوحة الصدارة">
+                    <img class="icon-img" src="${static.url('images/leaderboard-icon-2.png')}">
+                    <img class="icon-img-active" src="${static.url('images/leaderboard-icon-active.png')}">
                 </div>
                 <p> لوحة الصدارة</p>
             </div>
@@ -1257,22 +1249,70 @@ for ub in user_badges:
         popupTitle.textContent = icon.querySelector(".tab-label").textContent.trim();
     });
 
-    function activateIcon(targetId){
-        popupContent.querySelectorAll(".icon-item-tab").forEach(i=>{
-            i.classList.remove("active");
-            if(i.getAttribute("data-target") === targetId){
-                i.classList.add("active");
-            }
-        });
-         popupContent.querySelectorAll(".icon-img").forEach(i=>{
-            i.classList.add("locked");
-            i.classList.remove("show");
-         });
-        popupContent.querySelectorAll(".icon-img-active").forEach(i=>{
-            i.classList.add("show");
-             i.classList.remove("locked");
-         });
+   function activateIcon(targetId) {
+    popupContent.querySelectorAll(".icon-item-tab").forEach(tab => {
+        const isActive = tab.getAttribute("data-target") === targetId;
+
+        tab.classList.toggle("active", isActive);
+
+        const img = tab.querySelector(".icon-img");
+        const imgActive = tab.querySelector(".icon-img-active");
+
+        if (!img || !imgActive) return;
+
+        if (isActive) {
+            img.classList.add("locked");
+            img.classList.remove("show");
+
+            imgActive.classList.add("show");
+            imgActive.classList.remove("locked");
+        } else {
+            // Reset non-active icons to normal image
+            img.classList.remove("locked");
+            img.classList.add("show");
+
+            imgActive.classList.remove("show");
+            imgActive.classList.add("locked");
+        }
+    });
+}
+
+// HOVER: Make icon active on hover (if not active tab)
+popupContent.addEventListener("mouseover", function (e) {
+    const tab = e.target.closest(".icon-item-tab");
+    if (!tab) return;
+
+    if (!tab.classList.contains("active")) {
+        const img = tab.querySelector(".icon-img");
+        const imgActive = tab.querySelector(".icon-img-active");
+
+        if (img && imgActive) {
+            img.classList.add("locked");
+            img.classList.remove("show");
+
+            imgActive.classList.add("show");
+            imgActive.classList.remove("locked");
+        }
     }
+});
+
+popupContent.addEventListener("mouseout", function (e) {
+    const tab = e.target.closest(".icon-item-tab");
+    if (!tab) return;
+
+    if (!tab.classList.contains("active")) {
+        const img = tab.querySelector(".icon-img");
+        const imgActive = tab.querySelector(".icon-img-active");
+
+        if (img && imgActive) {
+            img.classList.remove("locked");
+            img.classList.add("show");
+
+            imgActive.classList.remove("show");
+            imgActive.classList.add("locked");
+        }
+    }
+});
 
     popupOverlay.querySelectorAll(".close-button").forEach(btn => {
     btn.addEventListener("click", closePopup);

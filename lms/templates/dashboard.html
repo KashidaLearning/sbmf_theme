@@ -67,7 +67,6 @@ cert_name_long = settings.CERT_NAME_LONG
   </script>
 <style>
     .program-card__header {
-    background-image: url("${static.url('images/dashboard-back-1.png')}");
      background-size: cover;     
     background-position: center; 
     background-repeat: no-repeat;
@@ -294,6 +293,11 @@ cert_name_long = settings.CERT_NAME_LONG
     # -----------------------------
     program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
 %>
+<%
+header_bg = program.header_image.url if program.header_image else static.url('images/dashboard-back-1.png')
+%>
+
+
 
 
 
@@ -305,7 +309,7 @@ cert_name_long = settings.CERT_NAME_LONG
                 </div>
 
                 <!-- Header -->
-                <header class="program-card__header">
+              <header class="program-card__header"style="background-image: url('${header_bg}');">
                     <h2 class="program-card__title">
                         <a href="${reverse('custom_programs:program_about', args=[program.id])}">
                             ${program.name}
