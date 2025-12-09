@@ -2210,7 +2210,7 @@ body.sticky-active .sticky-icons-wrapper {
 
     .control-text-box h3 {
         width: 100% !important;
-        text-align: center !important;
+        text-align: right !important;
         display: block !important;
     }
 
@@ -2218,7 +2218,7 @@ body.sticky-active .sticky-icons-wrapper {
         width: 100% !important;
         margin: 0 auto !important;
         padding: 0 !important;
-        text-align: center !important;
+        text-align: right !important;
     }
     .sticky-icons-wrapper.is-sticky{
       display: none;
