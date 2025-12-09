@@ -14180,31 +14180,30 @@ header.global-header {
       header.global-header .nav-links .secondary .dropdown-user-menu {
         position: absolute;
         left: 0;
-        top: 60px;
-        width: 224px;
+        width: 140px;
         border-radius: 6px;
         box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 4px 6px -2px rgba(0, 0, 0, 0.05), 0px 10px 15px -3px rgba(0, 0, 0, 0.1);
         border: none;
         overflow: hidden; }
-        /* line 104, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+        /* line 103, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
         header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item {
           border: none !important; }
           @media (min-width: 992px) {
-            /* line 106, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+            /* line 105, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
             header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item.hide-desktop {
               display: none; } }
-          /* line 111, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+          /* line 110, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
           header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item a {
             box-sizing: border-box;
             padding: 10px;
             font-size: 14px;
             line-height: 20px;
             color: #374151; }
-            /* line 117, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+            /* line 116, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
             header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item a:hover {
               background: #F2F7F8;
               color: #212529; }
-  /* line 126, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 125, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   header.global-header .hamburger-menu {
     height: 17px;
     width: 20px;
@@ -14214,17 +14213,17 @@ header.global-header {
     border: 0;
     padding: 0;
     box-shadow: none; }
-    /* line 136, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 135, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     header.global-header .hamburger-menu .line {
       height: 2px; }
-      /* line 138, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 137, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       header.global-header .hamburger-menu .line:nth-child(2), header.global-header .hamburger-menu .line:nth-child(3) {
         top: 6px; }
-      /* line 141, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 140, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       header.global-header .hamburger-menu .line:nth-child(4) {
         top: 12px; }
 
-/* line 147, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+/* line 146, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
 .mobile-menu {
   position: absolute;
   right: 0;
@@ -14234,7 +14233,7 @@ header.global-header {
   border: none;
   border-bottom: 2px solid #15376D;
   width: 100%; }
-  /* line 157, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 156, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   .mobile-menu .mobile-nav-link a {
     font-weight: normal;
     padding: 16px;
@@ -14242,51 +14241,51 @@ header.global-header {
     line-height: 20px;
     color: #374151;
     border: none; }
-    /* line 164, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 163, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     .mobile-menu .mobile-nav-link a:hover, .mobile-menu .mobile-nav-link a.active {
       background: #F2F7F8;
       color: #212529; }
 
-/* line 171, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+/* line 170, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
 .header-container {
   margin: 0 auto;
   padding: 0 15px;
   max-width: 1600px;
   box-sizing: border-box; }
-  /* line 176, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 175, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   .header-container:after {
     display: block;
     clear: both;
     content: ""; }
 
-/* line 183, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+/* line 182, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
 .theme-toggle-button {
   position: relative;
   display: flex;
   align-items: center;
   margin-left: 0 !important; }
   @media (min-width: 992px) {
-    /* line 183, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 182, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     .theme-toggle-button {
       margin-left: 1.5rem !important; } }
-  /* line 193, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 192, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   .theme-toggle-button .light-theme-icon, .theme-toggle-button .dark-theme-icon {
     width: 18px;
     height: 1.5rem;
     color: #15376D; }
-    /* line 197, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 196, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     .theme-toggle-button .light-theme-icon svg, .theme-toggle-button .dark-theme-icon svg {
       width: inherit;
       height: inherit; }
-  /* line 203, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 202, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   .theme-toggle-button #toggle-switch {
     display: flex;
     margin: 0 5px;
     /* The switch - the box around the slider */ }
-    /* line 207, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 206, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     .theme-toggle-button #toggle-switch label {
       margin: 0; }
-    /* line 212, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 211, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     .theme-toggle-button #toggle-switch .switch {
       position: relative;
       display: inline-block;
@@ -14294,16 +14293,16 @@ header.global-header {
       height: 24px;
       /* Hide default HTML checkbox */
       /* The slider */ }
-      /* line 219, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 218, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       .theme-toggle-button #toggle-switch .switch input {
         opacity: 0;
         width: 0;
         height: 0; }
-        /* line 225, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+        /* line 224, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
         .theme-toggle-button #toggle-switch .switch input:focus ~ .slider {
           outline: 2px solid #15376D;
           outline-offset: 1px; }
-      /* line 233, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 232, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       .theme-toggle-button #toggle-switch .switch .slider {
         position: absolute;
         cursor: pointer;
@@ -14313,7 +14312,7 @@ header.global-header {
         bottom: 0;
         background-color: #1D386A;
         transition: .4s; }
-        /* line 243, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+        /* line 242, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
         .theme-toggle-button #toggle-switch .switch .slider::before {
           position: absolute;
           content: "";
@@ -14323,21 +14322,21 @@ header.global-header {
           bottom: 2px;
           background-color: white;
           transition: .4s; }
-        /* line 254, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+        /* line 253, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
         .theme-toggle-button #toggle-switch .switch .slider.round {
           border-radius: 34px; }
-          /* line 256, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+          /* line 255, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
           .theme-toggle-button #toggle-switch .switch .slider.round::before {
             border-radius: 50%; }
 
-/* line 267, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+/* line 266, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
 body.indigo-dark-theme {
   background: #0D0D0E !important;
   color: #F8F8F8 !important; }
-  /* line 270, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 269, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   body.indigo-dark-theme .window-wrap {
     background: #0D0D0E; }
-  /* line 273, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 272, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   body.indigo-dark-theme .mobile-menu {
     position: absolute;
     right: 0;
@@ -14347,60 +14346,60 @@ body.indigo-dark-theme {
     border: none;
     border-bottom: 2px solid #15376D;
     width: 100%; }
-    /* line 283, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 282, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme .mobile-menu .mobile-nav-link a {
       background: #454545;
       color: #F8F8F8; }
-      /* line 286, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 285, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       body.indigo-dark-theme .mobile-menu .mobile-nav-link a:hover, body.indigo-dark-theme .mobile-menu .mobile-nav-link a.active {
         background: #323232;
         color: #F8F8F8; }
-  /* line 293, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 292, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   body.indigo-dark-theme header.global-header {
     background: #0D0D0E;
     box-shadow: 0px 1px 2px 0px rgba(255, 255, 255, 0.8), 0px 1px 3px 0px rgba(255, 255, 255, 0.1); }
-    /* line 299, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 298, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme header.global-header .nav-links .main .nav-tab a {
       color: #F8F8F8; }
-      /* line 301, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 300, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       body.indigo-dark-theme header.global-header .nav-links .main .nav-tab a.active, body.indigo-dark-theme header.global-header .nav-links .main .nav-tab a:hover {
         color: #F8F8F8;
         border-bottom: 2px solid #F8F8F8; }
-    /* line 309, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 308, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme header.global-header .nav-links .secondary .toggle-user-dropdown {
       background: #AEC7F6;
       color: #112F6B; }
-      /* line 312, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 311, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       body.indigo-dark-theme header.global-header .nav-links .secondary .toggle-user-dropdown:after {
         border-color: #112F6B; }
-    /* line 316, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 315, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme header.global-header .nav-links .secondary .dropdown-user-menu {
       background: #36383B;
       box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.8), 0px 4px 6px -2px rgba(255, 255, 255, 0.05), 0px 10px 15px -3px rgba(255, 255, 255, 0.1); }
-      /* line 320, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 319, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       body.indigo-dark-theme header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item a {
         color: #DDDFE2;
         background: none; }
-        /* line 323, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+        /* line 322, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
         body.indigo-dark-theme header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item a:hover {
           background: #0D0D0E;
           color: #F8F8F8; }
-    /* line 333, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 332, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme header.global-header .hamburger-menu .line {
       background: #F8F8F8; }
-  /* line 341, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 340, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   body.indigo-dark-theme .theme-toggle-button .light-theme-icon, body.indigo-dark-theme .theme-toggle-button .dark-theme-icon {
     color: #DDDFE2; }
-  /* line 345, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+  /* line 344, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
   body.indigo-dark-theme .theme-toggle-button #toggle-switch .switch {
     /* The slider */ }
-    /* line 348, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 347, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme .theme-toggle-button #toggle-switch .switch input:focus ~ .slider {
       outline-color: #AEC7F6; }
-    /* line 354, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+    /* line 353, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
     body.indigo-dark-theme .theme-toggle-button #toggle-switch .switch .slider {
       background-color: #717D8A; }
-      /* line 356, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
+      /* line 355, /openedx/themes/sbmf_theme/lms/static/sass/extra/_header.scss */
       body.indigo-dark-theme .theme-toggle-button #toggle-switch .switch .slider::before {
         transform: translateX(-19px);
         box-shadow: 0 0 1px #AEC7F6; }

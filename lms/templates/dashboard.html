@@ -293,6 +293,9 @@ cert_name_long = settings.CERT_NAME_LONG
     # -----------------------------
     program_accent_color = getattr(program, 'css_single_color', None) or '#ff2f92'
 %>
+<%
+    header_img = program.header_image.url if program.header_image else None
+%>
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
                 <div class="card-container">
@@ -303,7 +306,7 @@ cert_name_long = settings.CERT_NAME_LONG
               
                 <!-- Header -->
                 % if header_img:
-                    <header class="program-card__header" style="background-image: url('${header_img}');"></header>
+                    <header class="program-card__header" style="background-image: url('${header_img}');">
                 % endif
                     <h2 class="program-card__title">
                         <a href="${reverse('custom_programs:program_about', args=[program.id])}">
