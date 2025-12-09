@@ -44,17 +44,21 @@ header.global-header .header-logo a .logo {
     box-sizing: inherit;
 }
 
-/*purple icons css horizontal  */
-/* Horizontal container */
+
 .purple-icon-row {
   display: flex;
-    font-family: 'IBM Plex Sans', sans-serif;
-  justify-content: center;
-  align-items: flex-start;
- position: relative;
-  direction: rtl;
+  justify-content: space-between;
+  align-items: center; 
+  position: relative;
+  direction: initial;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 1270px;
 }
 
+.left-icons {
+    display: flex;
+}
 .purple-icon-row-mobile{
   display: none;
      font-family: 'IBM Plex Sans', sans-serif;
@@ -69,8 +73,11 @@ header.global-header .header-logo a .logo {
 
 }
 #yellowicon {
-  position: absolute;
-  right:40px;
+  position: static !important;
+  margin-right: 0 !important;
+}
+.yellow-link {
+  display: flex;
 }
 /* Each item block */
 .icon-item {
@@ -537,11 +544,6 @@ text-align: right;
 
 }
 
-/* === Purple icons column (center) === */
-.purple-icon-row {
- width: 100%;
-  flex: 0 0 160%;            
-}
 
 
 
@@ -1989,7 +1991,6 @@ body.sticky-active .icon-item p {
 
 body.sticky-active .lh-progress-track-out {
     margin-top: -45px !important;
-    margin-left: 273px !important;
 }
 body.sticky-active .sticky-icons-wrapper {
   width: 100%;
