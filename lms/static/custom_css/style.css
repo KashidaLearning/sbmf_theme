@@ -257,7 +257,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     border-color: #fff;
     background: var(--program-main-color);
     border: 4px solid var(--White, #FFF);
-    box-shadow: 0 2px 2px 2px rgba(255, 255, 255, 0.15), 4px 4px 10px 1px rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0 2px 2px 2px rgba(255, 255, 255, 0.15), 4px 4px 10px 1px rgba(0, 0, 0, 0.25) inset !important;
 }
 
 .circle-item--completed:hover .circle-content {
