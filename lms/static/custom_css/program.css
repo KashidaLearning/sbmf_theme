@@ -1030,6 +1030,7 @@ ease-in-out;
     padding-bottom: 4px;
     /* flex-direction: column; */
     align-items: center;
+        row-gap: 25px;
 }
 
 #popup-dynamic-content .badge-item {
@@ -2222,9 +2223,10 @@ body.sticky-active .sticky-icons-wrapper {
         padding: 0 !important;
         text-align: right !important;
     }
-    .sticky-icons-wrapper.is-sticky{
-      display: none;
-    }
+   
+
+
+
 
 
   .yellow-icon-alone {
@@ -2510,7 +2512,7 @@ display: none;
 .mobile .hero {
     position: relative;
     border-radius: 28px;
-     padding: 16px;
+     padding: 0px;
     text-align: center;
     background: var(--glass-weak);
     backdrop-filter: blur(14px);
@@ -2678,11 +2680,7 @@ text-transform: capitalize;
         padding: 20px !important;
     }
 
-    #popup-dynamic-content {
-        height: auto !important;
-        max-height: 68vh !important;  /* ensures content scrolls */
-        overflow-y: auto !important;
-    }
+   
     
 .state-icon--completed img, .state-icon2--completed img {
     width: 29px;

@@ -270,13 +270,11 @@ a.go-to-journeys {
 
   .program-card__title {
     font-size: 20px;
-    margin-top: 42px;
+    margin-top: 18px;
     margin-bottom: 12px;
 
   }
-  .card-container{
-    padding: 20px 0px;
-  }
+ 
   .course-row{
     width: 92%;
   }
@@ -285,5 +283,14 @@ a.go-to-journeys {
     font-size: 18px;
     line-height: normal;
 }
-  
+   .dashboard-description {
+      max-width: 85%;
+    }
+    .program-card__header {
+
+      max-width: 90%;
+    margin: 0 auto;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    }
 }
