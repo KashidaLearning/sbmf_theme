@@ -1461,17 +1461,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
-    const courses = window.coursePathData || [];
+    const originalRefresh = window.refreshCourseStatus;  // save original
 
-    courses.forEach(course => {
-        if (course.state === "completed") {
-            playCompletionSound();
+    window.refreshCourseStatus = async function () {
+        // 1) Run the original function so circles update normally
+        if (typeof originalRefresh === "function") {
+            await originalRefresh();
         }
-    });
+
+        // 2) Then run sound logic
+        try {
+            const updated = window.coursePathData || [];
+            if (updated.some(c => c.state === "completed")) {
+                playCompletionSound();
+            }
+        } catch (e) {
+            console.error("Sound refresh error:", e);
+        }
+    };
 
     function playCompletionSound() {
         if (window.__SOUND_ALREADY_PLAYED__) return;
-
         window.__SOUND_ALREADY_PLAYED__ = true;
 
         audio.volume = 1.0;
@@ -1479,15 +1489,6 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log("Audio blocked until user interaction:", err);
         });
     }
-
-    window.refreshCourseStatus = function () {
-        const updated = window.coursePathData || [];
-        const someCompleted = updated.some(c => c.state === "completed");
-
-        if (someCompleted) {
-            playCompletionSound();
-        }
-    };
 });
 </script>
 
