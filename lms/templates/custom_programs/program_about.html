@@ -476,7 +476,7 @@ except:
                 "link": course_link,
                 "is_special": is_special,
                 "is_first_course": is_first_course,
-                
+                "xpAward": int(50 if is_completed else 0),
             })
 
             idx += 1
@@ -1203,12 +1203,11 @@ document.addEventListener("DOMContentLoaded", function () {
     window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // store the ORIGINAL refresh from script.js (NOW it's defined)
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
 
-        await originalRefresh();  // run script.js logic
+        await originalRefresh();  
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
@@ -1241,6 +1240,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+
+
 
 <script>
    
