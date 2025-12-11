@@ -143,7 +143,61 @@ text-transform: capitalize;
         max-width: 300px;
     }
 }
+.xp-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
 
+/* Popup Box */
+.xp-popup-content {
+    background: #1a0033;
+    border: 3px solid #8b2bff;
+    box-shadow: 0 0 25px #8b2bff, 0 0 60px #5e17eb inset;
+    padding: 30px 45px;
+    border-radius: 20px;
+    color: #fff;
+    text-align: center;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform .4s ease-out, opacity .4s ease-out;
+    font-family: "IBM Plex Sans Arabic";
+}
+
+/* When active */
+.xp-popup.show .xp-popup-content {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.xp-popup.hide .xp-popup-content {
+    transform: scale(0.6);
+    opacity: 0;
+}
+#xp-popup {
+    display: none !important;
+}
+#xp-popup.show {
+    display: flex !important;
+}
+.xp-popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.xp-popup-content {
+    max-width: 350px;
+    width: 90%;
+}
 </style>
 % if program.css_color:
     <style>
@@ -1140,49 +1194,56 @@ for ub in user_badges:
         <audio id="courseCompleteSound" preload="auto">
     <source src="${static.url('sounds/course-complete.mp3')}" type="audio/mpeg">
 </audio>
+<div id="xp-popup" class="xp-popup">
+    <div class="xp-popup-content">
+        <h3 id="xp-popup-title">XP UP!</h3>
+        <p id="xp-popup-text"></p>
+    </div>
+</div>
 
 <%block name="js_extra">
-<script>
-    window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
-</script>
-
 
 <script>
-    window.STATE_ICONS = {
-        completed: "${static.url('images/badge112.png')}",
-        active: "${static.url('images/active00.png')}",
-        locked: "${static.url('images/Locked001.png')}"
-    };
+window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
 </script>
-<script>
-    window.CURRENT_USER_ID = ${request.user.id};
-    window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
 
-    window.EVAL_ICONS = {
-        completed: "${static.url('images/tick-icon.png')}",
-        locked: "${static.url('images/lockedstatus.png')}",
-        in_progress: "${static.url('images/hourglass-icon.png')}",
-        no_challenges: "${static.url('images/lockedstatus.png')}"
-    };
-</script>
 <script>
-    window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
+window.STATE_ICONS = {
+    completed: "${static.url('images/badge112.png')}",
+    active: "${static.url('images/active00.png')}",
+    locked: "${static.url('images/Locked001.png')}"
+};
 </script>
+
 <script>
-    window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
+window.CURRENT_USER_ID = ${request.user.id};
+window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
+window.EVAL_ICONS = {
+    completed: "${static.url('images/tick-icon.png')}",
+    locked: "${static.url('images/lockedstatus.png')}",
+    in_progress: "${static.url('images/hourglass-icon.png')}",
+    no_challenges: "${static.url('images/lockedstatus.png')}"
+};
 </script>
+
+<script>
+window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
+</script>
+
+<script>
+window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
 function launchConfetti() {
-    // Burst animation from the center
     confetti({
         particleCount: 150,
         spread: 70,
         startVelocity: 45,
         origin: { x: 0.5, y: 0.5 }
     });
-
-    // A second smaller burst for a nice effect
     setTimeout(() => {
         confetti({
             particleCount: 100,
@@ -1195,6 +1256,7 @@ function launchConfetti() {
 </script>
 
 <script src="${static.url('js/script.js')}"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("courseCompleteSound");
@@ -1206,9 +1268,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
-
-        await originalRefresh();  
-
+        await originalRefresh();
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
 
@@ -1234,29 +1294,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function playSound() {
         if (window.__SOUND_ALREADY_PLAYED__) return;
         window.__SOUND_ALREADY_PLAYED__ = true;
-
         audio.volume = 1.0;
         audio.play().catch(() => {});
     }
 });
 </script>
 
-
-
 <script>
-   
-   document.addEventListener("DOMContentLoaded", function () {
-
+document.addEventListener("DOMContentLoaded", function () {
     const popupOverlay = document.getElementById("global-popup-overlay");
     const popupTitle = document.getElementById("popup-title");
     const popupContent = document.getElementById("popup-dynamic-content");
-
     const templateEl = document.getElementById("popup-purple-icons-template");
 
-    if (!templateEl) {
-        console.error("❌ popup-purple-icons-template NOT FOUND!");
-        return;
-    }
+    if (!templateEl) return;
 
     const iconsTemplate = templateEl.innerHTML;
 
@@ -1267,202 +1318,170 @@ document.addEventListener("DOMContentLoaded", function () {
         "certificate": "certificate-content"
     };
 
-    // External icons
     document.querySelectorAll(".purple-icon-row .icon-item").forEach(item => {
         item.addEventListener("click", function () {
             const id = this.id;
             const target = map[id];
             if (!target) return;
-
             const title = this.querySelector("p").textContent.trim();
             showPopup(title, target);
         });
     });
+
     document.querySelectorAll(".purple-icon-row-mobile .icon-item").forEach(item => {
         item.addEventListener("click", function () {
             const id = this.id;
             const target = map[id];
             if (!target) return;
-
             const title = this.querySelector("p").textContent.trim();
             showPopup(title, target);
         });
     });
+
     function showPopup(title, targetId) {
-
         const contentDiv = document.getElementById(targetId);
-        if (!contentDiv) {
-            console.error("❌ Content div not found:", targetId);
-            return;
-        }
-
+        if (!contentDiv) return;
         popupTitle.textContent = title;
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
         activateIcon(targetId);
-        
-
         popupOverlay.classList.add("visible");
         document.body.style.overflow = "hidden";
     }
- 
-  
-    popupContent.addEventListener("click", function(e){
+
+    popupContent.addEventListener("click", function (e) {
         const icon = e.target.closest(".icon-item-tab");
         if (!icon || !popupContent.contains(icon)) return;
-
         const targetId = icon.getAttribute("data-target");
         const contentDiv = document.getElementById(targetId);
-
         if (!contentDiv) return;
-
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
         activateIcon(targetId);
-
         popupTitle.textContent = icon.querySelector(".tab-label").textContent.trim();
     });
 
-   function activateIcon(targetId) {
-    popupContent.querySelectorAll(".icon-item-tab").forEach(tab => {
-        const isActive = tab.getAttribute("data-target") === targetId;
+    function activateIcon(targetId) {
+        popupContent.querySelectorAll(".icon-item-tab").forEach(tab => {
+            const isActive = tab.getAttribute("data-target") === targetId;
+            tab.classList.toggle("active", isActive);
 
-        tab.classList.toggle("active", isActive);
+            const img = tab.querySelector(".icon-img");
+            const imgActive = tab.querySelector(".icon-img-active");
+            if (!img || !imgActive) return;
+
+            if (isActive) {
+                img.classList.add("locked");
+                img.classList.remove("show");
+                imgActive.classList.add("show");
+                imgActive.classList.remove("locked");
+            } else {
+                img.classList.remove("locked");
+                img.classList.add("show");
+                imgActive.classList.remove("show");
+                imgActive.classList.add("locked");
+            }
+        });
+    }
+
+    popupContent.addEventListener("mouseover", function (e) {
+        const tab = e.target.closest(".icon-item-tab");
+        if (!tab || tab.classList.contains("active")) return;
 
         const img = tab.querySelector(".icon-img");
         const imgActive = tab.querySelector(".icon-img-active");
 
-        if (!img || !imgActive) return;
-
-        if (isActive) {
+        if (img && imgActive) {
             img.classList.add("locked");
             img.classList.remove("show");
-
             imgActive.classList.add("show");
             imgActive.classList.remove("locked");
-        } else {
-            // Reset non-active icons to normal image
+        }
+    });
+
+    popupContent.addEventListener("mouseout", function (e) {
+        const tab = e.target.closest(".icon-item-tab");
+        if (!tab || tab.classList.contains("active")) return;
+
+        const img = tab.querySelector(".icon-img");
+        const imgActive = tab.querySelector(".icon-img-active");
+
+        if (img && imgActive) {
             img.classList.remove("locked");
             img.classList.add("show");
-
             imgActive.classList.remove("show");
             imgActive.classList.add("locked");
         }
     });
-}
-
-// HOVER: Make icon active on hover (if not active tab)
-popupContent.addEventListener("mouseover", function (e) {
-    const tab = e.target.closest(".icon-item-tab");
-    if (!tab) return;
-
-    if (!tab.classList.contains("active")) {
-        const img = tab.querySelector(".icon-img");
-        const imgActive = tab.querySelector(".icon-img-active");
-
-        if (img && imgActive) {
-            img.classList.add("locked");
-            img.classList.remove("show");
-
-            imgActive.classList.add("show");
-            imgActive.classList.remove("locked");
-        }
-    }
-});
-
-popupContent.addEventListener("mouseout", function (e) {
-    const tab = e.target.closest(".icon-item-tab");
-    if (!tab) return;
-
-    if (!tab.classList.contains("active")) {
-        const img = tab.querySelector(".icon-img");
-        const imgActive = tab.querySelector(".icon-img-active");
-
-        if (img && imgActive) {
-            img.classList.remove("locked");
-            img.classList.add("show");
-
-            imgActive.classList.remove("show");
-            imgActive.classList.add("locked");
-        }
-    }
-});
 
     popupOverlay.querySelectorAll(".close-button").forEach(btn => {
-    btn.addEventListener("click", closePopup);
-        });
-    popupOverlay.addEventListener("click", e => {
-        if(e.target === popupOverlay) closePopup();
+        btn.addEventListener("click", closePopup);
     });
 
-    function closePopup(){
+    popupOverlay.addEventListener("click", e => {
+        if (e.target === popupOverlay) closePopup();
+    });
+
+    function closePopup() {
         popupOverlay.classList.remove("visible");
         document.body.style.overflow = "";
     }
 });
-
-
 </script>
-    <script>
-        // Use jQuery for modal open/close behavior on all .open-course-modal-link anchor tags
-        $(function() {
-            // Open the modal and load the correct href in the iframe
-            $(document).on('click', '.open-course-modal-link', function(e) {
-                e.preventDefault();
-                var href = $(this).attr('href');
-                $('#courseFrame').attr('src', href);
-                $('#courseModal').css('display', 'block');
-            });
-            // Close modal on close button
-            $('.close-button').on('click', function() {
-                $('#courseFrame').attr('src', '');
-                $('#courseModal').css('display', 'none');
-                   refreshCourseStatus();
 
+<script>
+$(function() {
+    $(document).on('click', '.open-course-modal-link', function(e) {
+        e.preventDefault();
+        var href = $(this).attr('href');
+        $('#courseFrame').attr('src', href);
+        $('#courseModal').css('display', 'block');
+    });
 
-            });
-            // Optional: Close modal when clicking outside modal content
-            $('#courseModal').on('click', function(event) {
-                if (event.target === this) {
-                    $('#courseFrame').attr('src', '');
-                    $('#courseModal').css('display', 'none');
-                         refreshCourseStatus();
+    $('.close-button').on('click', function() {
+        $('#courseFrame').attr('src', '');
+        $('#courseModal').css('display', 'none');
+        refreshCourseStatus();
+    });
 
-
-                }
-            });
-        });
-
+    $('#courseModal').on('click', function(event) {
+        if (event.target === this) {
+            $('#courseFrame').attr('src', '');
+            $('#courseModal').css('display', 'none');
+            refreshCourseStatus();
+        }
+    });
+});
 
 document.body.addEventListener('click', function(e) {
     const lockedCircle = e.target.closest('.circle-item--locked');
+    if (!lockedCircle) return;
 
-    if (lockedCircle) {
-        e.preventDefault();
-        e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-        lockedCircle.querySelectorAll('.locked-message').forEach(x => x.remove());
+    lockedCircle.querySelectorAll('.locked-message').forEach(x => x.remove());
 
-        const msg = document.createElement('div');
-        msg.className = 'locked-message';
-        if (window.USER_IS_ENROLLED === "true") {
-            msg.textContent = "لطفًا، أكملوا التحدّي المتاح أولًا للتمكّن من فتح التحديات المقفلة.";
-        } else {
-            msg.textContent = "يجب الالتحاق في الرحلة أولًا لتتمكّن من بدء المغامرات.";
-        }
-        const iconArea = lockedCircle.querySelector('.state-icon, .state-icon2');
-        iconArea.appendChild(msg);
+    const msg = document.createElement('div');
+    msg.className = 'locked-message';
 
-        void msg.offsetWidth;
-        msg.classList.add('show');
-
-        setTimeout(() => {
-            msg.classList.remove('show');
-            setTimeout(() => msg.remove(), 300);
-        }, 7000);
+    if (window.USER_IS_ENROLLED === "true") {
+        msg.textContent = "لطفًا، أكملوا التحدّي المتاح أولًا للتمكّن من فتح التحديات المقفلة.";
+    } else {
+        msg.textContent = "يجب الالتحاق في الرحلة أولًا لتتمكّن من بدء المغامرات.";
     }
+
+    const iconArea = lockedCircle.querySelector('.state-icon, .state-icon2');
+    iconArea.appendChild(msg);
+
+    void msg.offsetWidth;
+    msg.classList.add('show');
+
+    setTimeout(() => {
+        msg.classList.remove('show');
+        setTimeout(() => msg.remove(), 300);
+    }, 7000);
 });
+</script>
 
-
-    </script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const sticky = document.querySelector(".sticky-icons-wrapper");
@@ -1472,64 +1491,81 @@ document.addEventListener("DOMContentLoaded", function () {
     const startOffset = sticky.offsetTop;
 
     function updateSticky() {
-    const scrollY = window.scrollY || 0;
-    const isScrollingDown = scrollY > lastScroll;
-    lastScroll = scrollY;
+        const scrollY = window.scrollY || 0;
+        const isScrollingDown = scrollY > lastScroll;
+        lastScroll = scrollY;
 
-    if (scrollY >= startOffset && isScrollingDown) {
-        sticky.classList.add("is-sticky");
-        document.body.classList.add("sticky-active");   
-        sticky.style.top = "0px";
-    } else if (scrollY < startOffset) {
-        sticky.classList.remove("is-sticky");
-        document.body.classList.remove("sticky-active"); 
+        if (scrollY >= startOffset && isScrollingDown) {
+            sticky.classList.add("is-sticky");
+            document.body.classList.add("sticky-active");
+            sticky.style.top = "0px";
+        } else if (scrollY < startOffset) {
+            sticky.classList.remove("is-sticky");
+            document.body.classList.remove("sticky-active");
+        }
     }
-}
 
     window.addEventListener("scroll", updateSticky);
     window.addEventListener("resize", updateSticky);
     updateSticky();
 
     function hideSticky() {
-        sticky.classList.remove("is-sticky"); 
-        sticky.style.zIndex = "-1";           
-        sticky.style.opacity = "0";           
-        sticky.style.pointerEvents = "none";  
+        sticky.classList.remove("is-sticky");
+        sticky.style.zIndex = "-1";
+        sticky.style.opacity = "0";
+        sticky.style.pointerEvents = "none";
     }
 
     function showSticky() {
         sticky.style.opacity = "1";
-        sticky.style.zIndex = "999";          
+        sticky.style.zIndex = "999";
         sticky.style.pointerEvents = "auto";
-        updateSticky();                       
+        updateSticky();
     }
 
-    // Open modal
     $(document).on('click', '.open-course-modal-link', function(e) {
         e.preventDefault();
         $('#courseFrame').attr('src', $(this).attr('href'));
         $('#courseModal').css('display', 'block');
-        hideSticky();   
+        hideSticky();
     });
 
-    // Close modal
     $('.close-button, #courseModal').on('click', function(event) {
         if (event.target === this || $(this).hasClass('close-button')) {
             $('#courseFrame').attr('src', '');
             $('#courseModal').css('display', 'none');
-            showSticky(); 
+            showSticky();
             refreshCourseStatus();
         }
     });
 });
-
-
-
 </script>
 
 
 
+<script>
+window.showXpPopup = function(gained, total){
+    const p = document.getElementById("xp-popup");
+    const title = document.getElementById("xp-popup-title");
+    const text = document.getElementById("xp-popup-text");
 
+    title.textContent = "XP POWER-UP!";
+    text.innerHTML = "Gained: " + gained + " XP<br>Total: " + total + " XP";
+
+    p.style.display = "flex";
+    p.classList.add("show");
+
+    setTimeout(() => {
+        p.classList.remove("show");
+        p.classList.add("hide");
+
+        setTimeout(() => {
+            p.classList.remove("hide");
+            p.style.display = "none";
+        }, 300);
+    }, 3000);
+};
+</script>
 
 
 </%block>
