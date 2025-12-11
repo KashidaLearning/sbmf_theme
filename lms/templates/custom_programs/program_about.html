@@ -1461,15 +1461,23 @@ document.addEventListener("DOMContentLoaded", function() {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
-    const originalRefresh = window.refreshCourseStatus;  // save original
+    window.__SOUND_ALREADY_PLAYED__ = false;
+
+    // Reset sound lock whenever modal closes → new course = new sound allowed
+    document.addEventListener("click", function(e){
+        if (e.target.matches(".close-button") || e.target.id === "courseModal") {
+            window.__SOUND_ALREADY_PLAYED__ = false;
+        }
+    });
+
+    const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
-        // 1) Run the original function so circles update normally
+
         if (typeof originalRefresh === "function") {
             await originalRefresh();
         }
 
-        // 2) Then run sound logic
         try {
             const updated = window.coursePathData || [];
             if (updated.some(c => c.state === "completed")) {
@@ -1491,6 +1499,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
+
 
 
 
