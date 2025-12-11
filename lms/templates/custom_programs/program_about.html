@@ -1170,6 +1170,7 @@ for ub in user_badges:
 <script>
     window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
 </script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script src="${static.url('js/script.js')}"></script>
 
@@ -1457,16 +1458,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 <script>
+function launchConfetti() {
+    // Burst animation from the center
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        startVelocity: 45,
+        origin: { x: 0.5, y: 0.5 }
+    });
+
+    // A second smaller burst for a nice effect
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            spread: 60,
+            startVelocity: 35,
+            origin: { x: 0.5, y: 0.4 }
+        });
+    }, 300);
+}
+</script>
+
+<script>
 document.addEventListener("DOMContentLoaded", function() {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // Reset sound lock whenever modal closes → new course = new sound allowed
-    document.addEventListener("click", function(e){
-        if (e.target.matches(".close-button") || e.target.id === "courseModal") {
-            window.__SOUND_ALREADY_PLAYED__ = false;
+    // Reset sound/confetti when popup closes
+   document.addEventListener("click", function(e){
+    if (e.target.matches(".close-button") || e.target.id === "courseModal") {
+        window.__SOUND_ALREADY_PLAYED__ = false;
+        window.__LAST_COMPLETED_COUNT__ = null;   // FIX HERE
         }
     });
 
@@ -1480,11 +1504,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const updated = window.coursePathData || [];
-            if (updated.some(c => c.state === "completed")) {
-                playCompletionSound();
+
+            // Detect newly completed courses
+            const completedCount = updated.filter(c => c.state === "completed").length;
+
+            if (window.__LAST_COMPLETED_COUNT__ === null || window.__LAST_COMPLETED_COUNT__ === undefined) {
+                window.__LAST_COMPLETED_COUNT__ = completedCount;
             }
+
+            if (completedCount > window.__LAST_COMPLETED_COUNT__) {
+                playCompletionSound();
+                launchConfetti();
+            }
+
+            window.__LAST_COMPLETED_COUNT__ = completedCount;
+
         } catch (e) {
-            console.error("Sound refresh error:", e);
+            console.error("Sound/Confetti error:", e);
         }
     };
 
@@ -1494,12 +1530,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         audio.volume = 1.0;
         audio.play().catch(err => {
-            console.log("Audio blocked until user interaction:", err);
+            console.log("Audio blocked:", err);
         });
     }
 });
 </script>
-
 
 
 
