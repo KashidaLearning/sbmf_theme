@@ -1480,27 +1480,21 @@ function launchConfetti() {
 </script>
 
 <script>
-window.addEventListener("load", function () {
-
+document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
-    // Allow sound again for next completion
+    // State
+    window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // Reset sound when any close-button OR modal background is clicked
-    document.addEventListener("click", function(e){
-        if (e.target.matches(".close-button") || e.target.id === "courseModal") {
-            window.__SOUND_ALREADY_PLAYED__ = false;
-        }
-    });
-
-    // Capture original refresh
+    // Save original function (only once)
     const originalRefresh = window.refreshCourseStatus;
 
-    async function newRefresh() {
+    // Single clean override
+    window.refreshCourseStatus = async function () {
 
-        // Run the original function (updates DOM, AJAX, circles)
+        // Run original AJAX refresh
         if (typeof originalRefresh === "function") {
             await originalRefresh();
         }
@@ -1508,30 +1502,35 @@ window.addEventListener("load", function () {
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
 
-        // Initialize baseline only once
-        if (window.__LAST_COMPLETED_COUNT__ === undefined) {
+        // First-time baseline
+        if (window.__LAST_COMPLETED_COUNT__ === null) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
+            return;
         }
 
-        // Trigger only on NEW completion
+        // Detect NEW completion
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-            playCompletionSound();
+            playSound();
             launchConfetti();
         }
 
-        // Update baseline AFTER detection
+        // Update baseline
         window.__LAST_COMPLETED_COUNT__ = completedCount;
-    }
+    };
 
-    // Override refreshCourseStatus permanently
-    window.refreshCourseStatus = newRefresh;
+    // Reset when popup closes
+    document.addEventListener("click", function (e) {
+        if (e.target.matches(".close-button") || e.target.id === "courseModal") {
+            window.__SOUND_ALREADY_PLAYED__ = false;
+        }
+    });
 
-    function playCompletionSound() {
+    function playSound() {
         if (window.__SOUND_ALREADY_PLAYED__) return;
         window.__SOUND_ALREADY_PLAYED__ = true;
 
         audio.volume = 1.0;
-        audio.play().catch(err => {});
+        audio.play().catch(() => {});
     }
 });
 </script>
