@@ -1136,6 +1136,10 @@ for ub in user_badges:
  <div class="course-sidebar" style="display: none;">
             <div class="inner-wrapper">${HTML(program.addition_info)}</div>
         </div> 
+        <audio id="courseCompleteSound" preload="auto">
+    <source src="${static.url('sounds/course-complete.mp3')}" type="audio/mpeg">
+</audio>
+
 <%block name="js_extra">
 <script>
     window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
@@ -1451,6 +1455,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const audio = document.getElementById("courseCompleteSound");
+    if (!audio) return;
+
+    const courses = window.coursePathData || [];
+
+    courses.forEach(course => {
+        if (course.state === "completed") {
+            playCompletionSound();
+        }
+    });
+
+    function playCompletionSound() {
+        if (window.__SOUND_ALREADY_PLAYED__) return;
+
+        window.__SOUND_ALREADY_PLAYED__ = true;
+
+        audio.volume = 1.0;
+        audio.play().catch(err => {
+            console.log("Audio blocked until user interaction:", err);
+        });
+    }
+
+    window.refreshCourseStatus = function () {
+        const updated = window.coursePathData || [];
+        const someCompleted = updated.some(c => c.state === "completed");
+
+        if (someCompleted) {
+            playCompletionSound();
+        }
+    };
+});
 </script>
 
 
