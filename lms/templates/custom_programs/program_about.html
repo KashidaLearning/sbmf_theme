@@ -143,40 +143,6 @@ text-transform: capitalize;
         max-width: 300px;
     }
 }
-.xp-popup {
-    position: absolute;
-    z-index: 9999;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: rgba(255, 203, 5, 0.95); /* نفس لون الأصفر */
-    color: #110D7C;
-    font-family: "IBM Plex Sans Arabic", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    pointer-events: none;
-    animation: xpPopupFloat 1.2s ease-out forwards;
-}
-
-@keyframes xpPopupFloat {
-    0% {
-        transform: translate(-50%, -10px);
-        opacity: 0;
-    }
-    20% {
-        opacity: 1;
-    }
-    80% {
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -60px);
-        opacity: 0;
-    }
-}
-
 
 </style>
 % if program.css_color:
@@ -510,7 +476,7 @@ except:
                 "link": course_link,
                 "is_special": is_special,
                 "is_first_course": is_first_course,
-                "xpAward": 50,
+                
             })
 
             idx += 1
@@ -1207,33 +1173,22 @@ for ub in user_badges:
 </script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-function launchConfetti(fromElement) {
-    let origin = { x: 0.5, y: 0.5 };
-
-    if (fromElement) {
-        const rect = fromElement.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-
-        origin = {
-            x: cx / window.innerWidth,
-            y: cy / window.innerHeight
-        };
-    }
-
+function launchConfetti() {
+    // Burst animation from the center
     confetti({
         particleCount: 150,
         spread: 70,
         startVelocity: 45,
-        origin: origin
+        origin: { x: 0.5, y: 0.5 }
     });
 
+    // A second smaller burst for a nice effect
     setTimeout(() => {
         confetti({
             particleCount: 100,
             spread: 60,
             startVelocity: 35,
-            origin: origin
+            origin: { x: 0.5, y: 0.4 }
         });
     }, 300);
 }
@@ -1241,82 +1196,34 @@ function launchConfetti(fromElement) {
 
 <script src="${static.url('js/script.js')}"></script>
 <script>
-function showXpPopup(circleEl, xpAmount) {
-    if (!circleEl) return;
-
-    const popup = document.createElement("div");
-    popup.className = "xp-popup";
-    popup.textContent = `+${xpAmount} XP`;
-
-    circleEl.style.position = circleEl.style.position || "relative";
-    circleEl.appendChild(popup);
-
-    setTimeout(() => {
-        popup.remove();
-    }, 1400);
-}
-</script>
-
-<script>
 document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
-    // State
     window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
-    window.__COURSE_STATE_SNAPSHOT__ = null; 
 
+    // store the ORIGINAL refresh from script.js (NOW it's defined)
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
 
-        let prevSnapshot = window.__COURSE_STATE_SNAPSHOT__;
-
-        await originalRefresh();
+        await originalRefresh();  // run script.js logic
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
 
-        const newSnapshot = {};
-        updated.forEach(item => {
-            newSnapshot[item.id] = item.state;
-        });
-
-        if (window.__LAST_COMPLETED_COUNT__ === null || !prevSnapshot) {
+        if (window.__LAST_COMPLETED_COUNT__ === null) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
-            window.__COURSE_STATE_SNAPSHOT__ = newSnapshot;
             return;
         }
 
-        const newlyCompleted = [];
-        updated.forEach(item => {
-            const prevState = prevSnapshot[item.id];
-            const nowState = item.state;
-            if (prevState !== "completed" && nowState === "completed") {
-                newlyCompleted.push(item);
-            }
-        });
-
-        newlyCompleted.forEach(item => {
-            const courseId = item.id;
-            const xp = item.xpAward || 50;
-
-         
-            const circleEl = document.querySelector(
-                `.circle-item[data-course-id="${courseId}"]`
-            );
-
-            showXpPopup(circleEl, xp);
-            launchConfetti(circleEl);
-        });
-
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
             playSound();
+            launchConfetti();
         }
 
         window.__LAST_COMPLETED_COUNT__ = completedCount;
-        window.__COURSE_STATE_SNAPSHOT__ = newSnapshot;
     };
 
     document.addEventListener("click", function (e) {
@@ -1334,7 +1241,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
-
 
 <script>
    
