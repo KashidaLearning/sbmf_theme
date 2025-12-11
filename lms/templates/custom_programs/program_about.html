@@ -1486,11 +1486,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // Reset sound/confetti when popup closes
-   document.addEventListener("click", function(e){
-    if (e.target.matches(".close-button") || e.target.id === "courseModal") {
-        window.__SOUND_ALREADY_PLAYED__ = false;
-        window.__LAST_COMPLETED_COUNT__ = null;   // FIX HERE
+    // Reset sound when popup closes
+    document.addEventListener("click", function(e){
+        if (e.target.matches(".close-button") || e.target.id === "courseModal") {
+            window.__SOUND_ALREADY_PLAYED__ = false;
         }
     });
 
@@ -1504,19 +1503,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
         try {
             const updated = window.coursePathData || [];
-
-            // Detect newly completed courses
             const completedCount = updated.filter(c => c.state === "completed").length;
 
-            if (window.__LAST_COMPLETED_COUNT__ === null || window.__LAST_COMPLETED_COUNT__ === undefined) {
+            // Initialize baseline only once
+            if (window.__LAST_COMPLETED_COUNT__ === undefined) {
                 window.__LAST_COMPLETED_COUNT__ = completedCount;
             }
 
+            // Trigger only on NEW completion
             if (completedCount > window.__LAST_COMPLETED_COUNT__) {
                 playCompletionSound();
                 launchConfetti();
             }
 
+            // Update baseline AFTER detection
             window.__LAST_COMPLETED_COUNT__ = completedCount;
 
         } catch (e) {
@@ -1534,6 +1534,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
 </script>
 
 
