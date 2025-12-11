@@ -1480,62 +1480,62 @@ function launchConfetti() {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+window.addEventListener("load", function () {
+
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
+    // Allow sound again for next completion
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // Reset sound when popup closes
+    // Reset sound when any close-button OR modal background is clicked
     document.addEventListener("click", function(e){
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
             window.__SOUND_ALREADY_PLAYED__ = false;
         }
     });
 
+    // Capture original refresh
     const originalRefresh = window.refreshCourseStatus;
 
-    window.refreshCourseStatus = async function () {
+    async function newRefresh() {
 
+        // Run the original function (updates DOM, AJAX, circles)
         if (typeof originalRefresh === "function") {
             await originalRefresh();
         }
 
-        try {
-            const updated = window.coursePathData || [];
-            const completedCount = updated.filter(c => c.state === "completed").length;
+        const updated = window.coursePathData || [];
+        const completedCount = updated.filter(c => c.state === "completed").length;
 
-            // Initialize baseline only once
-            if (window.__LAST_COMPLETED_COUNT__ === undefined) {
-                window.__LAST_COMPLETED_COUNT__ = completedCount;
-            }
-
-            // Trigger only on NEW completion
-            if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-                playCompletionSound();
-                launchConfetti();
-            }
-
-            // Update baseline AFTER detection
+        // Initialize baseline only once
+        if (window.__LAST_COMPLETED_COUNT__ === undefined) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
-
-        } catch (e) {
-            console.error("Sound/Confetti error:", e);
         }
-    };
+
+        // Trigger only on NEW completion
+        if (completedCount > window.__LAST_COMPLETED_COUNT__) {
+            playCompletionSound();
+            launchConfetti();
+        }
+
+        // Update baseline AFTER detection
+        window.__LAST_COMPLETED_COUNT__ = completedCount;
+    }
+
+    // Override refreshCourseStatus permanently
+    window.refreshCourseStatus = newRefresh;
 
     function playCompletionSound() {
         if (window.__SOUND_ALREADY_PLAYED__) return;
         window.__SOUND_ALREADY_PLAYED__ = true;
 
         audio.volume = 1.0;
-        audio.play().catch(err => {
-            console.log("Audio blocked:", err);
-        });
+        audio.play().catch(err => {});
     }
 });
-
 </script>
+
 
 
 
