@@ -144,60 +144,78 @@ text-transform: capitalize;
     }
 }
 .xp-popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 5000;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    z-index: 999999;
 }
 
-/* Popup Box */
+/* MAIN CARD */
 .xp-popup-content {
-    background: #1a0033;
-    border: 3px solid #8b2bff;
-    box-shadow: 0 0 25px #8b2bff, 0 0 60px #5e17eb inset;
-    padding: 30px 45px;
-    border-radius: 20px;
+    background: rgba(35, 0, 70, 0.9);
+    border: 2px solid #a24dff;
+    border-radius: 22px;
+    padding: 35px 50px;
+    width: 380px;
     color: #fff;
     text-align: center;
-    transform: scale(0);
+
+    /* Neon glow */
+    box-shadow:
+        0 0 20px #b36bff,
+        0 0 40px #8a2bff,
+        inset 0 0 20px #5e17eb;
+
+    /* Hide by default */
+    transform: translateY(40px) scale(0.7);
     opacity: 0;
-    transition: transform .4s ease-out, opacity .4s ease-out;
-    font-family: "IBM Plex Sans Arabic";
+
+    /* Entry animation */
+    transition:
+        transform .5s cubic-bezier(.19,1,.22,1),
+        opacity .5s ease-out;
 }
 
-/* When active */
+/* SHOW STATE */
 .xp-popup.show .xp-popup-content {
-    transform: scale(1.1);
+    transform: translateY(0px) scale(1);
     opacity: 1;
+    animation: xpFloat 3s ease-in-out infinite;
 }
 
+/* EXIT */
 .xp-popup.hide .xp-popup-content {
-    transform: scale(0.6);
+    transform: translateY(60px) scale(0.6);
     opacity: 0;
 }
-#xp-popup {
-    display: none !important;
-}
-#xp-popup.show {
-    display: flex !important;
-}
-.xp-popup {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+/* Floating (up-down motion) */
+@keyframes xpFloat {
+    0%   { transform: translateY(0) scale(1); }
+    50%  { transform: translateY(-10px) scale(1.03); }
+    100% { transform: translateY(0) scale(1); }
 }
 
-.xp-popup-content {
-    max-width: 350px;
-    width: 90%;
+/* XP TEXT */
+#xp-popup-title {
+    font-size: 26px;
+    font-weight: 900;
+    color: #ffcbff;
+    text-shadow: 0px 0px 12px #ff40ff;
 }
+
+#xp-popup-text {
+    margin-top: 8px;
+    font-size: 18px;
+    opacity: .9;
+}
+
 </style>
 % if program.css_color:
     <style>
@@ -1191,7 +1209,7 @@ for ub in user_badges:
  <div class="course-sidebar" style="display: none;">
             <div class="inner-wrapper">${HTML(program.addition_info)}</div>
         </div> 
-        <audio id="courseCompleteSound" preload="auto">
+<audio id="courseCompleteSound" preload="auto">
     <source src="${static.url('sounds/course-complete.mp3')}" type="audio/mpeg">
 </audio>
 <div id="xp-popup" class="xp-popup">
@@ -1256,7 +1274,21 @@ function launchConfetti() {
 </script>
 
 <script src="${static.url('js/script.js')}"></script>
+<script>
+window.playSound = function () {
+    const audio = document.getElementById("courseCompleteSound");
+    if (!audio) return;
 
+    if (window.__SOUND_ALREADY_PLAYED__) return;
+
+    window.__SOUND_ALREADY_PLAYED__ = true;
+    audio.volume = 1.0;
+    audio.play().catch(()=>{});
+};
+
+// Always reset sound when page reloads
+window.__SOUND_ALREADY_PLAYED__ = false;
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("courseCompleteSound");
@@ -1268,7 +1300,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
-        await originalRefresh();
+        if (typeof originalRefresh === "function") {
+            await originalRefresh();
+        }
+
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
 
@@ -1276,10 +1311,13 @@ document.addEventListener("DOMContentLoaded", function () {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
             return;
         }
-
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-            playSound();
+            window.playSound();
             launchConfetti();
+
+            setTimeout(() => { 
+                window.__SOUND_ALREADY_PLAYED__ = false; 
+            }, 2000);
         }
 
         window.__LAST_COMPLETED_COUNT__ = completedCount;
@@ -1288,16 +1326,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", function (e) {
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
             window.__SOUND_ALREADY_PLAYED__ = false;
+            window.__LAST_COMPLETED_COUNT__ = null;
         }
     });
-
-    function playSound() {
-        if (window.__SOUND_ALREADY_PLAYED__) return;
-        window.__SOUND_ALREADY_PLAYED__ = true;
-        audio.volume = 1.0;
-        audio.play().catch(() => {});
-    }
 });
+
 </script>
 
 <script>
@@ -1563,8 +1596,9 @@ window.showXpPopup = function(gained, total){
             p.classList.remove("hide");
             p.style.display = "none";
         }, 300);
-    }, 3000);
+    }, 8000);
 };
+
 </script>
 
 
