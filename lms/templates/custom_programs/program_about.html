@@ -252,6 +252,133 @@ body.xp-blur-active > *:not(#xp-popup) {
         opacity: 1;
     }
 }
+.rank-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 10, 40, 0.55);
+    backdrop-filter: blur(18px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+}
+
+.rank-popup.show {
+    display: flex;
+}
+
+.rank-popup-card {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--program-main-color) 80%, black),
+        #2b0f5c
+    );
+    border-radius: 24px;
+    padding: 26px 22px 28px;
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.08),
+        0 30px 90px rgba(0,0,0,.55);
+}
+.rank-title {
+    font-size: 20px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 18px;
+    color: #fff;
+    letter-spacing: .5px;
+    text-shadow: 0 4px 14px rgba(0,0,0,.4);
+}
+
+
+.rank-popup-card {
+    overflow: hidden;
+}
+
+.rank-rows {
+    position: relative;
+    height: 160px; /* صفين فقط */
+}
+
+.rank-rows .leaderboard-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    --y: 0px;
+    transform: translateY(var(--y));
+
+    transition: transform 0.7s cubic-bezier(.22,1,.36,1),
+                opacity 0.4s ease;
+}
+
+
+
+.rank-popup .winner {
+    top: 80px;   
+}
+
+.rank-popup .loser {
+    top: 0;      
+}
+.rank-popup.swap .winner {
+    --y: -80px;   
+}
+
+.rank-popup.swap .loser {
+    --y: 80px;    
+}
+
+.rank-popup .row-right {
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+
+/* initial appear */
+
+.rank-popup .winner .row-right.gold {
+    background: color-mix(
+        in srgb,
+        var(--program-main-color) 90%,
+        #FFD700
+    );
+    color: var(--Royal-Indigo, #110D7C);
+    box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.25),
+        0 0 30px rgba(255, 215, 0, 0.55);
+}
+.rank-popup .rank-box {
+    font-size: 32px;
+    font-weight: 900;
+    opacity: .85;
+}
+@keyframes winnerPulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+@keyframes goldGlow {
+    0%   { box-shadow: 0 0 0 rgba(255,215,0,0); }
+    50%  { box-shadow: 0 0 35px rgba(255,215,0,.7); }
+    100% { box-shadow: 0 0 0 rgba(255,215,0,0); }
+}
+.rank-popup .rank-popup-card {
+    width: 560px;
+    max-width: 90%;
+}
+.rank-popup .leaderboard-row {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.rank-popup.swap .winner .row-right.gold {
+    animation: goldGlow 0.8s ease-out;
+}
+
+.rank-popup.swap .winner {
+    animation: winnerPulse 0.6s ease-out;
+}
 
 .circle-item.completed-animate {
     animation: completePulse 1.2s ease-out;
@@ -1143,7 +1270,8 @@ for ub in user_badges:
     <div id="certificate-status">
         % if cert_url:
             <h1>شهــــــادة إنجــــــاز</h1>
-            <div class="name ">${user_data['name'] or user_data['username']}</div>
+            <div class="name ">${request.user.profile.name or request.user.username}</div>
+
 
             <div class="certificate-characters-right">
                 <img src="${static.url('images/cert-characters.png')}" alt="characters">
@@ -1258,6 +1386,9 @@ for ub in user_badges:
 <audio id="courseCompleteSound" preload="auto">
     <source src="${static.url('sounds/course-complete.mp3')}" type="audio/mpeg">
 </audio>
+<audio id="rankSound" preload="auto">
+    <source src="${static.url('sounds/xp-level-up.mp3')}" type="audio/mpeg">
+</audio>
 <div id="xp-popup" class="xp-popup">
   <div class="xp-popup-content">
 
@@ -1279,14 +1410,63 @@ for ub in user_badges:
 
   </div>
 </div>
+<div id="rank-popup" class="rank-popup" aria-hidden="true">
+  <div class="rank-popup-card">
+
+    <div class="rank-title">🔥 ترتيب جديد</div>
+
+    <div class="rank-rows">
+      <div id="rank-winner" class="leaderboard-row swap-row winner">
+        <div class="rank-box"></div>
+        <div class="icon">
+          <img src="${static.url('images/image-profile-blue.png')}">
+        </div>
+        <div class="row-right gold">
+          <div class="name"></div>
+          <div class="pt1">XP</div>
+        </div>
+      </div>
+
+      <div id="rank-loser" class="leaderboard-row swap-row loser">
+        <div class="rank-box"></div>
+        <div class="icon">
+          <img src="${static.url('images/image-profile-blue.png')}">
+        </div>
+        <div class="row-right blue2">
+          <div class="name"></div>
+          <div class="pt1">XP</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 
 <%block name="js_extra">
-
+<%
+_safe_current_user_rank = 0
+_safe_current_user_name = request.user.username
+%>
 <script>
 window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
 </script>
+<script>
+    let AUDIO_UNLOCKED = false;
 
+document.addEventListener("click", () => {
+    if (AUDIO_UNLOCKED) return;
+    document.querySelectorAll("audio").forEach(a => {
+        a.muted = true;
+        a.play().catch(()=>{});
+        a.pause();
+        a.muted = false;
+    });
+    AUDIO_UNLOCKED = true;
+}, { once: true });
+
+</script>
 <script>
 window.STATE_ICONS = {
     completed: "${static.url('images/badge112.png')}",
@@ -1305,6 +1485,11 @@ window.EVAL_ICONS = {
     no_challenges: "${static.url('images/lockedstatus.png')}"
 };
 </script>
+<script>
+window.CURRENT_USER_RANK = ${_safe_current_user_rank};
+window.CURRENT_USER_NAME = "${_safe_current_user_name}";
+</script>
+
 
 <script>
 window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
@@ -1318,13 +1503,28 @@ window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'p
 <script>
 
 const xpSound = new Audio(
-    "${static.url('sounds/xp-level-up.mp3')}"
+    "${static.url('sounds/course-complete.mp3')}"
 );
 
 xpSound.volume = 0.7;
 xpSound.preload = "auto";
 
 </script>
+<script>
+const rankSound = new Audio("${static.url('sounds/xp-level-up.mp3')}");
+rankSound.volume = 0.8;
+rankSound.preload = "auto";
+
+function lightRankConfetti() {
+    confetti({
+        particleCount: 70,
+        spread: 50,
+        startVelocity: 25,
+        origin: { x: 0.5, y: 0.65 }
+    });
+}
+</script>
+
 <script>
 function launchConfetti() {
     confetti({
@@ -1701,6 +1901,79 @@ function showXpPopup(gainedXP, currentXP) {
     }, 7000);
 }
 
+</script>
+<script>
+function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
+    const popup  = document.getElementById("rank-popup");
+    const winner = document.getElementById("rank-winner");
+    const loser  = document.getElementById("rank-loser");
+    const sound  = document.getElementById("rankSound");
+
+    if (!popup || !winner || !loser) return;
+
+    /* fill data */
+    winner.querySelector(".name").textContent = winnerName;
+    winner.querySelector(".rank-box").textContent = "#" + winnerRank;
+
+    loser.querySelector(".name").textContent = loserName;
+    loser.querySelector(".rank-box").textContent = "#" + loserRank;
+
+    winner.querySelector(".row-right").className = "row-right gold";
+    loser.querySelector(".row-right").className  = "row-right blue2";
+
+    /* reset state */
+    popup.classList.remove("swap");
+    popup.classList.remove("show");
+
+    /* show popup */
+    popup.classList.add("show");
+    popup.setAttribute("aria-hidden", "false");
+
+    /* sound */
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(()=>{});
+    }
+
+    /* confetti */
+   if (window.confetti) {
+    const duration = 1200;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 6,
+            angle: 60,
+            spread: 55,
+            startVelocity: 35,
+            origin: { x: 0.15, y: 0.65 }
+        });
+        confetti({
+            particleCount: 6,
+            angle: 120,
+            spread: 55,
+            startVelocity: 35,
+            origin: { x: 0.85, y: 0.65 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    })();
+    }
+
+    /* swap animation */
+    setTimeout(() => {
+        popup.classList.add("swap");
+    }, 700);
+
+    /* hide popup */
+    setTimeout(() => {
+        popup.classList.remove("swap");
+        popup.classList.remove("show");
+        popup.setAttribute("aria-hidden", "true");
+    }, 7000);
+}
 </script>
 
 
