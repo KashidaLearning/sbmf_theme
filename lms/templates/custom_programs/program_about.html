@@ -143,79 +143,125 @@ text-transform: capitalize;
         max-width: 300px;
     }
 }
+body.xp-blur-active > *:not(#xp-popup) {
+    filter: blur(20px) brightness(0.75);
+    transition: filter 0.45s ease;
+}
 .xp-popup {
-    position: fixed !important;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
+    position: fixed;
+    inset: 0;
     display: none;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
+
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
     z-index: 999999;
 }
 
-/* MAIN CARD */
+.xp-popup.show {
+    display: flex;
+}
+
 .xp-popup-content {
-    background: rgba(35, 0, 70, 0.9);
-    border: 2px solid #a24dff;
+    background: rgba(120, 60, 255, 0.22);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
     border-radius: 22px;
-    padding: 35px 50px;
-    width: 380px;
+    padding: 32px 48px;
+
+    border: 1px solid rgba(180, 140, 255, 0.35);
+
+    box-shadow:
+        0 0 25px rgba(150, 90, 255, 0.6),
+        0 0 60px rgba(90, 30, 200, 0.45),
+        inset 0 0 20px rgba(255, 255, 255, 0.12);
+
     color: #fff;
     text-align: center;
 
-    /* Neon glow */
-    box-shadow:
-        0 0 20px #b36bff,
-        0 0 40px #8a2bff,
-        inset 0 0 20px #5e17eb;
-
-    /* Hide by default */
-    transform: translateY(40px) scale(0.7);
+    transform: scale(0.85);
     opacity: 0;
 
-    /* Entry animation */
     transition:
-        transform .5s cubic-bezier(.19,1,.22,1),
-        opacity .5s ease-out;
+        transform 0.45s cubic-bezier(.2,1.3,.4,1),
+        opacity 0.35s ease;
+
+    font-family: "IBM Plex Sans Arabic";
 }
 
-/* SHOW STATE */
+
 .xp-popup.show .xp-popup-content {
-    transform: translateY(0px) scale(1);
+    animation: xpSpawn 0.6s cubic-bezier(.2,1.4,.4,1);
     opacity: 1;
-    animation: xpFloat 3s ease-in-out infinite;
+    transform: scale(1);
+}
+@keyframes xpImpact {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+.xp-popup.impact .xp-popup-content {
+    animation: xpImpact 0.4s ease;
 }
 
-/* EXIT */
-.xp-popup.hide .xp-popup-content {
-    transform: translateY(60px) scale(0.6);
-    opacity: 0;
+@keyframes popupIn {
+    from { transform: scale(.6) translateY(40px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-/* Floating (up-down motion) */
-@keyframes xpFloat {
-    0%   { transform: translateY(0) scale(1); }
-    50%  { transform: translateY(-10px) scale(1.03); }
-    100% { transform: translateY(0) scale(1); }
+.xp-icon {
+    font-size: 40px;
+    animation: pulse 1.5s infinite;
 }
 
-/* XP TEXT */
-#xp-popup-title {
-    font-size: 26px;
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.xp-gain {
+    font-size: 48px;
     font-weight: 900;
-    color: #ffcbff;
-    text-shadow: 0px 0px 12px #ff40ff;
+    margin: 15px 0;
+    animation: popNumber .6s ease-out;
 }
 
-#xp-popup-text {
-    margin-top: 8px;
-    font-size: 18px;
-    opacity: .9;
+@keyframes popNumber {
+    0% { transform: scale(.5); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+@keyframes xpSpawn {
+    0% {
+        transform: translateY(60px) scale(0.6);
+        opacity: 0;
+    }
+    60% {
+        transform: translateY(-10px) scale(1.08);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }
 
+.circle-item.completed-animate {
+    animation: completePulse 1.2s ease-out;
+}
+
+@keyframes completePulse {
+    0%   { transform: scale(1); box-shadow: none; }
+    40%  { transform: scale(1.2); box-shadow: 0 0 30px #7f2cff; }
+    100% { transform: scale(1); }
+}
 </style>
 % if program.css_color:
     <style>
@@ -1213,11 +1259,27 @@ for ub in user_badges:
     <source src="${static.url('sounds/course-complete.mp3')}" type="audio/mpeg">
 </audio>
 <div id="xp-popup" class="xp-popup">
-    <div class="xp-popup-content">
-        <h3 id="xp-popup-title">XP UP!</h3>
-        <p id="xp-popup-text"></p>
+  <div class="xp-popup-content">
+
+    <div class="xp-icon">⚡</div>
+
+    <div class="xp-gain">
+      <span class="plus">+</span>
+      <span id="xp-gained">25</span>
+      <span class="xp-text">XP</span>
     </div>
+
+    <div class="xp-total">
+      Total XP: <b id="xp-total">320</b>
+    </div>
+
+    <div class="xp-next">
+      Next Level in <b id="xp-remaining">45</b> XP
+    </div>
+
+  </div>
 </div>
+
 
 <%block name="js_extra">
 
@@ -1253,7 +1315,16 @@ window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'p
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
 
+const xpSound = new Audio(
+    "${static.url('sounds/xp-level-up.mp3')}"
+);
+
+xpSound.volume = 0.7;
+xpSound.preload = "auto";
+
+</script>
 <script>
 function launchConfetti() {
     confetti({
@@ -1286,10 +1357,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.refreshCourseStatus = async function () {
 
-        await originalRefresh();  // run script.js logic
+        await originalRefresh();  
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
+        const newlyCompleted = updated.find(c =>
+        c.state === "completed" && !c.__animated
+    );
+
+    if (newlyCompleted) {
+        const el = document.querySelector(
+            '.circle-item[data-course-id="' + newlyCompleted.id + '"]'
+        );
+
+        if (el) {
+            el.classList.add("completed-animate");
+
+            setTimeout(() => {
+                el.classList.remove("completed-animate");
+            }, 1200);
+        }
+
+        newlyCompleted.__animated = true;
+    }
+
 
         if (window.__LAST_COMPLETED_COUNT__ === null) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
@@ -1299,6 +1390,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
             playSound();
             launchConfetti();
+            showXpPopup(25, window.USER_XP || 300);
         }
 
         window.__LAST_COMPLETED_COUNT__ = completedCount;
@@ -1318,7 +1410,6 @@ document.addEventListener("DOMContentLoaded", function () {
         audio.play().catch(() => {});
     }
 });
-
 </script>
 
 <script>
@@ -1561,31 +1652,54 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<script>
+function calculateXpState(currentXP, gainedXP) {
+    const totalXP = currentXP + gainedXP;
 
+    const LEVEL_STEP = 100; 
+    const nextLevelXP = Math.ceil(totalXP / LEVEL_STEP) * LEVEL_STEP;
+    const remaining = nextLevelXP - totalXP;
+
+    return {
+        gainedXP: gainedXP,
+        totalXP: totalXP,
+        remaining: remaining
+    };
+}
+
+
+</script>
 
 
 <script>
-window.showXpPopup = function(gained, total){
-    const p = document.getElementById("xp-popup");
-    const title = document.getElementById("xp-popup-title");
-    const text = document.getElementById("xp-popup-text");
+function showXpPopup(gainedXP, currentXP) {
+    const xp = calculateXpState(currentXP, gainedXP);
 
-    title.textContent = "XP POWER-UP!";
-    text.innerHTML = "Gained: " + gained + " XP<br>Total: " + total + " XP";
+    document.getElementById("xp-gained").textContent = xp.gainedXP;
+    document.getElementById("xp-total").textContent = xp.totalXP;
+    document.getElementById("xp-remaining").textContent = xp.remaining;
 
-    p.style.display = "flex";
-    p.classList.add("show");
+    const popup = document.getElementById("xp-popup");
+
+    popup.classList.add("show");
+
+    // sound
+    xpSound.currentTime = 0;
+    setTimeout(() => xpSound.play().catch(() => {}), 120);
+
+    // impact shake after spawn
+    setTimeout(() => {
+        popup.classList.add("impact");
+    }, 650);
 
     setTimeout(() => {
-        p.classList.remove("show");
-        p.classList.add("hide");
+        popup.classList.remove("impact");
+    }, 1100);
 
-        setTimeout(() => {
-            p.classList.remove("hide");
-            p.style.display = "none";
-        }, 300);
-    }, 8000);
-};
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 7000);
+}
 
 </script>
 
