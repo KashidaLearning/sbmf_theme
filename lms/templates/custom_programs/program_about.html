@@ -1407,10 +1407,22 @@ for ub in user_badges:
     <div class="xp-next">
       Next Level in <b id="xp-remaining">45</b> XP
     </div>
-
+  <div class="xp-badge-wrapper" id="xp-badge-wrapper" style="display:none;">
+        <div class="xp-badge-frame">
+            <img id="xp-badge-img" src="">
+        </div>
+    </div>
   </div>
 </div>
 <div id="rank-popup" class="rank-popup" aria-hidden="true">
+    <canvas id="rank-confetti-canvas"></canvas>
+    <div class="rank-characters">
+    <div class="dance-wrap">
+        <img src="${static.url('images/saudi-characters.png')}" class="char-duo">
+    </div>
+</div>
+
+
   <div class="rank-popup-card">
 
     <div class="rank-title">🔥 ترتيب جديد</div>
@@ -1441,7 +1453,6 @@ for ub in user_badges:
 
   </div>
 </div>
-
 
 
 <%block name="js_extra">
@@ -1566,10 +1577,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     if (newlyCompleted) {
-        const el = document.querySelector(
-            '.circle-item[data-course-id="' + newlyCompleted.id + '"]'
-        );
-
+      
         if (el) {
             el.classList.add("completed-animate");
 
@@ -1586,13 +1594,25 @@ document.addEventListener("DOMContentLoaded", function () {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
             return;
         }
-
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
             playSound();
             launchConfetti();
-            showXpPopup(25, window.USER_XP || 300);
-        }
+            let badgeUrl = null;
 
+            const sharatiBadges = document.querySelectorAll(
+                '#my-badges-content .badge-item img'
+            );
+
+            if (sharatiBadges.length > 0) {
+                badgeUrl = sharatiBadges[sharatiBadges.length - 1]
+                    .getAttribute('src');
+            }
+
+            showXpPopup(
+                25,
+                window.USER_XP || 300,
+                badgeUrl
+            );
         window.__LAST_COMPLETED_COUNT__ = completedCount;
     };
 
@@ -1870,9 +1890,69 @@ function calculateXpState(currentXP, gainedXP) {
 
 </script>
 
+<script>
+const confettiCanvas = document.getElementById("rank-confetti-canvas");
+
+let rankConfetti = null;
+
+if (confettiCanvas && window.confetti) {
+    rankConfetti = confetti.create(confettiCanvas, {
+        resize: true,
+        useWorker: true
+    });
+}
+
+function launchRankConfettiWOW() {
+    if (!rankConfetti) return;
+
+    const duration = 5000; // 5 ثواني 🔥
+    const end = Date.now() + duration;
+
+    (function frame() {
+
+        // 🎉 burst من اليسار
+        rankConfetti({
+            particleCount: 10,
+            angle: 60,
+            spread: 60,
+            startVelocity: 45,
+            gravity: 0.9,
+            scalar: 1.1,
+            origin: { x: 0.2, y: 0.6 }
+        });
+
+        // 🎉 burst من اليمين
+        rankConfetti({
+            particleCount: 10,
+            angle: 120,
+            spread: 60,
+            startVelocity: 45,
+            gravity: 0.9,
+            scalar: 1.1,
+            origin: { x: 0.8, y: 0.6 }
+        });
+
+        // ✨ ذهب من الوسط
+        rankConfetti({
+            particleCount: 6,
+            spread: 360,
+            startVelocity: 25,
+            gravity: 0.6,
+            colors: ["#FFD700", "#FFEE99", "#FFC400"],
+            scalar: 0.9,
+            origin: { x: 0.5, y: 0.45 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    })();
+}
+
+</script>
 
 <script>
-function showXpPopup(gainedXP, currentXP) {
+function showXpPopup(gainedXP, currentXP, badgeUrl = null) {
     const xp = calculateXpState(currentXP, gainedXP);
 
     document.getElementById("xp-gained").textContent = xp.gainedXP;
@@ -1880,26 +1960,32 @@ function showXpPopup(gainedXP, currentXP) {
     document.getElementById("xp-remaining").textContent = xp.remaining;
 
     const popup = document.getElementById("xp-popup");
+    const badgeWrapper = document.getElementById("xp-badge-wrapper");
+    const badgeImg = document.getElementById("xp-badge-img");
+
+    if (badgeUrl) {
+        badgeImg.src = badgeUrl;
+        badgeWrapper.style.display = "flex";
+    } else {
+        badgeWrapper.style.display = "none";
+    }
 
     popup.classList.add("show");
 
-    // sound
     xpSound.currentTime = 0;
     setTimeout(() => xpSound.play().catch(() => {}), 120);
 
-    // impact shake after spawn
-    setTimeout(() => {
-        popup.classList.add("impact");
-    }, 650);
-
-    setTimeout(() => {
-        popup.classList.remove("impact");
-    }, 1100);
+    setTimeout(() => popup.classList.add("impact"), 650);
+    setTimeout(() => popup.classList.remove("impact"), 1100);
 
     setTimeout(() => {
         popup.classList.remove("show");
+        badgeWrapper.style.display = "none";
     }, 7000);
 }
+
+
+
 
 </script>
 <script>
@@ -1921,59 +2007,44 @@ function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
     winner.querySelector(".row-right").className = "row-right gold";
     loser.querySelector(".row-right").className  = "row-right blue2";
 
-    /* reset state */
+    /* reset */
     popup.classList.remove("swap");
     popup.classList.remove("show");
 
-    /* show popup */
+    /* show */
     popup.classList.add("show");
     popup.setAttribute("aria-hidden", "false");
 
     /* sound */
     if (sound) {
         sound.currentTime = 0;
-        sound.play().catch(()=>{});
+        sound.play().catch(() => {});
     }
 
-    /* confetti */
-   if (window.confetti) {
-    const duration = 1200;
-    const end = Date.now() + duration;
+    /* ✨ WOW confetti */
+    launchRankConfettiWOW();
+    document.querySelector(".rank-characters")
+    ?.classList.add("show");
 
-    (function frame() {
-        confetti({
-            particleCount: 6,
-            angle: 60,
-            spread: 55,
-            startVelocity: 35,
-            origin: { x: 0.15, y: 0.65 }
-        });
-        confetti({
-            particleCount: 6,
-            angle: 120,
-            spread: 55,
-            startVelocity: 35,
-            origin: { x: 0.85, y: 0.65 }
-        });
-
-        if (Date.now() < end) {
-            requestAnimationFrame(frame);
-        }
-    })();
-    }
 
     /* swap animation */
     setTimeout(() => {
         popup.classList.add("swap");
     }, 700);
-
-    /* hide popup */
+   setTimeout(() => {
+    launchRankConfettiWOW();
+}, 600);
+    /* hide */
     setTimeout(() => {
         popup.classList.remove("swap");
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
+         document.querySelector(".rank-characters")
+        ?.classList.remove("show");
     }, 7000);
 }
+
+
 </script>
 
 

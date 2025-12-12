@@ -2686,3 +2686,139 @@ text-transform: capitalize;
     width: 29px;
 }
 }
+.xp-badge-wrapper {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    animation: badgePop 0.6s ease-out;
+}
+
+.xp-badge-frame {
+    width: 96px;
+    height: 96px;
+    border-radius: 18px;
+    padding: 8px;
+
+    background: linear-gradient(
+        135deg,
+        #FFD700,
+        #FFB800,
+        #FFD700
+    );
+
+    box-shadow:
+        0 0 0 2px rgba(255,215,0,.9),
+        0 0 25px rgba(255,215,0,.6),
+        inset 0 0 10px rgba(255,255,255,.35);
+}
+
+.xp-badge-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+    background: rgba(0,0,0,.25);
+}
+
+@keyframes badgePop {
+    0%   { transform: scale(.6); opacity: 0; }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+#rank-confetti-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2; /* فوق البلور */
+}
+
+.rank-popup {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(20, 10, 40, 0.45);
+    backdrop-filter: blur(18px);
+}
+
+.rank-popup.show {
+    display: flex;
+}
+
+/* الكرت نفسه */
+.rank-popup-card {
+    position: relative;
+    z-index: 3; /* فوق الكونفيتي */
+    width: 640px;              /* ⬅️ أكبر */
+    max-width: 92%;
+    padding: 34px 26px 36px;   /* ⬅️ أريح */
+    border-radius: 28px;
+    background: linear-gradient(
+        180deg,
+        rgba(170, 90, 220, 0.85),
+        rgba(90, 30, 160, 0.9)
+    );
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.12),
+        0 40px 120px rgba(0,0,0,.65);
+    animation: popupEnter 0.5s cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes popupEnter {
+    from {
+        transform: scale(.88) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+.rank-characters {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000001;
+    pointer-events: none;
+}
+
+/* wrapper للرقص */
+.rank-characters .dance-wrap {
+    animation: saudiDance 1.2s ease-in-out infinite;
+}
+
+.rank-characters .char-duo {
+    width: 280px;
+    max-width: none;
+    filter: drop-shadow(0 25px 40px rgba(0,0,0,.45));
+}
+
+.rank-characters {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px) scale(.8);
+    transition: all .6s cubic-bezier(.2,1.4,.4,1);
+}
+
+.rank-popup.show .rank-characters {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+/* الرقص */
+@keyframes saudiDance {
+    0%   { transform: translateY(0) rotate(0deg); }
+    20%  { transform: translateY(-6px) rotate(-2deg); }
+    40%  { transform: translateY(0) rotate(2deg); }
+    60%  { transform: translateY(-6px) rotate(-2deg); }
+    80%  { transform: translateY(0) rotate(2deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* توهج وقت الفوز */
+.rank-popup.swap .char-duo {
+    filter:
+        drop-shadow(0 0 25px rgba(255,215,0,0.6))
+        drop-shadow(0 0 45px rgba(255,215,0,0.35));
+}
