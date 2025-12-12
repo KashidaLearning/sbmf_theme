@@ -1577,17 +1577,9 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     if (newlyCompleted) {
-      
-        if (el) {
-            el.classList.add("completed-animate");
+    newlyCompleted.__animated = true;
+}
 
-            setTimeout(() => {
-                el.classList.remove("completed-animate");
-            }, 1200);
-        }
-
-        newlyCompleted.__animated = true;
-    }
 
 
         if (window.__LAST_COMPLETED_COUNT__ === null) {
@@ -1595,26 +1587,26 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-            playSound();
-            launchConfetti();
-            let badgeUrl = null;
+        playSound();
+        launchConfetti();
 
-            const sharatiBadges = document.querySelectorAll(
-                '#my-badges-content .badge-item img'
-            );
+        let badgeUrl = null;
+        const sharatiBadges = document.querySelectorAll(
+            '#my-badges-content .badge-item img'
+        );
 
-            if (sharatiBadges.length > 0) {
-                badgeUrl = sharatiBadges[sharatiBadges.length - 1]
-                    .getAttribute('src');
-            }
+        if (sharatiBadges.length > 0) {
+            badgeUrl = sharatiBadges[sharatiBadges.length - 1].getAttribute('src');
+        }
 
-            showXpPopup(
-                25,
-                window.USER_XP || 300,
-                badgeUrl
-            );
+        showXpPopup(
+            25,
+            window.USER_XP || 300,
+            badgeUrl
+        );
+
         window.__LAST_COMPLETED_COUNT__ = completedCount;
-    };
+    }
 
     document.addEventListener("click", function (e) {
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
