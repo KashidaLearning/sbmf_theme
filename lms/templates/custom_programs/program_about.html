@@ -1461,6 +1461,7 @@ _safe_current_user_rank = 0
 _safe_current_user_name = request.user.username
 %>
 <script>
+    window.__COMPLETED_BEFORE__ = 0;
 window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
 </script>
 <script>
@@ -1564,64 +1565,65 @@ document.addEventListener("DOMContentLoaded", function () {
     window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
 
+    // ✅ guard مهم
+    if (typeof window.refreshCourseStatus !== "function") {
+        console.warn("refreshCourseStatus is not defined yet");
+        return;
+    }
+
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
-
-        await originalRefresh();  
+        await originalRefresh();
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
-        const newlyCompleted = updated.find(c =>
-        c.state === "completed" && !c.__animated
-    );
 
-    if (newlyCompleted) {
-    newlyCompleted.__animated = true;
-}
+        if (window.__LAST_COMPLETED_COUNT__ === null) {
+            window.__LAST_COMPLETED_COUNT__ = completedCount;
+            return;
+        }
 
+        if (completedCount <= window.__LAST_COMPLETED_COUNT__) {
+            return;
+        }
 
+        window.__LAST_COMPLETED_COUNT__ = completedCount;
 
-     if (window.__LAST_COMPLETED_COUNT__ === null) {
-    window.__LAST_COMPLETED_COUNT__ = completedCount;
-}
+        // 🔊 صوت
+        if (typeof window.playSound === "function") {
+            window.playSound();
+        }
 
-if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-    playSound();
-    launchConfetti();
+        if (typeof window.launchConfetti === "function") {
+            window.launchConfetti();
+        }
 
-    let badgeUrl = null;
-    const sharatiBadges = document.querySelectorAll(
-        '#my-badges-content .badge-item img'
-    );
+        let badgeUrl = null;
+        const sharatiBadges = document.querySelectorAll(
+            '#my-badges-content .badge-item img'
+        );
 
-    if (sharatiBadges.length > 0) {
-        badgeUrl = sharatiBadges[sharatiBadges.length - 1].getAttribute('src');
-    }
+        if (sharatiBadges.length > 0) {
+            badgeUrl = sharatiBadges[sharatiBadges.length - 1].src;
+        }
 
-    showXpPopup(
-        25,
-        window.USER_XP || 300,
-        badgeUrl
-    );
-
-    window.__LAST_COMPLETED_COUNT__ = completedCount;
-}
+        if (typeof window.showXpPopup === "function") {
+            window.showXpPopup(
+                25,
+                window.USER_XP || 300,
+                badgeUrl
+            );
+        }
+    };
 
     document.addEventListener("click", function (e) {
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
             window.__SOUND_ALREADY_PLAYED__ = false;
         }
     });
-
-    function playSound() {
-        if (window.__SOUND_ALREADY_PLAYED__) return;
-        window.__SOUND_ALREADY_PLAYED__ = true;
-
-        audio.volume = 1.0;
-        audio.play().catch(() => {});
-    }
 });
+
 </script>
 
 <script>
@@ -2039,5 +2041,45 @@ function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
 
 </script>
 
+<script>
+(function () {
+  const audioEl = document.getElementById("courseCompleteSound");
+
+  window.playSound = function () {
+    if (!audioEl) return;
+    if (window.__SOUND_ALREADY_PLAYED__) return;
+    window.__SOUND_ALREADY_PLAYED__ = true;
+    audioEl.volume = 1.0;
+    audioEl.play().catch(() => {});
+  };
+
+  window.handleCourseClose = function () {
+    $('#courseFrame').attr('src', '');
+    $('#courseModal').css('display', 'none');
+
+    setTimeout(() => {
+      const updated = window.coursePathData || [];
+      const completedNow = updated.filter(c => c.state === "completed").length;
+
+      if (window.__COMPLETED_BEFORE__ == null) {
+        window.__COMPLETED_BEFORE__ = completedNow;
+        return;
+      }
+
+      if (completedNow > window.__COMPLETED_BEFORE__) {
+        let badgeUrl = null;
+        const imgs = document.querySelectorAll('#my-badges-content .badge-item img');
+        if (imgs.length) badgeUrl = imgs[imgs.length - 1].src;
+
+        window.playSound();
+        if (window.launchConfetti) window.launchConfetti();
+        if (window.showXpPopup) window.showXpPopup(25, window.USER_XP || 300, badgeUrl);
+
+        window.__COMPLETED_BEFORE__ = completedNow;
+      }
+    }, 600);
+  };
+})();
+</script>
 
 </%block>
