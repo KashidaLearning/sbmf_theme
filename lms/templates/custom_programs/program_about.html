@@ -1582,31 +1582,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-        if (window.__LAST_COMPLETED_COUNT__ === null) {
-            window.__LAST_COMPLETED_COUNT__ = completedCount;
-            return;
-        }
-        if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-        playSound();
-        launchConfetti();
+     if (window.__LAST_COMPLETED_COUNT__ === null) {
+    window.__LAST_COMPLETED_COUNT__ = completedCount;
+}
 
-        let badgeUrl = null;
-        const sharatiBadges = document.querySelectorAll(
-            '#my-badges-content .badge-item img'
-        );
+if (completedCount > window.__LAST_COMPLETED_COUNT__) {
+    playSound();
+    launchConfetti();
 
-        if (sharatiBadges.length > 0) {
-            badgeUrl = sharatiBadges[sharatiBadges.length - 1].getAttribute('src');
-        }
+    let badgeUrl = null;
+    const sharatiBadges = document.querySelectorAll(
+        '#my-badges-content .badge-item img'
+    );
 
-        showXpPopup(
-            25,
-            window.USER_XP || 300,
-            badgeUrl
-        );
-
-        window.__LAST_COMPLETED_COUNT__ = completedCount;
+    if (sharatiBadges.length > 0) {
+        badgeUrl = sharatiBadges[sharatiBadges.length - 1].getAttribute('src');
     }
+
+    showXpPopup(
+        25,
+        window.USER_XP || 300,
+        badgeUrl
+    );
+
+    window.__LAST_COMPLETED_COUNT__ = completedCount;
+}
 
     document.addEventListener("click", function (e) {
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
