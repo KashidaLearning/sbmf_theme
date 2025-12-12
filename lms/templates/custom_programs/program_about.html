@@ -1275,21 +1275,6 @@ function launchConfetti() {
 
 <script src="${static.url('js/script.js')}"></script>
 <script>
-window.playSound = function () {
-    const audio = document.getElementById("courseCompleteSound");
-    if (!audio) return;
-
-    if (window.__SOUND_ALREADY_PLAYED__) return;
-
-    window.__SOUND_ALREADY_PLAYED__ = true;
-    audio.volume = 1.0;
-    audio.play().catch(()=>{});
-};
-
-// Always reset sound when page reloads
-window.__SOUND_ALREADY_PLAYED__ = false;
-</script>
-<script>
 document.addEventListener("DOMContentLoaded", function () {
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
@@ -1300,9 +1285,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const originalRefresh = window.refreshCourseStatus;
 
     window.refreshCourseStatus = async function () {
-        if (typeof originalRefresh === "function") {
-            await originalRefresh();
-        }
+
+        await originalRefresh();  // run script.js logic
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
@@ -1311,13 +1295,10 @@ document.addEventListener("DOMContentLoaded", function () {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
             return;
         }
-        if (completedCount > window.__LAST_COMPLETED_COUNT__) {
-            window.playSound();
-            launchConfetti();
 
-            setTimeout(() => { 
-                window.__SOUND_ALREADY_PLAYED__ = false; 
-            }, 2000);
+        if (completedCount > window.__LAST_COMPLETED_COUNT__) {
+            playSound();
+            launchConfetti();
         }
 
         window.__LAST_COMPLETED_COUNT__ = completedCount;
@@ -1326,9 +1307,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", function (e) {
         if (e.target.matches(".close-button") || e.target.id === "courseModal") {
             window.__SOUND_ALREADY_PLAYED__ = false;
-            window.__LAST_COMPLETED_COUNT__ = null;
         }
     });
+
+    function playSound() {
+        if (window.__SOUND_ALREADY_PLAYED__) return;
+        window.__SOUND_ALREADY_PLAYED__ = true;
+
+        audio.volume = 1.0;
+        audio.play().catch(() => {});
+    }
 });
 
 </script>
