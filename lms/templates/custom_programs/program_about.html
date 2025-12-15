@@ -153,103 +153,209 @@ body.xp-blur-active > *:not(#xp-popup) {
     display: none;
     justify-content: center;
     align-items: center;
-
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
+    background: radial-gradient(
+        circle at center,
+        rgba(90, 60, 200, .45),
+        rgba(20, 10, 40, .75)
+    );
+    backdrop-filter: blur(14px);
     z-index: 999999;
 }
 
 .xp-popup.show {
     display: flex;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255, 255, 255, 0.12), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+    background: #ffffff00;
+    backdrop-filter: blur(50px);
+
 }
 
-.xp-popup-content {
-    background: rgba(120, 60, 255, 0.22);
+.xp-stage {
+    position: relative;
+    width: 720px;
+    max-width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: xpStageIn .7s cubic-bezier(.2,1.3,.3,1);
+}
+
+@keyframes xpStageIn {
+    from { transform: scale(.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* CHARACTERS */
+
+.xp-character {
+    position: absolute;
+    bottom: -12px;
+    width: 150px;
+    z-index: 2;
+}
+
+.xp-character.left {
+     left: 71px;
+    top: -10%;
+}
+
+.xp-character.right {
+     right: 157px;
+    top: -64%;
+}
+
+.xp-character img {
+       width: 227px;
+  
+}
+
+
+
+
+@keyframes charFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-10px); }
+}
+
+/* CENTER CARD */
+
+.xp-card {
+      position: relative;
+    width: 208px;
+    max-height: 252px;
+    padding: 15px 16px 18px;
+    border-radius: 26px;
     backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    border-radius: 22px;
-    padding: 32px 48px;
-
-    border: 1px solid rgba(180, 140, 255, 0.35);
-
-    box-shadow:
-        0 0 25px rgba(150, 90, 255, 0.6),
-        0 0 60px rgba(90, 30, 200, 0.45),
-        inset 0 0 20px rgba(255, 255, 255, 0.12);
-
-    color: #fff;
+    border: 2px solid var(--gold-stroke, #FEB910);
     text-align: center;
-
-    transform: scale(0.85);
-    opacity: 0;
-
-    transition:
-        transform 0.45s cubic-bezier(.2,1.3,.4,1),
-        opacity 0.35s ease;
-
     font-family: "IBM Plex Sans Arabic";
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255, 255, 255, 0.12), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+    background: #ffffff00;
+    backdrop-filter: blur(50px);
 }
 
-
-.xp-popup.show .xp-popup-content {
-    animation: xpSpawn 0.6s cubic-bezier(.2,1.4,.4,1);
-    opacity: 1;
-    transform: scale(1);
-}
-@keyframes xpImpact {
-    0% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
-    100% { transform: translateX(0); }
-}
-.xp-popup.impact .xp-popup-content {
-    animation: xpImpact 0.4s ease;
+/* TOP */
+.xp-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 14px;
 }
 
-@keyframes popupIn {
-    from { transform: scale(.6) translateY(40px); opacity: 0; }
-    to   { transform: scale(1) translateY(0); opacity: 1; }
+.xp-value-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
 }
 
-.xp-icon {
-    font-size: 40px;
-    animation: pulse 1.5s infinite;
+.xp-plus {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
 }
 
-@keyframes pulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.xp-gain {
-    font-size: 48px;
+.xp-number {
+    font-size: 54px;
     font-weight: 900;
-    margin: 15px 0;
-    animation: popNumber .6s ease-out;
+    color: #fff;
+    line-height: 1;
 }
 
-@keyframes popNumber {
-    0% { transform: scale(.5); }
-    70% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+/* XP IMAGE */
+.xp-icon-img {
+    width: 130px;
+    height: auto;
+    display: block;
+
+    --xp-scale: 1;
+    transform: scale(var(--xp-scale));
+
+    filter:
+        drop-shadow(0 6px 14px rgba(0,0,0,.35))
+        drop-shadow(0 0 18px rgba(255,220,120,.8));
+
+    animation: xpPulse 1.6s ease-in-out infinite;
+    transform-origin: center;
 }
-@keyframes xpSpawn {
-    0% {
-        transform: translateY(60px) scale(0.6);
-        opacity: 0;
-    }
-    60% {
-        transform: translateY(-10px) scale(1.08);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
+
+@keyframes xpPulse {
+    0%   { --xp-scale: 1; }
+    50%  { --xp-scale: 1.1; }
+    100% { --xp-scale: 1; }
+}
+
+
+/* TOTAL */
+.xp-total-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.xp-pill {
+    color: white;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 15px;
+    border-radius: 10px;
+    border: 2px solid var(--gold-stroke, #FEB910);
+    background: var(--Digital-Wave, #0CC6B4);
+    box-shadow: 0 3px 3px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
+}
+
+.xp-total-text {
+   color: white !important;
+    color: var(--White, #FFF);
+    text-align: right;
+    font-kerning: none;
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    text-transform: capitalize;
+}
+
+/* NEXT BUTTON */
+.xp-next-btn {
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: #FFF;
+    text-align: center;
+    font-kerning: none;
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    text-transform: capitalize;
+    border-radius: 10px;
+    background: var(--MIDNIGHT, #100E4A);
+    box-shadow: 0 3px 3px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
+}
+span#xp-remaining {
+    background: var(--Gotta-be-golden, linear-gradient(236deg, #FEB910 15.98%, #FFE975 32.88%, #F6FFBC 49.77%, #FFE975 66.66%, #FEB910 83.55%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-kerning: none;
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+    text-transform: capitalize;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 720px) {
+    .xp-character {
+        display: none;
     }
 }
 .rank-popup {
@@ -265,6 +371,9 @@ body.xp-blur-active > *:not(#xp-popup) {
 
 .rank-popup.show {
     display: flex;
+        box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255, 255, 255, 0.12), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+    background: #ffffff00;
+    backdrop-filter: blur(50px);
 }
 
 .rank-popup-card {
@@ -280,13 +389,26 @@ body.xp-blur-active > *:not(#xp-popup) {
         0 30px 90px rgba(0,0,0,.55);
 }
 .rank-title {
-    font-size: 20px;
-    font-weight: 800;
+   
     text-align: center;
     margin-bottom: 18px;
     color: #fff;
     letter-spacing: .5px;
     text-shadow: 0 4px 14px rgba(0,0,0,.4);
+     margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--White, #FFF);
+    text-align: right;
+    font-feature-settings: 'calt' off;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px rgba(34, 26, 55, 0.18);
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 
@@ -380,6 +502,236 @@ body.xp-blur-active > *:not(#xp-popup) {
     animation: winnerPulse 0.6s ease-out;
 }
 
+.rank-popup {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(25px);
+    background: rgba(20,10,40,.55);
+    z-index: 999999;
+}
+
+.rank-popup.show {
+    display: flex;
+}
+
+/* characters */
+.rank-characters {
+    position: absolute;
+        left: -10%;
+    bottom: -17%;
+    transform: translateX(-50%);
+    z-index: 3;
+}
+
+.rank-duo {
+    width: 260px;
+    filter: drop-shadow(0 25px 40px rgba(0,0,0,.45));
+}
+
+/* arrows */
+.rank-arrows {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+        right: -10%;
+    top: -17%;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.rank-arrows .arrow {
+    display: block;
+    animation: arrowFloat 1.6s ease-in-out infinite;
+    transform-origin: center;
+}
+
+
+.rank-arrows .arrow.big {
+    width: 122px;
+    opacity: 1;
+
+    animation-delay: 0s;
+}
+.rank-arrows .arrow.small {
+    width: 122px;
+    animation-delay: .25s;
+}
+@keyframes arrowFloat {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.rank-title .fire {
+    width: 62px;
+    animation: fireImg 1.3s infinite ease-in-out;
+    transform-origin: center bottom;
+    filter:
+        drop-shadow(0 0 6px rgba(255, 170, 0, 0.9))
+        drop-shadow(0 0 14px rgba(255, 120, 0, 0.8));
+}
+
+/* فرق خفيف بين اليمين واليسار */
+.rank-title .fire:first-child {
+    animation-delay: 0s;
+}
+.rank-title .fire:last-child {
+    animation-delay: .2s;
+}
+
+@keyframes fireImg {
+    0% {
+        transform: scale(1) rotate(-1deg);
+        filter:
+            drop-shadow(0 0 6px rgba(255,170,0,.9))
+            drop-shadow(0 0 14px rgba(255,120,0,.7));
+    }
+    35% {
+        transform: scale(1.08) rotate(1deg);
+        filter:
+            drop-shadow(0 0 10px rgba(255,200,0,1))
+            drop-shadow(0 0 26px rgba(255,140,0,.9));
+    }
+    65% {
+        transform: scale(0.96) rotate(-1deg);
+        filter:
+            drop-shadow(0 0 8px rgba(255,150,0,.8))
+            drop-shadow(0 0 18px rgba(255,100,0,.7));
+    }
+    100% {
+        transform: scale(1) rotate(1deg);
+        filter:
+            drop-shadow(0 0 6px rgba(255,170,0,.9))
+            drop-shadow(0 0 14px rgba(255,120,0,.7));
+    }
+}
+
+/* card */
+.rank-card {
+    width: 40%;
+    padding: 22px 24px 26px;
+    border-radius: 26px;
+    border: 2px solid #FEB910;
+    backdrop-filter: blur(40px);
+    background: rgba(255,255,255,.05);
+    box-shadow:
+        0 4px 4px rgba(0,0,0,.25),
+        inset 14px 17px 20px rgba(255,255,255,.12),
+        inset -20px -16px 20px rgba(34,26,55,.18);
+    text-align: center;
+      overflow: visible;
+    position: relative;
+    z-index: 5;
+}
+
+/* title */
+.rank-title {
+      margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    color: var(--White, #FFF);
+    text-align: right;
+    font-feature-settings: 'calt' off;
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px rgba(34, 26, 55, 0.18);
+    font-family: "IBM Plex Sans Arabic";
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.rank-title .fire {
+        width: 62px;
+}
+
+/* rows */
+.rank-list {
+    direction: rtl;
+    display: flex;
+    width: 98%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 31px;
+}
+
+.rank-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rank-num {
+   
+    width: 28px;
+    text-align: center;
+    color: rgba(17, 13, 124, 0.20);
+    text-align: right;
+    text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
+    font-family: "IBM Plex Sans";
+        font-size: 50px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: capitalize;
+
+}
+
+.rank-user img {
+      width: 58px;
+    height: 58px;
+ 
+}
+
+/* info blocks */
+.rank-info {
+    flex: 1;
+        padding: 10px 14px;
+ 
+}
+
+.rank-info.green {
+    color: #110D7C;
+    border-radius: 10px;
+    border: 3px solid var(--gold-stroke, #FEB910);
+    background: var(--Digital-Wave, #0CC6B4);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+}
+
+.rank-info.blue {
+ border-radius: 10px;
+background: #89E7DE;
+
+/* Claymorphed Extruded */
+box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
+}
+
+.rank-info .name {
+    color: var(--Royal-Indigo, #110D7C);
+    text-align: right;
+    font-family: "IBM Plex Sans";
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.rank-info .xp {
+       font-family: "IBM Plex Sans";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: left;
+}
 .circle-item.completed-animate {
     animation: completePulse 1.2s ease-out;
 }
@@ -481,8 +833,10 @@ except:
 
                         % else:
                             <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
-                               class="btn btn-cta one-click-purchase-btn active">
-                               ${_("التحق في الرحلة")}
+                            class="btn btn-cta one-click-purchase-btn active"
+                            onclick="sessionStorage.setItem('programJustEnrolled','1')">
+
+                            التحق في المغامرة،
                             </a>
                         % endif
                     </div>
@@ -533,7 +887,7 @@ except:
                                     <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">طلب التسجيل في المسار</a>
                                 % endif
                             % else:
-                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">${_("التحق في الرحلة")}</a>
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active" onclick="sessionStorage.setItem('programJustEnrolled','1')">${_("التحق في الرحلة")}</a>
                             % endif
                         </div>
                     % endif
@@ -1389,70 +1743,119 @@ for ub in user_badges:
 <audio id="rankSound" preload="auto">
     <source src="${static.url('sounds/xp-level-up.mp3')}" type="audio/mpeg">
 </audio>
+<audio id="takSound" preload="auto">
+    <source src="${static.url('sounds/tak-tak.mp3')}" type="audio/mpeg">
+</audio>
 <div id="xp-popup" class="xp-popup">
-  <div class="xp-popup-content">
+  <div class="xp-stage">
 
-    <div class="xp-icon">⚡</div>
-
-    <div class="xp-gain">
-      <span class="plus">+</span>
-      <span id="xp-gained">25</span>
-      <span class="xp-text">XP</span>
+    <!-- LEFT CHARACTER -->
+    <div class="xp-character left">
+      <img src="${static.url('images/xp-char-boy.png')}" alt="">
     </div>
 
-    <div class="xp-total">
-      Total XP: <b id="xp-total">320</b>
-    </div>
+    <!-- CENTER CARD -->
+   <div class="xp-card">
 
-    <div class="xp-next">
-      Next Level in <b id="xp-remaining">45</b> XP
-    </div>
-  <div class="xp-badge-wrapper" id="xp-badge-wrapper" style="display:none;">
-        <div class="xp-badge-frame">
-            <img id="xp-badge-img" src="">
+    <!-- TOP ROW -->
+    <div class="xp-top">
+
+        <div class="xp-value-wrap">
+        <span class="xp-plus">+</span>
+        <span class="xp-number" id="xp-gained">25</span>
         </div>
+
+        <img
+        src="${static.url('images/XP.png')}"
+        class="xp-icon-img"
+        alt="XP"
+        />
+
     </div>
+
+    <!-- TOTAL -->
+    <div class="xp-total-row">
+        <span class="xp-pill" id="xp-total">325</span>
+        <span class="xp-total-text">مجموع نقاطك الحالي</span>
+    </div>
+
+    <!-- NEXT -->
+    <div class="xp-next-btn">
+        التحدي التالي سيمنحك: <b>+<span id="xp-remaining">75</span></b>
+    </div>
+
+    </div>
+
+
+    <!-- RIGHT CHARACTER -->
+    <div class="xp-character right">
+      <img src="${static.url('images/xp-char-girl.png')}" alt="">
+    </div>
+
   </div>
 </div>
+
 <div id="rank-popup" class="rank-popup" aria-hidden="true">
-    <canvas id="rank-confetti-canvas"></canvas>
-    <div class="rank-characters">
-    <div class="dance-wrap">
-        <img src="${static.url('images/saudi-characters.png')}" class="char-duo">
+  <div class="rank-card">
+
+  <!-- characters (image) -->
+  <div class="rank-characters">
+    <img src="${static.url('images/saudi-characters.png')}" class="rank-duo">
+  </div>
+
+  <!-- arrows -->
+  <div class="rank-arrows">
+    <img src="${static.url('images/arrow-up-top.png')}" class="arrow big">
+    <img src="${static.url('images/arrow-up-down.png')}" class="arrow small">
+ 
+  </div>
+
+  <!-- CARD -->
+
+    <!-- title -->
+    <div class="rank-title">
+      <img src="${static.url('images/fire.png')}" class="fire">
+      الترتيب الجديد
+      <img src="${static.url('images/fire.png')}" class="fire">
     </div>
-</div>
 
+    <!-- rows -->
+    <div class="rank-list rank-rows">
+      <!-- WINNER -->
+      <div id="rank-winner" class="rank-row winner leaderboard-row">
 
-  <div class="rank-popup-card">
+        <div class="rank-num">1</div>
 
-    <div class="rank-title">🔥 ترتيب جديد</div>
-
-    <div class="rank-rows">
-      <div id="rank-winner" class="leaderboard-row swap-row winner">
-        <div class="rank-box"></div>
-        <div class="icon">
+        <div class="rank-user">
           <img src="${static.url('images/image-profile-blue.png')}">
         </div>
-        <div class="row-right gold">
+
+        <div class="rank-info green">
           <div class="name"></div>
-          <div class="pt1">XP</div>
+          <div class="xp">XP</div>
         </div>
       </div>
 
-      <div id="rank-loser" class="leaderboard-row swap-row loser">
-        <div class="rank-box"></div>
-        <div class="icon">
+      <!-- PREVIOUS -->
+      <div id="rank-loser" class="rank-row loser leaderboard-row">
+
+        <div class="rank-num">2</div>
+
+        <div class="rank-user">
           <img src="${static.url('images/image-profile-blue.png')}">
         </div>
-        <div class="row-right blue2">
+
+        <div class="rank-info blue">
           <div class="name"></div>
-          <div class="pt1">XP</div>
+          <div class="xp">XP</div>
         </div>
       </div>
+
     </div>
 
   </div>
 </div>
+
 
 
 <%block name="js_extra">
@@ -1565,10 +1968,10 @@ document.addEventListener("DOMContentLoaded", function () {
     window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
 
-    // ✅ guard مهم
     if (typeof window.refreshCourseStatus !== "function") {
         console.warn("refreshCourseStatus is not defined yet");
         return;
+    
     }
 
     const originalRefresh = window.refreshCourseStatus;
@@ -1590,7 +1993,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         window.__LAST_COMPLETED_COUNT__ = completedCount;
 
-        // 🔊 صوت
         if (typeof window.playSound === "function") {
             window.playSound();
         }
@@ -1946,36 +2348,24 @@ function launchRankConfettiWOW() {
 </script>
 
 <script>
-function showXpPopup(gainedXP, currentXP, badgeUrl = null) {
+function showXpPopup(gainedXP, currentXP) {
     const xp = calculateXpState(currentXP, gainedXP);
 
     document.getElementById("xp-gained").textContent = xp.gainedXP;
-    document.getElementById("xp-total").textContent = xp.totalXP;
+    document.getElementById("xp-total").textContent  = xp.totalXP;
     document.getElementById("xp-remaining").textContent = xp.remaining;
 
     const popup = document.getElementById("xp-popup");
-    const badgeWrapper = document.getElementById("xp-badge-wrapper");
-    const badgeImg = document.getElementById("xp-badge-img");
-
-    if (badgeUrl) {
-        badgeImg.src = badgeUrl;
-        badgeWrapper.style.display = "flex";
-    } else {
-        badgeWrapper.style.display = "none";
-    }
 
     popup.classList.add("show");
 
     xpSound.currentTime = 0;
-    setTimeout(() => xpSound.play().catch(() => {}), 120);
+    setTimeout(() => xpSound.play().catch(()=>{}), 150);
 
-    setTimeout(() => popup.classList.add("impact"), 650);
-    setTimeout(() => popup.classList.remove("impact"), 1100);
-
+    // auto close
     setTimeout(() => {
         popup.classList.remove("show");
-        badgeWrapper.style.display = "none";
-    }, 7000);
+    }, 1800000);
 }
 
 
@@ -1985,25 +2375,42 @@ function showXpPopup(gainedXP, currentXP, badgeUrl = null) {
 <script>
 function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
     const popup  = document.getElementById("rank-popup");
-    const winner = document.getElementById("rank-winner");
-    const loser  = document.getElementById("rank-loser");
+    const row1   = document.getElementById("rank-winner");
+    const row2   = document.getElementById("rank-loser");
     const sound  = document.getElementById("rankSound");
 
-    if (!popup || !winner || !loser) return;
+    if (!popup || !row1 || !row2) return;
 
-    /* fill data */
-    winner.querySelector(".name").textContent = winnerName;
-    winner.querySelector(".rank-box").textContent = "#" + winnerRank;
+    // الرتبة الأصغر = أعلى
+    const winnerIsUp = winnerRank < loserRank;
 
-    loser.querySelector(".name").textContent = loserName;
-    loser.querySelector(".rank-box").textContent = "#" + loserRank;
+    const topRow    = winnerIsUp ? row1 : row2;
+    const bottomRow = winnerIsUp ? row2 : row1;
 
-    winner.querySelector(".row-right").className = "row-right gold";
-    loser.querySelector(".row-right").className  = "row-right blue2";
+    /* العناصر الداخلية */
+    const topName  = topRow.querySelector(".name");
+    const topRank  = topRow.querySelector(".rank-num");
+    const botName  = bottomRow.querySelector(".name");
+    const botRank  = bottomRow.querySelector(".rank-num");
+
+    if (!topName || !topRank || !botName || !botRank) return;
+
+    /* تعبئة البيانات */
+    topName.textContent = winnerName;
+    topRank.textContent = winnerRank;
+
+    botName.textContent = loserName;
+    botRank.textContent = loserRank;
+
+    /* ألوان */
+    topRow.querySelector(".rank-info").classList.remove("blue");
+    topRow.querySelector(".rank-info").classList.add("green");
+
+    bottomRow.querySelector(".rank-info").classList.remove("green");
+    bottomRow.querySelector(".rank-info").classList.add("blue");
 
     /* reset */
-    popup.classList.remove("swap");
-    popup.classList.remove("show");
+    popup.classList.remove("swap", "show");
 
     /* show */
     popup.classList.add("show");
@@ -2015,28 +2422,23 @@ function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
         sound.play().catch(() => {});
     }
 
-    /* ✨ WOW confetti */
-    launchRankConfettiWOW();
-    document.querySelector(".rank-characters")
-    ?.classList.add("show");
-
+    /* confetti */
+    if (typeof launchRankConfettiWOW === "function") {
+        launchRankConfettiWOW();
+    }
 
     /* swap animation */
     setTimeout(() => {
         popup.classList.add("swap");
-    }, 700);
-   setTimeout(() => {
-    launchRankConfettiWOW();
-}, 600);
-    /* hide */
+    }, 600);
+
+    /* hide بعد 30 دقيقة */
     setTimeout(() => {
-        popup.classList.remove("swap");
-        popup.classList.remove("show");
+        popup.classList.remove("swap", "show");
         popup.setAttribute("aria-hidden", "true");
-         document.querySelector(".rank-characters")
-        ?.classList.remove("show");
-    }, 7000);
+    }, 1800000);
 }
+
 
 
 </script>

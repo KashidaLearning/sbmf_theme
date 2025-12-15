@@ -144,6 +144,7 @@ function initializeScene() {
 
     data.forEach((item, index) => createCircle(item, index));
     updatePositions();
+     setTimeout(playGameCourseIntro, 300);
 }
 
 function updateBadgesPopup(badges) {
@@ -334,6 +335,7 @@ async function refreshCourseStatus() {
             window.coursePathData = parsed.items;
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
+
         }
 
         if (typeof data.progress_percent !== "undefined") {
@@ -397,3 +399,35 @@ window.addEventListener("message", (event) => {
         refreshCourseStatus();
     }
 });
+ document.addEventListener("circlesRebuilt", revealCoursesLikeGame);
+
+function playGameCourseIntro() {
+
+    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
+
+   function playTak() {
+    const sound = document.getElementById("takSound");
+    if (!sound) return;
+
+    sound.pause();
+    sound.currentTime = 0;
+
+    sound.play().catch(() => {});
+    }
+    const circles = document.querySelectorAll(".circle-item");
+
+    circles.forEach((circle, index) => {
+        setTimeout(() => {
+            circle.classList.remove("game-pop");
+            void circle.offsetHeight;
+            circle.classList.add("game-pop");
+
+            playTak();
+        }, index * 420 + 180);
+        });
+
+    // run once only
+    setTimeout(() => {
+        sessionStorage.removeItem("programJustEnrolled");
+    }, circles.length * 220 + 600);
+}
