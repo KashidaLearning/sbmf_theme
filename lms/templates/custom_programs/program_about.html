@@ -540,8 +540,8 @@ span#xp-remaining {
     flex-direction: column;
     align-items: center;
     gap: 12px;
-        right: -10%;
-    top: -17%;
+     right: -12%;
+    top: -19%;
     z-index: 20;
     pointer-events: none;
 }
@@ -1984,10 +1984,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
 
-        if (window.__LAST_COMPLETED_COUNT__ === null) {
+       if (window.__LAST_COMPLETED_COUNT__ === null) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
-            return;
         }
+
 
         if (completedCount <= window.__LAST_COMPLETED_COUNT__) {
             return;
@@ -2208,7 +2208,7 @@ document.body.addEventListener('click', function(e) {
     setTimeout(() => {
         msg.classList.remove('show');
         setTimeout(() => msg.remove(), 300);
-    }, 7000);
+    }, 8000);
 });
 </script>
 
@@ -2367,7 +2367,7 @@ function showXpPopup(gainedXP, currentXP) {
     // auto close
     setTimeout(() => {
         popup.classList.remove("show");
-    }, 1800000);
+    }, 8000);
 }
 
 
@@ -2383,13 +2383,12 @@ function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
 
     if (!popup || !row1 || !row2) return;
 
-    // الرتبة الأصغر = أعلى
+
     const winnerIsUp = winnerRank < loserRank;
 
     const topRow    = winnerIsUp ? row1 : row2;
     const bottomRow = winnerIsUp ? row2 : row1;
 
-    /* العناصر الداخلية */
     const topName  = topRow.querySelector(".name");
     const topRank  = topRow.querySelector(".rank-num");
     const botName  = bottomRow.querySelector(".name");
@@ -2397,48 +2396,40 @@ function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
 
     if (!topName || !topRank || !botName || !botRank) return;
 
-    /* تعبئة البيانات */
     topName.textContent = winnerName;
     topRank.textContent = winnerRank;
 
     botName.textContent = loserName;
     botRank.textContent = loserRank;
 
-    /* ألوان */
     topRow.querySelector(".rank-info").classList.remove("blue");
     topRow.querySelector(".rank-info").classList.add("green");
 
     bottomRow.querySelector(".rank-info").classList.remove("green");
     bottomRow.querySelector(".rank-info").classList.add("blue");
 
-    /* reset */
     popup.classList.remove("swap", "show");
 
-    /* show */
     popup.classList.add("show");
     popup.setAttribute("aria-hidden", "false");
 
-    /* sound */
     if (sound) {
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
 
-    /* confetti */
     if (typeof launchRankConfettiWOW === "function") {
         launchRankConfettiWOW();
     }
 
-    /* swap animation */
     setTimeout(() => {
         popup.classList.add("swap");
     }, 600);
 
-    /* hide بعد 30 دقيقة */
     setTimeout(() => {
         popup.classList.remove("swap", "show");
         popup.setAttribute("aria-hidden", "true");
-    }, 1800000);
+    }, 8000);
 }
 
 
