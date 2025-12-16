@@ -143,10 +143,10 @@ text-transform: capitalize;
         max-width: 300px;
     }
 }
-body.xp-blur-active > *:not(#xp-popup) {
+body.xp-blur-active > *:not(#xp-popup):not(canvas.confetti-canvas) {
     filter: blur(20px) brightness(0.75);
-    transition: filter 0.45s ease;
 }
+
 .xp-popup {
     position: fixed;
     inset: 0;
@@ -242,6 +242,7 @@ left: -63%;
     justify-content: center;
     gap: 14px;
     margin-bottom: 14px;
+    text-shadow: 2px 1px 10px rgba(0, 0, 0, 0.45);
 }
 
 .xp-value-wrap {
@@ -422,35 +423,40 @@ span#xp-remaining {
     height: 160px; /* صفين فقط */
 }
 
-.rank-rows .leaderboard-row {
+
+.rank-row {
+    transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+    will-change: transform;
+}
+.rank-row {
     position: absolute;
     left: 0;
     right: 0;
+    margin: auto;
+    transition: transform 0.8s cubic-bezier(.22,1,.36,1);
+    will-change: transform;
+}
+
+/* slots */
+.rank-row.slot-top {
+    transform: translateY(0);
+}
+.rank-row.slot-bottom {
+    transform: translateY(84px); /* row height + gap */
+}
+
+.rank-rows .leaderboard-row {
+   
+    left: 0;
+    right: 0;
     margin: 0 auto;
-
-    --y: 0px;
-    transform: translateY(var(--y));
-
-    transition: transform 0.7s cubic-bezier(.22,1,.36,1),
-                opacity 0.4s ease;
+     transition: transform 0.7s cubic-bezier(.22,1,.36,1);
+    will-change: transform;
 }
 
 
 
-.rank-popup .winner {
-    top: 80px;   
-}
 
-.rank-popup .loser {
-    top: 0;      
-}
-.rank-popup.swap .winner {
-    --y: -80px;   
-}
-
-.rank-popup.swap .loser {
-    --y: 80px;    
-}
 
 .rank-popup .row-right {
     padding: 12px 18px;
@@ -569,6 +575,8 @@ span#xp-remaining {
     100% { transform: translateY(0); }
 }
 
+
+
 .rank-title .fire {
     width: 62px;
     animation: fireImg 1.3s infinite ease-in-out;
@@ -664,9 +672,15 @@ span#xp-remaining {
 }
 
 .rank-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: transform 0.8s cubic-bezier(.22,1,.36,1);
+    will-change: transform;
 }
 
 .rank-num {
@@ -742,6 +756,13 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255
     40%  { transform: scale(1.2); box-shadow: 0 0 30px #7f2cff; }
     100% { transform: scale(1); }
 }
+canvas.confetti-canvas {
+    position: fixed !important;
+    inset: 0;
+    z-index: 10000000 !important;
+    pointer-events: none;
+}
+
 </style>
 % if program.css_color:
     <style>
@@ -1918,6 +1939,55 @@ window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'p
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
+  function launchRankConfettiWOW() {
+    if (!window.confetti) return;
+
+    const popup = document.getElementById("rank-popup");
+    if (!popup) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "confetti-canvas";
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.zIndex = "9999999"; // فوق الكرت
+    canvas.style.pointerEvents = "none";
+
+    popup.appendChild(canvas);
+
+    const myConfetti = confetti.create(canvas, {
+        resize: true,
+        useWorker: true
+    });
+
+    const duration = 2000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        myConfetti({
+            particleCount: 100,
+            spread: 140,
+            startVelocity: 32,
+            gravity: 0.9,
+            ticks: 260,
+            colors: ["#FFD700", "#FFEE99", "#FFC400"],
+            origin: {
+                x: Math.random(), 
+                y: 0              
+            }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        } else {
+            setTimeout(() => canvas.remove(), 500);
+        }
+    })();
+}
+
+</script>
+<script>
 
 const xpSound = new Audio(
     "${static.url('sounds/course-complete.mp3')}"
@@ -1942,24 +2012,7 @@ function lightRankConfetti() {
 }
 </script>
 
-<script>
-function launchConfetti() {
-    confetti({
-        particleCount: 150,
-        spread: 70,
-        startVelocity: 45,
-        origin: { x: 0.5, y: 0.5 }
-    });
-    setTimeout(() => {
-        confetti({
-            particleCount: 100,
-            spread: 60,
-            startVelocity: 35,
-            origin: { x: 0.5, y: 0.4 }
-        });
-    }, 300);
-}
-</script>
+
 
 <script src="${static.url('js/script.js')}"></script>
 <script>
@@ -2289,67 +2342,6 @@ function calculateXpState(currentXP, gainedXP) {
 </script>
 
 <script>
-const confettiCanvas = document.getElementById("rank-confetti-canvas");
-
-let rankConfetti = null;
-
-if (confettiCanvas && window.confetti) {
-    rankConfetti = confetti.create(confettiCanvas, {
-        resize: true,
-        useWorker: true
-    });
-}
-
-function launchRankConfettiWOW() {
-    if (!rankConfetti) return;
-
-    const duration = 5000; // 5 ثواني 🔥
-    const end = Date.now() + duration;
-
-    (function frame() {
-
-        // 🎉 burst من اليسار
-        rankConfetti({
-            particleCount: 10,
-            angle: 60,
-            spread: 60,
-            startVelocity: 45,
-            gravity: 0.9,
-            scalar: 1.1,
-            origin: { x: 0.2, y: 0.6 }
-        });
-
-        // 🎉 burst من اليمين
-        rankConfetti({
-            particleCount: 10,
-            angle: 120,
-            spread: 60,
-            startVelocity: 45,
-            gravity: 0.9,
-            scalar: 1.1,
-            origin: { x: 0.8, y: 0.6 }
-        });
-
-        // ✨ ذهب من الوسط
-        rankConfetti({
-            particleCount: 6,
-            spread: 360,
-            startVelocity: 25,
-            gravity: 0.6,
-            colors: ["#FFD700", "#FFEE99", "#FFC400"],
-            scalar: 0.9,
-            origin: { x: 0.5, y: 0.45 }
-        });
-
-        if (Date.now() < end) {
-            requestAnimationFrame(frame);
-        }
-    })();
-}
-
-</script>
-
-<script>
 function showXpPopup(gainedXP, currentXP) {
     const xp = calculateXpState(currentXP, gainedXP);
 
@@ -2375,66 +2367,57 @@ function showXpPopup(gainedXP, currentXP) {
 
 </script>
 <script>
-function showRankPopup({ winnerName, winnerRank, loserName, loserRank }) {
-    const popup  = document.getElementById("rank-popup");
-    const row1   = document.getElementById("rank-winner");
-    const row2   = document.getElementById("rank-loser");
-    const sound  = document.getElementById("rankSound");
+function showRankPopup(data) {
+    if (!data) return;
 
-    if (!popup || !row1 || !row2) return;
+    var popup  = document.getElementById("rank-popup");
+    var winner = document.getElementById("rank-winner");
+    var loser  = document.getElementById("rank-loser");
+    var sound  = document.getElementById("rankSound");
 
+    if (!popup || !winner || !loser) return;
 
-    const winnerIsUp = winnerRank < loserRank;
+    winner.querySelector(".name").textContent = data.winnerName;
+    winner.querySelector(".rank-num").textContent = data.winnerRank;
+    loser.querySelector(".name").textContent = data.loserName;
+    loser.querySelector(".rank-num").textContent = data.loserRank;
 
-    const topRow    = winnerIsUp ? row1 : row2;
-    const bottomRow = winnerIsUp ? row2 : row1;
+    winner.classList.remove("slot-top", "slot-bottom");
+    loser.classList.remove("slot-top", "slot-bottom");
 
-    const topName  = topRow.querySelector(".name");
-    const topRank  = topRow.querySelector(".rank-num");
-    const botName  = bottomRow.querySelector(".name");
-    const botRank  = bottomRow.querySelector(".rank-num");
-
-    if (!topName || !topRank || !botName || !botRank) return;
-
-    topName.textContent = winnerName;
-    topRank.textContent = winnerRank;
-
-    botName.textContent = loserName;
-    botRank.textContent = loserRank;
-
-    topRow.querySelector(".rank-info").classList.remove("blue");
-    topRow.querySelector(".rank-info").classList.add("green");
-
-    bottomRow.querySelector(".rank-info").classList.remove("green");
-    bottomRow.querySelector(".rank-info").classList.add("blue");
-
-    popup.classList.remove("swap", "show");
+    winner.classList.add("slot-bottom");
+    loser.classList.add("slot-top");
 
     popup.classList.add("show");
     popup.setAttribute("aria-hidden", "false");
 
+    winner.offsetHeight;
+
+    winner.classList.remove("slot-bottom");
+    winner.classList.add("slot-top");
+
+    loser.classList.remove("slot-top");
+    loser.classList.add("slot-bottom");
+
     if (sound) {
         sound.currentTime = 0;
-        sound.play().catch(() => {});
+        sound.play().catch(()=>{});
     }
 
-    if (typeof launchRankConfettiWOW === "function") {
-        launchRankConfettiWOW();
+    if (window.launchRankConfettiWOW) {
+        setTimeout(launchRankConfettiWOW, 200);
     }
 
-    setTimeout(() => {
-        popup.classList.add("swap");
-    }, 600);
-
-    setTimeout(() => {
-        popup.classList.remove("swap", "show");
+    /* ✅ AUTO CLOSE AFTER 8 SECONDS */
+    clearTimeout(popup._autoCloseTimer);
+    popup._autoCloseTimer = setTimeout(() => {
+        popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
-    }, 18000000);
+    }, 8000);
 }
 
-
-
 </script>
+
 
 <script>
 (function () {
