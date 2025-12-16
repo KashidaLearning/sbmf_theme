@@ -788,6 +788,22 @@ canvas.confetti-canvas {
             bottom_right_background_image = background_image.image.url
 %>
 <div class="program-about">
+    <div class="program-bg-balls" aria-hidden="true">
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+    <span class="ball"></span>
+</div>
+
+
    <%
 from achievements.models import UserBadge
 
@@ -2050,7 +2066,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (typeof window.playSound === "function") {
             window.playSound();
-        }
+        
 
         if (typeof window.launchConfetti === "function") {
             window.launchConfetti();
@@ -2128,7 +2144,6 @@ document.addEventListener("DOMContentLoaded", function () {
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
         activateIcon(targetId);
         popupOverlay.classList.add("visible");
-        document.body.style.overflow = "hidden";
     }
 
     popupContent.addEventListener("click", function (e) {
@@ -2352,13 +2367,14 @@ function showXpPopup(gainedXP, currentXP) {
     const popup = document.getElementById("xp-popup");
 
     popup.classList.add("show");
-
+     forceEnableScroll();
     xpSound.currentTime = 0;
     setTimeout(() => xpSound.play().catch(()=>{}), 150);
 
     // auto close
     setTimeout(() => {
         popup.classList.remove("show");
+          forceEnableScroll();
     }, 18000000);
 }
 
@@ -2389,6 +2405,7 @@ function showRankPopup(data) {
     loser.classList.add("slot-top");
 
     popup.classList.add("show");
+    forceEnableScroll();
     popup.setAttribute("aria-hidden", "false");
 
     winner.offsetHeight;
@@ -2413,6 +2430,7 @@ function showRankPopup(data) {
     popup._autoCloseTimer = setTimeout(() => {
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
+        forceEnableScroll();
     }, 8000);
 }
 
@@ -2458,6 +2476,84 @@ function showRankPopup(data) {
     }, 600);
   };
 })();
+</script>
+
+
+<script>
+   function forceEnableScroll() {
+    document.body.style.overflow = "auto";
+    document.documentElement.style.overflow = "auto";
+    document.body.style.position = "static";
+}
+</script>
+
+
+<script>
+function scrollWindowDownAndBack(targetEl, options = {}) {
+    if (!targetEl) return;
+
+    const {
+        delay = 300,
+        stay = 900,
+        offset = -140
+    } = options;
+
+    // force unlock scroll
+    document.body.style.overflow = "";
+    document.documentElement.style.overflow = "";
+
+    const startY = window.scrollY;
+    const targetY =
+        targetEl.getBoundingClientRect().top +
+        window.scrollY +
+        offset;
+
+    setTimeout(() => {
+        window.scrollTo({
+            top: targetY,
+            behavior: "smooth"
+        });
+    }, delay);
+
+    setTimeout(() => {
+        window.scrollTo({
+            top: startY,
+            behavior: "smooth"
+        });
+    }, delay + stay);
+}
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const justEnrolled = sessionStorage.getItem("programJustEnrolled");
+
+    if (justEnrolled === "1") {
+        sessionStorage.removeItem("programJustEnrolled");
+
+        // ⏳ ننتظر الصفحة + رسم الدواير
+        setTimeout(() => {
+
+            // 🔊 الصوت (tak)
+            if (window.playSound) {
+                window.playSound();
+            }
+
+            // ⬇️ scroll على الكورسات
+            const target = document.getElementById("coursescontainer");
+            if (!target) return;
+
+            scrollWindowDownAndBack(target, {
+                delay: 0,
+                stay: 1500,
+                offset: -120
+            });
+
+        }, 700); // مهم: بعد ما الصفحة تجهز
+    }
+
+});
 </script>
 
 </%block>

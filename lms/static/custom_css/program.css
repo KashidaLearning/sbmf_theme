@@ -2822,3 +2822,149 @@ text-transform: capitalize;
         drop-shadow(0 0 25px rgba(255,215,0,0.6))
         drop-shadow(0 0 45px rgba(255,215,0,0.35));
 }
+.program-about {
+    position: relative;
+    overflow: hidden;
+}
+
+.program-bg-balls {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+@keyframes move {
+    100% {
+        transform: translate3d(0, 0, 1px) rotate(360deg);
+    }
+}
+.program-bg-balls .ball {
+    position: absolute;
+    width: 22vmin;
+    height: 22vmin;
+    border-radius: 50%;
+    backface-visibility: hidden;
+    animation: move linear infinite;
+
+    background: radial-gradient(
+        circle at 30% 30%,
+        #201469 0%,
+        #1C0773 70%
+    );
+
+    opacity: 0.65;
+    filter: blur(2px);
+}
+.program-bg-balls .ball:nth-child(1) {
+    top: -10%;
+    left: 10%;
+    animation-duration: 42s;
+    animation-delay: -5s;
+    transform-origin: 20vw 10vh;
+    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+}
+
+.program-bg-balls .ball:nth-child(2) {
+    top: 0%;
+    left: 70%;
+    animation-duration: 55s;
+    animation-delay: -18s;
+    transform-origin: -18vw 22vh;
+    box-shadow: -40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+}
+
+.program-bg-balls .ball:nth-child(3) {
+    top: 12%;
+    left: 30%;
+    animation-duration: 48s;
+    animation-delay: -12s;
+    transform-origin: 24vw -6vh;
+    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+}
+
+.program-bg-balls .ball:nth-child(4) {
+    top: 18%;
+    left: 85%;
+    animation-duration: 36s;
+    animation-delay: -20s;
+    transform-origin: -12vw 18vh;
+    box-shadow: 40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+}
+
+.program-bg-balls .ball:nth-child(5) {
+    top: 25%;
+    left: 5%;
+    animation-duration: 60s;
+    animation-delay: -30s;
+    transform-origin: 30vw 0vh;
+    box-shadow: -40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+}
+
+.program-bg-balls .ball:nth-child(6) {
+    top: 32%;
+    left: 55%;
+    animation-duration: 34s;
+    animation-delay: -14s;
+    transform-origin: -20vw -8vh;
+    box-shadow: 40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+}
+
+/* الكرات الإضافية */
+.program-bg-balls .ball:nth-child(7) {
+    top: -8%;
+    left: 45%;
+    animation-duration: 50s;
+    animation-delay: -25s;
+    transform-origin: 15vw 25vh;
+    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.3);
+}
+
+.program-bg-balls .ball:nth-child(8) {
+    top: 8%;
+    left: 90%;
+    animation-duration: 58s;
+    animation-delay: -10s;
+    transform-origin: -25vw 15vh;
+    box-shadow: -40vmin 0 6vmin rgba(28, 7, 115, 0.3);
+}
+
+.program-bg-balls .ball:nth-child(9) {
+    top: 15%;
+    left: 60%;
+    animation-duration: 44s;
+    animation-delay: -22s;
+    transform-origin: 18vw -12vh;
+    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.3);
+}
+
+.program-bg-balls .ball:nth-child(10) {
+    top: 28%;
+    left: 20%;
+    animation-duration: 62s;
+    animation-delay: -35s;
+    transform-origin: -30vw 5vh;
+    box-shadow: -40vmin 0 6vmin rgba(28, 7, 115, 0.3);
+}
+
+.program-bg-balls .ball:nth-child(11) {
+    top: 5%;
+    left: 75%;
+    animation-duration: 39s;
+    animation-delay: -16s;
+    transform-origin: 22vw 18vh;
+    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.3);
+}
+
+.program-bg-balls .ball:nth-child(12) {
+    top: 20%;
+    left: 40%;
+    animation-duration: 47s;
+    animation-delay: -28s;
+    transform-origin: -15vw -10vh;
+    box-shadow: 40vmin 0 6vmin rgba(28, 7, 115, 0.3);
+}
+
+.program-about > *:not(.program-bg-balls) {
+    position: relative;
+    z-index: 1;
+}
