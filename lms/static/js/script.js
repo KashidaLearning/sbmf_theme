@@ -1,3 +1,5 @@
+let INTRO_FINISHED = false;
+
 let numCircles = 0;
 let circleElements = [];
 
@@ -144,6 +146,11 @@ function initializeScene() {
 
     data.forEach((item, index) => createCircle(item, index));
     updatePositions();
+    if (sessionStorage.getItem("programJustEnrolled") === "1") {
+        document.querySelectorAll(".circle-item").forEach(c => {
+            c.classList.add("is-faded");
+        });
+    }
      setTimeout(playGameCourseIntro, 300);
 }
 
@@ -399,35 +406,80 @@ window.addEventListener("message", (event) => {
         refreshCourseStatus();
     }
 });
- document.addEventListener("circlesRebuilt", revealCoursesLikeGame);
 
 function playGameCourseIntro() {
-
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
 
-   function playTak() {
-    const sound = document.getElementById("takSound");
-    if (!sound) return;
-
-    sound.pause();
-    sound.currentTime = 0;
-
-    sound.play().catch(() => {});
+    function playTak() {
+        const sound = document.getElementById("takSound");
+        if (!sound) return;
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
     }
+
     const circles = document.querySelectorAll(".circle-item");
 
     circles.forEach((circle, index) => {
         setTimeout(() => {
+            circle.classList.remove("is-faded");
+            circle.classList.add("is-visible");
+
             circle.classList.remove("game-pop");
             void circle.offsetHeight;
             circle.classList.add("game-pop");
 
             playTak();
-        }, index * 420 + 180);
-        });
 
-    // run once only
+           circle.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            setTimeout(() => {
+                window.scrollBy({ top: -90, left: 0, behavior: "smooth" });
+            }, 220)
+
+        }, index * 420 + 180);
+    });
+
     setTimeout(() => {
         sessionStorage.removeItem("programJustEnrolled");
-    }, circles.length * 220 + 600);
+        INTRO_FINISHED = true;
+
+        setTimeout(() => {
+            focusFirstCourse();
+        }, 500);
+    }, circles.length * 420 + 600);
+}
+
+function focusFirstCourse() {
+    if (!INTRO_FINISHED) return;
+
+    const first =
+        document.querySelector(".circle-item--active") ||
+        document.querySelector(".circle-item");
+
+    if (!first) return;
+
+    const y =
+        first.getBoundingClientRect().top +
+        window.pageYOffset -
+        (window.innerHeight / 2) +
+        80;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+
+    setTimeout(() => {
+        first.classList.remove("pulse-focus");
+        void first.offsetHeight;
+        first.classList.add("pulse-focus");
+    }, 450);
+
+    function stopPulse() {
+        first.classList.remove("pulse-focus");
+        window.removeEventListener("wheel", stopPulse);
+        window.removeEventListener("touchstart", stopPulse);
+        first.removeEventListener("click", stopPulse);
+    }
+
+    window.addEventListener("wheel", stopPulse, { once: true });
+    window.addEventListener("touchstart", stopPulse, { once: true });
+    first.addEventListener("click", stopPulse, { once: true });
 }

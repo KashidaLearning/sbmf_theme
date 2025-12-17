@@ -18,6 +18,7 @@
  
     <div class="programs-grid">
       % for index, program in enumerate(programs):
+      
         <div  class="program-card">
           <div class="spline-bg">
            % if program.spline_url:
@@ -37,21 +38,38 @@
               % endif  
             </div>
             -->
-            <div class="program-info">
+            <!-- <div class="program-info">
               <h3 class="program-title">${program.name}</h3>
               <div class="program-subject" >
                <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
               </div>
-            </div>
+            </div> -->
+            
           </div>
+           <p class="program-text">
+        ابدؤوا مغامرتكم من الداخل.
+        في هذه التجربة تتعلّمون كيف تديرون وقتكم، وتنظّمون مواردكم،
+        وتضعون أهدافكم بطريقة عملية تساعدكم على بناء الثقة وتحقيق التوازن.
+        تتعرّفون على أدوات التحليل، اتخاذ القرار، والتخطيط الذكي
+        لحياتكم اليومية والمستقبلية.
+      </p>
         </div>
+    
       % endfor
+     
     </div>
   </section>
 </main>
 
 <style>
-  
+  .program-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: white;
+    margin-bottom: 18px;
+    font-weight: 400;
+}
+
 .program-subject img {
     margin-left: 12px;
     width: 24px;
@@ -183,7 +201,7 @@
  
 @media (max-width: 768px) {
   .program-card {
-    width: 90%;
+    width: 100%;
     height: 480px;
   }
   .section-title {

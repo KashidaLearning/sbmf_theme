@@ -2848,8 +2848,8 @@ text-transform: capitalize;
 
     background: radial-gradient(
         circle at 30% 30%,
-        #201469 0%,
-        #1C0773 70%
+        #416A9E 0%,
+        #110D7C 80%
     );
 
     opacity: 0.65;
@@ -2968,3 +2968,4 @@ text-transform: capitalize;
     position: relative;
     z-index: 1;
 }
+
