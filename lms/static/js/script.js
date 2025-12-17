@@ -146,11 +146,15 @@ function initializeScene() {
 
     data.forEach((item, index) => createCircle(item, index));
     updatePositions();
-    if (sessionStorage.getItem("programJustEnrolled") === "1") {
-        document.querySelectorAll(".circle-item").forEach(c => {
-            c.classList.add("is-faded");
-        });
-    }
+    if (
+    sessionStorage.getItem("programJustEnrolled") === "1" &&
+    !INTRO_FINISHED
+        ) {
+            document.querySelectorAll(".circle-item").forEach(c => {
+                c.classList.add("is-faded");
+            });
+        }
+
      if (
     sessionStorage.getItem("programJustEnrolled") === "1" &&
     !INTRO_FINISHED
