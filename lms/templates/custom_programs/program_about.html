@@ -391,11 +391,7 @@ span#xp-remaining {
 
 /* RESPONSIVE */
 
-@media (max-width: 720px) {
-    .xp-character {
-        display: none;
-    }
-}
+
 .rank-popup {
     position: fixed;
     inset: 0;
@@ -625,7 +621,6 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
     display: none !important;
 }
 
-/* فرق خفيف بين اليمين واليسار */
 .rank-title .fire:first-child {
     animation-delay: 0s;
 }
@@ -805,7 +800,44 @@ body:not(.user-enrolled) .circle-item {
     visibility: hidden;    
     pointer-events: none;   
 }
+@media (max-width: 720px) {
+  .xp-character.right{
+ 
+            right: -8%;
+        top: -54%;
+}
+.xp-character img {
+    width: 115px;
+}
+.xp-stage{
+        margin-bottom: 110%;
 
+}
+.xp-character.left {
+    left: -34%;
+    top: 70%;
+}
+.rank-card {
+   width: 80%;
+    margin-top: -90%;
+}
+.rank-duo {
+    width: 170px;
+}
+.rank-characters {
+    left: 79%;
+    bottom: -81%;
+}
+.rank-title {
+    font-size: 25px;
+}
+.rank-arrows .arrow.big {
+    width: 100px;
+}
+.rank-arrows .arrow.small {
+    width: 100px;
+}
+}
 
 </style>
 % if program.css_color:
@@ -2016,7 +2048,7 @@ window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'p
     canvas.style.inset = "0";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
-    canvas.style.zIndex = "9999999"; // فوق الكرت
+    canvas.style.zIndex = "9999999"; 
     canvas.style.pointerEvents = "none";
 
     popup.appendChild(canvas);
@@ -2480,7 +2512,7 @@ function showRankPopup(data) {
     }
 
     if (window.launchRankConfettiWOW) {
-        setTimeout(launchRankConfettiWOW, 200);
+        setTimeout(launchRankConfettiWOW, 800);
     }
 
     clearTimeout(popup._autoCloseTimer);

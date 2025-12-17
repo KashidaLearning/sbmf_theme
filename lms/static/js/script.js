@@ -151,7 +151,13 @@ function initializeScene() {
             c.classList.add("is-faded");
         });
     }
-     setTimeout(playGameCourseIntro, 300);
+     if (
+    sessionStorage.getItem("programJustEnrolled") === "1" &&
+    !INTRO_FINISHED
+        ) {
+            setTimeout(playGameCourseIntro, 300);
+        }
+
 }
 
 function updateBadgesPopup(badges) {
