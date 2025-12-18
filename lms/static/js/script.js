@@ -1,4 +1,20 @@
-let INTRO_FINISHED = false;
+const CURRENT_PROGRAM_ID =
+    document.body.dataset.programId || window.location.pathname;
+
+const INTRO_KEY = `introPlayed_${CURRENT_PROGRAM_ID}`;
+let INTRO_FINISHED = sessionStorage.getItem(INTRO_KEY) === "1";
+let SCENE_READY = false;
+let introTimeouts = [];
+
+function safeTimeout(fn, delay) {
+    const id = setTimeout(fn, delay);
+    introTimeouts.push(id);
+}
+
+function clearIntroTimeouts() {
+    introTimeouts.forEach(clearTimeout);
+    introTimeouts = [];
+}
 
 let numCircles = 0;
 let circleElements = [];
@@ -137,6 +153,8 @@ function updateContainerHeight() {
 }
 
 function initializeScene() {
+      if (SCENE_READY) return; 
+    SCENE_READY = true;
     const data = window.coursePathData || [];
     if (!data.length || !circlesWrapper) return;
 
@@ -146,21 +164,22 @@ function initializeScene() {
 
     data.forEach((item, index) => createCircle(item, index));
     updatePositions();
-    if (
+   const shouldPlayIntro =
     sessionStorage.getItem("programJustEnrolled") === "1" &&
-    !INTRO_FINISHED
-        ) {
-            document.querySelectorAll(".circle-item").forEach(c => {
-                c.classList.add("is-faded");
-            });
-        }
+    !INTRO_FINISHED;
+    if (shouldPlayIntro) {
+    document.querySelectorAll(".circle-item").forEach(c => {
+        c.classList.add("is-faded");
+    });
 
-     if (
-    sessionStorage.getItem("programJustEnrolled") === "1" &&
-    !INTRO_FINISHED
-        ) {
-            setTimeout(playGameCourseIntro, 300);
-        }
+    setTimeout(playGameCourseIntro, 300);
+} else {
+    document.querySelectorAll(".circle-item").forEach(c => {
+        c.classList.remove("is-faded");
+        c.classList.add("is-visible");
+    });
+}
+
 
 }
 
@@ -348,6 +367,7 @@ async function refreshCourseStatus() {
         const data = JSON.parse(raw);
 
         if (data.coursePathDataJSON) {
+            SCENE_READY = false;
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
             initializeScene();
@@ -419,6 +439,8 @@ window.addEventListener("message", (event) => {
 
 function playGameCourseIntro() {
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
+    
+    clearIntroTimeouts();
 
     function playTak() {
         const sound = document.getElementById("takSound");
@@ -442,23 +464,24 @@ function playGameCourseIntro() {
 
            circle.scrollIntoView({ behavior: "smooth", block: "center" });
 
-            setTimeout(() => {
+            safeTimeout(() => {
                 window.scrollBy({ top: -90, left: 0, behavior: "smooth" });
             }, 220)
 
         }, index * 420 + 180);
     });
 
+  setTimeout(() => {
+    sessionStorage.setItem(INTRO_KEY, "1"); 
+    sessionStorage.removeItem("programJustEnrolled");
+    INTRO_FINISHED = true;
+
     setTimeout(() => {
-        sessionStorage.removeItem("programJustEnrolled");
-        INTRO_FINISHED = true;
+        focusFirstCourse();
+    }, 500);
+}, circles.length * 420 + 600);
 
-        setTimeout(() => {
-            focusFirstCourse();
-        }, 500);
-    }, circles.length * 420 + 600);
 }
-
 function focusFirstCourse() {
     if (!INTRO_FINISHED) return;
 
