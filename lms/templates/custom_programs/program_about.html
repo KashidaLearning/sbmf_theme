@@ -1342,6 +1342,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   total_points = 0
   total_badges = 0
   %>
+  
   % for course in courses:
       <%
       course_id = str(course.course.course_key)
@@ -1358,7 +1359,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
           GROUP BY user_id, course_key
       )
       SELECT
-          GPC.percent_grade * 100 AS FinalGradePercent,
+          GPC.percent_grade AS FinalGradePercent,
           ROUND(
               COALESCE(
                   100.0 * UC.completed_blocks / NULLIF(TB.total_blocks, 0),
@@ -1413,18 +1414,26 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
           if duration_seconds > 0:
               duration_with_effort = effort_seconds / duration_seconds
 
-      xp = (final_grade * 6) + (completion_percent * 3) + (100 * duration_with_effort)
+      xp = (final_grade * 6)  + duration_with_effort
       total_points += xp
 
       badges = UserBadge.get_my_course_badges(user, course.course.course_key)
       if badges:
           total_badges += len(badges)
       %>
+   % if user.id == request.user.id:
+    <div style="font-size:12px;color:#ffcc00;margin:4px 0;">
+        DEBUG →
+        final_grade: ${final_grade} |
+        duration_with_effort: ${duration_with_effort}
+        </div>
+    % endif
+
   % endfor
 
   <%
   total_badges_overall = total_badges * 1000
-  rank_value = 0.5 * total_points + 0.5 * total_badges_overall
+  rank_value =  total_points 
 
   completed_courses = sum(1 for c in courses if UserBadge.get_my_course_badges(user, c.course.course_key))
   total_courses = len(courses)
@@ -1456,7 +1465,10 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         break
 %>
 
+
 <div class="leaderboard-header">
+ 
+
     <div class="center">
     <div class="lh-left">
         <ul class="eval-grid">
