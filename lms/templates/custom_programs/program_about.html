@@ -1359,7 +1359,7 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
           GROUP BY user_id, course_key
       )
       SELECT
-          GPC.percent_grade AS FinalGradePercent,
+          GPC.percent_grade * 100 AS FinalGradePercent,
           ROUND(
               COALESCE(
                   100.0 * UC.completed_blocks / NULLIF(TB.total_blocks, 0),
