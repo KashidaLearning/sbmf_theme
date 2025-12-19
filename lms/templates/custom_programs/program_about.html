@@ -864,6 +864,8 @@ body:not(.user-enrolled) .circle-item {
             bottom_right_background_image = background_image.image.url
 %>
 <div class="program-about">
+    <body data-program-id="${program.id}">
+
     <div class="program-bg-balls" aria-hidden="true">
     <span class="ball"></span>
     <span class="ball"></span>
@@ -919,7 +921,13 @@ def time_to_seconds(timestr):
 <div class="mobile">
     <section class="hero">
         <div class="row">
-
+          <div class="column column-left">
+                % if top_right_background_image:
+                    <div class="top_right_background_image">
+                        <img src="${top_right_background_image}" class="bg-img">
+                    </div>
+                % endif
+            </div>
             <div class="title">${program.name}</div>
 
             <div class="column column-middle">
@@ -931,7 +939,12 @@ def time_to_seconds(timestr):
                     </div>
                 % endif
 
-                <p>${program.short_description}</p>
+                   <div class="program-bubble">
+                    <div class="bubble-content">
+                        ${program.short_description}
+                    </div>
+                    <span class="bubble-arrow"></span>
+                </div>
 
                 % if not user_is_enrolled:
                     <div class="enrollment-info">
@@ -953,12 +966,8 @@ def time_to_seconds(timestr):
                             % endif
 
                         % else:
-                            <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
-                            class="btn btn-cta one-click-purchase-btn active"
-                            onclick="sessionStorage.setItem('programJustEnrolled','1')">
+                          <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active" onclick="sessionStorage.setItem('programJustEnrolled','1')">${_("التحق في الرحلة")}</a>
 
-                            التحق في المغامرة،
-                            </a>
                         % endif
                     </div>
                 % endif
@@ -972,6 +981,7 @@ def time_to_seconds(timestr):
                     </div>
                 % endif
             </div>
+           
 
         </div>
     </section>
@@ -981,21 +991,25 @@ def time_to_seconds(timestr):
             <div class="row">
                 <!-- This will be the leftmost column (Column 3) -->
                 
-
-                 % if top_right_background_image:
-                <div class="column column-left">
-                    <div><img src="${top_right_background_image}" alt="img" class="hero-img"></div>
-                </div>
-                % endif
-
-                <!-- This will be the middle column (Column 2) -->
-                <div class="column column-middle">
+                    <div class="column column-left">
                     <h2>${program.name}</h2>
                     % if program.subject:
                         <div class="cat-name" style="background-color:${program.css_single_color};" ><img src="${static.url('images/cat-icon.png')}"><span>${program.subject.name}</span></div>
                     % endif
-                    <p>${program.short_description}</p>
-                    % if not user_is_enrolled:
+
+                </div>
+                 % if top_right_background_image:
+                 
+                <div class="column column-middle">
+                    <div><img src="${top_right_background_image}" alt="img" class="hero-img"></div>
+                    <div class="program-bubble">
+                    <div class="bubble-content">
+                        ${program.short_description}
+                    </div>
+                    <span class="bubble-arrow"></span>
+                </div>
+                
+                   % if not user_is_enrolled:
                         <div class="enrollment-info">
                             % if program.enrollment_start >  timezone.now():
                                 <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Not Started Yet")}</span>
@@ -1013,6 +1027,10 @@ def time_to_seconds(timestr):
                         </div>
                     % endif
                 </div>
+                % endif
+
+                <!-- This will be the middle column (Column 2) -->
+               
                 
                 <div class="column column-right">
                 % if top_left_background_image:
@@ -1022,7 +1040,10 @@ def time_to_seconds(timestr):
                 % endif
               
                 </div>
+
+
             </div>
+                         
         </section>
     </div>
        
@@ -1475,16 +1496,6 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
     xp = (final_grade * 0.7) + (duration_score * 0.3)
     total_points += xp
     %>
-
-    % if user.id == request.user.id:
-        <div style="font-size:12px;color:#ffcc00;margin:4px 0;">
-            DEBUG →
-            final_grade: ${ "%.2f" % final_grade } |
-            duration_score: ${ "%.2f" % duration_score } |
-            xp: ${ "%.2f" % xp }
-
-        </div>
-    % endif
 
 % endfor
 
