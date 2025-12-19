@@ -297,8 +297,8 @@ a.go-to-journeys {
 
 
 .go-to-journeys{
-  width: 180px;
-  height: 47px;
+  width: 229px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -308,16 +308,17 @@ a.go-to-journeys {
   border: 2px solid #110D7C;
   background-color: #FFCB05;
   color: #110D7C;
-  font-weight: 700;
   text-decoration: none;
   opacity: 1;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 20px !important;
+  font-weight: 700 !important;
 }
 
 .go-to-journeys:hover{
   background-color: #110D7C;
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .go-to-journeys:focus-visible{

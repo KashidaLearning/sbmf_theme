@@ -389,9 +389,7 @@ cert_name_long = settings.CERT_NAME_LONG
 
         % if not has_any_program_enrollment:
             <div class="no-programs-message">
-               <h1 class="leader-dashboard__title"> مرحبًا بك في لوحة تقدّمك!</h1>
- <p class="dashboard-description">هنا تجد ملخّص رحلتك في البرنامج: إنجازاتك التي اكتملَت، والمهام المتبقية، والمهارات التي تعمل على تطويرها. تابع تقدّمك خطوة بخطوة، وارجع إلى أي نشاط متى احتجت، فكل شيء هنا مصمّم ليمنحك رؤية واضحة وسهلة لمسار تعلّمك.</p>
-                <img href="${static.url('images/no-program-image.png')}" alt="لا توجد برامج حالياً" class="no-programs-image">
+                <img src="${static.url('images/no-program-image.png')}" class="no-programs-image">
                 <a href="/courses" class="go-to-journeys">
                    استكشف الرحلات
                 </a>
