@@ -294,3 +294,34 @@ a.go-to-journeys {
     margin-bottom: 20px;
     }
 }
+
+
+.go-to-journeys{
+  width: 180px;
+  height: 47px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 56px;
+  border: 2px solid #110D7C;
+  background-color: #FFCB05;
+  color: #110D7C;
+  font-weight: 700;
+  text-decoration: none;
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.go-to-journeys:hover{
+  background-color: #110D7C;
+  color: #ffffff;
+}
+
+.go-to-journeys:focus-visible{
+  outline: 3px solid rgba(255,203,5,0.6);
+  outline-offset: 4px;
+}
+

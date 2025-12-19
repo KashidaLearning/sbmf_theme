@@ -124,6 +124,67 @@ header.global-header {
      font-family: "IBM Plex Sans" !important;
   }
 
+
+  header.global-header .nav-links .secondary .dropdown-user-menu .dropdown-item a:hover{
+    text-decoration: underline !important;
+  }
+
+  header.global-header .nav-links .secondary .dropdown-user-menu {
+    text-align: center !important;
+  }
+
+/* Hover underline for authenticated user nav links */
+
+.nav-links .tab-nav-link {
+  position: relative;
+  text-decoration: none;
+}
+
+.nav-links .tab-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  width: 0;
+  height: 2px;
+  background-color: #fff;
+  transition: width 0.3s ease;
+}
+
+.nav-links .tab-nav-link:hover::after,
+.nav-links .tab-nav-link[aria-current="page"]::after {
+  width: 100%;
+}
+
+
+
+/* hover for non-authenticated user nav items */
+
+.global-header .nav-links .main .nav-item a:not(.btn) {
+  position: relative;
+  display: inline-block;        /* REQUIRED */
+  padding-bottom: 8px;
+  text-decoration: none !important;
+}
+
+.global-header .nav-links .main .nav-item a:not(.btn)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -14px;
+  width: 0;
+  height: 2px;
+  background-color: #fff;
+  transition: width 0.25s ease;
+}
+
+.global-header .nav-links .main .nav-item a:not(.btn):hover::after,
+.global-header .nav-links .main .nav-item a:not(.btn)[aria-current="page"]::after {
+  width: 100%;
+}
+
+
+
 </style>
 
 
