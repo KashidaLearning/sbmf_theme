@@ -294,7 +294,7 @@ left: -63%;
 }
 
 .xp-number {
-    font-size: 54px;
+    font-size: 26px;
     font-weight: 900;
     color: #fff;
     line-height: 1;
@@ -351,7 +351,7 @@ left: -63%;
     text-align: right;
     font-kerning: none;
     font-family: "IBM Plex Sans Arabic";
-    font-size: 16px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 700;
     line-height: 22px;
@@ -904,7 +904,17 @@ except:
     my_badges = []
 
 %>
-
+<%
+def time_to_seconds(timestr):
+    """Convert HH:MM to total seconds."""
+    if not timestr:
+        return 0
+    try:
+        h, m = map(int, timestr.split(":"))
+        return h * 3600 + m * 60
+    except:
+        return 0
+%>
 
 <div class="mobile">
     <section class="hero">
@@ -1137,8 +1147,9 @@ except:
     <%!
         import json
     %>
+    
+    <% 
 
-    <%
         # Order courses
         all_courses_ordered = courses.order_by("order")
 
@@ -1170,6 +1181,57 @@ except:
 
             is_special = (course.display_layout == "horizontal" or course.order == 1)
             is_first_course = bool(course.order == 1)
+            course_xp = 0.0
+
+            if is_completed:
+                course_id = str(course.course.course_key)
+
+                query = f"""
+                SELECT
+                    GPC.percent_grade * 100 AS FinalGradePercent,
+                    (
+                        SELECT MIN(CSM.created)
+                        FROM courseware_studentmodule AS CSM
+                        WHERE CSM.student_id = {request.user.id}
+                        AND CSM.course_id = '{course_id}'
+                    ) AS FirstInteractionDate,
+                    (
+                        SELECT MIN(CGC.created_date)
+                        FROM certificates_generatedcertificate AS CGC
+                        WHERE CGC.user_id = {request.user.id}
+                        AND CGC.course_id = '{course_id}'
+                    ) AS CertificateIssuedDate,
+                    CO.effort AS Effort
+                FROM grades_persistentcoursegrade AS GPC
+                LEFT JOIN course_overviews_courseoverview AS CO
+                    ON CO.id = '{course_id}'
+                WHERE GPC.user_id = {request.user.id}
+                AND GPC.course_id = '{course_id}'
+                """
+
+                with connection.cursor() as cursor:
+                    cursor.execute(query)
+                    row = cursor.fetchone()
+
+                if row:
+                    final_grade = float(row[0] or 0)
+                    first_interaction = row[1]
+                    cert_date = row[2]
+                    effort_str = row[3] or "00:00"
+
+                    effort_seconds = time_to_seconds(effort_str)
+
+                    duration_score = 0
+                    if cert_date and first_interaction:
+                        duration_seconds = int((cert_date - first_interaction).total_seconds())
+                        if duration_seconds > 0:
+                            diff = abs(duration_seconds - effort_seconds)
+                            if diff <= 60:
+                                duration_score = 100
+                            else:
+                                duration_score = max(0, 100 - (diff - 60) * 0.05)
+
+                    course_xp = (final_grade * 0.7) + (duration_score * 0.3)
 
             coursePathItems.append({
                 "id": int(course.id),
@@ -1186,7 +1248,9 @@ except:
                 "link": course_link,
                 "is_special": is_special,
                 "is_first_course": is_first_course,
-                "xpAward": int(50 if is_completed else 0),
+                "xpAward": round(course_xp, 2),
+
+
             })
 
             idx += 1
@@ -1194,6 +1258,12 @@ except:
         if active_index is None:
             active_index = 0
     %>
+    <script>
+    window.USER_TOTAL_XP = window.coursePathData
+        .filter(c => c.state === "completed")
+        .reduce((sum, c) => sum + Number(c.xpAward || 0), 0);
+    </script>
+
 
     <script type="application/json" id="course-path-data-json">
         ${ json.dumps({
@@ -1316,17 +1386,7 @@ from datetime import datetime
 from achievements.models import UserBadge
 %>
 
-<%
-def time_to_seconds(timestr):
-    """Convert HH:MM to total seconds."""
-    if not timestr:
-        return 0
-    try:
-        h, m = map(int, timestr.split(":"))
-        return h * 3600 + m * 60
-    except:
-        return 0
-%>
+
 
 <%
 user_ids = []
@@ -1344,92 +1404,90 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   %>
   
   % for course in courses:
-      <%
-      course_id = str(course.course.course_key)
-      query = f"""
-      WITH total_blocks AS (
-          SELECT course_key, COUNT(DISTINCT block_key) AS total_blocks
-          FROM completion_blockcompletion
-          GROUP BY course_key
-      ),
-      user_completion AS (
-          SELECT user_id, course_key, COUNT(DISTINCT block_key) AS completed_blocks
-          FROM completion_blockcompletion
-          WHERE completion >= 0.999
-          GROUP BY user_id, course_key
-      )
-      SELECT
-          GPC.percent_grade * 100 AS FinalGradePercent,
-          ROUND(
-              COALESCE(
-                  100.0 * UC.completed_blocks / NULLIF(TB.total_blocks, 0),
-                  0
-              ), 2
-          ) AS CourseCompletionPercent,
-          (
-              SELECT MIN(CSM.created)
-              FROM courseware_studentmodule AS CSM
-              WHERE CSM.student_id = {user.id}
-              AND CSM.course_id = '{course_id}'
-          ) AS FirstInteractionDate,
-          (
-              SELECT MIN(CGC.created_date)
-              FROM certificates_generatedcertificate AS CGC
-              WHERE CGC.user_id = {user.id}
-              AND CGC.course_id = '{course_id}'
-          ) AS CertificateIssuedDate,
-          CO.effort AS Effort
-      FROM grades_persistentcoursegrade AS GPC
-      LEFT JOIN user_completion AS UC
-          ON UC.user_id = {user.id} AND UC.course_key = '{course_id}'
-      LEFT JOIN total_blocks AS TB
-          ON TB.course_key = '{course_id}'
-      LEFT JOIN course_overviews_courseoverview AS CO
-          ON CO.id = '{course_id}'
-      WHERE GPC.user_id = {user.id} AND GPC.course_id = '{course_id}'
-      """
+    <%
+    course_id = str(course.course.course_key)
 
-      with connection.cursor() as cursor:
-          cursor.execute(query)
-          rows = cursor.fetchall()
-          cols = [c[0] for c in cursor.description]
+    query = f"""
+    WITH total_blocks AS (
+        SELECT course_key, COUNT(DISTINCT block_key) AS total_blocks
+        FROM completion_blockcompletion
+        GROUP BY course_key
+    ),
+    user_completion AS (
+        SELECT user_id, course_key, COUNT(DISTINCT block_key) AS completed_blocks
+        FROM completion_blockcompletion
+        WHERE completion >= 0.999
+        GROUP BY user_id, course_key
+    )
+    SELECT
+        GPC.percent_grade * 100 AS FinalGradePercent,
+        (
+            SELECT MIN(CSM.created)
+            FROM courseware_studentmodule AS CSM
+            WHERE CSM.student_id = {user.id}
+            AND CSM.course_id = '{course_id}'
+        ) AS FirstInteractionDate,
+        (
+            SELECT MIN(CGC.created_date)
+            FROM certificates_generatedcertificate AS CGC
+            WHERE CGC.user_id = {user.id}
+            AND CGC.course_id = '{course_id}'
+        ) AS CertificateIssuedDate,
+        CO.effort AS Effort
+    FROM grades_persistentcoursegrade AS GPC
+    LEFT JOIN course_overviews_courseoverview AS CO
+        ON CO.id = '{course_id}'
+    WHERE GPC.user_id = {user.id}
+    AND GPC.course_id = '{course_id}'
+    """
+    %>
 
-      if not rows:
-          continue
+    <%
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        cols = [c[0] for c in cursor.description]
+    %>
 
-      data = dict(zip(cols, rows[0]))
-      final_grade = float(data.get("FinalGradePercent") or 0)
-      completion_percent = float(data.get("CourseCompletionPercent") or 0)
-      first_interaction = data.get("FirstInteractionDate")
-      cert_date = data.get("CertificateIssuedDate")
-      effort_str = data.get("Effort") or "00:00"
+    % if not rows:
+        <% continue %>
+    % endif
 
-      effort_seconds = time_to_seconds(effort_str)
-      duration_seconds = 0
-      duration_with_effort = 0.0
+    <%
+    data = dict(zip(cols, rows[0]))
+    final_grade = float(data.get("FinalGradePercent") or 0)
+    first_interaction = data.get("FirstInteractionDate")
+    cert_date = data.get("CertificateIssuedDate")
+    effort_str = data.get("Effort") or "00:00"
 
-      if cert_date and first_interaction:
-          duration = cert_date - first_interaction
-          duration_seconds = int(duration.total_seconds())
-          if duration_seconds > 0:
-              duration_with_effort = effort_seconds / duration_seconds
+    effort_seconds = time_to_seconds(effort_str)
 
-      xp = (final_grade * 6)  + duration_with_effort
-      total_points += xp
+    duration_score = 0
+    if cert_date and first_interaction:
+        duration_seconds = int((cert_date - first_interaction).total_seconds())
+        if duration_seconds > 0:
+            duration_diff = abs(duration_seconds - effort_seconds)
+            if duration_diff <= 60:
+                duration_score = 100
+            else:
+                duration_score = max(0, 100 - (duration_diff - 60) * 0.05)
 
-      badges = UserBadge.get_my_course_badges(user, course.course.course_key)
-      if badges:
-          total_badges += len(badges)
-      %>
-   % if user.id == request.user.id:
-    <div style="font-size:12px;color:#ffcc00;margin:4px 0;">
-        DEBUG →
-        final_grade: ${final_grade} |
-        duration_with_effort: ${duration_with_effort}
+    xp = (final_grade * 0.7) + (duration_score * 0.3)
+    total_points += xp
+    %>
+
+    % if user.id == request.user.id:
+        <div style="font-size:12px;color:#ffcc00;margin:4px 0;">
+            DEBUG →
+            final_grade: ${ "%.2f" % final_grade } |
+            duration_score: ${ "%.2f" % duration_score } |
+            xp: ${ "%.2f" % xp }
+
         </div>
     % endif
 
-  % endfor
+% endfor
+
 
   <%
   total_badges_overall = total_badges * 1000
@@ -1460,7 +1518,7 @@ current_user_rank_points = 0
 for index, data in enumerate(sorted_leaderboard, start=1):
     if data['user'].id == current_user_id:
         current_user_rank = index
-        current_user_rank_points = int(data['rank_points'])
+        current_user_rank_points = data['rank_points']
         current_user_progress = data['progress']
         break
 %>
@@ -1558,7 +1616,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     <div class="lh-right">
         <div class="lh-rank-text">
             <h2 class="lh-rank-title">مركزك الحالي: <span>المرتبة ${current_user_rank}</span></h2>
-            <p class="lh-p">نقاطك:   <b>XP ${current_user_rank_points}</b> </p>
+            <p class="lh-p">نقاطك:   <b>XP ${ "%.2f" % current_user_rank_points}</b> </p>
            
         </div>
         <div class="lh-avatar">
@@ -1592,7 +1650,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         </div>
         <div class="xp"><h4></h4></div>
       </div>
-        <div class="pt1">XP <b>${int(user_data['rank_points'])}</b></div>
+        <div class="pt1"> XP <b>${ "%.2f" % user_data['rank_points'] }</b></div>
 
       </div>
  
@@ -1904,9 +1962,9 @@ for ub in user_badges:
     </div>
 
     <!-- NEXT -->
-    <div class="xp-next-btn">
+   <!--  <div class="xp-next-btn">
         التحدي التالي سيمنحك: <b>+<span id="xp-remaining">75</span></b>
-    </div>
+    </div> -->
 
     </div>
 
@@ -2177,13 +2235,21 @@ document.addEventListener("DOMContentLoaded", function () {
             badgeUrl = sharatiBadges[sharatiBadges.length - 1].src;
         }
 
-        if (typeof window.showXpPopup === "function") {
-            window.showXpPopup(
-                25,
-                window.USER_XP || 300,
-                badgeUrl
-            );
-        }
+       const completedCourses = updated.filter(c => c.state === "completed");
+
+        const lastCompletedCourse = completedCourses[completedCourses.length - 1];
+
+        if (!lastCompletedCourse) return;
+
+        const gainedXP = Number(lastCompletedCourse.xpAward || 0);
+
+        const previousTotalXP = completedCourses
+        .slice(0, -1)
+        .reduce((sum, c) => sum + Number(c.xpAward || 0), 0);
+        console.log("Gained XP:", gainedXP);
+        console.log("Previous Total XP:", previousTotalXP);
+        window.showXpPopup(gainedXP, previousTotalXP);
+
     };
 
     document.addEventListener("click", function (e) {
@@ -2462,9 +2528,9 @@ function calculateXpState(currentXP, gainedXP) {
 function showXpPopup(gainedXP, currentXP) {
     const xp = calculateXpState(currentXP, gainedXP);
 
-    document.getElementById("xp-gained").textContent = xp.gainedXP;
-    document.getElementById("xp-total").textContent  = xp.totalXP;
-    document.getElementById("xp-remaining").textContent = xp.remaining;
+    document.getElementById("xp-gained").textContent = Number(xp.gainedXP).toFixed(2);
+    document.getElementById("xp-total").textContent  = Number(xp.totalXP).toFixed(2);
+
 
     const popup = document.getElementById("xp-popup");
 
@@ -2477,7 +2543,7 @@ function showXpPopup(gainedXP, currentXP) {
     setTimeout(() => {
         popup.classList.remove("show");
          
-    }, 8000);
+    }, 6500);
 }
 
 

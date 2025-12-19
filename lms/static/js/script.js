@@ -88,6 +88,12 @@ function createCircle(data, index) {
             </div>
         `;
     }
+  if (state === "completed" && data.xpAward) {
+    const xpBadge = document.createElement("div");
+    xpBadge.className = "course-xp-badge";
+    xpBadge.textContent = `+${data.xpAward} XP`;
+    circle.appendChild(xpBadge);
+}
 
     circle.addEventListener("click", () => {
     if (state === "locked") {
