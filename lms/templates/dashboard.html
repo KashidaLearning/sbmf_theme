@@ -389,7 +389,18 @@ cert_name_long = settings.CERT_NAME_LONG
 
         % if not has_any_program_enrollment:
             <div class="no-programs-message">
-                <img src="${static.url('images/no-program-image.png')}" class="no-programs-image">
+               <picture>
+                    <!-- Mobile image -->
+                     <source
+                        srcset="${static.url('images/no-program-image-mobile.png')}"
+                        media="(max-width: 768px)">
+
+                        <!-- Default / desktop image -->
+                     <img
+                        src="${static.url('images/no-program-image.png')}"
+                        alt="No programs illustration"
+                        class="no-programs-image">
+                 </picture>
                 <a href="/courses" class="go-to-journeys">
                    استكشف الرحلات
                 </a>
