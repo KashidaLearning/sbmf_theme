@@ -455,10 +455,11 @@ function playGameCourseIntro() {
     setTimeout(() => {
         sessionStorage.removeItem("programJustEnrolled");
         INTRO_FINISHED = true;
-
+      
         setTimeout(() => {
             focusFirstCourse();
         }, 500);
+         showIntroPopup();
     }, circles.length * 420 + 600);
 }
 
@@ -495,4 +496,34 @@ function focusFirstCourse() {
     window.addEventListener("wheel", stopPulse, { once: true });
     window.addEventListener("touchstart", stopPulse, { once: true });
     first.addEventListener("click", stopPulse, { once: true });
+}
+function showIntroPopup() {
+    const overlay = document.createElement("div");
+    overlay.id = "introFullModal";
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center;
+        justify-content: center; z-index: 20000;  background: rgba(17, 13, 124, 0.08);
+    backdrop-filter: blur(50px);
+    `;
+
+    const content = document.createElement("div");
+    content.className = "intro-content-container";
+    
+    content.innerHTML = `
+        <div class="intro-image-wrapper">
+            <span class="intro-close-btn">&times;</span>
+            <img src="${window.MY_APP_ASSETS.popupImage}" class="main-intro-img" alt="Intro Guide">
+        </div>
+    `;
+
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    const closePopup = () => {
+        overlay.remove();
+        focusFirstCourse(); 
+    };
+
+    overlay.querySelector(".intro-close-btn").onclick = closePopup;
+    overlay.onclick = (e) => { if(e.target === overlay) closePopup(); };
 }

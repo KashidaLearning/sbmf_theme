@@ -2047,6 +2047,9 @@ for ub in user_badges:
     </div>
 
   </div>
+
+</div>
+
 </div>
 
 
@@ -2090,7 +2093,11 @@ window.STATE_ICONS = {
     locked: "${static.url('images/Locked001.png')}"
 };
 </script>
-
+<script>
+    window.MY_APP_ASSETS = {
+        popupImage: "${static.url('images/popup-1.png')}"
+    };
+</script>
 <script>
 window.CURRENT_USER_ID = ${request.user.id};
 window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
