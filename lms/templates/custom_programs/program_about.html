@@ -1009,7 +1009,10 @@ def time_to_seconds(timestr):
                     <span class="bubble-arrow"></span>
                 </div>
                 
-                   % if not user_is_enrolled:
+                 
+                </div>
+                % endif
+                 % if not user_is_enrolled:
                         <div class="enrollment-info">
                             % if program.enrollment_start >  timezone.now():
                                 <span class="btn btn-cta one-click-purchase-btn disabled">${_("Enrollment Not Started Yet")}</span>
@@ -1026,9 +1029,6 @@ def time_to_seconds(timestr):
                             % endif
                         </div>
                     % endif
-                </div>
-                % endif
-
                 <!-- This will be the middle column (Column 2) -->
                
                 
@@ -2095,7 +2095,9 @@ window.STATE_ICONS = {
 </script>
 <script>
     window.MY_APP_ASSETS = {
-        popupImage: "${static.url('images/popup-1.png')}"
+        popupImage: "${static.url('images/MapStuff.png')}",
+        introCharacter: "${static.url('images/mapcharacter.png')}"
+
     };
 </script>
 <script>
@@ -2466,6 +2468,10 @@ document.body.addEventListener('click', function(e) {
 </script>
 
 <script>
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const sticky = document.querySelector(".sticky-icons-wrapper");
     if (!sticky) return;
@@ -2474,18 +2480,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const startOffset = sticky.offsetTop;
 
     function updateSticky() {
-        
         const scrollY = window.scrollY || 0;
         const isScrollingDown = scrollY > lastScroll;
         lastScroll = scrollY;
 
         if (scrollY >= startOffset && isScrollingDown) {
+            // STICKY
             sticky.classList.add("is-sticky");
             document.body.classList.add("sticky-active");
             sticky.style.top = "0px";
-        } else if (scrollY < startOffset) {
+        } else {
+            // NOT STICKY
             sticky.classList.remove("is-sticky");
             document.body.classList.remove("sticky-active");
+
+            // ✅ only mobile gets 66px
+            sticky.style.top = isMobile() ? "66px" : "0px";
         }
     }
 
@@ -2524,6 +2534,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
 <script>
 function calculateXpState(currentXP, gainedXP) {
     const totalXP = currentXP + gainedXP;

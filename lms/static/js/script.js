@@ -455,11 +455,12 @@ function playGameCourseIntro() {
     setTimeout(() => {
         sessionStorage.removeItem("programJustEnrolled");
         INTRO_FINISHED = true;
-      
         setTimeout(() => {
             focusFirstCourse();
+
         }, 500);
-         showIntroPopup();
+                        showIntroPopup();
+
     }, circles.length * 420 + 600);
 }
 
@@ -496,24 +497,52 @@ function focusFirstCourse() {
     window.addEventListener("wheel", stopPulse, { once: true });
     window.addEventListener("touchstart", stopPulse, { once: true });
     first.addEventListener("click", stopPulse, { once: true });
+ 
+
 }
 function showIntroPopup() {
     const overlay = document.createElement("div");
     overlay.id = "introFullModal";
     overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center;
-        justify-content: center; z-index: 20000;  background: rgba(17, 13, 124, 0.08);
-    backdrop-filter: blur(50px);
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20000;
+        background: rgba(17, 13, 124, 0.5);
+        backdrop-filter: blur(20px);
     `;
 
     const content = document.createElement("div");
     content.className = "intro-content-container";
-    
+
     content.innerHTML = `
-        <div class="intro-image-wrapper">
+       <div class="intro-image-wrapper">
+
+            <div class="intro-yellow-header">
+                طريق واحد، خطوات واضحة. أنه كل تحدي لفتح اللي بعده!
+            </div>
+
             <span class="intro-close-btn">&times;</span>
-            <img src="${window.MY_APP_ASSETS.popupImage}" class="main-intro-img" alt="Intro Guide">
+
+            <!-- MAIN BACKGROUND IMAGE -->
+            <img
+                src="${window.MY_APP_ASSETS.popupImage}"
+                class="main-intro-img"
+                alt="Intro Path"
+            >
+
+            <!-- CHARACTER -->
+            <img
+                src="${window.MY_APP_ASSETS.introCharacter}"
+                class="intro-character-img"
+                alt="Guide Character"
+            >
+
         </div>
+
     `;
 
     overlay.appendChild(content);
@@ -521,9 +550,11 @@ function showIntroPopup() {
 
     const closePopup = () => {
         overlay.remove();
-        focusFirstCourse(); 
+        focusFirstCourse();
     };
 
     overlay.querySelector(".intro-close-btn").onclick = closePopup;
-    overlay.onclick = (e) => { if(e.target === overlay) closePopup(); };
+    overlay.onclick = (e) => {
+        if (e.target === overlay) closePopup();
+    };
 }
