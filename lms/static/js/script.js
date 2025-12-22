@@ -519,42 +519,38 @@ function showIntroPopup() {
     content.className = "intro-content-container";
 
     content.innerHTML = `
-       <div class="intro-image-wrapper">
-
+        <div class="intro-image-wrapper">
             <div class="intro-yellow-header">
                 طريق واحد، خطوات واضحة. أنه كل تحدي لفتح اللي بعده!
             </div>
 
-            <span class="intro-close-btn">&times;</span>
+            <span class="intro-close-btn" aria-label="Close">&times;</span>
 
-            <!-- MAIN BACKGROUND IMAGE -->
-            <img
-                src="${window.MY_APP_ASSETS.popupImage}"
-                class="main-intro-img"
-                alt="Intro Path"
-            >
-
-            <!-- CHARACTER -->
-            <img
-                src="${window.MY_APP_ASSETS.introCharacter}"
-                class="intro-character-img"
-                alt="Guide Character"
-            >
-
+            <img src="${window.MY_APP_ASSETS.popupImage}" class="main-intro-img">
+            <img src="${window.MY_APP_ASSETS.introCharacter}" class="intro-character-img">
         </div>
-
     `;
 
     overlay.appendChild(content);
     document.body.appendChild(overlay);
 
-    const closePopup = () => {
+    function closePopup() {
         overlay.remove();
-        focusFirstCourse();
-    };
 
-    overlay.querySelector(".intro-close-btn").onclick = closePopup;
-    overlay.onclick = (e) => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                if (typeof focusFirstCourse === "function") {
+                    focusFirstCourse();
+                }
+            });
+        });
+    }
+
+    overlay.querySelector(".intro-close-btn")
+        .addEventListener("click", closePopup);
+
+    overlay.addEventListener("click", (e) => {
         if (e.target === overlay) closePopup();
-    };
+    });
 }
+
