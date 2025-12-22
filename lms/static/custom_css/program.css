@@ -1135,6 +1135,94 @@ ease-in-out;
     background: #242184a3;
     cursor: auto;
 }
+.enroll-attention {
+    position: relative;
+    animation: enrollBounce 1.8s ease-in-out infinite;
+    box-shadow:
+        0 0 12px rgba(255,203,5,.55),
+        0 0 28px rgba(255,203,5,.35);
+}
+
+
+/* golden focus ring */
+.enroll-attention::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 999px;
+
+    /* REAL visible ring */
+    border: 2px solid rgba(255,203,5,.9);
+
+    opacity: 0;
+    animation: enrollRing 1.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.enroll-attention::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 999px;
+
+    /* REAL visible ring */
+    border: 2px solid rgba(255,203,5,.9);
+
+    opacity: 0;
+    animation: enrollRing 1.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+
+
+.enroll-attention.enroll-clicked,
+.enroll-attention.enroll-clicked::before,
+.enroll-attention.enroll-clicked::after {
+    animation: none;
+    opacity: 0;
+}
+
+
+@keyframes enrollBounce {
+    0%   {
+        transform: translateY(0) scale(1);
+        box-shadow:
+            0 0 12px rgba(255,203,5,.4),
+            0 0 22px rgba(255,203,5,.25);
+    }
+    40%  {
+        transform: translateY(-7px) scale(1.06);
+        box-shadow:
+            0 0 22px rgba(255,203,5,.8),
+            0 0 48px rgba(255,203,5,.55);
+    }
+    60%  {
+        transform: translateY(0) scale(1);
+        box-shadow:
+            0 0 16px rgba(255,203,5,.6),
+            0 0 30px rgba(255,203,5,.4);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        box-shadow:
+            0 0 12px rgba(255,203,5,.4),
+            0 0 22px rgba(255,203,5,.25);
+    }
+}
+
+@keyframes enrollRing {
+    0%   { opacity: 0; transform: scale(.95); }
+    40%  { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0; transform: scale(1.15); }
+}
+
+@keyframes enrollGlow {
+    0%   { opacity: .3; transform: scale(1); }
+    40%  { opacity: .9; transform: scale(1.1); }
+    100% { opacity: .3; transform: scale(1.25); }
+}
+
+
 
 
 .close-button:hover,
@@ -2630,14 +2718,13 @@ text-transform: capitalize;
 .mobile .enrollment-info .btn {
     color: #fff;
     border: 0;
-    padding: 8px 25px;
+    padding: 10px 22px;
     font-weight: 800;
     cursor: pointer;
     border-radius: 56px;
     border: 2px solid var(--gold-stroke, #FEB910);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 2.832px 2.832px 0 rgba(0, 0, 0, 0.25), -4.878px -4.878px 14.634px 0 rgba(255, 255, 255, 0.12), 4.878px 4.878px 14.634px 0 rgba(34, 26, 55, 0.18);
-    margin: 0 auto;
+    background: #112f6bc7;
+    box-shadow: 0 4px 4px 0 rgb(0 0 0 / 30%), inset 14px 17px 20.671px 0 rgb(255 255 255 / 46%), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
     @media  (max-width:992px){
       .top_left_background_image .bg-img {

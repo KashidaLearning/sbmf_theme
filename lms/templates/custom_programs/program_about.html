@@ -966,7 +966,11 @@ def time_to_seconds(timestr):
                             % endif
 
                         % else:
-                          <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active" onclick="sessionStorage.setItem('programJustEnrolled','1')">${_("التحق في الرحلة")}</a>
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
+                                class="btn btn-cta one-click-purchase-btn active enroll-attention"
+                                onclick="handleEnrollClick(event)">
+                                التحق في الرحلة
+                                </a>
 
                         % endif
                     </div>
@@ -1025,9 +1029,14 @@ def time_to_seconds(timestr):
                                     <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active">طلب التسجيل في المسار</a>
                                 % endif
                             % else:
-                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}" class="btn btn-cta one-click-purchase-btn active" onclick="sessionStorage.setItem('programJustEnrolled','1')">${_("التحق في الرحلة")}</a>
-                            % endif
-                        </div>
+                                <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
+                                class="btn btn-cta one-click-purchase-btn active enroll-attention"
+                                onclick="handleEnrollClick(event)">
+                                التحق في الرحلة
+                                </a>                               
+                             % endif
+                       
+                            </div>
                     % endif
                 <!-- This will be the middle column (Column 2) -->
                
@@ -2672,6 +2681,23 @@ function showRankPopup(data) {
     }, 600);
   };
 })();
+function handleEnrollClick(e) {
+    e.preventDefault();
+
+    const btn = e.currentTarget;
+
+    btn.classList.add("enroll-clicked");
+
+    if (btn.classList.contains("is-animating")) return;
+    btn.classList.add("is-animating");
+
+    sessionStorage.setItem("programJustEnrolled", "1");
+
+    setTimeout(() => {
+        window.location.href = btn.href;
+    }, 400);
+}
+
 </script>
 
 
