@@ -1175,13 +1175,6 @@ ease-in-out;
 
 
 
-.enroll-attention.enroll-clicked,
-.enroll-attention.enroll-clicked::before,
-.enroll-attention.enroll-clicked::after {
-    animation: none;
-    opacity: 0;
-}
-
 
 @keyframes enrollBounce {
     0%   {
@@ -1583,7 +1576,15 @@ ul.eval-grid:before {
 }
 
 .lh-p b {
-    color: white; /* Gold/yellow for XP numbers */
+    color: white; 
+    padding: 4px 6px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid var(--gold-stroke, #FEB910);
+    background: var(--program-main-color);
+    box-shadow: 0 3px 3px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
     
 }
 div#certificate-status {

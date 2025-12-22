@@ -341,7 +341,7 @@ left: -63%;
     font-size: 15px;
     border-radius: 10px;
     border: 2px solid var(--gold-stroke, #FEB910);
-    background: var(--Digital-Wave, #0CC6B4);
+    background: var(--program-main-color);
     box-shadow: 0 3px 3px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
 }
 
@@ -1636,6 +1636,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     <div class="lh-right">
         <div class="lh-rank-text">
             <h2 class="lh-rank-title">مركزك الحالي: <span>المرتبة ${current_user_rank}</span></h2>
+            
             <p class="lh-p">نقاطك:   <b>XP ${ "%.2f" % current_user_rank_points}</b> </p>
            
         </div>

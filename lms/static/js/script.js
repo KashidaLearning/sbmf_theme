@@ -341,6 +341,7 @@ function updateLeaderboardPopup(leaderboard) {
 }
 
 async function refreshCourseStatus() {
+    if (INTRO_PLAYING) return;
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
         const raw = await response.text();
@@ -354,8 +355,10 @@ async function refreshCourseStatus() {
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
-            initializeScene();
-            document.dispatchEvent(new Event("circlesRebuilt"));
+            if (!INTRO_PLAYING) {
+                initializeScene();
+                document.dispatchEvent(new Event("circlesRebuilt"));
+            }
 
         }
 
@@ -462,9 +465,9 @@ function playGameCourseIntro() {
         INTRO_FINISHED = true;
          showIntroPopup();
         setTimeout(() => {
+            refreshCourseStatus();
             focusFirstCourse();
-
-        }, 500);
+     }, 500);
 
     }, circles.length * 420 + 600);
 }
