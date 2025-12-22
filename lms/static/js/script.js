@@ -1,5 +1,5 @@
+let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
-
 let numCircles = 0;
 let circleElements = [];
 
@@ -158,12 +158,13 @@ function initializeScene() {
             c.classList.add("is-faded");
         });
     }
-     if (
+   if (
     sessionStorage.getItem("programJustEnrolled") === "1" &&
-    !INTRO_FINISHED
-        ) {
-            setTimeout(playGameCourseIntro, 300);
-        }
+    !INTRO_FINISHED &&
+    !INTRO_PLAYING
+    ) {
+        setTimeout(playGameCourseIntro, 300);
+    }
 
 }
 
@@ -421,6 +422,8 @@ window.addEventListener("message", (event) => {
 });
 
 function playGameCourseIntro() {
+    if (INTRO_PLAYING) return;   
+        INTRO_PLAYING = true;   
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
 
     function playTak() {
@@ -451,15 +454,17 @@ function playGameCourseIntro() {
 
         }, index * 420 + 180);
     });
+    INTRO_FINISHED = true; 
 
+   
     setTimeout(() => {
         sessionStorage.removeItem("programJustEnrolled");
         INTRO_FINISHED = true;
+         showIntroPopup();
         setTimeout(() => {
             focusFirstCourse();
 
         }, 500);
-                        showIntroPopup();
 
     }, circles.length * 420 + 600);
 }
@@ -501,6 +506,8 @@ function focusFirstCourse() {
 
 }
 function showIntroPopup() {
+    if (document.getElementById("introFullModal")) return;
+
     const overlay = document.createElement("div");
     overlay.id = "introFullModal";
     overlay.style.cssText = `
