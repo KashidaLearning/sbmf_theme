@@ -3102,6 +3102,8 @@ text-transform: capitalize;
     height: 85%;
     object-fit: contain;
     padding-top: 60px;   /* space for yellow header */
+        pointer-events: none;
+
 }
 
 
@@ -3117,6 +3119,7 @@ text-transform: capitalize;
     justify-content: center;
     font-size: 40px;
     cursor: pointer;
+      z-index: 10;  
       
 }
 
