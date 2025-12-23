@@ -30,19 +30,7 @@ function getVerticalSpacing() {
 function getPatternMultiplier(base) {
     return window.innerWidth < 700 ? base / 2 : base;
 }
-function getLocalXpMap() {
-    try {
-        return JSON.parse(sessionStorage.getItem("courseXpMap") || "{}");
-    } catch {
-        return {};
-    }
-}
 
-function saveCourseXp(courseId, xp) {
-    const map = getLocalXpMap();
-    map[courseId] = xp;
-    sessionStorage.setItem("courseXpMap", JSON.stringify(map));
-}
 
 function createCircle(data, index) {
     const state = data.state || "locked";
@@ -114,38 +102,20 @@ function createCircle(data, index) {
         index,
         element: circle
     });
-   const localXpMap = getLocalXpMap();
-    const courseId   = data.id || data.course_id || data.course_key;
+    if (data.state === "completed" && Number(data.xpAward) > 0) {
+        let xpBadge = circle.querySelector(".course-xp-badge");
 
-    const xpRaw   = (data.xpAward ?? localXpMap[courseId]);
-    const xpValue = (xpRaw === undefined || xpRaw === null) ? null : Number(xpRaw);
-       
-   if (state === "completed") {
-    const existing = circle.querySelector(".course-xp-badge");
+        if (!xpBadge) {
+            xpBadge = document.createElement("div");
+            xpBadge.className = "course-xp-badge";
+            circle.appendChild(xpBadge);
+        }
 
-    if (!courseId || !Number.isFinite(xpValue) || xpValue <= 0) {
-        console.warn("XP badge preserved (waiting data)", {
-            courseId,
-            xpValue
-        });
-        return;
+        xpBadge.textContent = `+${Number(data.xpAward).toFixed(2)} XP`;
+    } else {
+        const existing = circle.querySelector(".course-xp-badge");
+        if (existing) existing.remove();
     }
-
-    let xpBadge = existing;
-    if (!xpBadge) {
-        xpBadge = document.createElement("div");
-        xpBadge.className = "course-xp-badge";
-        circle.appendChild(xpBadge);
-    }
-
-    xpBadge.textContent = `+${xpValue} XP`;
-    saveCourseXp(courseId, xpValue);
-
-    console.log("XP BADGE OK", { courseId, xpValue });
-}
-
-
-
 }
 const CURRENT_PROGRAM_ID =
     document.body.dataset.programId || window.location.pathname;
