@@ -231,17 +231,17 @@ body.xp-blur-active > *:not(#xp-popup):not(canvas.confetti-canvas) {
 }
 
 .xp-character.left {
-left: -63%;
-    top: 2%;
+    left: -104%;
+    top: -22%;
 }
 
 .xp-character.right {
-    right: 11%;
-    top: -60%;
+      right: -1%;
+    top: -107%;
 }
 
 .xp-character img {
-       width: 227px;
+     width: 260%;
   
 }
 
@@ -559,14 +559,14 @@ span#xp-remaining {
 /* characters */
 .rank-characters {
     position: absolute;
-        left: -10%;
-    bottom: -17%;
+    left: -14%;
+    bottom: -25%;
     transform: translateX(-50%);
     z-index: 3;
 }
 
 .rank-duo {
-    width: 260px;
+   width: 361px;
     filter: drop-shadow(0 25px 40px rgba(0,0,0,.45));
 }
 
@@ -803,30 +803,30 @@ body:not(.user-enrolled) .circle-item {
 @media (max-width: 720px) {
   .xp-character.right{
  
-            right: -8%;
-        top: -54%;
+               right: -15%;
+        top: -76%;
 }
 .xp-character img {
-    width: 115px;
+          width: 145%;
 }
 .xp-stage{
         margin-bottom: 110%;
 
 }
 .xp-character.left {
-    left: -34%;
-    top: 70%;
+            left: -47%;
+        top: 53%;
 }
 .rank-card {
    width: 80%;
     margin-top: -90%;
 }
 .rank-duo {
-    width: 170px;
+  width: 253px;
 }
 .rank-characters {
-    left: 79%;
-    bottom: -81%;
+         left: 52%;
+        bottom: -87%;
 }
 .rank-title {
     font-size: 25px;
@@ -2003,7 +2003,7 @@ for ub in user_badges:
 
   <!-- characters (image) -->
   <div class="rank-characters">
-    <img src="${static.url('images/saudi-characters.png')}" class="rank-duo">
+    <img src="${static.url('images/saudi-characters.gif')}" class="rank-duo">
   </div>
 
   <!-- arrows -->
@@ -2106,7 +2106,7 @@ window.STATE_ICONS = {
 <script>
     window.MY_APP_ASSETS = {
         popupImage: "${static.url('images/MapStuff.png')}",
-        introCharacter: "${static.url('images/mapcharacter.png')}"
+        introCharacter: "${static.url('images/mapchar.gif')}"
 
     };
 </script>
@@ -2637,7 +2637,7 @@ function showRankPopup(data) {
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
         forceEnableScroll();
-    }, 8000);
+    }, 18000000);
 }
 
 </script>
