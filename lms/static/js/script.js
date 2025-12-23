@@ -155,11 +155,17 @@ function initializeScene() {
 
     data.forEach((item, index) => createCircle(item, index));
     updatePositions();
-    if (sessionStorage.getItem("programJustEnrolled") === "1") {
-        document.querySelectorAll(".circle-item").forEach(c => {
+    const justEnrolled = sessionStorage.getItem("programJustEnrolled") === "1";
+    document.querySelectorAll(".circle-item").forEach(c => {
+        if (justEnrolled && !INTRO_FINISHED) {
             c.classList.add("is-faded");
-        });
-    }
+            c.classList.remove("is-visible");
+        } else {
+            c.classList.remove("is-faded");
+            c.classList.add("is-visible");
+        }
+    });
+
    if (
     sessionStorage.getItem("programJustEnrolled") === "1" &&
     !INTRO_FINISHED &&
@@ -564,6 +570,10 @@ function showIntroPopup() {
 
     const closePopup = () => {
         overlay.remove();
+        document.querySelectorAll(".circle-item").forEach(c => {
+        c.classList.remove("is-faded");
+        c.classList.add("is-visible");
+    });
         focusFirstCourse();
     };
 
