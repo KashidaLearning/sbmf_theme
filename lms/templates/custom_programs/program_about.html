@@ -2216,6 +2216,8 @@ function lightRankConfetti() {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+        window.__LAST_XP_COURSE_ID__ = null;
+
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
@@ -2265,13 +2267,19 @@ document.addEventListener("DOMContentLoaded", function () {
             badgeUrl = sharatiBadges[sharatiBadges.length - 1].src;
         }
 
-       const completedCourses = updated.filter(c => c.state === "completed");
-
+        const completedCourses = updated.filter(c => c.state === "completed");
         const lastCompletedCourse = completedCourses[completedCourses.length - 1];
 
         if (!lastCompletedCourse) return;
 
+        if (window.__LAST_XP_COURSE_ID__ === lastCompletedCourse.id) {
+            return;
+        }
+
+        window.__LAST_XP_COURSE_ID__ = lastCompletedCourse.id;
+
         const gainedXP = Number(lastCompletedCourse.xpAward || 0);
+
 
         const previousTotalXP = completedCourses
         .slice(0, -1)
@@ -2565,6 +2573,10 @@ function calculateXpState(currentXP, gainedXP) {
 
 <script>
 function showXpPopup(gainedXP, currentXP) {
+    if (!gainedXP || isNaN(gainedXP)) {
+        console.warn("XP popup blocked – invalid XP", gainedXP);
+        return;
+    }
     const xp = calculateXpState(currentXP, gainedXP);
 
     document.getElementById("xp-gained").textContent = Number(xp.gainedXP).toFixed(2);
