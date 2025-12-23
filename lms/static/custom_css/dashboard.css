@@ -411,12 +411,11 @@ a.go-to-journeys {
 /* Speech bubbles */
 .speech {
   position: absolute;
-  max-width: 220px;
+  max-width: 245px;
   background: #A7D20C; /* green bubble */
   color: #110D7C;
   padding: 14px 16px;
   border-radius: 16px;
-  font-size: 14px;
   line-height: 1.5;
   direction: rtl;
   text-align: right;
@@ -436,23 +435,28 @@ a.go-to-journeys {
 .speech-1 {
   top: 60%;
   left: 35%;
+  font-weight: 700;
+  font-size: 16px;
+  background:  #0CC6B4;
 }
 
 .speech-1::after {
   left: 20px;
-  border-top-color: #A7D20C;
+  border-top-color: #0CC6B4;
 }
 
 /* Bubble near male character */
 .speech-2 {
   top: 15%;
   right: 40%;
-  background: #0CC6B4; /* blue bubble */
+  background: #A7D20C; 
+  font-weight: 700;
+  font-size: 24px;
 }
 
 .speech-2::after {
   right: 20px;
-  border-top-color: #0CC6B4;
+  border-top-color: #A7D20C;
 }
 
 
