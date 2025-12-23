@@ -115,17 +115,30 @@ function createCircle(data, index) {
         element: circle
     });
    const localXpMap = getLocalXpMap();
-    const courseId  = data.id || data.course_id || data.course_key;
-    const xpValue   = data.xpAward || localXpMap[courseId];
+    const courseId   = data.id || data.course_id || data.course_key;
 
-    if (state === "completed" && xpValue && courseId) {
-        if (!circle.querySelector(".course-xp-badge")) {
-            const xpBadge = document.createElement("div");
-            xpBadge.className = "course-xp-badge";
-            xpBadge.textContent = `+${xpValue} XP`;
-            circle.appendChild(xpBadge);
+    const xpRaw   = (data.xpAward ?? localXpMap[courseId]);
+    const xpValue = (xpRaw === undefined || xpRaw === null) ? null : Number(xpRaw);
+       
+    if (state === "completed" && courseId) {
+        const existing = circle.querySelector(".course-xp-badge");
+        const shouldShow = Number.isFinite(xpValue) && xpValue > 0;
+
+        if (shouldShow) {
+            if (!existing) {
+                const xpBadge = document.createElement("div");
+                xpBadge.className = "course-xp-badge";
+                circle.appendChild(xpBadge);
+            }
+            circle.querySelector(".course-xp-badge").textContent = `+${xpValue} XP`;
+            saveCourseXp(courseId, xpValue);
+        } else {
+            if (existing) existing.remove();
         }
-        saveCourseXp(courseId, xpValue);
+    }
+
+    if (state === "completed") {
+    console.log("XP DEBUG", { courseId, xpAward: data.xpAward, xpFromMap: localXpMap[courseId], xpValue });
     }
 
 
