@@ -30,6 +30,19 @@ function getVerticalSpacing() {
 function getPatternMultiplier(base) {
     return window.innerWidth < 700 ? base / 2 : base;
 }
+function getLocalXpMap() {
+    try {
+        return JSON.parse(sessionStorage.getItem("courseXpMap") || "{}");
+    } catch {
+        return {};
+    }
+}
+
+function saveCourseXp(courseId, xp) {
+    const map = getLocalXpMap();
+    map[courseId] = xp;
+    sessionStorage.setItem("courseXpMap", JSON.stringify(map));
+}
 
 function createCircle(data, index) {
     const state = data.state || "locked";
@@ -96,19 +109,39 @@ function createCircle(data, index) {
 });
 
     circlesWrapper.appendChild(circle);
-
+    
     circleElements.push({
-        index: index,
+        index,
         element: circle
     });
-    if (state === "completed" && data.xpAward) {
-    const xpBadge = document.createElement("div");
-    xpBadge.className = "course-xp-badge";
-    xpBadge.textContent = `+${data.xpAward} XP`;
-    circle.appendChild(xpBadge);
-}
+   const localXpMap = getLocalXpMap();
+    const courseId  = data.id || data.course_id || data.course_key;
+    const xpValue   = data.xpAward || localXpMap[courseId];
+
+    if (state === "completed" && xpValue && courseId) {
+        if (!circle.querySelector(".course-xp-badge")) {
+            const xpBadge = document.createElement("div");
+            xpBadge.className = "course-xp-badge";
+            xpBadge.textContent = `+${xpValue} XP`;
+            circle.appendChild(xpBadge);
+        }
+        saveCourseXp(courseId, xpValue);
+    }
+
 
 }
+const CURRENT_PROGRAM_ID =
+    document.body.dataset.programId || window.location.pathname;
+
+const LAST_PROGRAM_ID =
+    sessionStorage.getItem("lastProgramId");
+
+if (LAST_PROGRAM_ID !== CURRENT_PROGRAM_ID) {
+    sessionStorage.removeItem("courseXpMap");
+}
+
+sessionStorage.setItem("lastProgramId", CURRENT_PROGRAM_ID);
+
 
 function calculatePosition(index) {
     const containerWidth = circlesWrapper.parentElement.offsetWidth;
