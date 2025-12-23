@@ -389,22 +389,45 @@ cert_name_long = settings.CERT_NAME_LONG
 
         % if not has_any_program_enrollment:
             <div class="no-programs-message">
-               <picture>
-                    <!-- Mobile image -->
-                     <source
-                        srcset="${static.url('images/no-program-image-mobile.png')}"
-                        media="(max-width: 768px)">
+  <div class="scene">
+    <!-- Background -->
+    <img
+      src="${static.url('images/no-program-bg-desktop.png')}"
+      alt=""
+      class="scene-bg"
+    />
 
-                        <!-- Default / desktop image -->
-                     <img
-                        src="${static.url('images/no-program-image.png')}"
-                        alt="No programs illustration"
-                        class="no-programs-image">
-                 </picture>
-                <a href="/courses" class="go-to-journeys">
-                   استكشف الرحلات
-                </a>
-            </div>
+    <!-- Characters -->
+    <img
+      src="${static.url('no-program-female.gif')}"
+      alt=""
+      class="character character-female"
+    />
+
+    <img
+      src="${static.url('images/no-program-male.gif')}"
+      alt=""
+      class="character character-male"
+    />
+
+    <!-- Speech bubbles -->
+    <div class="speech speech-1">
+      <p>هل تريد البدء في رحلة تعلم جديدة؟</p>
+    </div>
+
+    <div class="speech speech-2">
+      <p>
+        استكشف الرحلات التعليمية المصممة
+        خصيصًا لتطوير مهاراتك
+      </p>
+    </div>
+  </div>
+
+  <a href="/courses" class="go-to-journeys">
+    استكشف الرحلات
+  </a>
+</div>
+
         % endif
 
     </div>
