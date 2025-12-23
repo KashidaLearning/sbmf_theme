@@ -1,5 +1,7 @@
 let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
+let ENROLL_INTRO_ACTIVE = false;
+
 let numCircles = 0;
 let circleElements = [];
 
@@ -341,7 +343,7 @@ function updateLeaderboardPopup(leaderboard) {
 }
 
 async function refreshCourseStatus() {
-    if (INTRO_PLAYING) return;
+    if (ENROLL_INTRO_ACTIVE) return;   
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
         const raw = await response.text();
@@ -355,10 +357,9 @@ async function refreshCourseStatus() {
         if (data.coursePathDataJSON) {
             const parsed = JSON.parse(data.coursePathDataJSON);
             window.coursePathData = parsed.items;
-            if (!INTRO_PLAYING) {
-                initializeScene();
-                document.dispatchEvent(new Event("circlesRebuilt"));
-            }
+            initializeScene();
+            document.dispatchEvent(new Event("circlesRebuilt"));
+            
 
         }
 
@@ -425,10 +426,12 @@ window.addEventListener("message", (event) => {
 });
 
 function playGameCourseIntro() {
-    if (INTRO_PLAYING) return;   
-        INTRO_PLAYING = true;   
-    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
+    if (ENROLL_INTRO_ACTIVE) return;
 
+  
+    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
+    ENROLL_INTRO_ACTIVE = true;
+    INTRO_PLAYING = true;
     function playTak() {
         const sound = document.getElementById("takSound");
         if (!sound) return;
@@ -457,11 +460,12 @@ function playGameCourseIntro() {
 
         }, index * 420 + 180);
     });
-    INTRO_FINISHED = true; 
 
    
     setTimeout(() => {
         sessionStorage.removeItem("programJustEnrolled");
+        INTRO_PLAYING = false;
+        ENROLL_INTRO_ACTIVE = false; 
         INTRO_FINISHED = true;
          showIntroPopup();
         setTimeout(() => {

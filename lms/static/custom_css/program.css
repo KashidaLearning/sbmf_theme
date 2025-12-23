@@ -2992,20 +2992,18 @@ text-transform: capitalize;
 }
 .program-bg-balls .ball {
     position: absolute;
-    width: 13vmin;
-    height: 13vmin;
+    width: 72vmin;
+    height: 72vmin;
     border-radius: 50%;
     backface-visibility: hidden;
     animation: move linear infinite;
 
-    background: radial-gradient(
-        circle at 30% 30%,
-        #416A9E 0%,
-        #110D7C 80%
-    );
+   
 
-    opacity: 0.65;
-    filter: blur(2px);
+    opacity: 0.25;
+    filter: blur(50px);
+        
+
 }
 .program-bg-balls .ball:nth-child(1) {
     top: -10%;
@@ -3013,7 +3011,10 @@ text-transform: capitalize;
     animation-duration: 42s;
     animation-delay: -5s;
     transform-origin: 20vw 10vh;
-    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+       box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+
+       background: var(--program-main-color);
+
 }
 
 .program-bg-balls .ball:nth-child(2) {
@@ -3022,7 +3023,11 @@ text-transform: capitalize;
     animation-duration: 55s;
     animation-delay: -18s;
     transform-origin: -18vw 22vh;
-    box-shadow: -40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+       box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+
+     background: radial-gradient(
+        rgba(255, 255, 255, 0.725)
+    );
 }
 
 .program-bg-balls .ball:nth-child(3) {
@@ -3031,7 +3036,10 @@ text-transform: capitalize;
     animation-duration: 48s;
     animation-delay: -12s;
     transform-origin: 24vw -6vh;
-    box-shadow: 40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+       box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+
+           background: var(--program-main-color);
+
 }
 
 .program-bg-balls .ball:nth-child(4) {
@@ -3040,7 +3048,9 @@ text-transform: capitalize;
     animation-duration: 36s;
     animation-delay: -20s;
     transform-origin: -12vw 18vh;
-    box-shadow: 40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+    box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+   background: var(--program-main-color);
+
 }
 
 .program-bg-balls .ball:nth-child(5) {
@@ -3049,7 +3059,11 @@ text-transform: capitalize;
     animation-duration: 60s;
     animation-delay: -30s;
     transform-origin: 30vw 0vh;
-    box-shadow: -40vmin 0 6vmin rgba(32, 20, 105, 0.35);
+       box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+
+     background: radial-gradient(
+        rgba(255, 255, 255, 0.725)
+    );
 }
 
 .program-bg-balls .ball:nth-child(6) {
@@ -3058,10 +3072,12 @@ text-transform: capitalize;
     animation-duration: 34s;
     animation-delay: -14s;
     transform-origin: -20vw -8vh;
-    box-shadow: 40vmin 0 6vmin rgba(28, 7, 115, 0.35);
+       box-shadow: -40vmin 0 6vmin rgba(29, 7, 115, 0.525);
+     background: radial-gradient(
+        rgba(255, 255, 255, 0.725)
+    );
 }
 
-/* الكرات الإضافية */
 .program-bg-balls .ball:nth-child(7) {
     top: -8%;
     left: 45%;
