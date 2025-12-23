@@ -411,11 +411,11 @@ a.go-to-journeys {
 /* Speech bubbles */
 .speech {
   position: absolute;
-  max-width: 245px;
+  width: 245px;
   background: #A7D20C; /* green bubble */
   color: #110D7C;
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: 28px;
   line-height: 1.5;
   direction: rtl;
   text-align: right;
@@ -489,4 +489,26 @@ a.go-to-journeys {
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
+}
+
+
+.bubble-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+}
+
+
+.speech-1 .bubble-arrow {
+  right: -16px;
+  top: 35%;
+  border-left: 16px solid #0CC6B4;
+}
+
+.speech-2 .bubble-arrow {
+  left: -16px;
+  top: 22%;
+  border-right: 16px solid #A7D20C;
 }
