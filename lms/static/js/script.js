@@ -597,8 +597,7 @@ function checkRankChangeAndPopup() {
 
     if (!window.CURRENT_USER_RANK_DATA) return;
 
-    const myRankNow = window.CURRENT_USER_RANK_DATA.rank;
-
+    const myRankNow = Number(window.CURRENT_USER_RANK_DATA.rank);
     if (!myRankNow) return;
 
     if (window.__LAST_KNOWN_RANK__ === null) {
@@ -611,22 +610,14 @@ function checkRankChangeAndPopup() {
         return;
     }
 
-    const winner = window.CURRENT_USER_RANK_DATA;
-
-    const loser = window.LEADERBOARD_DATA.find(
-        u => u.rank === myRankNow + 1
-    );
-
-    if (!loser) return;
-
     showRankPopup({
-        winnerName: winner.name || "أنت",
+        winnerName: window.CURRENT_USER_RANK_DATA.name || "أنت",
         winnerRank: myRankNow,
-        winnerXP: winner.rank_points,
+        winnerXP: window.CURRENT_USER_RANK_DATA.rank_points,
 
-        loserName: loser.name,
-        loserRank: myRankNow + 1,
-        loserXP: loser.rank_points
+        loserName: "منافسك السابق",
+        loserRank: window.__LAST_KNOWN_RANK__,
+        loserXP: "-"
     });
 
     window.__RANK_POPUP_SHOWN__ = true;

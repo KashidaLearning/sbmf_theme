@@ -2050,9 +2050,9 @@ max-width: 110px;
   text-align: center;
  }
  .statuscomplete{
-    max-width: 60px;
-    margin-left: -8px;
-    margin-top: -8px;
+     max-width: 51px;
+    margin-left: -15px !important;
+    margin-top: -8px !important;
  }
  
  .statusicon img{
