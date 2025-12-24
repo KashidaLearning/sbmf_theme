@@ -491,7 +491,7 @@ a.go-to-journeys {
   50% { transform: translateY(-6px); }
 }
 
-
+/*
 .bubble-arrow {
   position: absolute;
   width: 0;
@@ -511,4 +511,31 @@ a.go-to-journeys {
   left: -16px;
   top: 22%;
   border-right: 16px solid #A7D20C;
+}
+  */
+
+.speech-2::after{
+  content:"";
+  position: absolute;
+  right: 28px;     /* move tail more to the right */
+  bottom: -18px;   /* down more */
+  width: 0;
+  height: 0;
+  border-left: 22px solid transparent;
+  border-right: 0 solid transparent;
+  border-top: 22px solid #B7D300; /* tail color = bubble bg */
+  transform: skewX(-18deg);
+}
+
+.speech-1::after{
+  content:"";
+  position: absolute;
+  left: 26px;     /* tail on left side */
+  top: -16px;     /* near top */
+  width: 0;
+  height: 0;
+  border-right: 22px solid transparent;
+  border-left: 0 solid transparent;
+  border-bottom: 22px solid #11C7C2; /* tail color */
+  transform: skewX(18deg);
 }
