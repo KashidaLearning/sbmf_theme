@@ -287,46 +287,29 @@ function updateEvalStatusInRoot(root, evalData) {
     }
 }
 
-function renderLeaderboardInContainer(container, leaderboard) {
+function renderLeaderboardInContainer(container, users, currentUser) {
     if (!container) return;
 
-    const currentUserId = window.CURRENT_USER_ID;
-    let currentUserRank = null;
-    let currentUserXp = 0;
-    let currentUserProgress = 0;
-
-    leaderboard.forEach((u, index) => {
-        if (u.id === currentUserId) {
-            currentUserRank = index + 1;
-            currentUserXp = u.xp;
-            currentUserProgress = u.progress;
+    if (currentUser) {
+        const rankSpan = container.querySelector(".lh-rank-title span");
+        if (rankSpan) {
+            rankSpan.textContent = "المرتبة " + currentUser.rank;
         }
-    });
 
-    const rankSpan = container.querySelector(".lh-rank-title span");
-    if (rankSpan && currentUserRank !== null) {
-        rankSpan.textContent = "المرتبة " + currentUserRank;
-    }
+        const xpBold = container.querySelector(".lh-p b");
+        if (xpBold) {
+            xpBold.textContent = "XP " + currentUser.rank_points.toFixed(2);
+        }
 
-    const xpBold = container.querySelector(".lh-p b");
-    if (xpBold && currentUserRank !== null) {
-        xpBold.textContent = "XP " + currentUserXp;
-    }
-
-   // const headerProgVal  = container.querySelector(".lh-progress-val");
-    const headerProgFill = container.querySelector(".lh-progress-fill");
-    if (currentUserRank !== null) {
-       /*  if (headerProgVal) {
-            headerProgVal.textContent = currentUserProgress + "%";
-        } */
+        const headerProgFill = container.querySelector(".lh-progress-fill");
         if (headerProgFill) {
-            headerProgFill.style.width = currentUserProgress + "%";
+            headerProgFill.style.width = currentUser.progress + "%";
         }
     }
 
     container.querySelectorAll(".leaderboard-row").forEach(row => row.remove());
 
-    leaderboard.forEach((u, index) => {
+    users.forEach((u, index) => {
         let colorClass;
         if (index === 0)      colorClass = "gold";
         else if (index === 1) colorClass = "silver";
@@ -348,9 +331,8 @@ function renderLeaderboardInContainer(container, leaderboard) {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${u.progress}%"></div>
                     </div>
-                    <div class="xp"><h4></h4></div>
                 </div>
-                <div class="pt1">XP <b>${u.xp}</b></div>
+                <div class="pt1">XP <b>${u.rank_points.toFixed(2)}</b></div>
             </div>
         `;
 
@@ -358,15 +340,23 @@ function renderLeaderboardInContainer(container, leaderboard) {
     });
 }
 
-function updateLeaderboardPopup(leaderboard) {
-    const baseContainer = document.querySelector("#leaderboard-content .leaderboard");
-    renderLeaderboardInContainer(baseContainer, leaderboard);
 
-    const popupContainer = document.querySelector("#popup-dynamic-content .leaderboard");
+function updateLeaderboardPopup(leaderboardData) {
+    if (!leaderboardData) return;
+
+    const { top_users, current_user } = leaderboardData;
+
+    const baseContainer =
+        document.querySelector("#leaderboard-content .leaderboard");
+    renderLeaderboardInContainer(baseContainer, top_users, current_user);
+
+    const popupContainer =
+        document.querySelector("#popup-dynamic-content .leaderboard");
     if (popupContainer) {
-        renderLeaderboardInContainer(popupContainer, leaderboard);
+        renderLeaderboardInContainer(popupContainer, top_users, current_user);
     }
 }
+
 
 async function refreshCourseStatus() {
     if (ENROLL_INTRO_ACTIVE) return;   
@@ -380,14 +370,12 @@ async function refreshCourseStatus() {
 
         const data = JSON.parse(raw);
 
-        if (data.coursePathDataJSON) {
-            const parsed = JSON.parse(data.coursePathDataJSON);
-            window.coursePathData = parsed.items;
+       if (data.coursePathData?.items) {
+            window.coursePathData = data.coursePathData.items;
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
-            
-
         }
+
 
         if (typeof data.progress_percent !== "undefined") {
             const barFillOut = document.querySelector(".lh-progress-fill-out");
@@ -405,7 +393,7 @@ async function refreshCourseStatus() {
             updateBadgesPopup(data.badges);
         }
 
-        if (Array.isArray(data.leaderboard)) {
+       if (data.leaderboard && data.leaderboard.top_users) {
             window.lastLeaderboardData = data.leaderboard;
             updateLeaderboardPopup(data.leaderboard);
         }
@@ -419,9 +407,10 @@ async function refreshCourseStatus() {
 const leaderboardIcon = document.getElementById("leaderboard");
 if (leaderboardIcon) {
     leaderboardIcon.addEventListener("click", function () {
-        if (Array.isArray(window.lastLeaderboardData)) {
+       if (window.lastLeaderboardData?.top_users) {
             updateLeaderboardPopup(window.lastLeaderboardData);
         }
+
     });
 }
 

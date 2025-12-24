@@ -2056,7 +2056,8 @@ max-width: 110px;
  }
  
  .statusicon img{
-     width: 147%;
+    width: 188%;
+    margin: -15px -15px;
  }
 .bottom_left_background_image {
   position: absolute;

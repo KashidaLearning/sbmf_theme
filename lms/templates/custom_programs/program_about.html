@@ -1261,7 +1261,6 @@ def time_to_seconds(timestr):
                             else:
                                 duration_score = max(0, 100 - (diff - 60) * 0.05)
 
-                    course_xp = (final_grade * 0.7) + (duration_score * 0.3)
 
             coursePathItems.append({
                 "id": int(course.id),
@@ -1278,7 +1277,7 @@ def time_to_seconds(timestr):
                 "link": course_link,
                 "is_special": is_special,
                 "is_first_course": is_first_course,
-                "xpAward": round(course_xp, 2),
+                "xpAward": 0,
 
 
             })
@@ -1563,7 +1562,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 % else:
                  <div class="statusicon">
 
-                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                <img src="${static.url('images/active001.png')}" alt="قيد التقدم" class="eval-icon">
                 </div>
                 % endif
             </li>
@@ -1579,7 +1578,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 </div>
                 % else:
                 <div class="statusicon">
-                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                <img src="${static.url('images/active001.png')}" alt="قيد التقدم" class="eval-icon">
                 </div>
                 % endif
             </li>
@@ -1595,7 +1594,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
                 </div>
                 % else:
                 <div class="statusicon">
-                <img src="${static.url('images/hourglass-icon.png')}" alt="قيد التقدم" class="eval-icon">
+                <img src="${static.url('images/active001.png')}" alt="قيد التقدم" class="eval-icon">
                 </div>
                 % endif
             </li>
@@ -2099,8 +2098,8 @@ document.addEventListener("click", () => {
 <script>
 window.STATE_ICONS = {
     completed: "${static.url('images/badge112.png')}",
-    active: "${static.url('images/active00.png')}",
-    locked: "${static.url('images/Locked001.png')}"
+    active: "${static.url('images/activecard.png')}",
+    locked: "${static.url('images/lockedcard.png')}"
 };
 </script>
 <script>
@@ -2115,8 +2114,8 @@ window.CURRENT_USER_ID = ${request.user.id};
 window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
 window.EVAL_ICONS = {
     completed: "${static.url('images/tick-icon.png')}",
-    locked: "${static.url('images/lockedstatus.png')}",
-    in_progress: "${static.url('images/hourglass-icon.png')}",
+    locked: "${static.url('images/Locked1.png')}",
+    in_progress: "${static.url('images/active001.png')}",
     no_challenges: "${static.url('images/lockedstatus.png')}"
 };
 </script>
