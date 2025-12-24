@@ -492,12 +492,12 @@ a.go-to-journeys {
   content:"";
   position: absolute;
   right: 28px;     /* move tail more to the right */
-  bottom: -48px;   /* down more */
+  bottom: -32px;   /* down more */
   width: 0;
   height: 0;
   border-right: 22px solid transparent;
   border-top: 22px solid #A7D20C; /* tail color = bubble bg */
-  transform: skewX(-45deg);
+  transform: skewX(60deg);
 }
 
 .speech-1::after{
