@@ -1,7 +1,8 @@
 let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
 let ENROLL_INTRO_ACTIVE = false;
-
+window.__RANK_POPUP_SHOWN__ = false;
+window.__LAST_KNOWN_RANK__ = null;
 let numCircles = 0;
 let circleElements = [];
 
@@ -124,8 +125,10 @@ const LAST_PROGRAM_ID =
     sessionStorage.getItem("lastProgramId");
 
 if (LAST_PROGRAM_ID !== CURRENT_PROGRAM_ID) {
-    sessionStorage.removeItem("courseXpMap");
+    window.__RANK_POPUP_SHOWN__ = false;
+    window.__LAST_KNOWN_RANK__ = null;
 }
+
 
 sessionStorage.setItem("lastProgramId", CURRENT_PROGRAM_ID);
 
@@ -395,7 +398,12 @@ async function refreshCourseStatus() {
 
        if (data.leaderboard && data.leaderboard.top_users) {
             window.lastLeaderboardData = data.leaderboard;
+            window.LEADERBOARD_DATA = data.leaderboard.top_users || [];
+            window.CURRENT_USER_RANK_DATA = data.leaderboard.current_user || null;
+
             updateLeaderboardPopup(data.leaderboard);
+            checkRankChangeAndPopup();
+
         }
 
         if (data.eval) {
@@ -542,6 +550,7 @@ function showIntroPopup() {
         z-index: 20000;
         background: rgba(17, 13, 124, 0.5);
         backdrop-filter: blur(20px);
+        overflow:auto;
     `;
 
     const content = document.createElement("div");
@@ -562,14 +571,6 @@ function showIntroPopup() {
                 class="main-intro-img"
                 alt="Intro Path"
             >
-
-            <!-- CHARACTER -->
-            <img
-                src="${window.MY_APP_ASSETS.introCharacter}"
-                class="intro-character-img"
-                alt="Guide Character"
-            >
-
         </div>
 
     `;
@@ -590,4 +591,44 @@ function showIntroPopup() {
     overlay.onclick = (e) => {
         if (e.target === overlay) closePopup();
     };
+}
+function checkRankChangeAndPopup() {
+    if (window.__RANK_POPUP_SHOWN__) return;
+
+    if (!window.CURRENT_USER_RANK_DATA) return;
+
+    const myRankNow = window.CURRENT_USER_RANK_DATA.rank;
+
+    if (!myRankNow) return;
+
+    if (window.__LAST_KNOWN_RANK__ === null) {
+        window.__LAST_KNOWN_RANK__ = myRankNow;
+        return;
+    }
+
+    if (myRankNow >= window.__LAST_KNOWN_RANK__) {
+        window.__LAST_KNOWN_RANK__ = myRankNow;
+        return;
+    }
+
+    const winner = window.CURRENT_USER_RANK_DATA;
+
+    const loser = window.LEADERBOARD_DATA.find(
+        u => u.rank === myRankNow + 1
+    );
+
+    if (!loser) return;
+
+    showRankPopup({
+        winnerName: winner.name || "أنت",
+        winnerRank: myRankNow,
+        winnerXP: winner.rank_points,
+
+        loserName: loser.name,
+        loserRank: myRankNow + 1,
+        loserXP: loser.rank_points
+    });
+
+    window.__RANK_POPUP_SHOWN__ = true;
+    window.__LAST_KNOWN_RANK__ = myRankNow;
 }

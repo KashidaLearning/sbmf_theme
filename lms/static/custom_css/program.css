@@ -2076,14 +2076,27 @@ max-width: 110px;
 
 .top_left_background_image .bg-img {
     position: absolute;
-    left: 18px;
-    top: -27px;
-    width: 179px;
+    left: -50px;
+    top: -85px;
+    width: 342px;
 }
 .close-button.mobilex{
   display: none !important;
 
 }
+.sticky-icons-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+body.sticky-active .sticky-icons-wrapper {
+    width: 100%;
+    z-index: 500; /* أقل من popups */
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(31.25px);
+}
+
 body.sticky-active .icon-circle img {
     max-width: 90px !important;
     height: auto !important;
@@ -2096,11 +2109,20 @@ body.sticky-active .icon-item p {
 body.sticky-active .lh-progress-track-out {
     margin-top: -45px !important;
 }
-body.sticky-active .sticky-icons-wrapper {
-  width: 100%;
-  z-index: 9999;
-  background: rgba(255, 255, 255, 0.01);
-  backdrop-filter: blur(31.25px);
+
+
+.sticky-icons-wrapper.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+body.popup-active .sticky-icons-wrapper {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(-8px);
+    z-index: 1 !important;
 }
 
 @media (max-width: 992px) {
@@ -2632,7 +2654,7 @@ display: none;
     margin: 0px auto;
 color: #fff;
     text-align: justify;position: relative;
-        min-height: 333px;
+        min-height: 404px;
 }   
 
 .mobile .column {
@@ -2739,18 +2761,20 @@ text-transform: capitalize;
     }
         @media  (max-width:998px){
       .top_left_background_image .bg-img {
-                 position: absolute;
-        left: -185px;
+         position: absolute;
+        left: -247px;
+        top: -92px;
         width: initial;
-        max-width: 102px;
+        max-width: 203px;
+
       
       }
            .top_right_background_image .bg-img {
        position: absolute;
-        right: -22px;
+        right: -93px;
         width: initial;
-        max-width: 88px;
-        top: 149px;
+        max-width: 220px;
+        top: 151px;
       
       }
     }
@@ -2836,7 +2860,7 @@ text-transform: capitalize;
    
     
 .state-icon--completed img, .state-icon2--completed img {
-    width: 29px;
+    width: 59px !important;
 }
 }
 .xp-badge-wrapper {
@@ -3175,7 +3199,7 @@ text-transform: capitalize;
 
 .intro-content-container {
     position: relative;
-    max-width: 450px; 
+    max-width: 1005px; 
     width: 90%;
         height: 90vh;
     display: flex;
@@ -3196,7 +3220,7 @@ text-transform: capitalize;
         rgba(255,255,255,.05) 113%
     );
     backdrop-filter: blur(35px);
-    overflow: hidden; 
+    overflow: auto; 
 }
 
 
@@ -3204,7 +3228,6 @@ text-transform: capitalize;
     position: absolute;
     inset: 0;
     width: 100%;
-    height: 85%;
     object-fit: contain;
     padding-top: 60px;   /* space for yellow header */
         pointer-events: none;

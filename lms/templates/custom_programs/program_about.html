@@ -810,7 +810,7 @@ body:not(.user-enrolled) .circle-item {
           width: 145%;
 }
 .xp-stage{
-        margin-bottom: 110%;
+        margin-bottom: 50%;
 
 }
 .xp-character.left {
@@ -1277,7 +1277,8 @@ def time_to_seconds(timestr):
                 "link": course_link,
                 "is_special": is_special,
                 "is_first_course": is_first_course,
-                "xpAward": 0,
+                "xpAward": round(course_xp, 2),
+
 
 
             })
@@ -1287,12 +1288,7 @@ def time_to_seconds(timestr):
         if active_index is None:
             active_index = 0
     %>
-    <script>
-    window.USER_TOTAL_XP = window.coursePathData
-        .filter(c => c.state === "completed")
-        .reduce((sum, c) => sum + Number(c.xpAward || 0), 0);
-    </script>
-
+   
 
     <script type="application/json" id="course-path-data-json">
         ${ json.dumps({
@@ -1309,6 +1305,11 @@ def time_to_seconds(timestr):
         window.coursePathConfig = {
             initialActiveIndex: parsed.initialActiveIndex
         };
+    </script>
+ <script>
+    window.USER_TOTAL_XP = window.coursePathData
+        .filter(c => c.state === "completed")
+        .reduce((sum, c) => sum + Number(c.xpAward || 0), 0);
     </script>
 
 
@@ -2104,8 +2105,8 @@ window.STATE_ICONS = {
 </script>
 <script>
     window.MY_APP_ASSETS = {
-        popupImage: "${static.url('images/MapStuff.png')}",
-        introCharacter: "${static.url('images/mapchar.gif')}"
+        popupImage: "${static.url('images/Journey1_Map.gif')}",
+        /* introCharacter: "${static.url('images/mapchar.gif')}" */
 
     };
 </script>
@@ -2495,44 +2496,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let lastScroll = 0;
     const startOffset = sticky.offsetTop;
+    function isAnyPopupOpen() {
+    return (
+        document.getElementById("global-popup-overlay")?.classList.contains("visible") ||
+        document.getElementById("courseModal")?.style.display === "block" ||
+        document.getElementById("xp-popup")?.classList.contains("show") ||
+        document.getElementById("rank-popup")?.classList.contains("show")
+    );
+}
 
     function updateSticky() {
-        const scrollY = window.scrollY || 0;
-        const isScrollingDown = scrollY > lastScroll;
-        lastScroll = scrollY;
+    const scrollY = window.scrollY || 0;
+    lastScroll = scrollY;
 
-        if (scrollY >= startOffset && isScrollingDown) {
-            // STICKY
-            sticky.classList.add("is-sticky");
-            document.body.classList.add("sticky-active");
-            sticky.style.top = "0px";
-        } else {
-            // NOT STICKY
-            sticky.classList.remove("is-sticky");
-            document.body.classList.remove("sticky-active");
-
-            // ✅ only mobile gets 66px
-            sticky.style.top = isMobile() ? "66px" : "0px";
-        }
+    if (isAnyPopupOpen()) {
+        sticky.classList.remove("is-sticky");
+        document.body.classList.remove("sticky-active");
+        return;
     }
+
+    if (scrollY >= startOffset) {
+        sticky.classList.add("is-sticky");
+        document.body.classList.add("sticky-active");
+        sticky.style.top = "0px";
+    } else {
+        sticky.classList.remove("is-sticky");
+        document.body.classList.remove("sticky-active");
+    }
+
+}
 
     window.addEventListener("scroll", updateSticky);
     window.addEventListener("resize", updateSticky);
     updateSticky();
-
-    function hideSticky() {
-        sticky.classList.remove("is-sticky");
-        sticky.style.zIndex = "-1";
-        sticky.style.opacity = "0";
-        sticky.style.pointerEvents = "none";
-    }
-
-    function showSticky() {
-        sticky.style.opacity = "1";
-        sticky.style.zIndex = "999";
-        sticky.style.pointerEvents = "auto";
-        updateSticky();
-    }
 
     $(document).on('click', '.open-course-modal-link', function(e) {
         e.preventDefault();
@@ -2593,7 +2589,7 @@ function showXpPopup(gainedXP, currentXP) {
     setTimeout(() => {
         popup.classList.remove("show");
          
-    }, 6500);
+    }, 6000);
 }
 
 
@@ -2613,8 +2609,12 @@ function showRankPopup(data) {
 
     winner.querySelector(".name").textContent = data.winnerName;
     winner.querySelector(".rank-num").textContent = data.winnerRank;
+    winner.querySelector(".xp").textContent = "XP " + Number(data.winnerXP || 0).toFixed(2);
+
     loser.querySelector(".name").textContent = data.loserName;
     loser.querySelector(".rank-num").textContent = data.loserRank;
+    loser.querySelector(".xp").textContent = "XP " + Number(data.loserXP || 0).toFixed(2);
+
 
     winner.classList.remove("slot-top", "slot-bottom");
     loser.classList.remove("slot-top", "slot-bottom");
@@ -2648,7 +2648,7 @@ function showRankPopup(data) {
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
         forceEnableScroll();
-    }, 6500);
+    }, 6000);
 }
 
 </script>
