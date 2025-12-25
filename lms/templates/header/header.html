@@ -69,7 +69,11 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
     }
 
     header.global-header .hamburger-menu {
-      top: 30px !important;
+        position: absolute;
+        top: 50% !important;
+        transform: translateY(-50%) rotate(0deg);
+        left: 20px;
+        width: unset !important;
 
     }
 

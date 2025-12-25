@@ -462,20 +462,6 @@ a.go-to-journeys {
     max-width: 180px;
     font-size: 13px;
   }
-
-  .speech-1 {
-    top: 18%;
-    left: 10%;
-  }
-
-  .speech-2 {
-    top: 25%;
-    right: 10%;
-  }
-
-  .character {
-    width: 120px;
-  }
 }
 
 
