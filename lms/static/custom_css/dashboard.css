@@ -314,6 +314,11 @@ a.go-to-journeys {
   transition: background-color 0.2s ease, color 0.2s ease;
   font-size: 18px !important;
   font-weight: 700 !important;
+   box-shadow:
+    4.88px 4.88px 14.63px 0px #221A372E,
+   -4.88px -4.88px 14.63px 0px #FFFFFF1F,
+    0px 2.83px 2.83px 0px #00000040;
+
 }
 
 .go-to-journeys:hover{
@@ -401,9 +406,11 @@ a.go-to-journeys {
 }
 
 @media (max-width: 768px) {
-  .character-female, .character-male {
-    width: 120px;
-    left: 5%;
+
+  .go-to-journeys {
+    width: 144px;
+    height: unset;
+    font-size: 16px;
   }
 }
 
