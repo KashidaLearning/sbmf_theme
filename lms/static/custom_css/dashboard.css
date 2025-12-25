@@ -347,16 +347,16 @@ a.go-to-journeys {
   position: absolute;
 }
 
-/* Example positioning */
+
 .character-female {
   bottom: 0;
-  left: 10%;
+  left: 5%;
   width: 180px;
 }
 
 .character-male {
   bottom: 0;
-  right: 12%;
+  right: 0%;
   width: 180px;
 }
 
@@ -391,12 +391,12 @@ a.go-to-journeys {
 }
 
 .character-female {
-  left: 8%;
+  left: 5%;
   width: 40%;
 }
 
 .character-male {
-  right: 10%;
+  right: 0%;
   width: 40%;
 }
 
@@ -433,22 +433,29 @@ a.go-to-journeys {
 
 /* Bubble near female character */
 .speech-1 {
-  top: 60%;
+  top: 48%;
   left: 35%;
   font-weight: 700;
   font-size: 16px;
   background:  #0CC6B4;
+  width: 205px;
+  height: 110px;
+  display: flex;
+  align-items: center;
 }
 
 
 /* Bubble near male character */
 .speech-2 {
   top: 15%;
-  right: 40%;
+  right: 30%;
   background: #A7D20C; 
   font-weight: 700;
   font-size: 24px;
-  height: 70px;
+  height: 80px;
+  width: 205px;
+  display: flex;
+  align-items: center;
 }
 
 .speech-2::after {
@@ -477,13 +484,13 @@ a.go-to-journeys {
 .speech-2::after{
   content:"";
   position: absolute;
-  right: 28px;     /* move tail more to the right */
-  bottom: -32px;   /* down more */
+  right: 8px;     /* move tail more to the right */
+  bottom: -30px;   /* down more */
   width: 0;
   height: 0;
-  border-right: 22px solid transparent;
-  border-top: 22px solid #A7D20C; /* tail color = bubble bg */
-  transform: skewX(60deg);
+  border-right: 36px solid transparent;
+  border-top: 32px solid #A7D20C; /* tail color = bubble bg */
+  transform: skewX(58deg);
 }
 
 .speech-1::after{
