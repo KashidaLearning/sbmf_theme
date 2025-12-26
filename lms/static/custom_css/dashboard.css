@@ -345,6 +345,7 @@ a.go-to-journeys {
 .scene-bg {
   width: 100%;
   display: block;
+  height: auto;
 }
 
 .character,
