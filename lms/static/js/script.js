@@ -456,11 +456,15 @@ function playGameCourseIntro() {
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
     function playTak() {
+        if (!window.__AUDIO_UNLOCKED__) return;
+
         const sound = document.getElementById("takSound");
         if (!sound) return;
+
         sound.currentTime = 0;
-        sound.play().catch(() => {});
-    }
+        sound.play().catch(()=>{});
+        }
+
 
     const circles = document.querySelectorAll(".circle-item");
 
@@ -649,3 +653,17 @@ function checkRankChangeAndPopup() {
   window.addEventListener("touchstart", unlock, { once: true, passive: true });
   window.addEventListener("click", unlock, { once: true });
 })();
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".enroll-button")) return;
+
+  const sound = document.getElementById("takSound");
+  if (!sound) return;
+
+  sound.muted = true;
+  sound.play().then(() => {
+    sound.pause();
+    sound.currentTime = 0;
+    sound.muted = false;
+    window.__AUDIO_UNLOCKED__ = true;
+  }).catch(()=>{});
+}, { once: true });

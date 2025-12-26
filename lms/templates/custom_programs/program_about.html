@@ -1956,9 +1956,10 @@ for ub in user_badges:
 <audio id="rankSound" preload="auto">
     <source src="${static.url('sounds/xp-level-up.mp3')}" type="audio/mpeg">
 </audio>
-<audio id="takSound" preload="auto">
+<audio id="takSound" preload="auto" playsinline webkit-playsinline>
     <source src="${static.url('sounds/tak-tak.mp3')}" type="audio/mpeg">
 </audio>
+
 <div id="xp-popup" class="xp-popup">
                 <button class="popup-close-btn xp-close" aria-label="Close">&times;</button>
 
