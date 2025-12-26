@@ -169,6 +169,7 @@ function updateContainerHeight() {
 }
 
 function initializeScene() {
+     if (INTRO_PLAYING) return; 
     const data = window.coursePathData || [];
     if (!data.length || !circlesWrapper) return;
 
@@ -453,6 +454,8 @@ window.addEventListener("message", (event) => {
 });
 
 function playGameCourseIntro() {
+    if (INTRO_FINISHED || INTRO_PLAYING) return;
+
     if (ENROLL_INTRO_ACTIVE) return;
 
   
@@ -500,7 +503,6 @@ function playGameCourseIntro() {
         INTRO_FINISHED = true;
          showIntroPopup();
         setTimeout(() => {
-            refreshCourseStatus();
             focusFirstCourse();
      }, 500);
 
@@ -604,6 +606,7 @@ function checkRankChangeAndPopup() {
     if (window.__RANK_POPUP_SHOWN__) return;
 
     if (!window.CURRENT_USER_RANK_DATA) return;
+    if (!Array.isArray(window.LEADERBOARD_DATA)) return;
 
     const myRankNow = Number(window.CURRENT_USER_RANK_DATA.rank);
     if (!myRankNow) return;
@@ -618,19 +621,29 @@ function checkRankChangeAndPopup() {
         return;
     }
 
+    const loser = window.LEADERBOARD_DATA.find(
+        u => Number(u.rank) === myRankNow + 1
+    );
+
+    if (!loser) {
+        window.__LAST_KNOWN_RANK__ = myRankNow;
+        return;
+    }
+
     showRankPopup({
-        winnerName: window.CURRENT_USER_RANK_DATA.name || "أنت",
+        winnerName: window.CURRENT_USER_RANK_DATA.name, 
         winnerRank: myRankNow,
         winnerXP: window.CURRENT_USER_RANK_DATA.rank_points,
 
-        loserName: "منافسك السابق",
-        loserRank: window.__LAST_KNOWN_RANK__,
-        loserXP: "-"
+        loserName: loser.name,
+        loserRank: myRankNow + 1,
+        loserXP: loser.rank_points
     });
 
     window.__RANK_POPUP_SHOWN__ = true;
     window.__LAST_KNOWN_RANK__ = myRankNow;
 }
+
 (function mobileAudioUnlockOnly() {
   let unlocked = false;
 
@@ -648,6 +661,7 @@ function checkRankChangeAndPopup() {
       sound.currentTime = 0;
       sound.muted = false;
       unlocked = true;
+      window.__AUDIO_UNLOCKED__ = true; 
     };
 
     if (p && p.catch) p.catch(()=>{}).finally(done);
@@ -657,20 +671,8 @@ function checkRankChangeAndPopup() {
   window.addEventListener("touchstart", unlock, { once: true, passive: true });
   window.addEventListener("click", unlock, { once: true });
 })();
-document.addEventListener("click", function(e) {
-  if (!e.target.closest(".enroll-button")) return;
 
-  const sound = document.getElementById("takSound");
-  if (!sound) return;
 
-  sound.muted = true;
-  sound.play().then(() => {
-    sound.pause();
-    sound.currentTime = 0;
-    sound.muted = false;
-    window.__AUDIO_UNLOCKED__ = true;
-  }).catch(()=>{});
-}, { once: true });
 function applyPulseToActiveCourses() {
     document.querySelectorAll(".circle-item").forEach(circle => {
         circle.classList.remove("pulse-focus");
