@@ -819,7 +819,7 @@ body:not(.user-enrolled) .circle-item {
 }
 .rank-card {
    width: 80%;
-    margin-top: -90%;
+    margin-top: -50%;
 }
 .rank-duo {
   width: 253px;
@@ -1949,8 +1949,11 @@ for ub in user_badges:
     <source src="${static.url('sounds/tak-tak.mp3')}" type="audio/mpeg">
 </audio>
 <div id="xp-popup" class="xp-popup">
+                <button class="popup-close-btn xp-close" aria-label="Close">&times;</button>
+
   <div class="xp-stage">
        <div class="xp-card">
+
 
 
     <!-- LEFT CHARACTER -->
@@ -1999,6 +2002,8 @@ for ub in user_badges:
 </div>
 
 <div id="rank-popup" class="rank-popup" aria-hidden="true">
+        <button class="popup-close-btn rank-close" aria-label="Close">&times;</button>
+
   <div class="rank-card">
 
   <!-- characters (image) -->
@@ -2585,11 +2590,12 @@ function showXpPopup(gainedXP, currentXP) {
     xpSound.currentTime = 0;
     setTimeout(() => xpSound.play().catch(()=>{}), 150);
 
-    // auto close
-    setTimeout(() => {
-        popup.classList.remove("show");
-         
-    }, 6000);
+   document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("xp-close")) {
+        document.getElementById("xp-popup").classList.remove("show");
+    }
+});
+
 }
 
 
@@ -2643,12 +2649,14 @@ function showRankPopup(data) {
         setTimeout(launchRankConfettiWOW, 800);
     }
 
-    clearTimeout(popup._autoCloseTimer);
-    popup._autoCloseTimer = setTimeout(() => {
+    document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("rank-close")) {
+        const popup = document.getElementById("rank-popup");
         popup.classList.remove("show");
         popup.setAttribute("aria-hidden", "true");
-        forceEnableScroll();
-    }, 6000);
+    }
+});
+
 }
 
 </script>

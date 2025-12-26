@@ -3289,7 +3289,7 @@ text-transform: capitalize;
     filter: drop-shadow(0 18px 30px rgba(0,0,0,.35));
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 992px) {
     .intro-yellow-header {
         font-size: 11px; /* Smaller font for small phones */
         padding: 6px 10px;
@@ -3314,9 +3314,31 @@ text-transform: capitalize;
         top: 22%;
         height: 52%;
     }
+    .popup-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    color: white;
+    font-size: x-large;
+
+
+}
 }
 
 @keyframes modalSlideUp {
     from { transform: translateY(50px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+.popup-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    color: white;
+    font-size: x-large;
+    background-color: #15376d00 !important;
+    border: none !important;
+
+
+}
+
+
