@@ -3305,9 +3305,9 @@ text-transform: capitalize;
     }
 
     .intro-close-btn {
-      font-size: 28px;
-        right: 2px;
-        top: -3px;
+          font-size: 28px;
+        right: 3px;
+        top: 7px;
     }
      .intro-character-img {
         right: 2%;

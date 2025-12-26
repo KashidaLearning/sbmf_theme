@@ -594,17 +594,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     animation: enrollBounce 1.8s ease-in-out infinite;
 }
 
-/* gold ring */
-.circle-item.pulse-focus::before {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 999px;
-    border: 2px solid rgba(255,203,5,.9);
-    opacity: 0;
-    animation: enrollRing 1.8s ease-in-out infinite;
-    pointer-events: none;
-}
+
 
 /* soft glow halo */
 .circle-item.pulse-focus::after {
@@ -639,29 +629,30 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     z-index: 20;
 }
 .circle-item:not(.circle-item--special-layout) .course-xp-badge {
-    bottom: 65px;
+       bottom: 46px;
     left: 50%;
     transform: translateX(-50%);
 }
 .circle-item--special-layout .course-xp-badge {
-    bottom: 24px;
-    right: 48px;
+      bottom: -12px;
+    right: 236px;
     left: auto;
     transform: none;
 }
 @media (max-width: 992px) {
 
     .circle-item:not(.circle-item--special-layout) .course-xp-badge {
-        bottom: 80px;
+              bottom: 24px;
         font-size: 12px;
         padding: 5px 12px;
     }
 
     .circle-item--special-layout .course-xp-badge {
-        bottom: 18px;
-        right: 22px;
+                bottom: -7px;
+        right: 29px;
         font-size: 11px;
         padding: 4px 10px;
+
     }
 }
 

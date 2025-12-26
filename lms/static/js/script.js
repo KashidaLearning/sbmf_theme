@@ -623,3 +623,29 @@ function checkRankChangeAndPopup() {
     window.__RANK_POPUP_SHOWN__ = true;
     window.__LAST_KNOWN_RANK__ = myRankNow;
 }
+(function mobileAudioUnlockOnly() {
+  let unlocked = false;
+
+  function unlock() {
+    if (unlocked) return;
+
+    const sound = document.getElementById("takSound");
+    if (!sound) return;
+
+    sound.muted = true;
+    const p = sound.play();
+
+    const done = () => {
+      try { sound.pause(); } catch(e){}
+      sound.currentTime = 0;
+      sound.muted = false;
+      unlocked = true;
+    };
+
+    if (p && p.catch) p.catch(()=>{}).finally(done);
+    else done();
+  }
+
+  window.addEventListener("touchstart", unlock, { once: true, passive: true });
+  window.addEventListener("click", unlock, { once: true });
+})();
