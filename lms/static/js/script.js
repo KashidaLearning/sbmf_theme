@@ -169,7 +169,6 @@ function updateContainerHeight() {
 }
 
 function initializeScene() {
-     if (INTRO_PLAYING) return; 
     const data = window.coursePathData || [];
     if (!data.length || !circlesWrapper) return;
 
@@ -454,8 +453,6 @@ window.addEventListener("message", (event) => {
 });
 
 function playGameCourseIntro() {
-    if (INTRO_FINISHED || INTRO_PLAYING) return;
-
     if (ENROLL_INTRO_ACTIVE) return;
 
   
@@ -503,6 +500,7 @@ function playGameCourseIntro() {
         INTRO_FINISHED = true;
          showIntroPopup();
         setTimeout(() => {
+            refreshCourseStatus();
             focusFirstCourse();
      }, 500);
 
@@ -533,11 +531,13 @@ function focusFirstCourse() {
     }, 450);
 
     function stopPulse() {
-        first.classList.remove("pulse-focus");
-        window.removeEventListener("wheel", stopPulse);
-        window.removeEventListener("touchstart", stopPulse);
-        first.removeEventListener("click", stopPulse);
-    }
+  applyPulseToActiveCourses();
+
+  window.removeEventListener("wheel", stopPulse);
+  window.removeEventListener("touchstart", stopPulse);
+  first.removeEventListener("click", stopPulse);
+}
+
 
     window.addEventListener("wheel", stopPulse, { once: true });
     window.addEventListener("touchstart", stopPulse, { once: true });
@@ -650,7 +650,7 @@ function checkRankChangeAndPopup() {
       sound.currentTime = 0;
       sound.muted = false;
       unlocked = true;
-      window.__AUDIO_UNLOCKED__ = true; // ✅ هذا السطر المهم
+      window.__AUDIO_UNLOCKED__ = true; // ✅ السطر الحاسم
     };
 
     if (p && p.catch) p.catch(()=>{}).finally(done);

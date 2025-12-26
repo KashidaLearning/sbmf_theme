@@ -533,12 +533,12 @@ text-align: right;
 
 
 .hero-img {
-      left: 49%;
+  left: 40%;
     top: -17%;
     /* max-width: 180px; */
     padding-right: 5px;
     position: absolute;
-    width: 121px;
+    width: 328px;
 }
 .icons-container {
   display: flex;
