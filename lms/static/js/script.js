@@ -604,9 +604,7 @@ function showIntroPopup() {
 }
 function checkRankChangeAndPopup() {
     if (window.__RANK_POPUP_SHOWN__) return;
-
     if (!window.CURRENT_USER_RANK_DATA) return;
-    if (!Array.isArray(window.LEADERBOARD_DATA)) return;
 
     const myRankNow = Number(window.CURRENT_USER_RANK_DATA.rank);
     if (!myRankNow) return;
@@ -617,32 +615,25 @@ function checkRankChangeAndPopup() {
     }
 
     if (myRankNow >= window.__LAST_KNOWN_RANK__) {
-        window.__LAST_KNOWN_RANK__ = myRankNow;
         return;
     }
 
-    const loser = window.LEADERBOARD_DATA.find(
-        u => Number(u.rank) === myRankNow + 1
-    );
-
-    if (!loser) {
-        window.__LAST_KNOWN_RANK__ = myRankNow;
-        return;
-    }
+    const loserRank = window.__LAST_KNOWN_RANK__;
 
     showRankPopup({
         winnerName: window.CURRENT_USER_RANK_DATA.name, 
         winnerRank: myRankNow,
         winnerXP: window.CURRENT_USER_RANK_DATA.rank_points,
 
-        loserName: loser.name,
-        loserRank: myRankNow + 1,
-        loserXP: loser.rank_points
+        loserName: "المستخدم الذي تجاوزته",
+        loserRank: loserRank,
+        loserXP: null
     });
 
     window.__RANK_POPUP_SHOWN__ = true;
     window.__LAST_KNOWN_RANK__ = myRankNow;
 }
+
 
 (function mobileAudioUnlockOnly() {
   let unlocked = false;
