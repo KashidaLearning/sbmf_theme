@@ -837,6 +837,17 @@ body:not(.user-enrolled) .circle-item {
 .rank-arrows .arrow.small {
     width: 100px;
 }
+.rank-num{
+    font-size: 25px;
+}
+.rank-user img{
+        width: 45px;
+    height: 45px;
+}
+.rank-info {
+    flex: 1;
+    padding: 0px 15px;
+}
 }
 
 </style>
@@ -2590,10 +2601,22 @@ function showXpPopup(gainedXP, currentXP) {
     xpSound.currentTime = 0;
     setTimeout(() => xpSound.play().catch(()=>{}), 150);
 
-   document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("xp-close")) {
-        document.getElementById("xp-popup").classList.remove("show");
-    }
+ function closeXpPopup(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementById("xp-popup").classList.remove("show");
+}
+
+document.addEventListener("touchstart", function (e) {
+    const btn = e.target.closest(".xp-close");
+    if (!btn) return;
+    closeXpPopup(e);
+}, { passive: false });
+
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest(".xp-close");
+    if (!btn) return;
+    closeXpPopup(e);
 });
 
 }

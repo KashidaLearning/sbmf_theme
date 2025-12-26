@@ -3315,14 +3315,32 @@ text-transform: capitalize;
         height: 52%;
     }
     .popup-close-btn {
+            pointer-events: auto !important;
+
     position: absolute;
     top: 10px;
     right: 12px;
     color: white;
     font-size: x-large;
+     cursor: pointer;
+    touch-action: manipulation;
+        box-shadow: none;
+    background-color: #50558700 !important;
+    border: none !important;
+    background-image: none;
 
 
 }
+.xp-popup {
+    pointer-events: none;
+}
+
+.xp-stage,
+.xp-character,
+.xp-character img {
+    pointer-events: none;
+}
+
 }
 
 @keyframes modalSlideUp {
@@ -3330,15 +3348,19 @@ text-transform: capitalize;
     to { transform: translateY(0); opacity: 1; }
 }
 .popup-close-btn {
+              pointer-events: auto !important;
+
     position: absolute;
     top: 10px;
     right: 12px;
     color: white;
     font-size: x-large;
-    background-color: #15376d00 !important;
+    
+    background-color: #50558700 !important;
     border: none !important;
-
+    background-image: none;
 
 }
+
 
 
