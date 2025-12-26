@@ -589,15 +589,13 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
    ========================= */
 
 .circle-item.pulse-focus {
-    position: relative;
     z-index: 30;
     animation: enrollBounce 1.8s ease-in-out infinite;
 }
 
 
 
-/* soft glow halo */
-.circle-item.pulse-focus::after {
+.circle-item.pulse-focus .circle-content::after {
     content: "";
     position: absolute;
     inset: -14px;
@@ -611,6 +609,14 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
     animation: enrollGlow 1.8s ease-in-out infinite;
     pointer-events: none;
     z-index: -1;
+}
+
+.circle-item {
+    transform-origin: center center;
+}
+
+.circle-item.pulse-focus {
+    will-change: transform;
 }
 
 

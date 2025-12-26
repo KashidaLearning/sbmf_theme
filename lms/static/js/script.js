@@ -177,6 +177,7 @@ function initializeScene() {
     circleElements = [];
 
     data.forEach((item, index) => createCircle(item, index));
+    applyPulseToActiveCourses();
     updatePositions();
     const justEnrolled = sessionStorage.getItem("programJustEnrolled") === "1";
     document.querySelectorAll(".circle-item").forEach(c => {
@@ -378,6 +379,9 @@ async function refreshCourseStatus() {
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
         }
+        document.addEventListener("circlesRebuilt", () => {
+            applyPulseToActiveCourses();
+        });
 
 
         if (typeof data.progress_percent !== "undefined") {
@@ -667,3 +671,13 @@ document.addEventListener("click", function(e) {
     window.__AUDIO_UNLOCKED__ = true;
   }).catch(()=>{});
 }, { once: true });
+function applyPulseToActiveCourses() {
+    document.querySelectorAll(".circle-item").forEach(circle => {
+        circle.classList.remove("pulse-focus");
+
+        if (circle.classList.contains("circle-item--active") && !circle.classList.contains("circle-item--completed")) {
+            circle.classList.add("pulse-focus");
+        }
+
+    });
+}
