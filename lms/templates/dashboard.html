@@ -390,11 +390,8 @@ cert_name_long = settings.CERT_NAME_LONG
         % if not has_any_program_enrollment:
             <div class="no-programs-message">
 <div class="scene">
- <img
-    src="${static.url('images/no-program-bg-desktop.png')}"
-    alt=""
-    class="scene-bg"
-  />
+ <img src="${static.url('images/no-program-bg-desktop.png')}" alt="" class="scene-bg-desktop"/>
+ <img src="${static.url('images/no-program-bg-mobile.png')}" alt="" class="scene-bg-mobile"/>
     <!-- Characters -->
     <img
       src="${static.url('images/no-program-female.gif')}"

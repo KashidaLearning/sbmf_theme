@@ -342,11 +342,6 @@ a.go-to-journeys {
   margin: 0 auto;
 }
 
-.scene-bg {
-  width: 100%;
-  display: block;
-  height: auto;
-}
 
 .character,
 .speech {
@@ -385,9 +380,14 @@ a.go-to-journeys {
   margin: 0 auto;
 }
 
-.scene-bg {
+.scene-bg-desktop {
   width: 100%;
   display: block;
+}
+
+.scene-bg-mobile {
+  width: 100%;
+  display: none;
 }
 
 /* Characters */
@@ -473,13 +473,15 @@ a.go-to-journeys {
 
 
 @media (max-width: 768px) {
-  .speech {
-    max-width: 180px;
-    font-size: 13px;
-  }
-}
 
-@media (max-width: 400px) {
+  .scene-bg-desktop {
+    display: none;
+  }
+
+  .scene-bg-mobile {
+    display: block;
+  }
+
  .character-female {
     left: 0%;
     width: 60%;
