@@ -2301,10 +2301,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const previousTotalXP = completedCourses
         .slice(0, -1)
         .reduce((sum, c) => sum + Number(c.xpAward || 0), 0);
+        window.safeShowXpPopup(lastCompletedCourse, gainedXP, previousTotalXP);
         console.log("Gained XP:", gainedXP);
         console.log("Previous Total XP:", previousTotalXP);
-        window.showXpPopup(gainedXP, previousTotalXP);
-
+        
     };
 
     document.addEventListener("click", function (e) {
@@ -2584,6 +2584,7 @@ function calculateXpState(currentXP, gainedXP) {
 </script>
 
 <script>
+    
 function showXpPopup(gainedXP, currentXP) {
     if (!gainedXP || isNaN(gainedXP)) {
         console.warn("XP popup blocked – invalid XP", gainedXP);

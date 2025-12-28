@@ -3,6 +3,8 @@ let INTRO_FINISHED = false;
 let ENROLL_INTRO_ACTIVE = false;
 window.__RANK_POPUP_SHOWN__ = false;
 window.__LAST_KNOWN_RANK__ = null;
+window.__POPUP_HANDLED__ = null;
+
 let numCircles = 0;
 let circleElements = [];
 
@@ -323,7 +325,9 @@ function renderLeaderboardInContainer(container, users, currentUser) {
 
         const row = document.createElement("div");
         row.className = "leaderboard-row";
-
+        if (currentUser && u.name === currentUser.name) {
+            row.classList.add("current-user");
+        }
         row.innerHTML = `
             <div class="rank-box">${index + 1}</div>
             <div class="icon">
@@ -406,13 +410,16 @@ async function refreshCourseStatus() {
             window.CURRENT_USER_RANK_DATA = data.leaderboard.current_user || null;
 
             updateLeaderboardPopup(data.leaderboard);
-            checkRankChangeAndPopup();
 
         }
 
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
+        if (data.program_state) {
+            window.PROGRAM_STATE = data.program_state;
+        }
+     handleProgramPopups();
     } catch (err) {}
 }
 
@@ -483,23 +490,7 @@ function playGameCourseIntro() {
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
-   function playTak() {
-  const sound = document.getElementById("takSound");
-  if (!sound) return;
 
-  // Desktop: play immediately
-  if (!("ontouchstart" in window)) {
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
-    return;
-  }
-
-  // Mobile: only after unlock
-  if (!window.__AUDIO_UNLOCKED__) return;
-
-  sound.currentTime = 0;
-  sound.play().catch(() => {});
-}
     function playTak() {
     const sound = document.getElementById("takSound");
     if (!sound) return;
@@ -650,37 +641,98 @@ function showIntroPopup() {
         if (e.target === overlay) closePopup();
     };
 }
-function checkRankChangeAndPopup() {
-    if (window.__RANK_POPUP_SHOWN__) return;
 
+    window.shouldShowXpPopup = function (course) {
+        if (!window.PROGRAM_STATE) return true;
+
+        if (
+            course.course_type === "pre_assessment" ||
+            course.course_type === "Pre-assessment" ||
+            course.course_type === "التقييم القبلي"
+        ) {
+            return false;
+        }
+
+        if (
+            window.PROGRAM_STATE.challenges &&
+            window.PROGRAM_STATE.challenges.completed ===
+            window.PROGRAM_STATE.challenges.total
+        ) {
+            return false;
+        }
+
+        if (
+            window.PROGRAM_STATE.assignment_completed &&
+            window.PROGRAM_STATE.post_completed
+        ) {
+            return false;
+        }
+
+        return true;
+    };
+    window.safeShowXpPopup = function (course, gainedXP, previousXP) {
+        if (!window.shouldShowXpPopup(course)) return;
+
+        showXpPopup(gainedXP, previousXP);
+};
+
+function handleProgramPopups() {
+    if (!window.PROGRAM_STATE) return;
     if (!window.CURRENT_USER_RANK_DATA) return;
 
-    const myRankNow = Number(window.CURRENT_USER_RANK_DATA.rank);
-    if (!myRankNow) return;
+    if (window.__POPUP_HANDLED__) return;
 
-    if (window.__LAST_KNOWN_RANK__ === null) {
-        window.__LAST_KNOWN_RANK__ = myRankNow;
+    const state = window.PROGRAM_STATE;
+    const user  = window.CURRENT_USER_RANK_DATA;
+
+    if (state.pre_completed && !state.challenges?.completed) {
+        showRankPopup({
+            winnerName: user.name || "أنت",
+            winnerRank: user.rank,
+            winnerXP: 100,
+            loserName: "التقييم القبلي",
+            loserRank: "✓",
+            loserXP: "مكتمل"
+        });
+
+        window.__POPUP_HANDLED__ = "pre";
         return;
     }
 
-    if (myRankNow >= window.__LAST_KNOWN_RANK__) {
-        window.__LAST_KNOWN_RANK__ = myRankNow;
+    if (
+        state.challenges &&
+        state.challenges.completed === state.challenges.total &&
+        state.challenges.total > 0 &&
+        !state.assignment_completed
+    ) {
+        showRankPopup({
+            winnerName: user.name || "أنت",
+            winnerRank: user.rank,
+            winnerXP: user.rank_points,
+            loserName: "التحديات",
+            loserRank: "6 / 6",
+            loserXP: "مكتملة"
+        });
+
+        window.__POPUP_HANDLED__ = "challenges";
         return;
     }
 
-    showRankPopup({
-        winnerName: window.CURRENT_USER_RANK_DATA.name || "أنت",
-        winnerRank: myRankNow,
-        winnerXP: window.CURRENT_USER_RANK_DATA.rank_points,
+    if (state.assignment_completed && state.post_completed) {
+        showRankPopup({
+            winnerName: user.name || "أنت",
+            winnerRank: user.rank,
+            winnerXP: user.rank_points,
+            loserName: "الشهادة",
+            loserRank: "🎓",
+            loserXP: "جاهزة للتنزيل"
+        });
 
-        loserName: "منافسك السابق",
-        loserRank: window.__LAST_KNOWN_RANK__,
-        loserXP: "-"
-    });
-
-    window.__RANK_POPUP_SHOWN__ = true;
-    window.__LAST_KNOWN_RANK__ = myRankNow;
+        window.__POPUP_HANDLED__ = "final";
+    }
 }
+
+
 (function mobileAudioUnlockOnly() {
   let unlocked = false;
 
