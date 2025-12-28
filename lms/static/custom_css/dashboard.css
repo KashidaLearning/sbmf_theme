@@ -479,6 +479,37 @@ a.go-to-journeys {
   }
 }
 
+@media (max-width: 400px) {
+ .character-female {
+    left: 0%;
+    width: 60%;
+    z-index: 1000;
+}
+
+.character-male {
+    right: 0%;
+    width: 60%;
+}
+
+.speech-1 {
+    top: 30%;
+    left: 35%;
+    height: 70px;
+}
+
+.speech-2 {
+    top: -30%;
+    right: 35%;
+    height: 40px;
+}
+
+    .speech {
+        max-width: 100px;
+        font-size: 11px;
+    }
+
+}
+
 
 .speech {
   animation: float 3s ease-in-out infinite;
