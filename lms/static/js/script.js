@@ -451,6 +451,30 @@ window.addEventListener("message", (event) => {
         refreshCourseStatus();
     }
 });
+window.__AUDIO_UNLOCKED__ = false;
+
+function unlockTakSound() {
+  if (window.__AUDIO_UNLOCKED__) return;
+
+  const sound = document.getElementById("takSound");
+  if (!sound) return;
+
+  sound.muted = true;
+
+  const p = sound.play();
+  const done = () => {
+    sound.pause();
+    sound.currentTime = 0;
+    sound.muted = false;
+    window.__AUDIO_UNLOCKED__ = true;
+  };
+
+  if (p && p.catch) p.catch(() => {}).finally(done);
+  else done();
+}
+
+window.addEventListener("touchstart", unlockTakSound, { once: true });
+window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
     if (ENROLL_INTRO_ACTIVE) return;
@@ -459,15 +483,39 @@ function playGameCourseIntro() {
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
+   function playTak() {
+  const sound = document.getElementById("takSound");
+  if (!sound) return;
+
+  // Desktop: play immediately
+  if (!("ontouchstart" in window)) {
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+    return;
+  }
+
+  // Mobile: only after unlock
+  if (!window.__AUDIO_UNLOCKED__) return;
+
+  sound.currentTime = 0;
+  sound.play().catch(() => {});
+}
     function playTak() {
-        if (!window.__AUDIO_UNLOCKED__) return;
+    const sound = document.getElementById("takSound");
+    if (!sound) return;
 
-        const sound = document.getElementById("takSound");
-        if (!sound) return;
-
+    if (!("ontouchstart" in window)) {
         sound.currentTime = 0;
-        sound.play().catch(()=>{});
-        }
+        sound.play().catch(() => {});
+        return;
+    }
+
+    if (!window.__AUDIO_UNLOCKED__) return;
+
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+    }
+
 
 
     const circles = document.querySelectorAll(".circle-item");
