@@ -781,6 +781,38 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255
     line-height: 18px;
     text-align: left;
 }
+.rank-eval-grid {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+}
+
+.eval-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0CC6B4, #89E7DE);
+    color: #110D7C;
+    font-weight: 700;
+    box-shadow: 0 8px 22px rgba(0,0,0,.25);
+}
+
+.eval-box img {
+    width: 28px;
+}
+
+.eval-box.pulse {
+    animation: evalPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes evalPulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
 .circle-item.completed-animate {
     animation: completePulse 1.2s ease-out;
 }
@@ -847,6 +879,9 @@ body:not(.user-enrolled) .circle-item {
 .rank-info {
     flex: 1;
     padding: 0px 15px;
+}
+.eval-box {
+        margin-top: -51px;
 }
 }
 
@@ -2627,74 +2662,44 @@ function showRankPopup(data) {
     const winner = document.getElementById("rank-winner");
     const sound  = document.getElementById("rankSound");
 
-    if (!popup || !winner) {
-        console.warn("Rank popup DOM missing");
-        return;
-    }
+    if (!popup || !winner) return;
 
-    /* -------------------------
-       1️⃣ تحديث صف المستخدم
-    ------------------------- */
-    winner.querySelector(".name").textContent =
-        data.winnerName || "أنت";
-
-    winner.querySelector(".rank-num").textContent =
-        data.winnerRank ?? "";
-
+    // ====== USER RANK ======
+    winner.querySelector(".name").textContent = data.winnerName;
+    winner.querySelector(".rank-num").textContent = data.winnerRank;
     winner.querySelector(".xp").textContent =
-        data.winnerXP !== undefined
-            ? "XP " + Number(data.winnerXP).toFixed(2)
+        typeof data.winnerXP === "number"
+            ? "XP " + data.winnerXP.toFixed(2)
+            : data.winnerXP;
+
+    // ====== REMOVE OLD EVAL GRID ======
+    popup.querySelectorAll(".rank-eval-grid").forEach(e => e.remove());
+
+    // ====== ADD EVAL GRID ======
+    if (data.eval) {
+        const grid = document.createElement("div");
+        grid.className = "rank-eval-grid";
+
+        const icon =
+        window.EVAL_ICONS && window.EVAL_ICONS.completed
+            ? window.EVAL_ICONS.completed
             : "";
 
-    /* تأكيد الستايل */
-    winner.classList.remove("slot-bottom");
-    winner.classList.add("slot-top", "winner");
+    let html = '<div class="eval-box completed pulse">';
 
-    /* -------------------------
-       2️⃣ بناء صف المرحلة (eval)
-    ------------------------- */
-    let stageRow = document.getElementById("rank-eval-row");
-
-    if (!stageRow) {
-        stageRow = document.createElement("div");
-        stageRow.id = "rank-eval-row";
-        stageRow.className = "rank-row slot-bottom eval-row leaderboard-row";
-
-        stageRow.innerHTML = `
-            <div class="rank-num">✓</div>
-            <div class="rank-user">
-                <img class="eval-icon-img">
-            </div>
-            <div class="rank-info blue">
-                <div class="name"></div>
-                <div class="xp"></div>
-            </div>
-        `;
-
-        document.querySelector(".rank-rows").appendChild(stageRow);
+    if (icon) {
+        html += '<img src="' + icon + '" />';
     }
 
-    /* هنا نستخدم JS variable بأمان */
-    const iconImg = stageRow.querySelector(".eval-icon-img");
-    if (iconImg && window.EVAL_ICONS?.completed) {
-        iconImg.src = window.EVAL_ICONS.completed;
+    html += '<span>' + data.eval.label + '</span>';
+    html += '</div>';
+
+    grid.innerHTML = html;
+
+
+        popup.querySelector(".rank-card").appendChild(grid);
     }
 
-
-    stageRow.querySelector(".name").textContent =
-        data.stageLabel || "";
-
-    stageRow.querySelector(".xp").textContent =
-        data.stageText || "";
-
-    /* animation */
-    stageRow.classList.remove("pulse");
-    void stageRow.offsetHeight;
-    stageRow.classList.add("pulse");
-
-    /* -------------------------
-       3️⃣ عرض الـ popup
-    ------------------------- */
     popup.classList.add("show");
     popup.setAttribute("aria-hidden", "false");
 
@@ -2704,8 +2709,18 @@ function showRankPopup(data) {
     }
 
     if (window.launchRankConfettiWOW) {
-        setTimeout(launchRankConfettiWOW, 600);
+        setTimeout(launchRankConfettiWOW, 700);
     }
+
+
+   document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("rank-close")) {
+        popup.classList.remove("show");
+    }
+});
+
+
+
 }
 
 </script>

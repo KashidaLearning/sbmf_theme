@@ -684,55 +684,52 @@ function areChallengesCompleted(state) {
 function handleProgramPopups() {
     if (!window.PROGRAM_STATE) return;
     if (!window.CURRENT_USER_RANK_DATA) return;
-
     if (window.__POPUP_HANDLED__) return;
 
     const state = window.PROGRAM_STATE;
     const user  = window.CURRENT_USER_RANK_DATA;
 
-    if (state.pre_completed && !state.challenges?.completed) {
+    // ===== PRE =====
+    if (
+        state.pre_completed &&
+        state.challenges &&
+        state.challenges.completed === 0
+    ) {
         showRankPopup({
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
-            winnerXP: 100,
-            loserName: "التقييم القبلي",
-            loserRank: "✓",
-            loserXP: "مكتمل"
+            winnerXP: user.rank_points,
+            eval: { label: "تم إكمال التقييم القبلي" }
         });
-
         window.__POPUP_HANDLED__ = "pre";
         return;
     }
 
+    // ===== CHALLENGES =====
     if (
         state.challenges &&
-        state.challenges.completed === state.challenges.total &&
         state.challenges.total > 0 &&
+        state.challenges.completed === state.challenges.total &&
         !state.assignment_completed
     ) {
         showRankPopup({
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
-            loserName: "التحديات",
-            loserRank: "6 / 6",
-            loserXP: "مكتملة"
+            eval: { label: "تم إكمال جميع التحديات" }
         });
-
         window.__POPUP_HANDLED__ = "challenges";
         return;
     }
 
+    // ===== FINAL =====
     if (state.assignment_completed && state.post_completed) {
         showRankPopup({
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
-            loserName: "الشهادة",
-            loserRank: "🎓",
-            loserXP: "جاهزة للتنزيل"
+            eval: { label: "الرحلة اكتملت 🎓" }
         });
-
         window.__POPUP_HANDLED__ = "final";
     }
 }
@@ -755,7 +752,7 @@ function handleProgramPopups() {
       sound.currentTime = 0;
       sound.muted = false;
       unlocked = true;
-      window.__AUDIO_UNLOCKED__ = true; // ✅ السطر الحاسم
+      window.__AUDIO_UNLOCKED__ = true; 
     };
 
     if (p && p.catch) p.catch(()=>{}).finally(done);
