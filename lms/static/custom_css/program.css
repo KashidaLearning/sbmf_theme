@@ -2417,6 +2417,7 @@ body.popup-active .sticky-icons-wrapper {
     top: 0px !important;
     left: unset !important;
     color: white !important;
+    text-shadow: 0 0 15px #FFCB05 !important;
   }
   .close-button.bigscreenx {
     display: none !important;
