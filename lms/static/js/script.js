@@ -122,7 +122,17 @@ function createCircle(data, index) {
 }
 const CURRENT_PROGRAM_ID =
     document.body.dataset.programId || window.location.pathname;
+function getPopupStorageKey(stage) {
+    return `program_${CURRENT_PROGRAM_ID}_popup_${stage}`;
+}
 
+function hasPopupBeenShown(stage) {
+    return sessionStorage.getItem(getPopupStorageKey(stage)) === "1";
+}
+
+function markPopupAsShown(stage) {
+    sessionStorage.setItem(getPopupStorageKey(stage), "1");
+}
 const LAST_PROGRAM_ID =
     sessionStorage.getItem("lastProgramId");
 
@@ -691,16 +701,16 @@ function handleProgramPopups() {
     // ================= PRE =================
     if (
         state.pre_completed &&
-        window.__POPUP_HANDLED__ !== "pre"
+        !hasPopupBeenShown("pre")
     ) {
         showRankPopup({
+             stage: "pre",
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال التقييم القبلي" }
         });
 
-        window.__POPUP_HANDLED__ = "pre";
         return;
     }
 
@@ -709,16 +719,16 @@ function handleProgramPopups() {
         state.challenges &&
         state.challenges.total > 0 &&
         state.challenges.completed === state.challenges.total &&
-        window.__POPUP_HANDLED__ !== "challenges"
+        !hasPopupBeenShown("challenges")
     ) {
         showRankPopup({
+            stage: "challenges",
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال جميع التحديات" }
         });
 
-        window.__POPUP_HANDLED__ = "challenges";
         return;
     }
 
@@ -726,18 +736,19 @@ function handleProgramPopups() {
     if (
         state.assignment_completed &&
         state.post_completed &&
-        window.__POPUP_HANDLED__ !== "final"
+        !hasPopupBeenShown("final")
     ) {
         showRankPopup({
+            stage: "final",
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
-            eval: { label: "مبروك! أنهيت الرحلة بالكامل 🎓 يمكنك استلام شهادتك " }
+            eval: { label: "مبروك! أنهيت الرحلة بالكامل 🎓 يمكنك استلام شهادتك" }
         });
 
-        window.__POPUP_HANDLED__ = "final";
     }
 }
+
 
 
 (function mobileAudioUnlockOnly() {

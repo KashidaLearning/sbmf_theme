@@ -2713,10 +2713,19 @@ function showRankPopup(data) {
     }
 
 
-   document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("rank-close")) {
-        popup.classList.remove("show");
+   document.addEventListener("click", function onClose(e) {
+    if (!e.target.classList.contains("rank-close")) return;
+
+    popup.classList.remove("show");
+    popup.setAttribute("aria-hidden", "true");
+
+    if (data.stage) {
+        markPopupAsShown(data.stage);
     }
+
+    document.removeEventListener("click", onClose);
+
+
 });
 
 
