@@ -675,6 +675,11 @@ function showIntroPopup() {
 
         showXpPopup(gainedXP, previousXP);
 };
+function areChallengesCompleted(state) {
+    if (!state.challenges) return false;
+    if (state.challenges.total === 0) return false;
+    return state.challenges.completed === state.challenges.total;
+}
 
 function handleProgramPopups() {
     if (!window.PROGRAM_STATE) return;

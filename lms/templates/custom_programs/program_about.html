@@ -2057,19 +2057,11 @@ for ub in user_badges:
       </div>
 
       <!-- PREVIOUS -->
-      <div id="rank-loser" class="rank-row loser leaderboard-row">
+   <!-- STAGE ANNOUNCEMENT (dynamic) -->
+    <div id="rank-stage" class="rank-row stage-row">
+    <!-- injected by JS حسب المرحلة -->
+    </div>
 
-        <div class="rank-num">2</div>
-
-        <div class="rank-user">
-          <img src="${static.url('images/image-profile-blue.png')}">
-        </div>
-
-        <div class="rank-info blue">
-          <div class="name"></div>
-          <div class="xp">XP</div>
-        </div>
-      </div>
 
     </div>
 
@@ -2631,39 +2623,80 @@ document.addEventListener("click", function (e) {
 function showRankPopup(data) {
     if (!data) return;
 
-    var popup  = document.getElementById("rank-popup");
-    var winner = document.getElementById("rank-winner");
-    var loser  = document.getElementById("rank-loser");
-    var sound  = document.getElementById("rankSound");
+    const popup  = document.getElementById("rank-popup");
+    const winner = document.getElementById("rank-winner");
+    const sound  = document.getElementById("rankSound");
 
-    if (!popup || !winner || !loser) return;
+    if (!popup || !winner) {
+        console.warn("Rank popup DOM missing");
+        return;
+    }
 
-    winner.querySelector(".name").textContent = data.winnerName;
-    winner.querySelector(".rank-num").textContent = data.winnerRank;
-    winner.querySelector(".xp").textContent = "XP " + Number(data.winnerXP || 0).toFixed(2);
+    /* -------------------------
+       1️⃣ تحديث صف المستخدم
+    ------------------------- */
+    winner.querySelector(".name").textContent =
+        data.winnerName || "أنت";
 
-    loser.querySelector(".name").textContent = data.loserName;
-    loser.querySelector(".rank-num").textContent = data.loserRank;
-    loser.querySelector(".xp").textContent = "XP " + Number(data.loserXP || 0).toFixed(2);
+    winner.querySelector(".rank-num").textContent =
+        data.winnerRank ?? "";
 
+    winner.querySelector(".xp").textContent =
+        data.winnerXP !== undefined
+            ? "XP " + Number(data.winnerXP).toFixed(2)
+            : "";
 
-    winner.classList.remove("slot-top", "slot-bottom");
-    loser.classList.remove("slot-top", "slot-bottom");
-
-    winner.classList.add("slot-bottom");
-    loser.classList.add("slot-top");
-
-    popup.classList.add("show");
-    
-    popup.setAttribute("aria-hidden", "false");
-
-    winner.offsetHeight;
-
+    /* تأكيد الستايل */
     winner.classList.remove("slot-bottom");
-    winner.classList.add("slot-top");
+    winner.classList.add("slot-top", "winner");
 
-    loser.classList.remove("slot-top");
-    loser.classList.add("slot-bottom");
+    /* -------------------------
+       2️⃣ بناء صف المرحلة (eval)
+    ------------------------- */
+    let stageRow = document.getElementById("rank-eval-row");
+
+    if (!stageRow) {
+        stageRow = document.createElement("div");
+        stageRow.id = "rank-eval-row";
+        stageRow.className = "rank-row slot-bottom eval-row leaderboard-row";
+
+        stageRow.innerHTML = `
+            <div class="rank-num">✓</div>
+            <div class="rank-user">
+                <img class="eval-icon-img">
+            </div>
+            <div class="rank-info blue">
+                <div class="name"></div>
+                <div class="xp"></div>
+            </div>
+        `;
+
+        document.querySelector(".rank-rows").appendChild(stageRow);
+    }
+
+    /* هنا نستخدم JS variable بأمان */
+    const iconImg = stageRow.querySelector(".eval-icon-img");
+    if (iconImg && window.EVAL_ICONS?.completed) {
+        iconImg.src = window.EVAL_ICONS.completed;
+    }
+
+
+    stageRow.querySelector(".name").textContent =
+        data.stageLabel || "";
+
+    stageRow.querySelector(".xp").textContent =
+        data.stageText || "";
+
+    /* animation */
+    stageRow.classList.remove("pulse");
+    void stageRow.offsetHeight;
+    stageRow.classList.add("pulse");
+
+    /* -------------------------
+       3️⃣ عرض الـ popup
+    ------------------------- */
+    popup.classList.add("show");
+    popup.setAttribute("aria-hidden", "false");
 
     if (sound) {
         sound.currentTime = 0;
@@ -2671,17 +2704,8 @@ function showRankPopup(data) {
     }
 
     if (window.launchRankConfettiWOW) {
-        setTimeout(launchRankConfettiWOW, 800);
+        setTimeout(launchRankConfettiWOW, 600);
     }
-
-    document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("rank-close")) {
-        const popup = document.getElementById("rank-popup");
-        popup.classList.remove("show");
-        popup.setAttribute("aria-hidden", "true");
-    }
-});
-
 }
 
 </script>
