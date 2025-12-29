@@ -684,16 +684,14 @@ function areChallengesCompleted(state) {
 function handleProgramPopups() {
     if (!window.PROGRAM_STATE) return;
     if (!window.CURRENT_USER_RANK_DATA) return;
-    if (window.__POPUP_HANDLED__) return;
 
     const state = window.PROGRAM_STATE;
     const user  = window.CURRENT_USER_RANK_DATA;
 
-    // ===== PRE =====
+    // ================= PRE =================
     if (
         state.pre_completed &&
-        state.challenges &&
-        state.challenges.completed === 0
+        window.__POPUP_HANDLED__ !== "pre"
     ) {
         showRankPopup({
             winnerName: user.name || "أنت",
@@ -701,16 +699,17 @@ function handleProgramPopups() {
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال التقييم القبلي" }
         });
+
         window.__POPUP_HANDLED__ = "pre";
         return;
     }
 
-    // ===== CHALLENGES =====
+    // =============== CHALLENGES ===============
     if (
         state.challenges &&
         state.challenges.total > 0 &&
         state.challenges.completed === state.challenges.total &&
-        !state.assignment_completed
+        window.__POPUP_HANDLED__ !== "challenges"
     ) {
         showRankPopup({
             winnerName: user.name || "أنت",
@@ -718,18 +717,24 @@ function handleProgramPopups() {
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال جميع التحديات" }
         });
+
         window.__POPUP_HANDLED__ = "challenges";
         return;
     }
 
-    // ===== FINAL =====
-    if (state.assignment_completed && state.post_completed) {
+    // =========== FINAL (ASSIGNMENT + POST) ===========
+    if (
+        state.assignment_completed &&
+        state.post_completed &&
+        window.__POPUP_HANDLED__ !== "final"
+    ) {
         showRankPopup({
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
-            eval: { label: "الرحلة اكتملت 🎓" }
+            eval: { label: "مبروك! أنهيت الرحلة بالكامل 🎓 يمكنك استلام شهادتك " }
         });
+
         window.__POPUP_HANDLED__ = "final";
     }
 }

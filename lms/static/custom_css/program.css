@@ -2413,7 +2413,7 @@ body.popup-active .sticky-icons-wrapper {
   
  .close-button.mobilex{
     display: initial !important;
-    right: -17px !important;
+    right: 327px !important;
     top: 0px !important;
     left: unset !important;
     color: white !important;
