@@ -3363,6 +3363,42 @@ text-transform: capitalize;
     background-image: none;
 
 }
+.intro-image-wrapper {
+    padding-right: 18px;          /* space for scrollbar */
+    box-sizing: border-box;
+}
 
 
+.intro-image-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.intro-image-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 20px 0; 
+}
+
+.intro-image-wrapper::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        180deg,
+        rgba(255,203,5,0.9),
+        rgba(255,185,16,0.75)
+    );
+    border-radius: 999px;
+    border: 2px solid rgba(17,13,124,0.25); /* blends with bg */
+    backdrop-filter: blur(6px);
+}
+
+.intro-image-wrapper::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        180deg,
+        rgba(255,203,5,1),
+        rgba(255,185,16,0.9)
+    );
+}
+
+.intro-image-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,203,5,0.85) transparent;
+}
 
