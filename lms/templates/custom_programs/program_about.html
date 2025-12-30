@@ -884,6 +884,11 @@ body:not(.user-enrolled) .circle-item {
         margin-top: -51px;
 }
 }
+body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+    touch-action: none;
+}
 
 </style>
 % if program.css_color:
@@ -2113,7 +2118,23 @@ for ub in user_badges:
 _safe_current_user_rank = 0
 _safe_current_user_name = request.user.username
 %>
+
 <script>
+    function lockScroll() {
+    document.body.classList.add("no-scroll");
+}
+
+function unlockScrollIfNoPopup() {
+    const anyOpen =
+        document.getElementById("global-popup-overlay")?.classList.contains("visible") ||
+        document.getElementById("xp-popup")?.classList.contains("show") ||
+        document.getElementById("rank-popup")?.classList.contains("show") ||
+        document.getElementById("courseModal")?.style.display === "block";
+
+    if (!anyOpen) {
+        document.body.classList.remove("no-scroll");
+    }
+}
 document.addEventListener("DOMContentLoaded", function () {
     if (window.USER_IS_ENROLLED === "true") {
         document.body.classList.add("user-enrolled");
@@ -2388,6 +2409,7 @@ document.addEventListener("DOMContentLoaded", function () {
         popupContent.innerHTML = iconsTemplate + contentDiv.innerHTML;
         activateIcon(targetId);
         popupOverlay.classList.add("visible");
+         lockScroll();
     }
 
     popupContent.addEventListener("click", function (e) {
@@ -2464,7 +2486,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closePopup() {
         popupOverlay.classList.remove("visible");
-        document.body.style.overflow = "";
+         unlockScrollIfNoPopup();
     }
 });
 </script>
@@ -2476,6 +2498,7 @@ $(function() {
         var href = $(this).attr('href');
         $('#courseFrame').attr('src', href);
         $('#courseModal').css('display', 'block');
+        lockScroll();
     });
 
     $('.close-button').on('click', function() {
@@ -2626,7 +2649,7 @@ function showXpPopup(gainedXP, currentXP) {
     const popup = document.getElementById("xp-popup");
 
     popup.classList.add("show");
-     
+    lockScroll();
     xpSound.currentTime = 0;
     setTimeout(() => xpSound.play().catch(()=>{}), 150);
 
@@ -2634,6 +2657,8 @@ function showXpPopup(gainedXP, currentXP) {
     e.preventDefault();
     e.stopPropagation();
     document.getElementById("xp-popup").classList.remove("show");
+    unlockScrollIfNoPopup();
+
 }
 
 document.addEventListener("touchstart", function (e) {
@@ -2701,6 +2726,7 @@ function showRankPopup(data) {
     }
 
     popup.classList.add("show");
+    lockScroll();
     popup.setAttribute("aria-hidden", "false");
 
     if (sound) {
@@ -2718,6 +2744,8 @@ function showRankPopup(data) {
 
     popup.classList.remove("show");
     popup.setAttribute("aria-hidden", "true");
+    unlockScrollIfNoPopup();
+
 
     if (data.stage) {
         markPopupAsShown(data.stage);
@@ -2749,6 +2777,8 @@ function showRankPopup(data) {
   window.handleCourseClose = function () {
     $('#courseFrame').attr('src', '');
     $('#courseModal').css('display', 'none');
+    unlockScrollIfNoPopup();
+
 
     setTimeout(() => {
       const updated = window.coursePathData || [];
@@ -2790,6 +2820,7 @@ function handleEnrollClick(e) {
         window.location.href = btn.href;
     }, 400);
 }
+
 
 </script>
 

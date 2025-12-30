@@ -2413,11 +2413,10 @@ body.popup-active .sticky-icons-wrapper {
   
  .close-button.mobilex{
     display: initial !important;
-    right: 327px !important;
     top: 0px !important;
-    left: unset !important;
     color: white !important;
     text-shadow: 0 0 15px #FFCB05 !important;
+    left: -94% !important;
   }
   .close-button.bigscreenx {
     display: none !important;
