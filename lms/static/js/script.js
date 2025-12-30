@@ -4,6 +4,7 @@ let ENROLL_INTRO_ACTIVE = false;
 window.__RANK_POPUP_SHOWN__ = false;
 window.__LAST_KNOWN_RANK__ = null;
 window.__POPUP_HANDLED__ = null;
+window.__ACTIVE_RANK_POPUP_STAGE__ = null;
 
 let numCircles = 0;
 let circleElements = [];

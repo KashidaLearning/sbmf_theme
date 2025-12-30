@@ -2505,7 +2505,8 @@ $(function() {
         $('#courseFrame').attr('src', '');
         $('#courseModal').css('display', 'none');
             refreshCourseStatus();
-        
+          unlockScrollIfNoPopup();
+
 
     });
 
@@ -2515,7 +2516,8 @@ $(function() {
             $('#courseModal').css('display', 'none');
            
             refreshCourseStatus();
-        
+        unlockScrollIfNoPopup();
+
 
         }
     });
@@ -2610,6 +2612,8 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#courseModal').css('display', 'none');
             showSticky();
             refreshCourseStatus();
+            unlockScrollIfNoPopup();
+
         }
     });
 });
@@ -2634,53 +2638,57 @@ function calculateXpState(currentXP, gainedXP) {
 </script>
 
 <script>
-    
 function showXpPopup(gainedXP, currentXP) {
     if (!gainedXP || isNaN(gainedXP)) {
         console.warn("XP popup blocked – invalid XP", gainedXP);
         return;
     }
+
     const xp = calculateXpState(currentXP, gainedXP);
 
-    document.getElementById("xp-gained").textContent = Number(xp.gainedXP).toFixed(2);
-    document.getElementById("xp-total").textContent  = Number(xp.totalXP).toFixed(2);
+    document.getElementById("xp-gained").textContent =
+        Number(xp.gainedXP).toFixed(2);
 
+    document.getElementById("xp-total").textContent =
+        Number(xp.totalXP).toFixed(2);
 
     const popup = document.getElementById("xp-popup");
+    if (!popup) return;
 
     popup.classList.add("show");
     lockScroll();
+
     xpSound.currentTime = 0;
-    setTimeout(() => xpSound.play().catch(()=>{}), 150);
-
- function closeXpPopup(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    document.getElementById("xp-popup").classList.remove("show");
-    unlockScrollIfNoPopup();
-
+    setTimeout(() => xpSound.play().catch(() => {}), 150);
 }
+function closeXpPopup() {
+    const popup = document.getElementById("xp-popup");
+    if (!popup) return;
 
-document.addEventListener("touchstart", function (e) {
-    const btn = e.target.closest(".xp-close");
-    if (!btn) return;
-    closeXpPopup(e);
-}, { passive: false });
+    popup.classList.remove("show");
+    unlockScrollIfNoPopup();
+}
 
 document.addEventListener("click", function (e) {
     const btn = e.target.closest(".xp-close");
     if (!btn) return;
-    closeXpPopup(e);
+    e.preventDefault();
+    closeXpPopup();
 });
 
-}
-
-
+document.addEventListener("touchstart", function (e) {
+    const btn = e.target.closest(".xp-close");
+    if (!btn) return;
+    e.preventDefault();
+    closeXpPopup();
+}, { passive: false });
 
 
 </script>
 <script>
 function showRankPopup(data) {
+    window.__ACTIVE_RANK_POPUP_STAGE__ = data.stage || null;
+
     if (!data) return;
 
     const popup  = document.getElementById("rank-popup");
@@ -2697,10 +2705,8 @@ function showRankPopup(data) {
             ? "XP " + data.winnerXP.toFixed(2)
             : data.winnerXP;
 
-    // ====== REMOVE OLD EVAL GRID ======
     popup.querySelectorAll(".rank-eval-grid").forEach(e => e.remove());
 
-    // ====== ADD EVAL GRID ======
     if (data.eval) {
         const grid = document.createElement("div");
         grid.className = "rank-eval-grid";
@@ -2739,26 +2745,29 @@ function showRankPopup(data) {
     }
 
 
-   document.addEventListener("click", function onClose(e) {
-    if (!e.target.classList.contains("rank-close")) return;
+}
+function closeRankPopup() {
+    const popup = document.getElementById("rank-popup");
+    if (!popup) return;
 
     popup.classList.remove("show");
     popup.setAttribute("aria-hidden", "true");
     unlockScrollIfNoPopup();
 
-
-    if (data.stage) {
-        markPopupAsShown(data.stage);
+    if (window.__ACTIVE_RANK_POPUP_STAGE__) {
+        markPopupAsShown(window.__ACTIVE_RANK_POPUP_STAGE__);
+        window.__ACTIVE_RANK_POPUP_STAGE__ = null;
     }
+}
 
-    document.removeEventListener("click", onClose);
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest(".rank-close");
+    if (!btn) return;
 
-
+    e.preventDefault();
+    closeRankPopup();
 });
 
-
-
-}
 
 </script>
 
@@ -2820,6 +2829,11 @@ function handleEnrollClick(e) {
         window.location.href = btn.href;
     }, 400);
 }
+window.addEventListener("beforeunload", () => {
+    if (window.__ACTIVE_RANK_POPUP_STAGE__) {
+        markPopupAsShown(window.__ACTIVE_RANK_POPUP_STAGE__);
+    }
+});
 
 
 </script>
