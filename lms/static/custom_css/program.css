@@ -3349,6 +3349,15 @@ text-transform: capitalize;
 .xp-character img {
     pointer-events: none;
 }
+.certificate-characters-right {
+    position: absolute;
+    right: -61px;
+    top: 82%;
+    transform: translateY(-50%);
+    width: 173px;
+    z-index: 5;
+    pointer-events: none;
+}
 
 }
 

@@ -15,7 +15,84 @@
 <main id="main" aria-label="Content" tabindex="-1" dir="rtl">
   <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
+    <div class="scene-wrapper">
+
+      <!-- LEFT COLUMN -->
+      <div class="characterk">
+        <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@KandN.gif" />
+      </div>
+
+      <!-- CENTER COLUMN -->
+      <div class="center-content">
+
+        <!-- Upper Bubble -->
+        <div class="bubble">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Comic_bubble__2_.png" />
+          <div class="bubble-text">
+          أهلًا بك! أنا خالد، وهذه نورة. نحن أخوان ندير حسابًا على السوشيال ميديا نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+          </div>
+        </div>
+
+        <!-- Lower Bubble -->
+        <div class="bubble">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Comic_bubble__3_.png" />
+          <div class="bubble-text1">
+وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات تختبر مهاراتك وتجهّزك للمستقبل…  جاهز؟ خلّنا نبدأ!          </div>
+        </div>
+
+        <!-- Graphic -->
+        <div class="graphic-element">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2833.png" />
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="charactern">
+        <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2911.png" />
+      </div>
+
+    </div>
+<div class="scene-mobile">
+
+
+  <div class="mobile-blob">
+
  
+    <div class="mobile-bubble bubble-top">
+      أهلًا بك! أنا خالد، وهذه نورة. نحن أخوان ندير حسابًا على السوشيال ميديا نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+    </div>
+
+    <!-- CHARACTERS -->
+    <div class="mobile-characters">
+      <img
+        class="char-back"
+        src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@KandN.gif"
+        alt=""
+      />
+      <img
+        class="char-front"
+        src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2911.png"
+        alt=""
+      />
+    </div>
+
+    <!-- BOTTOM BUBBLE -->
+    <div class="mobile-bubble bubble-bottom">
+      وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات تختبر مهاراتك وتجهّزك للمستقبل…<br>
+      <strong>جاهز؟ خلّنا نبدأ!</strong>
+    </div>
+
+    <!-- ARROWS -->
+    <img
+      class="mobile-arrows"
+      src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2833.png"
+      alt=""
+    />
+
+  </div>
+</div>
+
     <div class="programs-grid">
       % for index, program in enumerate(programs):
       
@@ -62,6 +139,184 @@
 </main>
 
 <style>
+
+  
+  .scene-wrapper {
+      width: 50%;
+    background: url(https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Vector_3720__2_.png) center / 100% no-repeat;
+    display: flex;
+    grid-template-columns: 0.5fr 1.9fr 0.45fr;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    flex-direction: row;
+    margin: 0px auto;
+  }
+
+
+  .charactern {
+      width: 33%;
+  }
+
+    .characterk {
+      width: 33%;
+  }
+  .charactern img {
+    max-width: 100% !important;
+    height: auto;
+        margin-top: -68%;
+  }
+
+    .characterk img {
+  min-width: 120% !important;
+    height: auto;
+    margin-right: -166px;
+  }
+
+  /* CENTER CONTENT */
+  .center-content {
+display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35%;
+    gap: 30px;
+        margin-top: 96px;
+            margin-right: -81px;
+  }
+
+  .bubble {
+    position: relative;
+    max-width: 100%;
+    text-align: center;
+  }
+
+ .bubble img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+ .bubble-text,
+.bubble-text1 {
+  position: absolute;
+  inset: 0;
+
+  padding: 12% 16% 10% 10%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: right;
+  color: #110D7C;
+  font-family: 'IBM Plex Sans', sans-serif;
+
+  font-size: clamp(11px, 2.8vw, 17px);
+  line-height: 1.5;
+  font-weight: 700;
+
+  box-sizing: border-box;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+  
+  .graphic-element img {
+    width: 91%;
+    height: auto;
+  }
+.scene-mobile {
+  display: none;
+}
+@media (max-width: 992px) {
+  .scene-wrapper { 
+    display: none !important;
+  }
+
+  .scene-mobile {
+    display: block;
+  }
+}
+@media (max-width: 992px) {
+.mobile-blob {
+  background: url(https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Vector_3720__2_.png)
+    center / 100% no-repeat;
+}
+
+  .scene-mobile {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+.mobile-post {
+  position: absolute;
+  inset: 0;                 /* fills the blob */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;      /* keep proportions */
+  z-index: 1;               /* BACKGROUND */
+  pointer-events: none;     /* not clickable */
+}
+
+
+
+    .mobile-bubble {
+        background: #FFC400;
+        color: #110D7C;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.6;
+        padding: 7px 0px;
+        border-radius: 18px;
+        width: 50%;
+        margin: 0 auto;
+        text-align: right;
+    }
+  .bubble-top {
+    margin-top: 40px;
+  }
+
+  .bubble-bottom {
+    margin-top: 10px;
+  }
+
+  /* Characters */
+  .mobile-characters {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .char-back {
+    
+       width: 150px;
+    transform: translateX(-18px);
+    z-index: 5;
+  }
+
+  .char-front {
+ width: 150px;
+    transform: translateX(18px);
+    z-index: 2;
+  }
+
+  /* Arrows */
+  .mobile-arrows {
+    width: 60px;
+    display: block;
+    margin: 10px auto 0;
+  }
+  .mobile-bubble,
+.mobile-characters,
+.mobile-arrows {
+  position: relative;
+  z-index: 3;
+}
+}
   .program-text {
     font-size: 16px;
     line-height: 1.8;
