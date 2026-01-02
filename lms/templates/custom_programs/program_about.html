@@ -718,7 +718,9 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 }
 
 .rank-num {
-       text-align: center;
+   
+    width: 70px;
+    text-align: center;
     color: rgba(17, 13, 124, 0.20);
     text-align: right;
     text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
@@ -780,7 +782,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255
     text-align: left;
 }
 .rank-eval-grid {
-        margin-top: -51px;
+    margin-top: 22px;
     display: flex;
     justify-content: center;
 }
@@ -794,7 +796,7 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255
     background: linear-gradient(135deg, #0CC6B4, #89E7DE);
     color: #110D7C;
     font-weight: 700;
-      box-shadow: 0 2px 2px 2px rgba(255, 255, 255, 0.15), 4px 4px 10px 1px rgba(0, 0, 0, 0.25) inset;
+    box-shadow: 0 8px 22px rgba(0,0,0,.25);
 }
 
 .eval-box img {
@@ -880,15 +882,6 @@ body:not(.user-enrolled) .circle-item {
 }
 .eval-box {
         margin-top: -51px;
-              box-shadow: 0 2px 2px 2px rgba(255, 255, 255, 0.15), 4px 4px 10px 1px rgba(0, 0, 0, 0.25) inset;
-
-
-}
-.rank-eval-grid {
-    margin-top: -17px;
-}
-.rank-arrows {
-        top: -31%;
 }
 }
 body.no-scroll {
@@ -1891,7 +1884,7 @@ for ub in user_badges:
                 <img src="${static.url('images/cert-characters.png')}" alt="characters">
             </div>
 
-            <div class="certificate-case" style="background-image: url('${static.url("images/downloadbutton.png")}'); box-shadow:none; ">
+            <div class="certificate-case" style="background-image: url('${static.url("images/downloadbutton.png")}');">
                 <p style="font-size: 0.9em; margin-top: 20px; text-align: center !important;padding: 0px !important;}">
                     مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح،
                     ونلتم شهادتكم بجدارة.
