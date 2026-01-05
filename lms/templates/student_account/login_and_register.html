@@ -27,6 +27,45 @@
     % if configuration_helpers.get_value('DISPLAY_TOS_IN_MODAL_ON_REGISTRATION_PAGE', False):
     <script type="text/javascript" src="${static.url('js/student_account/tos_modal.js')}"></script>
     % endif
+
+    <!-- Parallax JS -->
+    <script>
+    (function () {
+        const wrap = document.querySelector('.image-column');
+        const layer1 = document.querySelector('.login-img-1');
+        const layer2 = document.querySelector('.login-img-2');
+
+        if (!wrap || !layer1 || !layer2) return;
+
+        // Disable on touch devices (important for mobile)
+        const isTouch = window.matchMedia('(hover: none)').matches;
+        if (isTouch) return;
+
+        const maxMove1 = 10; // back layer
+        const maxMove2 = 18; // front layer
+
+        function onMove(e) {
+            const r = wrap.getBoundingClientRect();
+            const x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+            const y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+
+            layer1.style.transform =
+                `translate3d(${x * maxMove1}px, ${y * maxMove1}px, 0)`;
+            layer2.style.transform =
+                `translate3d(${x * maxMove2}px, ${y * maxMove2}px, 0)`;
+        }
+
+        function reset() {
+            layer1.style.transform = 'translate3d(0,0,0)';
+            layer2.style.transform = 'translate3d(0,0,0)';
+        }
+
+        wrap.addEventListener('mousemove', onMove);
+        wrap.addEventListener('mouseleave', reset);
+    })();
+    </script>
+
+    
 </%block>
 
 <%block name="header_extras">
@@ -369,6 +408,19 @@ a.form-toggle.active {
     display: flex;
 }
 
+}
+
+
+/* Parallax prep */
+.image-column-container {
+  perspective: 800px;
+}
+
+.login-img-1, .login-img-2 {
+  will-change: transform;
+  transition: transform 120ms ease-out;
+  transform: translate3d(0,0,0);
+  pointer-events: none;
 }
 
 
