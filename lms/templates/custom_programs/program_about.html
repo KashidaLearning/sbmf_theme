@@ -719,7 +719,7 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 
 .rank-num {
    
-    width: 70px;
+        width: 104px;
     text-align: center;
     color: rgba(17, 13, 124, 0.20);
     text-align: right;
@@ -915,7 +915,10 @@ body.no-scroll {
 %>
 <div class="program-about">
     <body data-program-id="${program.id}">
-
+    <body
+  data-program-id="${program.id}"
+  data-user-id="${request.user.id}"
+>
     <div class="program-bg-balls" aria-hidden="true">
     <span class="ball"></span>
     <span class="ball"></span>

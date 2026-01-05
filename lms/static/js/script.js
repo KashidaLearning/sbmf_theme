@@ -123,9 +123,14 @@ function createCircle(data, index) {
 }
 const CURRENT_PROGRAM_ID =
     document.body.dataset.programId || window.location.pathname;
+
+const CURRENT_USER_ID =
+    document.body.dataset.userId || "anonymous";
+
 function getPopupStorageKey(stage) {
-    return `program_${CURRENT_PROGRAM_ID}_popup_${stage}`;
+    return `user_${CURRENT_USER_ID}_program_${CURRENT_PROGRAM_ID}_popup_${stage}`;
 }
+
 
 function hasPopupBeenShown(stage) {
     return sessionStorage.getItem(getPopupStorageKey(stage)) === "1";

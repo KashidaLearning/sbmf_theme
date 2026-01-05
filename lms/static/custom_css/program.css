@@ -3229,6 +3229,7 @@ text-transform: capitalize;
     );
     backdrop-filter: blur(35px);
     overflow: auto; 
+    border-radius: 14px;
 }
 
 
