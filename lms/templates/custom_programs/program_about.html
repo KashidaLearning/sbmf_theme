@@ -2715,13 +2715,10 @@ document.addEventListener("touchstart", function (e) {
     const popup = document.getElementById("rank-popup");
     if (!popup) return;
 
-    // إذا مفتوح أصلًا، ما تعيدي تشغيله ولا الصوت
     if (popup.classList.contains("show")) return;
 
-    // إذا سبق وانعرض، لا تعيدي
     if (hasPopupBeenShown(data.stage)) return;
 
-    // ✅ مهم: خزّنيه فور العرض لتمنعي التكرار من التايم آوتات
     markPopupAsShown(data.stage);
     window.__ACTIVE_RANK_POPUP_STAGE__ = data.stage;
 
@@ -2759,6 +2756,7 @@ document.addEventListener("touchstart", function (e) {
     popup.classList.add("show");
     lockScroll();
     popup.setAttribute("aria-hidden", "false");
+    window.__JUST_COMPLETED_COURSE__ = false;
 
     if (sound) {
         sound.pause();

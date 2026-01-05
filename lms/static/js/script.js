@@ -1,3 +1,4 @@
+window.__JUST_COMPLETED_COURSE__ = false;
 let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
 let ENROLL_INTRO_ACTIVE = false;
@@ -472,10 +473,17 @@ window.addEventListener("resize", () => {
 
 window.addEventListener("message", (event) => {
     if (!event.data) return;
-    if (event.data.event === "progress" || event.data.event === "completion") {
+
+    if (event.data.event === "completion") {
+        window.__JUST_COMPLETED_COURSE__ = true;
+        refreshCourseStatus();
+    }
+
+    if (event.data.event === "progress") {
         refreshCourseStatus();
     }
 });
+
 window.__AUDIO_UNLOCKED__ = false;
 
 function unlockTakSound() {
@@ -722,7 +730,7 @@ function areChallengesCompleted(state) {
 }
 function handleProgramPopups() {
     if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
-
+    if (!window.__JUST_COMPLETED_COURSE__) return;
     const user = window.CURRENT_USER_RANK_DATA;
 
     if (!user || typeof user.rank !== "number" || user.rank < 1) return;
