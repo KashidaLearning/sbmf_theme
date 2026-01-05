@@ -3377,7 +3377,14 @@ text-transform: capitalize;
     background-color: #50558700 !important;
     border: none !important;
     background-image: none;
+        box-shadow: none;
 
+}
+.popup-close-btn:hover, .close-button:focus
+ {
+    background: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
 }
 .intro-image-wrapper {
     padding-right: 18px;          /* space for scrollbar */
