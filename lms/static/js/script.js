@@ -660,42 +660,51 @@ function showIntroPopup() {
     };
 }
 
-    window.shouldShowXpPopup = function (course) {
-        if (!window.PROGRAM_STATE) return true;
+   window.shouldShowXpPopup = function (course) {
+    if (!window.PROGRAM_STATE) return true;
+
+    if (
+        course.course_type === "pre_assessment" ||
+        course.course_type === "Pre-assessment" ||
+        course.course_type === "التقييم القبلي"
+    ) {
+        return false;
+    }
+
+    if (
+        course.course_type === "challenge" ||
+        course.course_type === "Challenges" ||
+        course.course_type === "التحديات"
+    ) {
+        const state = window.PROGRAM_STATE;
 
         if (
-            course.course_type === "pre_assessment" ||
-            course.course_type === "Pre-assessment" ||
-            course.course_type === "التقييم القبلي"
-        ) {
-            return false; 
-        }
-        if (
-            course.course_type === "challenge" ||
-            course.course_type === "Challenges" ||
-            course.course_type === "التحديات"
-        ) {
-            const state = window.PROGRAM_STATE;
-
-            if (
-                state?.challenges &&
-                state.challenges.completed + 1 >= state.challenges.total
-            ) {
-                return false;
-            }
-        }
-
-
-
-        if (
-            window.PROGRAM_STATE.assignment_completed &&
-            window.PROGRAM_STATE.post_completed
+            state?.challenges &&
+            state.challenges.completed >= state.challenges.total
         ) {
             return false;
         }
+    }
 
-        return true;
-    };
+    if (
+        course.course_type === "assignment" ||
+        course.course_type === "Assignment" ||
+        course.course_type === "الواجب"
+    ) {
+        return false;
+    }
+
+    if (
+        course.course_type === "post_assessment" ||
+        course.course_type === "Post-assessment" ||
+        course.course_type === "التقييم النهائي"
+    ) {
+        return false;
+    }
+
+    return true;
+};
+
     window.safeShowXpPopup = function (course, gainedXP, previousXP) {
         if (!window.shouldShowXpPopup(course)) return;
 
