@@ -660,33 +660,13 @@ function showIntroPopup() {
     };
 }
 
-   window.shouldShowXpPopup = function (course) {
-    if (!window.PROGRAM_STATE) return true;
-
+window.shouldShowXpPopup = function (course) {
     if (
         course.course_type === "pre_assessment" ||
         course.course_type === "Pre-assessment" ||
         course.course_type === "التقييم القبلي"
     ) {
         return false;
-    }
-
-    if (
-        course.course_type === "challenge" ||
-        course.course_type === "Challenges" ||
-        course.course_type === "التحديات"
-    ) {
-        const state = window.PROGRAM_STATE;
-
-        if (state?.challenges) {
-            const total = state.challenges.total;
-            const completed = state.challenges.completed;
-
-      
-            if (completed === total) {
-                return false;
-            }
-        }
     }
 
     if (
@@ -703,6 +683,26 @@ function showIntroPopup() {
         course.course_type === "التقييم النهائي"
     ) {
         return false;
+    }
+
+    if (
+        course.course_type === "challenge" ||
+        course.course_type === "Challenges" ||
+        course.course_type === "التحديات"
+    ) {
+        const challenges = (window.coursePathData || []).filter(c =>
+            ["challenge", "Challenges", "التحديات"].includes(
+                (c.course_type || "").trim()
+            )
+        );
+
+        if (!challenges.length) return true;
+
+        const lastChallenge = challenges[challenges.length - 1];
+
+        if (lastChallenge.id === course.id) {
+            return false;
+        }
     }
 
     return true;
