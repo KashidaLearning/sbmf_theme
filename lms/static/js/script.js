@@ -678,11 +678,14 @@ function showIntroPopup() {
     ) {
         const state = window.PROGRAM_STATE;
 
-        if (
-            state?.challenges &&
-            state.challenges.completed >= state.challenges.total
-        ) {
-            return false;
+        if (state?.challenges) {
+            const total = state.challenges.total;
+            const completed = state.challenges.completed;
+
+      
+            if (completed === total) {
+                return false;
+            }
         }
     }
 
