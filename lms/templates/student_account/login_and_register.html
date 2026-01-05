@@ -321,12 +321,20 @@ a.form-toggle.active {
 
 .custom-section-title {
  margin-top: 35px !important;
+ margin-bottom: 15px;
 }
 
- 
-.login-register .login-provider.button-oa2-google-oauth2 {
-    margin-top: 40px;
+/* Hide visible text for ALL social auth buttons */
+.login-providers .login-provider span[aria-hidden="true"] {
+    display: none;
 }
+
+
+/* Remove extra spacing from icon */
+.login-providers .login-provider .icon {
+    margin: 0;
+}
+
 
 /* =========================
    RESPONSIVE STYLES
