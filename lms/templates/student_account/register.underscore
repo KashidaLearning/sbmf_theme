@@ -72,7 +72,7 @@
 
 
         <button type="submit" class="action action-primary action-update js-register register-button">
-            <% if ( context.registerFormSubmitButtonText ) { %><%- context.registerFormSubmitButtonText %><% } else { %><%- gettext("Create New Account") %><% } %>
+            <% if ( context.registerFormSubmitButtonText ) { %><%- context.registerFormSubmitButtonText %><% } else { %><%- إنشاء حساب جديد %><% } %>
         </button>
     </div>
 </form>
