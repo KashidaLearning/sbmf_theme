@@ -1329,6 +1329,7 @@ def time_to_seconds(timestr):
                 "is_special": is_special,
                 "is_first_course": is_first_course,
                 "xpAward": round(course_xp, 2),
+                "course_type": text_type(course.course_type or ""),
 
 
 
@@ -2686,22 +2687,26 @@ document.addEventListener("touchstart", function (e) {
 
 </script>
 <script>
-function showRankPopup(data) {
-     if (!data || !data.stage) return;
+    function showRankPopup(data) {
+    if (!data || !data.stage) return;
 
+    const popup = document.getElementById("rank-popup");
+    if (!popup) return;
+
+    // إذا مفتوح أصلًا، ما تعيدي تشغيله ولا الصوت
+    if (popup.classList.contains("show")) return;
+
+    // إذا سبق وانعرض، لا تعيدي
     if (hasPopupBeenShown(data.stage)) return;
 
+    // ✅ مهم: خزّنيه فور العرض لتمنعي التكرار من التايم آوتات
+    markPopupAsShown(data.stage);
     window.__ACTIVE_RANK_POPUP_STAGE__ = data.stage;
 
-    if (!data) return;
-
-    const popup  = document.getElementById("rank-popup");
     const winner = document.getElementById("rank-winner");
     const sound  = document.getElementById("rankSound");
+    if (!winner) return;
 
-    if (!popup || !winner) return;
-
-    // ====== USER RANK ======
     winner.querySelector(".name").textContent = data.winnerName;
     winner.querySelector(".rank-num").textContent = data.winnerRank;
     winner.querySelector(".xp").textContent =
@@ -2716,22 +2721,16 @@ function showRankPopup(data) {
         grid.className = "rank-eval-grid";
 
         const icon =
-        window.EVAL_ICONS && window.EVAL_ICONS.completed
-            ? window.EVAL_ICONS.completed
-            : "";
+            window.EVAL_ICONS && window.EVAL_ICONS.completed
+                ? window.EVAL_ICONS.completed
+                : "";
 
-    let html = '<div class="eval-box completed pulse">';
+        let html = '<div class="eval-box completed pulse">';
+        if (icon) html += '<img src="' + icon + '" />';
+        html += '<span>' + data.eval.label + '</span>';
+        html += '</div>';
 
-    if (icon) {
-        html += '<img src="' + icon + '" />';
-    }
-
-    html += '<span>' + data.eval.label + '</span>';
-    html += '</div>';
-
-    grid.innerHTML = html;
-
-
+        grid.innerHTML = html;
         popup.querySelector(".rank-card").appendChild(grid);
     }
 
@@ -2740,6 +2739,7 @@ function showRankPopup(data) {
     popup.setAttribute("aria-hidden", "false");
 
     if (sound) {
+        sound.pause();
         sound.currentTime = 0;
         sound.play().catch(()=>{});
     }
@@ -2747,9 +2747,8 @@ function showRankPopup(data) {
     if (window.launchRankConfettiWOW) {
         setTimeout(launchRankConfettiWOW, 700);
     }
-
-
 }
+
 function closeRankPopup() {
     const popup = document.getElementById("rank-popup");
     if (!popup) return;
@@ -2760,10 +2759,10 @@ function closeRankPopup() {
     popup.setAttribute("aria-hidden", "true");
     unlockScrollIfNoPopup();
 
-    if (wasVisible && window.__ACTIVE_RANK_POPUP_STAGE__) {
-        markPopupAsShown(window.__ACTIVE_RANK_POPUP_STAGE__);
-        window.__ACTIVE_RANK_POPUP_STAGE__ = null;
+   if (wasVisible) {
+    window.__ACTIVE_RANK_POPUP_STAGE__ = null;
     }
+
 }
 
 document.addEventListener("click", function (e) {

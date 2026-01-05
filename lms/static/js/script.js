@@ -415,7 +415,7 @@ async function refreshCourseStatus() {
             updateBadgesPopup(data.badges);
         }
 
-       if (data.leaderboard && data.leaderboard.top_users) {
+       if (data.leaderboard) {
             window.lastLeaderboardData = data.leaderboard;
             window.LEADERBOARD_DATA = data.leaderboard.top_users || [];
             window.CURRENT_USER_RANK_DATA = data.leaderboard.current_user || null;
@@ -667,12 +667,16 @@ function showIntroPopup() {
         }
 
         if (
-            window.PROGRAM_STATE.challenges &&
-            window.PROGRAM_STATE.challenges.completed ===
-            window.PROGRAM_STATE.challenges.total
+            course.course_type === "challenge" ||
+            course.course_type === "Challenges" ||
+            course.course_type === "التحديات"
         ) {
-            return false;
+            const state = window.PROGRAM_STATE;
+           if (state?.challenges && state.challenges.completed === state.challenges.total) {
+               return false;
+             }
         }
+
 
         if (
             window.PROGRAM_STATE.assignment_completed &&
@@ -695,12 +699,44 @@ function areChallengesCompleted(state) {
 }
 function handleProgramPopups() {
     if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
-    if (!window.PROGRAM_STATE) return;
 
-    const state = window.PROGRAM_STATE;
-    const user  = window.CURRENT_USER_RANK_DATA;
+    const user = window.CURRENT_USER_RANK_DATA;
 
     if (!user || typeof user.rank !== "number" || user.rank < 1) return;
+
+    let state = window.PROGRAM_STATE;
+
+    if (!state) {
+        const items = window.coursePathData || [];
+
+        const isCompletedType = (types) =>
+            items.some(c =>
+                types.includes((c.course_type || "").trim()) &&
+                c.state === "completed"
+            );
+
+        const allCompletedType = (types) => {
+            const list = items.filter(c => types.includes((c.course_type || "").trim()));
+            if (!list.length) return false;
+            return list.every(c => c.state === "completed");
+        };
+
+        const preTypes  = ["pre_assessment", "Pre-assessment", "pre-assessment", "التقييم القبلي"];
+        const chTypes   = ["challenge", "Challenges", "التحديات"];
+        const asgTypes  = ["assignment", "Assignment", "الواجب"];
+        const postTypes = ["post_assessment", "Post-assessment", "post-assessment", "التقييم النهائي"];
+
+        const chList = items.filter(c => chTypes.includes((c.course_type || "").trim()));
+        const chTotal = chList.length;
+        const chCompleted = chList.filter(c => c.state === "completed").length;
+
+        state = {
+            pre_completed: isCompletedType(preTypes),
+            challenges: { total: chTotal, completed: chCompleted },
+            assignment_completed: isCompletedType(asgTypes),
+            post_completed: isCompletedType(postTypes),
+        };
+    }
 
     // PRE
     if (state.pre_completed && !hasPopupBeenShown("pre")) {
@@ -746,6 +782,7 @@ function handleProgramPopups() {
         });
     }
 }
+
 
 
 
