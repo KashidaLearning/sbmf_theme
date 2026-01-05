@@ -661,6 +661,7 @@ function showIntroPopup() {
 }
 
 window.shouldShowXpPopup = function (course) {
+
     if (
         course.course_type === "pre_assessment" ||
         course.course_type === "Pre-assessment" ||
@@ -685,28 +686,9 @@ window.shouldShowXpPopup = function (course) {
         return false;
     }
 
-    if (
-        course.course_type === "challenge" ||
-        course.course_type === "Challenges" ||
-        course.course_type === "التحديات"
-    ) {
-        const challenges = (window.coursePathData || []).filter(c =>
-            ["challenge", "Challenges", "التحديات"].includes(
-                (c.course_type || "").trim()
-            )
-        );
-
-        if (!challenges.length) return true;
-
-        const lastChallenge = challenges[challenges.length - 1];
-
-        if (lastChallenge.id === course.id) {
-            return false;
-        }
-    }
-
     return true;
 };
+
 
     window.safeShowXpPopup = function (course, gainedXP, previousXP) {
         if (!window.shouldShowXpPopup(course)) return;
