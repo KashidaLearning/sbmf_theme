@@ -5,7 +5,7 @@
 	<div class="toggle-form">
 		
 		<a href="#login" class="form-toggle" data-type="login"><%- gettext("Sign in") %></a>
-        <a href="#login" class="form-toggle active" data-type="register"><%- gettext("Create an Account") %></a>
+        <a href="#login" class="form-toggle active" data-type="register"><%- gettext("Create New Account") %></a>
 	</div>
 <% } %>
 
@@ -72,7 +72,7 @@
 
 
         <button type="submit" class="action action-primary action-update js-register register-button">
-            <% if ( context.registerFormSubmitButtonText ) { %><%- context.registerFormSubmitButtonText %><% } else { %><%- gettext("Create Account") %><% } %>
+            <% if ( context.registerFormSubmitButtonText ) { %><%- context.registerFormSubmitButtonText %><% } else { %><%- gettext("Create New Account") %><% } %>
         </button>
     </div>
 </form>
