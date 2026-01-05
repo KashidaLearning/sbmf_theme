@@ -3351,8 +3351,8 @@ text-transform: capitalize;
 }
 .certificate-characters-right {
     position: absolute;
-    right: -61px;
-    top: 82%;
+    right: -31px;
+    top: 44%;
     transform: translateY(-50%);
     width: 173px;
     z-index: 5;
