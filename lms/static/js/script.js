@@ -686,8 +686,28 @@ window.shouldShowXpPopup = function (course) {
         return false;
     }
 
+    if (
+        course.course_type === "challenge" ||
+        course.course_type === "Challenges" ||
+        course.course_type === "التحديات"
+    ) {
+        const challenges = (window.coursePathData || []).filter(c =>
+            ["challenge", "Challenges", "التحديات"].includes(
+                (c.course_type || "").trim()
+            )
+        );
+
+        if (challenges.length) {
+            const lastChallenge = challenges[challenges.length - 1];
+            if (lastChallenge.id === course.id) {
+                return false; 
+            }
+        }
+    }
+
     return true;
 };
+
 
 
     window.safeShowXpPopup = function (course, gainedXP, previousXP) {
