@@ -431,6 +431,8 @@ async function refreshCourseStatus() {
             window.PROGRAM_STATE = data.program_state;
         }
      handleProgramPopups();
+     setTimeout(handleProgramPopups, 350);
+    setTimeout(handleProgramPopups, 900);
     } catch (err) {}
 }
 
@@ -691,31 +693,28 @@ function areChallengesCompleted(state) {
     if (state.challenges.total === 0) return false;
     return state.challenges.completed === state.challenges.total;
 }
-
 function handleProgramPopups() {
+    if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
     if (!window.PROGRAM_STATE) return;
-    if (!window.CURRENT_USER_RANK_DATA) return;
 
     const state = window.PROGRAM_STATE;
     const user  = window.CURRENT_USER_RANK_DATA;
 
-    // ================= PRE =================
-    if (
-        state.pre_completed &&
-        !hasPopupBeenShown("pre")
-    ) {
+    if (!user || typeof user.rank !== "number" || user.rank < 1) return;
+
+    // PRE
+    if (state.pre_completed && !hasPopupBeenShown("pre")) {
         showRankPopup({
-             stage: "pre",
+            stage: "pre",
             winnerName: user.name || "أنت",
             winnerRank: user.rank,
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال التقييم القبلي" }
         });
-
         return;
     }
 
-    // =============== CHALLENGES ===============
+    // CHALLENGES
     if (
         state.challenges &&
         state.challenges.total > 0 &&
@@ -729,11 +728,10 @@ function handleProgramPopups() {
             winnerXP: user.rank_points,
             eval: { label: "تم إكمال جميع التحديات" }
         });
-
         return;
     }
 
-    // =========== FINAL (ASSIGNMENT + POST) ===========
+    // FINAL
     if (
         state.assignment_completed &&
         state.post_completed &&
@@ -746,9 +744,9 @@ function handleProgramPopups() {
             winnerXP: user.rank_points,
             eval: { label: "مبروك! أنهيت الرحلة بالكامل 🎓 يمكنك استلام شهادتك" }
         });
-
     }
 }
+
 
 
 

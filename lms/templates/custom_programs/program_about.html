@@ -742,7 +742,7 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 /* info blocks */
 .rank-info {
     flex: 1;
-        padding: 10px 14px;
+        padding: 20px 14px;
  
 }
 
@@ -750,7 +750,7 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
     color: #110D7C;
     border-radius: 10px;
     border: 3px solid var(--gold-stroke, #FEB910);
-    background: var(--Digital-Wave, #0CC6B4);
+    background:  var(--program-main-color);
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
 
@@ -763,23 +763,23 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255
 }
 
 .rank-info .name {
-    color: var(--Royal-Indigo, #110D7C);
+    color: white;
     text-align: right;
     font-family: "IBM Plex Sans";
-    font-size: 17px;
+    font-size: 30px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
 }
 
 .rank-info .xp {
        font-family: "IBM Plex Sans";
-    font-size: 15px;
+    font-size: 25px;
     font-style: normal;
     font-weight: 700;
-    line-height: 18px;
     text-align: left;
+    margin-top: -28px;
 }
 .rank-eval-grid {
     margin-top: 22px;
@@ -1020,7 +1020,7 @@ def time_to_seconds(timestr):
                                 <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
                                 class="btn btn-cta one-click-purchase-btn active enroll-attention"
                                 onclick="handleEnrollClick(event)">
-                                    التحق في المغامرة 
+                                    شارك في المغامرة 
                                 </a>
 
                         % endif
@@ -1083,7 +1083,7 @@ def time_to_seconds(timestr):
                                 <a href="${reverse('custom_programs:program_enroll', kwargs={'program_id': program.id})}"
                                 class="btn btn-cta one-click-purchase-btn active enroll-attention"
                                 onclick="handleEnrollClick(event)">
-                                    التحق في المغامرة 
+                                    شارك في المغامرة 
                                 </a>                               
                              % endif
                        
@@ -2687,7 +2687,11 @@ document.addEventListener("touchstart", function (e) {
 </script>
 <script>
 function showRankPopup(data) {
-    window.__ACTIVE_RANK_POPUP_STAGE__ = data.stage || null;
+     if (!data || !data.stage) return;
+
+    if (hasPopupBeenShown(data.stage)) return;
+
+    window.__ACTIVE_RANK_POPUP_STAGE__ = data.stage;
 
     if (!data) return;
 
@@ -2750,11 +2754,13 @@ function closeRankPopup() {
     const popup = document.getElementById("rank-popup");
     if (!popup) return;
 
+    const wasVisible = popup.classList.contains("show");
+
     popup.classList.remove("show");
     popup.setAttribute("aria-hidden", "true");
     unlockScrollIfNoPopup();
 
-    if (window.__ACTIVE_RANK_POPUP_STAGE__) {
+    if (wasVisible && window.__ACTIVE_RANK_POPUP_STAGE__) {
         markPopupAsShown(window.__ACTIVE_RANK_POPUP_STAGE__);
         window.__ACTIVE_RANK_POPUP_STAGE__ = null;
     }
@@ -2830,7 +2836,13 @@ function handleEnrollClick(e) {
     }, 400);
 }
 window.addEventListener("beforeunload", () => {
-    if (window.__ACTIVE_RANK_POPUP_STAGE__) {
+    const popup = document.getElementById("rank-popup");
+
+    if (
+        popup &&
+        popup.classList.contains("show") &&
+        window.__ACTIVE_RANK_POPUP_STAGE__
+    ) {
         markPopupAsShown(window.__ACTIVE_RANK_POPUP_STAGE__);
     }
 });
