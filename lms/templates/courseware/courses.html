@@ -239,15 +239,13 @@
     display: block;
   }
 
-  /* THE STAGE: everything is stacked here */
   .hero__stage{
     position: relative;
     width: min(500px, 92vw);
-    height: 220px;              /* adjust if needed */
+    height: 220px;              
     margin: 0 auto;
   }
 
-  /* Layer defaults */
   .hero__instagram,
   .hero__characters,
   .hero__bubbles{
@@ -256,19 +254,17 @@
     transform: translateX(-50%);
   }
 
-  /* 1) Instagram layer (above blob) */
   .hero__instagram{
-    bottom: 40px;                  /* move it */
+    bottom: 40px;
     z-index: 2;
     transform: translate(-166px, 10px)
   }
   .hero__instagram img{
     width: 100%;
     display: block;
-    transform: none !important; /* override your desktop transform */
+    transform: none !important;
   }
 
-  /* 2) Characters layer (above instagram) */
   .hero__characters{
     z-index: 3;
   }
@@ -291,40 +287,50 @@
   .bubble{
     width: 152px;
     font-size: 12px;
-    padding: 14px 22px;
+    padding: 10px 6px;
     border-radius: 26px;
   }
 
+ .bubble:not(.bubble--bottom) {
+  transform: translate(85px, -79px);
+ }
+
+ .bubble--bottom {
+  transform: translate(-85px, 20px);
+  }
+
   .bubble:not(.bubble--bottom)::after{
-    right: -14px;
-    left: auto;
-    top: 22px;
+    right: 40px;
+    top: 99px;
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
     border-left: 14px solid #FFCB05;
     border-right: 0;
+    transform: rotate(236deg);
   }
 
   .bubble--bottom::after{
-    left: -14px;
-    right: auto;
-    top: 26px;
+    right: 0px !important;
+    top: -8px;
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
-    border-right: 14px solid #FFCB05;
+    border-right: 18px solid #FFCB05;
     border-left: 0;
+    transform: rotate(235deg) !important;
   }
 
-  /* Arrow stays at bottom of hero */
   .hero__arrow{
     position: absolute;
-    left: 50%;
     bottom: 18px;
     transform: translateX(-50%);
     z-index: 5;
   }
   .hero__arrow img{
     width: 105px;
+  }
+
+  .hero .hero--mobile {
+    top: 50px;
   }
 }
 
