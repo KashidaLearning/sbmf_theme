@@ -16,7 +16,7 @@
   <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
  
-    <section class="hero">
+    <section class="hero hero--desktop">
   <div class="hero__content">
     <div class="hero__instagram">
       <img src="${static.url('images/instagram-screen.png')}" alt="Instagram preview" />
@@ -44,6 +44,32 @@
     <img src="${static.url('images/arrow-down.png')}" alt="" />
   </div>
 </section>
+
+<section class="hero hero--mobile">
+  <div class="hero__content">
+    <div class="hero__stage">
+
+      <div class="hero__instagram">
+        <img src="${static.url('images/instagram-screen.png')}" alt="Instagram preview" />
+      </div>
+
+      <div class="hero__characters">
+        <img class="char" src="${static.url('images/khaled_and_noura.gif')}" alt="Khaled and Noura" />
+      </div>
+
+      <div class="hero__bubbles">
+        <div class="bubble">...</div>
+        <div class="bubble bubble--bottom">...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hero__arrow">
+    <img src="${static.url('images/arrow-down.png')}" alt="" />
+  </div>
+</section>
+
 
 
     <div class="programs-grid">
@@ -92,6 +118,14 @@
 </main>
 
 <style>
+
+  /* default = desktop */
+.hero--mobile { display: none; }
+
+@media (max-width: 980px){
+  .hero--desktop { display: none; }
+  .hero--mobile  { display: block; }
+}
 
 /* Hero Section Styles */
 .hero{
@@ -187,7 +221,6 @@
     position: relative;
     overflow: visible;
     padding: 24px 0 140px;
-    background: url("./assets/blob-dark.png") center/no-repeat;
   }
 
   /* content just centers the stage */
@@ -289,6 +322,12 @@
   .hero__arrow img{
     width: 105px;
   }
+}
+
+@media (max-width: 500px){
+.hero{
+  background:url("${static.url('images/blob-dark-mobile.png')}") no-repeat;
+}
 }
 
 /*Enf of Hero Section Styles */
