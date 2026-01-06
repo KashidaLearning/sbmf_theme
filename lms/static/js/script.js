@@ -605,6 +605,7 @@ function playGameCourseIntro() {
 
     playNext();
 }
+
 function finishIntro() {
     sessionStorage.removeItem("programJustEnrolled");
 
