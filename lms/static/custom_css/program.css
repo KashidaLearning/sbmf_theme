@@ -2126,7 +2126,7 @@ body.popup-active .sticky-icons-wrapper {
     z-index: 1 !important;
 }
 
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
   .hero {
     padding: 28px 18px 24px;
     text-align: center;
@@ -2177,9 +2177,44 @@ body.popup-active .sticky-icons-wrapper {
             display: none;
   }
 
-}
+} */
 
+/* @media (max-width: 600px) {
+  .container {
+    padding: 28px 16px 12px;
+  }
 
+  .hero {
+    padding: 22px 16px 20px;
+  }
+
+  .hero-title {
+    font-size: 22px;
+  }
+
+  .hero-desc {
+    font-size: 13px;
+  }
+
+  .row {
+    margin: 15px auto;
+    padding: 14px;
+  }
+
+  .column h2 {
+    font-size: 1.7em;
+  }
+
+  .column p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .hero-img {
+    width: 150px;
+    margin-bottom: 10px;
+  }
+} */
 @media (max-width: 992px) {
   .popup-content {
     max-width: 90%;
@@ -2723,7 +2758,7 @@ text-transform: capitalize;
     background: #112f6bc7;
     box-shadow: 0 4px 4px 0 rgb(0 0 0 / 30%), inset 14px 17px 20.671px 0 rgb(255 255 255 / 46%), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), inset -20px -16px 20.671px 0 rgba(34, 26, 55, 0.18), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
 }
-    @media  (max-width:700px){
+    @media  (max-width:992px){
       .top_left_background_image .bg-img {
     position: relative;
     width: 100%;
@@ -2732,7 +2767,7 @@ text-transform: capitalize;
   margin: 0px 10px;
 }
     }
-        @media  (max-width:700px){
+        @media  (max-width:998px){
       .top_left_background_image .bg-img {
          position: absolute;
         left: -247px;
@@ -2756,7 +2791,7 @@ text-transform: capitalize;
     display: none !important;
 }
 
-@media (max-width:700px) {
+@media (max-width:500px) {
   .mobile {
     display: block !important;
     width: 100vw;       
@@ -3385,4 +3420,33 @@ text-transform: capitalize;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,203,5,0.85) transparent;
 }
+@media (max-width: 992px) {
 
+.program-bubble {
+    position: relative;
+    background: #FFCB05;
+    border-radius: 28px;
+    padding: 26px 32px;
+    direction: rtl;
+    display: block;
+    width: 34%;
+    max-width: 680px;
+    right: 26%;
+    top: 5%;
+    filter: drop-shadow(6.89px 6.89px 20.671px rgba(34, 26, 55, 0.18)) drop-shadow(-6.89px -6.89px 20.671px rgba(255, 255, 255, 0.12)) drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+}
+.top_left_background_image .bg-img {
+    position: absolute;
+    left: -51px;
+    top: -349px;
+    width: 342px;
+}
+.hero-img {
+    left: 61%;
+    top: 23%;
+    /* max-width: 180px; */
+    padding-right: 5px;
+    position: absolute;
+    width: 328px;
+}
+}
