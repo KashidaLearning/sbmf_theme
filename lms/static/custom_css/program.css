@@ -2792,7 +2792,7 @@ text-transform: capitalize;
 }
 
 /* Show only on mobile */
-@media (max-width: 999px) {
+@media (max-width: 450px) {
     html body .mobile {
         display: block !important;
         width: 100% !important;

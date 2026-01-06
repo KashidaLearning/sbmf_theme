@@ -509,91 +509,102 @@ window.addEventListener("message", (event) => {
 
 window.__AUDIO_UNLOCKED__ = false;
 
-function unlockTakSound() {
-  if (window.__AUDIO_UNLOCKED__) return;
-
-  const sound = document.getElementById("takSound");
-  if (!sound) return;
-
-  sound.muted = true;
-
-  const p = sound.play();
-  const done = () => {
-    sound.pause();
-    sound.currentTime = 0;
-    sound.muted = false;
-    window.__AUDIO_UNLOCKED__ = true;
-  };
-
-  if (p && p.catch) p.catch(() => {}).finally(done);
-  else done();
-}
 
 window.addEventListener("touchstart", unlockTakSound, { once: true });
 window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
+    if (INTRO_FINISHED) return;
     if (ENROLL_INTRO_ACTIVE) return;
-
-  
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
+
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
 
-    function playTak() {
-    const sound = document.getElementById("takSound");
-    if (!sound) return;
+    const circles = Array.from(document.querySelectorAll(".circle-item"));
+    let index = 0;
 
-    if (!("ontouchstart" in window)) {
-        sound.currentTime = 0;
-        sound.play().catch(() => {});
-        return;
+    function playFeedback() {
+        const sound = document.getElementById("takSound");
+
+        // Desktop
+        if (!("ontouchstart" in window)) {
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(() => {});
+            }
+            return;
+        }
+
+        // Mobile
+        if (window.__AUDIO_UNLOCKED__ && sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        } else if (navigator.vibrate) {
+           navigator.vibrate(10);
+
+        }
     }
 
-    if (!window.__AUDIO_UNLOCKED__) return;
+    function scrollToCircle(circle) {
+        const y =
+            circle.getBoundingClientRect().top +
+            window.pageYOffset -
+            window.innerHeight / 2 +
+            80;
 
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
+        window.scrollTo({
+            top: y,
+            behavior: "smooth",
+        });
     }
 
+    function playNext() {
+        if (index >= circles.length) {
+            finishIntro();
+            return;
+        }
 
+        const circle = circles[index];
 
-    const circles = document.querySelectorAll(".circle-item");
+        circle.classList.remove("is-faded");
+        circle.classList.add("is-visible");
 
-    circles.forEach((circle, index) => {
-        setTimeout(() => {
-            circle.classList.remove("is-faded");
-            circle.classList.add("is-visible");
-
-            circle.classList.remove("game-pop");
-            void circle.offsetHeight;
+        circle.classList.remove("game-pop");
+        requestAnimationFrame(() => {
             circle.classList.add("game-pop");
+        });
 
-            playTak();
+        scrollToCircle(circle);
+        playFeedback();
 
-           circle.scrollIntoView({ behavior: "smooth", block: "center" });
+        circle.addEventListener(
+            "animationend",
+            () => {
+                index++;
+                setTimeout(playNext, 120); // tiny buffer only
+            },
+            { once: true }
+        );
+    }
 
-            setTimeout(() => {
-                window.scrollBy({ top: -90, left: 0, behavior: "smooth" });
-            }, 220)
-
-        }, index * 420 + 180);
-    });
-
-   
-    setTimeout(() => {
-        sessionStorage.removeItem("programJustEnrolled");
-        INTRO_PLAYING = false;
-        ENROLL_INTRO_ACTIVE = false; 
-        INTRO_FINISHED = true;
-         showIntroPopup();
-        setTimeout(() => {
-            refreshCourseStatus();
-            focusFirstCourse();
-     }, 500);
-
-    }, circles.length * 420 + 600);
+    playNext();
 }
+function finishIntro() {
+    sessionStorage.removeItem("programJustEnrolled");
+
+    INTRO_PLAYING = false;
+    ENROLL_INTRO_ACTIVE = false;
+    INTRO_FINISHED = true;
+
+    showIntroPopup();
+
+    setTimeout(() => {
+        refreshCourseStatus();
+        focusFirstCourse();
+    }, 400);
+}
+
 
 function focusFirstCourse() {
     if (!INTRO_FINISHED) return;
