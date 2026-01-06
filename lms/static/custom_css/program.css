@@ -2773,7 +2773,6 @@ text-transform: capitalize;
         left: -247px;
         top: -92px;
         width: initial;
-        max-width: 203px;
 
       
       }
@@ -3450,7 +3449,7 @@ text-transform: capitalize;
     width: 328px;
 }
 }
-@media (max-width:450px) {
+@media (max-width:500px) {
 
     .top_left_background_image .bg-img {
              position: absolute;
