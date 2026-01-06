@@ -9,6 +9,7 @@ window.__ACTIVE_RANK_POPUP_STAGE__ = null;
 window.__LAST_PROGRAM_STATE__ = null;
 window.__LAST_XP__ = null;
 
+window.__LAST_COMPLETED_COURSE_ID__ = null;
 
 let numCircles = 0;
 let circleElements = [];
@@ -443,13 +444,16 @@ async function refreshCourseStatus() {
             const gainedXP = currentUser.rank_points - prevXP;
 
             // find last completed course
-            const completedCourse = (window.coursePathData || []).find(
-                c => c.state === "completed" && Number(c.xpAward) === gainedXP
+           const completedCourse = (window.coursePathData || []).find(
+                c =>
+                    c.state === "completed" &&
+                    Number(c.xpAward) === gainedXP &&
+                    c.id !== window.__LAST_COMPLETED_COURSE_ID__
             );
-
             if (completedCourse) {
-                safeShowXpPopup(completedCourse, gainedXP, prevXP);
-            }
+            window.__LAST_COMPLETED_COURSE_ID__ = completedCourse.id;
+            safeShowXpPopup(completedCourse, gainedXP, prevXP);
+        }
         }
 
         if (currentUser && typeof currentUser.rank_points === "number") {
@@ -484,10 +488,14 @@ async function refreshCourseStatus() {
 
         window.__LAST_PROGRAM_STATE__ = JSON.parse(JSON.stringify(data.program_state));
     }
+    if (
+        window.__JUST_COMPLETED_COURSE__ &&
+        window.CURRENT_USER_RANK_DATA &&
+        window.PROGRAM_STATE
+    ) {
+        handleProgramPopups();
+    }
 
-     handleProgramPopups();
-     setTimeout(handleProgramPopups, 350);
-    setTimeout(handleProgramPopups, 900);
     } catch (err) {}
 }
 
