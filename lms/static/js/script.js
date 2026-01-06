@@ -404,33 +404,39 @@ async function refreshCourseStatus() {
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
         }
-
-    if (window.__XP_POPUP_PENDING__) {
+        if (window.__XP_POPUP_PENDING__) {
         let completedCourse = null;
 
         if (window.__LAST_COMPLETED_COURSE_ID__) {
             completedCourse = (window.coursePathData || []).find(
-                c => String(c.id) === String(window.__LAST_COMPLETED_COURSE_ID__)
+            c => String(c.id) === String(window.__LAST_COMPLETED_COURSE_ID__)
             );
         }
 
-        if (!completedCourse) {
-            const completedList = (window.coursePathData || []).filter(
-                c => c.state === "completed" && Number(c.xpAward) > 0
-            );
-            completedCourse = completedList[completedList.length - 1];
-        }
-
-        if (
+        const isReallyCompleted =
             completedCourse &&
-            window.shouldShowXpPopup(completedCourse)
-        ) {
+            completedCourse.state === "completed" &&
+            Number(completedCourse.xpAward) > 0;
+
+        if (isReallyCompleted && window.shouldShowXpPopup(completedCourse)) {
             showXpPopup(Number(completedCourse.xpAward), null);
+
+            window.__XP_POPUP_PENDING__ = false;
+            window.__LAST_COMPLETED_COURSE_ID__ = null;
+            window.__XP_PENDING_TRIES__ = 0;
+        } else {
+            window.__XP_PENDING_TRIES__ = (window.__XP_PENDING_TRIES__ || 0) + 1;
+
+            if (window.__XP_PENDING_TRIES__ <= 6) {
+            setTimeout(() => refreshCourseStatus(), 450);
+            } else {
+            window.__XP_POPUP_PENDING__ = false;
+            window.__LAST_COMPLETED_COURSE_ID__ = null;
+            window.__XP_PENDING_TRIES__ = 0;
+            }
+        }
         }
 
-        window.__XP_POPUP_PENDING__ = false;
-        window.__LAST_COMPLETED_COURSE_ID__ = null;
-    }
 
         document.addEventListener("circlesRebuilt", () => {
             applyPulseToActiveCourses();
@@ -523,21 +529,29 @@ window.addEventListener("resize", () => {
     if (!circleElements.length) return;
     updatePositions();
 });
+window.__XP_PENDING_TRIES__ = 0;
+
 window.addEventListener("message", (event) => {
-    if (!event.data) return;
+  if (!event.data) return;
 
-    if (event.data.event === "completion" || event.data.event === "progress") {
-       window.__XP_POPUP_PENDING__ = true;
-        window.__JUST_COMPLETED_COURSE__ = true;
+  if (event.data.event === "completion") {
+    window.__XP_POPUP_PENDING__ = true;
+    window.__XP_PENDING_TRIES__ = 0;
+    window.__JUST_COMPLETED_COURSE__ = true;
 
-        if (event.data.course_id) {
-            window.__LAST_COMPLETED_COURSE_ID__ = event.data.course_id;
-        }
-
-        refreshCourseStatus();
-
+    if (event.data.course_id) {
+      window.__LAST_COMPLETED_COURSE_ID__ = event.data.course_id;
     }
+
+    setTimeout(() => refreshCourseStatus(), 350);
+    return;
+  }
+
+  if (event.data.event === "progress") {
+    refreshCourseStatus();
+  }
 });
+
 
 
 window.__AUDIO_UNLOCKED__ = false;
