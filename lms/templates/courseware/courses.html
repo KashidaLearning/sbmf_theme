@@ -15,47 +15,83 @@
 <main id="main" aria-label="Content" tabindex="-1" dir="rtl">
   <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
- 
-   <section class="hero">
-      <!-- Dark blue abstract shape -->
-      <img class="hero__blob" src="${static.url('images/blob-dark.png')}" alt="" />
-      
+    <div class="scene-wrapper">
 
-      <div class="hero__inner">
-        <div class="hero__grid">
-          <!-- Instagram -->
-          <div class="hero__instagram">
-            <img src="${static.url('images/instagram-screen.png')}" alt="Instagram preview" />
-          </div>
+      <!-- LEFT COLUMN -->
+      <div class="characterk">
+        <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@KandN.gif" />
+      </div>
 
-          <!-- Speech bubbles -->
-          <div class="hero__bubbles">
-            <div class="bubble">
-              أهلاً بك! أنا خالد وهذه نورة، نحن أخوان ندير حسابنا على السوشيال ميديا
-              نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
-            </div>
+      <!-- CENTER COLUMN -->
+      <div class="center-content">
 
-            <div class="bubble bubble--bottom">
-              وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات
-              تختبر مهاراتك وتجهزك للمستقبل...
-              <br />
-              جاهز؟ خلّنا نبدأ!
-            </div>
-          </div>
-
-          <!-- Characters (2 GIFs) -->
-          <div class="hero__chars">
-            <img class="char char--male" src="${static.url('images/khaled.gif')}" alt="Khaled" />
-            <img class="char char--female" src="${static.url('images/nora.gif')}" alt="Nora" />
+        <!-- Upper Bubble -->
+        <div class="bubble">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Comic_bubble__2_.png" />
+          <div class="bubble-text">
+          أهلًا بك! أنا خالد، وهذه نورة. نحن أخوان ندير حسابًا على السوشيال ميديا نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
           </div>
         </div>
+
+        <!-- Lower Bubble -->
+        <div class="bubble">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Comic_bubble__3_.png" />
+          <div class="bubble-text1">
+وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات تختبر مهاراتك وتجهّزك للمستقبل…  جاهز؟ خلّنا نبدأ!          </div>
+        </div>
+
+        <!-- Graphic -->
+        <div class="graphic-element">
+          <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2833.png" />
+        </div>
+
       </div>
 
-      <!-- Arrows -->
-      <div class="hero__arrows" aria-hidden="true">
-        <img src="${static.url('images/arrow-down.png')}" alt="" />
+      <!-- RIGHT COLUMN -->
+      <div class="charactern">
+        <img src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2911.png" />
       </div>
-    </section>
+
+    </div>
+<div class="scene-mobile">
+
+
+  <div class="mobile-blob">
+
+ 
+    <div class="mobile-bubble bubble-top">
+      أهلًا بك! أنا خالد، وهذه نورة. نحن أخوان ندير حسابًا على السوشيال ميديا نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+    </div>
+
+    <!-- CHARACTERS -->
+    <div class="mobile-characters">
+      <img
+        class="char-back"
+        src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@KandN.gif"
+        alt=""
+      />
+      <img
+        class="char-front"
+        src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2911.png"
+        alt=""
+      />
+    </div>
+
+    <!-- BOTTOM BUBBLE -->
+    <div class="mobile-bubble bubble-bottom">
+      وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات تختبر مهاراتك وتجهّزك للمستقبل…<br>
+      <strong>جاهز؟ خلّنا نبدأ!</strong>
+    </div>
+
+    <!-- ARROWS -->
+    <img
+      class="mobile-arrows"
+      src="https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Group_2833.png"
+      alt=""
+    />
+
+  </div>
+</div>
 
     <div class="programs-grid">
       % for index, program in enumerate(programs):
@@ -104,133 +140,183 @@
 
 <style>
 
- .hero__blob {
-        position: absolute;
-        left: 50%;
-        top: 610px;
-        transform: translate(-50%, -52%);
-        width: min(1100px, 125%);
-        z-index: 1;
-        pointer-events: none;
-        user-select: none;
-      }
+  
+  .scene-wrapper {
+      width: 50%;
+    background: url(https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Vector_3720__2_.png) center / 100% no-repeat;
+    display: flex;
+    grid-template-columns: 0.5fr 1.9fr 0.45fr;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    flex-direction: row;
+    margin: 0px auto;
+  }
 
-      .hero__inner {
-        position: relative;
-        z-index: 2;
-        max-width: var(--max-width);
-        margin: auto;
-        padding: 36px 20px 96px;
-      }
 
-      /* Desktop grid */
-      .hero__grid {
-        display: grid;
-        grid-template-columns: 0.95fr 1.2fr 0.95fr;
-        align-items: center;
-        direction: ltr;
-      }
+  .charactern {
+      width: 33%;
+  }
 
-      /* ===== Instagram ===== */
-      .hero__instagram {
-        display: flex;
-        justify-content: center;
-        position: relative;
-        left: 375px;
-        bottom: 155px;
-      }
+    .characterk {
+      width: 33%;
+  }
+  .charactern img {
+    max-width: 100% !important;
+    height: auto;
+        margin-top: -68%;
+  }
 
-      .hero__instagram img {
-        width: 280px;
-      }
+    .characterk img {
+  min-width: 120% !important;
+    height: auto;
+    margin-right: -166px;
+  }
 
-      /* ===== Bubbles ===== */
-      .hero__bubbles {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        align-items: center;
-        position: relative;
-        left: 55px;
-        bottom: 76px;
-      }
+  /* CENTER CONTENT */
+  .center-content {
+display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35%;
+    gap: 30px;
+        margin-top: 96px;
+            margin-right: -81px;
+  }
 
-      .bubble {
-        position: relative;
-        width: 320px;
-        background: var(--yellow);
+  .bubble {
+    position: relative;
+    max-width: 100%;
+    text-align: center;
+  }
+
+ .bubble img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+ .bubble-text,
+.bubble-text1 {
+  position: absolute;
+  inset: 0;
+
+  padding: 12% 16% 10% 10%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: right;
+  color: #110D7C;
+  font-family: 'IBM Plex Sans', sans-serif;
+
+  font-size: clamp(11px, 2.8vw, 17px);
+  line-height: 1.5;
+  font-weight: 700;
+
+  box-sizing: border-box;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+  
+  .graphic-element img {
+    width: 91%;
+    height: auto;
+  }
+.scene-mobile {
+  display: none;
+}
+@media (max-width: 992px) {
+  .scene-wrapper { 
+    display: none !important;
+  }
+
+  .scene-mobile {
+    display: block;
+  }
+}
+@media (max-width: 992px) {
+.mobile-blob {
+  background: url(https://sbmf-lms.kashida-learning.co/asset-v1:UniversityX+CS101+2025_T1+type@asset+block@Vector_3720__2_.png)
+    center / 100% no-repeat;
+}
+
+  .scene-mobile {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+.mobile-post {
+  position: absolute;
+  inset: 0;                 /* fills the blob */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;      /* keep proportions */
+  z-index: 1;               /* BACKGROUND */
+  pointer-events: none;     /* not clickable */
+}
+
+
+
+    .mobile-bubble {
+        background: #FFC400;
         color: #110D7C;
-        padding: 18px 22px;
-        border-radius: 50px;
-        box-shadow: var(--shadow);
-        font-size: 20px;
+        font-size: 10px;
         font-weight: 700;
-        line-height: 1.5;
+        line-height: 1.6;
+        padding: 10px 10px;
+        border-radius: 18px;
+        width: 50%;
+        margin: 0 auto;
         text-align: right;
-        direction: rtl;
-      }
+    }
+  .bubble-top {
+    margin-top: 40px;
+  }
 
-      /* Tail (desktop → left) */
-      .bubble::after {
-        content: "";
-        position: absolute;
-        top: 24px;
-        right: -18px;
-        border-top: 14px solid transparent;
-        border-bottom: 14px solid transparent;
-        border-right: 18px solid var(--yellow);
-      }
+  .bubble-bottom {
+    margin-top: 10px;
+  }
 
-      .bubble--bottom::after {
-        top: 30px;
-      }
+  /* Characters */
+  .mobile-characters {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
 
-      /* ===== Characters (2 GIFs) ===== */
-      .hero__chars {
-        display: flex;
-        justify-content: center;
-        align-items: flex-end;
-        bottom: 100px;
-        position: relative;
-      }
+  .char-back {
+    
+       width: 150px;
+    transform: translateX(-18px);
+    z-index: 5;
+  }
 
-      .char {
-        height: auto;
-        filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.22));
-        user-select: none;
-        position: relative;
-        top: 114px;
-      }
+  .char-front {
+ width: 150px;
+    transform: translateX(18px);
+    z-index: 2;
+  }
 
-      .char--male {
-        width: 100%;
-        position: relative;
-      }
-
-      .char--female {
-      width: 100%;
-        z-index: 1;
-        position: relative;
-        right:410px;
-      }
-
-      /* ===== Arrows ===== */
-      .hero__arrows {
-        transform: translateX(-50%);
-        display: flex;
-        z-index: 3;
-        pointer-events: none;
-        bottom: 277px;
-        position: relative;
-        left: 100px;
-      }
-
-      .hero__arrows img {
-        width: 200px;
-         height: auto;
-        filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.22));
-      }
- 
+  /* Arrows */
+  .mobile-arrows {
+    width: 60px;
+    display: block;
+    margin: 10px auto 0;
+  }
+  .mobile-bubble,
+.mobile-characters,
+.mobile-arrows {
+  position: relative;
+  z-index: 3;
+}
+}
   .program-text {
     font-size: 16px;
     line-height: 1.8;
