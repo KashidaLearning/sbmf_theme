@@ -1,4 +1,3 @@
-window.__JUST_COMPLETED_COURSE__ = false;
 let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
 let ENROLL_INTRO_ACTIVE = false;
@@ -6,8 +5,6 @@ window.__RANK_POPUP_SHOWN__ = false;
 window.__LAST_KNOWN_RANK__ = null;
 window.__POPUP_HANDLED__ = null;
 window.__ACTIVE_RANK_POPUP_STAGE__ = null;
-window.__LAST_PROGRAM_STATE__ = null;
-
 
 let numCircles = 0;
 let circleElements = [];
@@ -384,26 +381,6 @@ function updateLeaderboardPopup(leaderboardData) {
     }
 }
 
-function handleXpPopupLegacy() {
-    const items = window.coursePathData || [];
-    if (!items.length) return;
-
-    const completed = items.filter(c =>
-        c.state === "completed" && Number(c.xpAward) > 0
-    );
-
-    if (!completed.length) return;
-
-    const last = completed[completed.length - 1];
-
-    if (!window.shouldShowXpPopup(last)) return;
-
-    const key = `xp_shown_${last.id}`;
-    if (sessionStorage.getItem(key)) return;
-
-    sessionStorage.setItem(key, "1");
-    showXpPopup(Number(last.xpAward), null);
-}
 
 async function refreshCourseStatus() {
     if (ENROLL_INTRO_ACTIVE) return;   
@@ -422,12 +399,9 @@ async function refreshCourseStatus() {
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
         }
-        handleXpPopupLegacy();
-
-  
-
-document.addEventListener("circlesRebuilt", applyPulseToActiveCourses);
-
+        document.addEventListener("circlesRebuilt", () => {
+            applyPulseToActiveCourses();
+        });
 
 
         if (typeof data.progress_percent !== "undefined") {
@@ -458,30 +432,9 @@ document.addEventListener("circlesRebuilt", applyPulseToActiveCourses);
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
-       if (data.program_state) {
-        const prev = window.__LAST_PROGRAM_STATE__;
-        window.PROGRAM_STATE = data.program_state;
-
-        if (prev) {
-            const preJustCompleted =
-                !prev.pre_completed && data.program_state.pre_completed;
-
-            const challengesJustCompleted =
-                prev.challenges?.completed !== data.program_state.challenges?.completed &&
-                data.program_state.challenges.completed === data.program_state.challenges.total;
-
-            const finalJustCompleted =
-                (!prev.assignment_completed && data.program_state.assignment_completed) ||
-                (!prev.post_completed && data.program_state.post_completed);
-
-            if (preJustCompleted || challengesJustCompleted || finalJustCompleted) {
-                window.__JUST_COMPLETED_COURSE__ = true;
-            }
+        if (data.program_state) {
+            window.PROGRAM_STATE = data.program_state;
         }
-
-        window.__LAST_PROGRAM_STATE__ = JSON.parse(JSON.stringify(data.program_state));
-    }
-
      handleProgramPopups();
      setTimeout(handleProgramPopups, 350);
     setTimeout(handleProgramPopups, 900);
@@ -516,116 +469,100 @@ window.addEventListener("resize", () => {
     if (!circleElements.length) return;
     updatePositions();
 });
-window.__XP_PENDING_TRIES__ = 0;
 
 window.addEventListener("message", (event) => {
     if (!event.data) return;
-
     if (event.data.event === "progress" || event.data.event === "completion") {
         refreshCourseStatus();
     }
 });
-
-
-
 window.__AUDIO_UNLOCKED__ = false;
 
+function unlockTakSound() {
+  if (window.__AUDIO_UNLOCKED__) return;
+
+  const sound = document.getElementById("takSound");
+  if (!sound) return;
+
+  sound.muted = true;
+
+  const p = sound.play();
+  const done = () => {
+    sound.pause();
+    sound.currentTime = 0;
+    sound.muted = false;
+    window.__AUDIO_UNLOCKED__ = true;
+  };
+
+  if (p && p.catch) p.catch(() => {}).finally(done);
+  else done();
+}
 
 window.addEventListener("touchstart", unlockTakSound, { once: true });
 window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
-    if (INTRO_FINISHED) return;
     if (ENROLL_INTRO_ACTIVE) return;
-    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
 
+  
+    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
 
-    const circles = Array.from(document.querySelectorAll(".circle-item"));
-    let index = 0;
+    function playTak() {
+    const sound = document.getElementById("takSound");
+    if (!sound) return;
 
-    function playFeedback() {
-        const sound = document.getElementById("takSound");
-
-        // Desktop
-        if (!("ontouchstart" in window)) {
-            if (sound) {
-                sound.currentTime = 0;
-                sound.play().catch(() => {});
-            }
-            return;
-        }
-
-        // Mobile
-        if (window.__AUDIO_UNLOCKED__ && sound) {
-            sound.currentTime = 0;
-            sound.play().catch(() => {});
-        } else if (navigator.vibrate) {
-           navigator.vibrate(10);
-
-        }
+    if (!("ontouchstart" in window)) {
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+        return;
     }
 
-    function scrollToCircle(circle) {
-        const y =
-            circle.getBoundingClientRect().top +
-            window.pageYOffset -
-            window.innerHeight / 2 +
-            80;
+    if (!window.__AUDIO_UNLOCKED__) return;
 
-        window.scrollTo({
-            top: y,
-            behavior: "smooth",
-        });
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
     }
 
-    function playNext() {
-        if (index >= circles.length) {
-            finishIntro();
-            return;
-        }
 
-        const circle = circles[index];
 
-        circle.classList.remove("is-faded");
-        circle.classList.add("is-visible");
+    const circles = document.querySelectorAll(".circle-item");
 
-        circle.classList.remove("game-pop");
-        requestAnimationFrame(() => {
+    circles.forEach((circle, index) => {
+        setTimeout(() => {
+            circle.classList.remove("is-faded");
+            circle.classList.add("is-visible");
+
+            circle.classList.remove("game-pop");
+            void circle.offsetHeight;
             circle.classList.add("game-pop");
-        });
 
-        scrollToCircle(circle);
-        playFeedback();
+            playTak();
 
-        circle.addEventListener(
-            "animationend",
-            () => {
-                index++;
-                setTimeout(playNext, 120); // tiny buffer only
-            },
-            { once: true }
-        );
-    }
+           circle.scrollIntoView({ behavior: "smooth", block: "center" });
 
-    playNext();
-}
-function finishIntro() {
-    sessionStorage.removeItem("programJustEnrolled");
+            setTimeout(() => {
+                window.scrollBy({ top: -90, left: 0, behavior: "smooth" });
+            }, 220)
 
-    INTRO_PLAYING = false;
-    ENROLL_INTRO_ACTIVE = false;
-    INTRO_FINISHED = true;
+        }, index * 420 + 180);
+    });
 
-    showIntroPopup();
-
+   
     setTimeout(() => {
-        refreshCourseStatus();
-        focusFirstCourse();
-    }, 400);
-}
+        sessionStorage.removeItem("programJustEnrolled");
+        INTRO_PLAYING = false;
+        ENROLL_INTRO_ACTIVE = false; 
+        INTRO_FINISHED = true;
+         showIntroPopup();
+        setTimeout(() => {
+            refreshCourseStatus();
+            focusFirstCourse();
+     }, 500);
 
+    }, circles.length * 420 + 600);
+}
 
 function focusFirstCourse() {
     if (!INTRO_FINISHED) return;
@@ -723,7 +660,8 @@ function showIntroPopup() {
     };
 }
 
-window.shouldShowXpPopup = function (course) {
+   window.shouldShowXpPopup = function (course) {
+    if (!window.PROGRAM_STATE) return true;
 
     if (
         course.course_type === "pre_assessment" ||
@@ -731,6 +669,21 @@ window.shouldShowXpPopup = function (course) {
         course.course_type === "التقييم القبلي"
     ) {
         return false;
+    }
+
+    if (
+        course.course_type === "challenge" ||
+        course.course_type === "Challenges" ||
+        course.course_type === "التحديات"
+    ) {
+        const state = window.PROGRAM_STATE;
+
+        if (
+            state?.challenges &&
+            state.challenges.completed >= state.challenges.total
+        ) {
+            return false;
+        }
     }
 
     if (
@@ -749,29 +702,8 @@ window.shouldShowXpPopup = function (course) {
         return false;
     }
 
-    if (
-        course.course_type === "challenge" ||
-        course.course_type === "Challenges" ||
-        course.course_type === "التحديات"
-    ) {
-        const challenges = (window.coursePathData || []).filter(c =>
-            ["challenge", "Challenges", "التحديات"].includes(
-                (c.course_type || "").trim()
-            )
-        );
-
-        if (challenges.length) {
-            const lastChallenge = challenges[challenges.length - 1];
-            if (lastChallenge.id === course.id) {
-                return false; 
-            }
-        }
-    }
-
     return true;
 };
-
-
 
     window.safeShowXpPopup = function (course, gainedXP, previousXP) {
         if (!window.shouldShowXpPopup(course)) return;
@@ -785,7 +717,6 @@ function areChallengesCompleted(state) {
 }
 function handleProgramPopups() {
     if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
-    if (!window.__JUST_COMPLETED_COURSE__) return;
 
     const user = window.CURRENT_USER_RANK_DATA;
 
@@ -836,10 +767,8 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("pre");
-        window.__JUST_COMPLETED_COURSE__ = false; 
         return;
     }
-
 
 
     // CHALLENGES
@@ -858,8 +787,6 @@ function handleProgramPopups() {
     });
 
     markPopupAsShown("challenges");
-    window.__JUST_COMPLETED_COURSE__ = false;
-
     return;
 }
 
@@ -879,8 +806,6 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("final");
-        window.__JUST_COMPLETED_COURSE__ = false;
-
     }
 
 }
