@@ -58,8 +58,16 @@
       </div>
 
       <div class="hero__bubbles">
-        <div class="bubble">...</div>
-        <div class="bubble bubble--bottom">...</div>
+        <div class="bubble">
+ أهلاً بك! أنا نورة وهذا خالد. نحن أخوان ندير حسابنا على السوشيال ميديا
+        نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+
+        </div>
+         <div class="bubble bubble--bottom">
+        وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات
+        تختبر مهاراتك وتجهزك للمستقبل...
+        <br />جاهز؟ خلّنا نبدأ!
+      </div>
       </div>
 
     </div>
@@ -234,8 +242,8 @@
   /* THE STAGE: everything is stacked here */
   .hero__stage{
     position: relative;
-    width: min(420px, 92vw);
-    height: 560px;              /* adjust if needed */
+    width: min(500px, 92vw);
+    height: 220px;              /* adjust if needed */
     margin: 0 auto;
   }
 
@@ -250,9 +258,9 @@
 
   /* 1) Instagram layer (above blob) */
   .hero__instagram{
-    top: 40px;                  /* move it */
+    bottom: 40px;                  /* move it */
     z-index: 2;
-    transform: translate(-460px, 10px)
+    transform: translate(-166px, 10px)
   }
   .hero__instagram img{
     width: 100%;
@@ -262,7 +270,6 @@
 
   /* 2) Characters layer (above instagram) */
   .hero__characters{
-    top: 170px;                 /* move it */
     z-index: 3;
   }
   .char{
@@ -273,7 +280,6 @@
 
   /* 3) Bubbles layer (top-most) */
   .hero__bubbles{
-    top: 230px;                 /* move it */
     z-index: 4;
     display: flex;
     flex-direction: column;
