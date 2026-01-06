@@ -547,34 +547,38 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 }
 
 @keyframes heartBomb {
-    0% {
-        transform: scale(0.6);
-        opacity: 0;
-    }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
 
-    40% {
-        opacity: 1;
-        transform: scale(1.12);
-    }
+  25% {
+    opacity: 0.4;
+  }
 
-    70% {
-        transform: scale(0.96);
-    }
+  55% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
 
-    100% {
-        transform: scale(1);
-    }
+  78% {
+    transform: scale(0.97);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
+
 
 
 .circle-item.game-pop .circle-content {
-    animation: heartBomb 0.85s cubic-bezier(.2, .9, .2, 1);
-    will-change: transform;
+  animation: heartBomb 0.85s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform, opacity;
 }
 
-
 .circle-item--active.game-pop .circle-content {
-    animation-duration: 0.95s;
+  animation-duration: 0.95s;
 }
 
 

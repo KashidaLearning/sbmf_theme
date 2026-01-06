@@ -531,6 +531,8 @@ window.addEventListener("touchstart", unlockTakSound, { once: true });
 window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
+    const STEP_DURATION_DESKTOP = 520;
+const STEP_DURATION_MOBILE  = 620;
     if (ENROLL_INTRO_ACTIVE) return;
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
 
@@ -574,34 +576,35 @@ function playGameCourseIntro() {
         });
     }
 
-    function playNext() {
-        if (index >= circles.length) {
-            finishIntro();
-            return;
-        }
-
-        const circle = circles[index];
-
-        circle.classList.remove("is-faded");
-        circle.classList.add("is-visible");
-
-        circle.classList.remove("game-pop");
-        requestAnimationFrame(() => {
-            circle.classList.add("game-pop");
-        });
-
-        scrollToCircle(circle);
-        playFeedback();
-
-        circle.addEventListener(
-            "animationend",
-            () => {
-                index++;
-                setTimeout(playNext, 120); // tiny buffer only
-            },
-            { once: true }
-        );
+  function playNext() {
+    if (index >= circles.length) {
+        finishIntro();
+        return;
     }
+
+    const circle = circles[index];
+
+    circle.classList.remove("is-faded");
+    circle.classList.add("is-visible");
+
+    circle.classList.remove("game-pop");
+    requestAnimationFrame(() => {
+        circle.classList.add("game-pop");
+    });
+
+    scrollToCircle(circle);
+    playFeedback();
+
+    const stepDuration =
+        window.innerWidth < 700
+            ? STEP_DURATION_MOBILE
+            : STEP_DURATION_DESKTOP;
+
+    setTimeout(() => {
+        index++;
+        playNext();
+    }, index === 0 ? stepDuration + 180 : stepDuration);
+}
 
     playNext();
 }
