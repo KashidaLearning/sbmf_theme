@@ -3450,3 +3450,13 @@ text-transform: capitalize;
     width: 328px;
 }
 }
+@media (max-width:450px) {
+
+    .top_left_background_image .bg-img {
+             position: absolute;
+        left: -247px;
+        top: -92px;
+        width: initial;
+        max-width: 203px;
+    }
+  }
