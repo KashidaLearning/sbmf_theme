@@ -97,7 +97,6 @@
 .hero{
   overflow: hidden;
   background:url("${static.url('images/blob-dark.png')}") center / min(1100px, 90%) no-repeat;
-  padding: 80px 0 160px;
 }
 
 /* Foreground layout */
@@ -115,7 +114,7 @@
   width: 100%;
   max-width: 100%;
   filter: drop-shadow(0 12px 18px rgba(0,0,0,.22));
-  transform: translate(84px, -110px);
+  transform: translate(84px, 0px);
 }
 
 /* Bubbles */
@@ -124,7 +123,7 @@
   flex-direction: column;
   gap: 22px;
   align-items: flex-start;
-  transform: translate(89px, -36px);
+  transform: translate(89px, 94px);
 }
 
 .bubble{
@@ -163,7 +162,7 @@
   display: flex;
   align-items: flex-end;
   gap: 18px;
-  transform: translate(70px, 60px);
+  transform: translate(70px, 185px);
 }
 
 .char{
@@ -174,15 +173,10 @@
 
 
 /* Arrow */
-.hero__arrow{
-  position: absolute;
-  left: 50%;
-  bottom: 48px;
-  transform: translateX(-50%);
-}
+
 
 .hero__arrow img{
-  width: 120px;
+  width: 200px;
   filter: drop-shadow(0 12px 18px rgba(0,0,0,.22));
 }
 
