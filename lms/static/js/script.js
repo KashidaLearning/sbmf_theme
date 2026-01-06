@@ -7,9 +7,7 @@ window.__LAST_KNOWN_RANK__ = null;
 window.__POPUP_HANDLED__ = null;
 window.__ACTIVE_RANK_POPUP_STAGE__ = null;
 window.__LAST_PROGRAM_STATE__ = null;
-window.__LAST_XP__ = null;
 
-window.__LAST_COMPLETED_COURSE_ID__ = null;
 
 let numCircles = 0;
 let circleElements = [];
@@ -425,42 +423,14 @@ async function refreshCourseStatus() {
             updateBadgesPopup(data.badges);
         }
 
-    if (data.leaderboard) {
-        const prevXP = window.__LAST_XP__;
-        const currentUser = data.leaderboard.current_user;
+       if (data.leaderboard) {
+            window.lastLeaderboardData = data.leaderboard;
+            window.LEADERBOARD_DATA = data.leaderboard.top_users || [];
+            window.CURRENT_USER_RANK_DATA = data.leaderboard.current_user || null;
 
-        window.lastLeaderboardData = data.leaderboard;
-        window.LEADERBOARD_DATA = data.leaderboard.top_users || [];
-        window.CURRENT_USER_RANK_DATA = currentUser || null;
+            updateLeaderboardPopup(data.leaderboard);
 
-        updateLeaderboardPopup(data.leaderboard);
-
-        if (
-            currentUser &&
-            typeof currentUser.rank_points === "number" &&
-            prevXP !== null &&
-            currentUser.rank_points > prevXP
-        ) {
-            const gainedXP = currentUser.rank_points - prevXP;
-
-            // find last completed course
-           const completedCourse = (window.coursePathData || []).find(
-                c =>
-                    c.state === "completed" &&
-                    Number(c.xpAward) === gainedXP &&
-                    c.id !== window.__LAST_COMPLETED_COURSE_ID__
-            );
-            if (completedCourse) {
-            window.__LAST_COMPLETED_COURSE_ID__ = completedCourse.id;
-            safeShowXpPopup(completedCourse, gainedXP, prevXP);
         }
-        }
-
-        if (currentUser && typeof currentUser.rank_points === "number") {
-            window.__LAST_XP__ = currentUser.rank_points;
-        }
-    }
-
 
         if (data.eval) {
             updateEvalStatus(data.eval);
@@ -488,14 +458,10 @@ async function refreshCourseStatus() {
 
         window.__LAST_PROGRAM_STATE__ = JSON.parse(JSON.stringify(data.program_state));
     }
-    if (
-        window.__JUST_COMPLETED_COURSE__ &&
-        window.CURRENT_USER_RANK_DATA &&
-        window.PROGRAM_STATE
-    ) {
-        handleProgramPopups();
-    }
 
+     handleProgramPopups();
+     setTimeout(handleProgramPopups, 350);
+    setTimeout(handleProgramPopups, 900);
     } catch (err) {}
 }
 
