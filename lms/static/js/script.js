@@ -6,6 +6,8 @@ window.__RANK_POPUP_SHOWN__ = false;
 window.__LAST_KNOWN_RANK__ = null;
 window.__POPUP_HANDLED__ = null;
 window.__ACTIVE_RANK_POPUP_STAGE__ = null;
+window.__LAST_PROGRAM_STATE__ = null;
+
 
 let numCircles = 0;
 let circleElements = [];
@@ -433,9 +435,30 @@ async function refreshCourseStatus() {
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
-        if (data.program_state) {
-            window.PROGRAM_STATE = data.program_state;
+       if (data.program_state) {
+        const prev = window.__LAST_PROGRAM_STATE__;
+        window.PROGRAM_STATE = data.program_state;
+
+        if (prev) {
+            const preJustCompleted =
+                !prev.pre_completed && data.program_state.pre_completed;
+
+            const challengesJustCompleted =
+                prev.challenges?.completed !== data.program_state.challenges?.completed &&
+                data.program_state.challenges.completed === data.program_state.challenges.total;
+
+            const finalJustCompleted =
+                (!prev.assignment_completed && data.program_state.assignment_completed) ||
+                (!prev.post_completed && data.program_state.post_completed);
+
+            if (preJustCompleted || challengesJustCompleted || finalJustCompleted) {
+                window.__JUST_COMPLETED_COURSE__ = true;
+            }
         }
+
+        window.__LAST_PROGRAM_STATE__ = JSON.parse(JSON.stringify(data.program_state));
+    }
+
      handleProgramPopups();
      setTimeout(handleProgramPopups, 350);
     setTimeout(handleProgramPopups, 900);
@@ -780,8 +803,10 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("pre");
+        window.__JUST_COMPLETED_COURSE__ = false; 
         return;
     }
+
 
 
     // CHALLENGES
@@ -800,6 +825,8 @@ function handleProgramPopups() {
     });
 
     markPopupAsShown("challenges");
+    window.__JUST_COMPLETED_COURSE__ = false;
+
     return;
 }
 
@@ -819,6 +846,8 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("final");
+        window.__JUST_COMPLETED_COURSE__ = false;
+
     }
 
 }
