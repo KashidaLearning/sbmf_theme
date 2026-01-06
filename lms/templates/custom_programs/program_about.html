@@ -579,7 +579,7 @@ span#xp-remaining {
     align-items: center;
     gap: 12px;
      right: -12%;
-    top: -19%;
+    top: -25%;
     z-index: 20;
     pointer-events: none;
 }
@@ -719,17 +719,18 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 
 .rank-num {
    
-        width: 104px;
-    text-align: center;
+  .rank-num {
+    width: 104px;
     color: rgba(17, 13, 124, 0.20);
-    text-align: right;
+    text-align: left;
     text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
     font-family: "IBM Plex Sans";
-        font-size: 60px;
+    font-size: 45px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
+}
 
 }
 
@@ -831,7 +832,7 @@ body:not(.user-enrolled) .circle-item {
     visibility: hidden;    
     pointer-events: none;   
 }
-@media (max-width: 720px) {
+@media (max-width: 992px) {
   .xp-character.right{
  
                right: -15%;
