@@ -7,9 +7,7 @@ window.__LAST_KNOWN_RANK__ = null;
 window.__POPUP_HANDLED__ = null;
 window.__ACTIVE_RANK_POPUP_STAGE__ = null;
 window.__LAST_PROGRAM_STATE__ = null;
-window.__LAST_COMPLETED_COURSE_ID__ = null;
 
-window.__XP_POPUP_PENDING__ = false;
 
 let numCircles = 0;
 let circleElements = [];
@@ -386,6 +384,26 @@ function updateLeaderboardPopup(leaderboardData) {
     }
 }
 
+function handleXpPopupLegacy() {
+    const items = window.coursePathData || [];
+    if (!items.length) return;
+
+    const completed = items.filter(c =>
+        c.state === "completed" && Number(c.xpAward) > 0
+    );
+
+    if (!completed.length) return;
+
+    const last = completed[completed.length - 1];
+
+    if (!window.shouldShowXpPopup(last)) return;
+
+    const key = `xp_shown_${last.id}`;
+    if (sessionStorage.getItem(key)) return;
+
+    sessionStorage.setItem(key, "1");
+    showXpPopup(Number(last.xpAward), null);
+}
 
 async function refreshCourseStatus() {
     if (ENROLL_INTRO_ACTIVE) return;   
@@ -404,43 +422,12 @@ async function refreshCourseStatus() {
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
         }
-        if (window.__XP_POPUP_PENDING__) {
-        let completedCourse = null;
+        handleXpPopupLegacy();
 
-        if (window.__LAST_COMPLETED_COURSE_ID__) {
-            completedCourse = (window.coursePathData || []).find(
-            c => String(c.id) === String(window.__LAST_COMPLETED_COURSE_ID__)
-            );
-        }
+  
 
-        const isReallyCompleted =
-            completedCourse &&
-            completedCourse.state === "completed" &&
-            Number(completedCourse.xpAward) > 0;
+document.addEventListener("circlesRebuilt", applyPulseToActiveCourses);
 
-        if (isReallyCompleted && window.shouldShowXpPopup(completedCourse)) {
-            showXpPopup(Number(completedCourse.xpAward), null);
-
-            window.__XP_POPUP_PENDING__ = false;
-            window.__LAST_COMPLETED_COURSE_ID__ = null;
-            window.__XP_PENDING_TRIES__ = 0;
-        } else {
-            window.__XP_PENDING_TRIES__ = (window.__XP_PENDING_TRIES__ || 0) + 1;
-
-            if (window.__XP_PENDING_TRIES__ <= 6) {
-            setTimeout(() => refreshCourseStatus(), 450);
-            } else {
-            window.__XP_POPUP_PENDING__ = false;
-            window.__LAST_COMPLETED_COURSE_ID__ = null;
-            window.__XP_PENDING_TRIES__ = 0;
-            }
-        }
-        }
-
-
-        document.addEventListener("circlesRebuilt", () => {
-            applyPulseToActiveCourses();
-        });
 
 
         if (typeof data.progress_percent !== "undefined") {
@@ -532,24 +519,11 @@ window.addEventListener("resize", () => {
 window.__XP_PENDING_TRIES__ = 0;
 
 window.addEventListener("message", (event) => {
-  if (!event.data) return;
+    if (!event.data) return;
 
-  if (event.data.event === "completion") {
-    window.__XP_POPUP_PENDING__ = true;
-    window.__XP_PENDING_TRIES__ = 0;
-    window.__JUST_COMPLETED_COURSE__ = true;
-
-    if (event.data.course_id) {
-      window.__LAST_COMPLETED_COURSE_ID__ = event.data.course_id;
+    if (event.data.event === "progress" || event.data.event === "completion") {
+        refreshCourseStatus();
     }
-
-    setTimeout(() => refreshCourseStatus(), 350);
-    return;
-  }
-
-  if (event.data.event === "progress") {
-    refreshCourseStatus();
-  }
 });
 
 
@@ -812,7 +786,6 @@ function areChallengesCompleted(state) {
 function handleProgramPopups() {
     if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
     if (!window.__JUST_COMPLETED_COURSE__) return;
-    if (window.__XP_POPUP_PENDING__) return;
 
     const user = window.CURRENT_USER_RANK_DATA;
 
