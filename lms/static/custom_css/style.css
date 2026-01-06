@@ -568,12 +568,12 @@ box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), inset 14px 17px 20.671px 0 rgba(255
 
 
 .circle-item.game-pop .circle-content {
-    animation: heartBomb 0.5s cubic-bezier(.22, 1, .36, 1);
+    animation: heartBomb 0.75s cubic-bezier(.22, 1, .36, 1);
     will-change: transform;
 }
 
 .circle-item--active.game-pop .circle-content {
-    animation-duration: 0.85s;
+    animation-duration: 0.6s;
 }
 
 

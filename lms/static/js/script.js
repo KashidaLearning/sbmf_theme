@@ -499,8 +499,20 @@ window.addEventListener("message", (event) => {
 
     if (event.data.event === "completion") {
         window.__JUST_COMPLETED_COURSE__ = true;
+
+        if (
+            event.data.course &&
+            window.shouldShowXpPopup(event.data.course)
+        ) {
+            showXpPopup(
+                event.data.gained_xp || event.data.xp || event.data.course.xpAward || 0,
+                null
+            );
+        }
+
         refreshCourseStatus();
     }
+
 
     if (event.data.event === "progress") {
         refreshCourseStatus();
