@@ -2370,7 +2370,7 @@ body.popup-active .sticky-icons-wrapper {
 
 
   .sharati-intro-text {
-    width: 100%;
+    width: 80%;
     padding-right: 0;
     font-size: 17px;
     margin-bottom: 20px;
@@ -2778,7 +2778,7 @@ text-transform: capitalize;
       }
            .top_right_background_image .bg-img {
        position: absolute;
-        right: -93px;
+        right: -78px;
         width: initial;
         max-width: 220px;
         top: 151px;
