@@ -531,7 +531,7 @@ window.addEventListener("touchstart", unlockTakSound, { once: true });
 window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
-    const STEP_DURATION_DESKTOP = 600;
+    const STEP_DURATION_DESKTOP = 700;
 const STEP_DURATION_MOBILE  = 620;
     if (ENROLL_INTRO_ACTIVE) return;
     if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
