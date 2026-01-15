@@ -151,6 +151,9 @@ if (LAST_PROGRAM_ID !== CURRENT_PROGRAM_ID) {
     window.__LAST_KNOWN_RANK__ = null;
     window.__LAST_PROGRAM_STATE__ = null;
     window.__JUST_COMPLETED_STAGE__ = null;
+    INTRO_FINISHED = false;
+    INTRO_PLAYING = false;
+    ENROLL_INTRO_ACTIVE = false;
 }
 
 
@@ -204,7 +207,8 @@ function initializeScene() {
     data.forEach((item, index) => createCircle(item, index));
     applyPulseToActiveCourses();
     updatePositions();
-    const justEnrolled = sessionStorage.getItem("programJustEnrolled") === "1";
+   const justEnrolled =sessionStorage.getItem(`program_${CURRENT_PROGRAM_ID}_justEnrolled`) === "1";
+
     document.querySelectorAll(".circle-item").forEach(c => {
         if (justEnrolled && !INTRO_FINISHED) {
             c.classList.add("is-faded");
@@ -594,8 +598,7 @@ const STEP_DURATION_MOBILE  = 620;
 }
 
 function finishIntro() {
-    sessionStorage.removeItem("programJustEnrolled");
-
+    sessionStorage.removeItem(`program_${CURRENT_PROGRAM_ID}_justEnrolled`);
     INTRO_PLAYING = false;
     ENROLL_INTRO_ACTIVE = false;
     INTRO_FINISHED = true;
