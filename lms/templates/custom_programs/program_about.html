@@ -933,12 +933,8 @@ body.no-scroll {
         elif background_image.position == "bottom-right":
             bottom_right_background_image = background_image.image.url
 %>
-<div class="program-about">
-    <body data-program-id="${program.id}">
-    <body
-  data-program-id="${program.id}"
-  data-user-id="${request.user.id}"
->
+<div class="program-about"data-program-id="${program.id}"data-user-id="${request.user.id}">
+
     <div class="program-bg-balls" aria-hidden="true">
     <span class="ball"></span>
     <span class="ball"></span>
@@ -2157,7 +2153,10 @@ for ub in user_badges:
 _safe_current_user_rank = 0
 _safe_current_user_name = request.user.username
 %>
-
+<script>
+    window.__COMPLETED_BEFORE__ = 0;
+window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
+</script>
 <script>
     function lockScroll() {
     document.body.classList.add("no-scroll");
@@ -2175,31 +2174,14 @@ function unlockScrollIfNoPopup() {
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
-    if (window.USER_IS_ENROLLED === "true") {
-        document.body.classList.add("user-enrolled");
-    }
+    if (String(window.USER_IS_ENROLLED).toLowerCase() === "true") {
+    document.body.classList.add("user-enrolled");
+}
+
 });
 </script>
-<script>
-    window.__COMPLETED_BEFORE__ = 0;
-window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
-</script>
 
-<script>
-    let AUDIO_UNLOCKED = false;
 
-document.addEventListener("click", () => {
-    if (AUDIO_UNLOCKED) return;
-    document.querySelectorAll("audio").forEach(a => {
-        a.muted = true;
-        a.play().catch(()=>{});
-        a.pause();
-        a.muted = false;
-    });
-    AUDIO_UNLOCKED = true;
-}, { once: true });
-
-</script>
 <script>
 window.STATE_ICONS = {
     completed: "${static.url('images/badge112.png')}",
@@ -2375,12 +2357,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const lastCompletedCourse = completedCourses[completedCourses.length - 1];
 
         if (!lastCompletedCourse) return;
+        const pid = document.querySelector(".program-about")?.dataset.programId || window.location.pathname;
+        const uniqueKey = pid + "-" + lastCompletedCourse.id;
 
-        if (window.__LAST_XP_COURSE_ID__ === lastCompletedCourse.id) {
+      if (window.__LAST_XP_COURSE_ID__ === uniqueKey) {
             return;
         }
+        window.__LAST_XP_COURSE_ID__ = uniqueKey;
 
-        window.__LAST_XP_COURSE_ID__ = lastCompletedCourse.id;
+
 
         const gainedXP = Number(lastCompletedCourse.xpAward || 0);
 

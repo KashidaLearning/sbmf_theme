@@ -122,11 +122,14 @@ function createCircle(data, index) {
         if (existing) existing.remove();
     }
 }
+const ROOT = document.querySelector(".program-about") || document.body;
+
 const CURRENT_PROGRAM_ID =
-    document.body.dataset.programId || window.location.pathname;
+    ROOT.dataset.programId || window.location.pathname;
 
 const CURRENT_USER_ID =
-    document.body.dataset.userId || "anonymous";
+    ROOT.dataset.userId || "anonymous";
+
 
 function getPopupStorageKey(stage) {
     return `user_${CURRENT_USER_ID}_program_${CURRENT_PROGRAM_ID}_popup_${stage}`;
@@ -190,6 +193,7 @@ function updateContainerHeight() {
 }
 
 function initializeScene() {
+    if (!circlesWrapper || !coursescontainer) return;
     const data = window.coursePathData || [];
     if (!data.length || !circlesWrapper) return;
 
@@ -505,30 +509,7 @@ window.addEventListener("message", (event) => {
         refreshCourseStatus();
     }
 });
-window.__AUDIO_UNLOCKED__ = false;
 
-function unlockTakSound() {
-  if (window.__AUDIO_UNLOCKED__) return;
-
-  const sound = document.getElementById("takSound");
-  if (!sound) return;
-
-  sound.muted = true;
-
-  const p = sound.play();
-  const done = () => {
-    sound.pause();
-    sound.currentTime = 0;
-    sound.muted = false;
-    window.__AUDIO_UNLOCKED__ = true;
-  };
-
-  if (p && p.catch) p.catch(() => {}).finally(done);
-  else done();
-}
-
-window.addEventListener("touchstart", unlockTakSound, { once: true });
-window.addEventListener("click", unlockTakSound, { once: true });
 
 function playGameCourseIntro() {
     const STEP_DURATION_DESKTOP = 700;
@@ -563,18 +544,21 @@ const STEP_DURATION_MOBILE  = 620;
         }
     }
 
-    function scrollToCircle(circle) {
-        const y =
-            circle.getBoundingClientRect().top +
-            window.pageYOffset -
-            window.innerHeight / 2 +
-            80;
+  function scrollToCircle(circle) {
+    if (!circle || INTRO_FINISHED) return;
 
-        window.scrollTo({
-            top: y,
-            behavior: "smooth",
-        });
-    }
+    const rect = circle.getBoundingClientRect();
+    if (!rect.height) return;
+
+    const y =
+        rect.top +
+        window.pageYOffset -
+        window.innerHeight / 2 +
+        80;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+}
+
 
   function playNext() {
     if (index >= circles.length) {
