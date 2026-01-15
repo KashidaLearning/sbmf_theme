@@ -16,6 +16,66 @@
 <main id="main" aria-label="Content" tabindex="-1" dir="rtl">
   <section class="programs-section">
     <h1 class="section-title">المغامرات في البرنامج</h1>
+
+     <section class="hero hero--desktop">
+  <div class="hero__content">
+    <div class="hero__instagram">
+      <img src="${static.url('images/instagram-screen.png')}" alt="Instagram preview" />
+    </div>
+
+    <div class="hero__bubbles">
+      <div class="bubble">
+    أهلاً بك! أنا نورة وهذا خالد. نحن أخوان ندير حسابنا على السوشيال ميديا
+        نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+      </div>
+
+      <div class="bubble bubble--bottom">
+        وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات
+        تختبر مهاراتك وتجهزك للمستقبل...
+        <br />جاهز؟ خلّنا نبدأ!
+      </div>
+    </div>
+
+     <div class="hero__characters">
+      <img class="char" src="${static.url('images/khaled_and_noura.gif')}" alt="Khaled and Noura" />
+    </div>
+  </div>
+
+  <div class="hero__arrow" aria-hidden="true">
+    <img src="${static.url('images/arrow-down.png')}" alt="" />
+  </div>
+</section>
+
+<section class="hero hero--mobile">
+  <div class="hero__content">
+    <div class="hero__stage">
+
+      <div class="hero__instagram">
+        <img src="${static.url('images/instagram-screen.png')}" alt="Instagram preview" />
+      </div>
+
+      <div class="hero__characters">
+        <img class="char" src="${static.url('images/khaled_and_noura.gif')}" alt="Khaled and Noura" />
+      </div>
+
+      <div class="hero__bubbles">
+        <div class="bubble">
+أهلًا بك! أنا خالد، وهذه نورة. نحن أخوان ندير حسابًا على السوشيال ميديا نشارك فيه يومياتنا ونغطي الفعاليات ونعيش كل لحظة على حقيقتها.
+        </div>
+         <div class="bubble bubble--bottom">
+        وسعيدين بانضمامك لنا! خلال الرحلة بتتعرف على أصدقاء جدد وتواجه تحديات
+        تختبر مهاراتك وتجهزك للمستقبل...
+        <br />جاهز؟ خلّنا نبدأ!
+      </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hero__arrow">
+    <img src="${static.url('images/arrow-down.png')}" alt="" />
+  </div>
+</section>
  
     <div class="programs-grid">
       % for index, program in enumerate(programs):
@@ -53,7 +113,231 @@
 
 
 <style>
+
+  /* default = desktop */
+.hero--mobile { display: none; }
+
+@media (max-width: 980px){
+  .hero--desktop { display: none; }
+  .hero--mobile  { display: block; }
+}
+
+/* Hero Section Styles */
+.hero{
+  overflow: hidden;
+  background:url("${static.url('images/blob-dark.png')}") center / min(1100px, 90%) no-repeat;
+}
+
+/* Foreground layout */
+.hero__content{
+  max-width: 1130px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: ltr;
+}
+
+/* Instagram */
+.hero__instagram img{
+  width: 100%;
+  max-width: 100%;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.22));
+  transform: translate(84px, 0px);
+}
+
+/* Bubbles */
+.hero__bubbles{
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: flex-start;
+  transform: translate(89px, 94px);
+}
+
+.bubble{
+  width: 320px;
+  background: #FFCB05;
+  color: #110D7C;
+  padding: 10px 30px;
+  border-radius: 50px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.22);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: right;
+  direction: rtl;
+  position: relative;
+}
+
+.bubble::after{
+  content:"";
+  position:absolute;
+  right:-20px;
+  top: 53px;
+  border-top: 43px solid transparent;
+  border-bottom: 31px solid transparent;
+  border-left: 20px solid #FFCB05;
+  transform: rotate(129deg);
+}
+
+.bubble--bottom::after {
+        transform: rotate(65deg) !important;
+        right: -10px !important;
+      }
+
+/* Characters */
+.hero__characters{
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  transform: translate(70px, 185px);
+}
+
+.char{
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 22px rgba(0,0,0,.22));
+}
+
+
+/* Arrow */
+
+
+.hero__arrow img{
+  width: 200px;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.22));
+}
+
+/* Mobile */
+@media (max-width: 980px){
+
+  .hero{
+    position: relative;
+    overflow: visible;
+    padding: 24px 0 140px;
+  }
+
+  /* content just centers the stage */
+  .hero__content{
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0 14px;
+    display: block;
+  }
+
+  .hero__stage{
+    position: relative;
+    width: min(500px, 92vw);
+    height: 220px;              
+    margin: 0 auto;
+  }
+
+  .hero__instagram,
+  .hero__characters,
+  .hero__bubbles{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hero__instagram{
+    bottom: 40px;
+    z-index: 2;
+    transform: translate(-166px, 10px)
+  }
+  .hero__instagram img{
+    width: 100%;
+    display: block;
+    transform: none !important;
+  }
+
+  .hero__characters{
+    z-index: 3;
+  }
+  .char{
+    width: 140%;
+    height: auto;
+    display: block;
+  }
+
+  .hero__bubbles{
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+
+    transform: translateX(-50%); /* keep centered */
+  }
+
+  .bubble{
+    width: 152px;
+    font-size: 12px;
+    padding: 10px 6px;
+    border-radius: 26px;
+  }
+
+ .bubble:not(.bubble--bottom) {
+  transform: translate(85px, -79px);
+ }
+
+ .bubble--bottom {
+  transform: translate(-85px, 20px);
+  }
+
+  .bubble:not(.bubble--bottom)::after{
+    right: 40px;
+    top: 99px;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 14px solid #FFCB05;
+    border-right: 0;
+    transform: rotate(236deg);
+  }
+
+  .bubble--bottom::after{
+    right: 0px !important;
+    top: -8px;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-right: 18px solid #FFCB05;
+    border-left: 0;
+    transform: rotate(235deg) !important;
+  }
+
+  .hero__arrow{
+    position: absolute;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 5;
+  }
+  .hero__arrow img{
+    width: 105px;
+  }
+
+  .hero .hero--mobile {
+    top: 50px;
+  }
+}
+
+@media (max-width: 500px){
+.hero{
+  background:url("${static.url('images/blob-dark-mobile.png')}") no-repeat;
+  top: 40px;
+}
+}
+
+/*Enf of Hero Section Styles */
   
+  .program-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: white;
+    margin-bottom: 18px;
+    font-weight: 400;
+}
+
 .program-subject img {
     margin-left: 12px;
     width: 24px;
@@ -74,7 +358,7 @@
     font-size: 45px;
     font-weight: 800;
     margin-bottom: 35px;
-    text-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
+    text-shadow: -4px 2px 10px rgba(0, 0, 0, 0.45);
 }
  
  
@@ -82,27 +366,27 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  max-width: 1300px;
+  gap: 100px;
+  max-width: 1240px;
   margin: 0 auto;
+  margin-top: 40px;
 }
  
  
 .program-card {
-  width: 40%;
-  height: 560px;
-  position: relative;
-  border-radius: 26px;
-  overflow: hidden;
-  text-decoration: none;
- 
+    width: 360px;
+    height: 560px;
+    position: relative;
+    border-radius: 26px;
+    overflow: hidden;
+    text-decoration: none;
 }
  
 
  
 .spline-bg {
   position: relative;
-      width: 90%;
+  width: 100%;
   height: 100%;
 }
  
@@ -178,15 +462,19 @@
 }
  
  
-@media (max-width: 1200px) {
+@media (max-width: 992px) {
+.program-grid{
+  gap: 10px !important;
+    max-width: 1240px !important;
+}
   .program-card {
-    width: 45%;
+            width: 33% ;
   }
 }
  
 @media (max-width: 768px) {
   .program-card {
-    width: 90%;
+    width: 100%;
     height: 480px;
   }
   .section-title {
@@ -196,6 +484,13 @@
     font-size: 22px;
     
   }
+  .spline-bg {
+    width: 90%;
+}
+    .program-card {
+        width: 100%;
+        height: 480px;
+    }
 }
  
 header.global-header .header-logo a .logo {
