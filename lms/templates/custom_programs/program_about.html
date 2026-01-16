@@ -2157,8 +2157,11 @@ _safe_current_user_name = request.user.username
     program_id = program.id if program else None
 %>
 <script>
-    window.PROGRAM_ID = ${program_id | n, 'null'};
+    window.PROGRAM_ID = ${program_id if program_id is not None else 'null'};
 </script>
+
+
+
 
 <script>
     window.__COMPLETED_BEFORE__ = 0;
