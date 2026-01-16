@@ -2839,17 +2839,38 @@ document.addEventListener("click", function (e) {
     }, 600);
   };
 })();
-function handleEnrollClick(e) {
-    e.preventDefault();
+    function handleEnrollClick(e) {
+        e.preventDefault();
 
-    const btn = e.currentTarget;
+        const btn = e.currentTarget;
 
-    btn.classList.add("enroll-clicked");
+        btn.classList.add("enroll-clicked");
 
-    if (btn.classList.contains("is-animating")) return;
-    btn.classList.add("is-animating");
+        if (btn.classList.contains("is-animating")) return;
+        btn.classList.add("is-animating");
 
-    sessionStorage.setItem("programJustEnrolled", "1");
+        function handleEnrollClick(e) {
+        e.preventDefault();
+
+        const btn = e.currentTarget;
+        btn.classList.add("enroll-clicked");
+
+        if (btn.classList.contains("is-animating")) return;
+        btn.classList.add("is-animating");
+
+        // ✅ program-specific key
+        const programId =
+            document.querySelector(".program-about")?.dataset.programId;
+
+        if (programId) {
+            sessionStorage.setItem(`program_${programId}_justEnrolled`, "1");
+        }
+
+        setTimeout(() => {
+            window.location.href = btn.href;
+        }, 400);
+    }
+
 
     setTimeout(() => {
         window.location.href = btn.href;

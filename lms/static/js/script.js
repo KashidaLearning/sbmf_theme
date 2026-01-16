@@ -219,14 +219,7 @@ function initializeScene() {
         }
     });
 
-   if (
-    sessionStorage.getItem("programJustEnrolled") === "1" &&
-    !INTRO_FINISHED &&
-    !INTRO_PLAYING
-    ) {
-        setTimeout(playGameCourseIntro, 300);
-    }
-
+   
 }
 
 function updateBadgesPopup(badges) {
@@ -409,6 +402,18 @@ async function refreshCourseStatus() {
             window.coursePathData = data.coursePathData.items;
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
+            const justEnrolled =sessionStorage.getItem(`program_${CURRENT_PROGRAM_ID}_justEnrolled`) === "1";
+            if (
+            justEnrolled &&
+            !INTRO_FINISHED &&
+            !INTRO_PLAYING &&
+            !ENROLL_INTRO_ACTIVE
+            ) {
+            if (document.querySelectorAll(".circle-item").length) {
+                setTimeout(playGameCourseIntro, 300);
+            }
+            }
+
         }
       
 
@@ -518,9 +523,8 @@ window.addEventListener("message", (event) => {
 function playGameCourseIntro() {
     const STEP_DURATION_DESKTOP = 700;
 const STEP_DURATION_MOBILE  = 620;
-    if (ENROLL_INTRO_ACTIVE) return;
-    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
-
+    if (INTRO_PLAYING || ENROLL_INTRO_ACTIVE) return;
+    if (sessionStorage.getItem(`program_${CURRENT_PROGRAM_ID}_justEnrolled`) !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
 
