@@ -2153,18 +2153,33 @@ for ub in user_badges:
 _safe_current_user_rank = 0
 _safe_current_user_name = request.user.username
 %>
-<%
-    program_id = program.id if program else None
-%>
 <script>
-    window.PROGRAM_ID = ${program_id if program_id is not None else 'null'};
+  window.PROGRAM_ID = "${program.id}";
+</script>
+
+<script>
+  const PROGRAM_KEY = "program_" + window.PROGRAM_ID;
+
+  const K = {
+    completedBefore: PROGRAM_KEY + "_completedBefore",
+    lastCompletedCount: PROGRAM_KEY + "_lastCompletedCount",
+    lastXpCourseId: PROGRAM_KEY + "_lastXpCourseId",
+    soundPlayed: PROGRAM_KEY + "_soundPlayed",
+    justEnrolled: PROGRAM_KEY + "_justEnrolled",
+  };
+
+  window.__COMPLETED_BEFORE__ =
+    Number(localStorage.getItem(K.completedBefore)) || null;
+
+  window.__LAST_COMPLETED_COUNT__ =
+    Number(localStorage.getItem(K.lastCompletedCount)) || null;
+
+  window.__LAST_XP_COURSE_ID__ =
+    localStorage.getItem(K.lastXpCourseId) || null;
 </script>
 
 
-
-
 <script>
-    window.__COMPLETED_BEFORE__ = 0;
 window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
 </script>
 <script>
@@ -2312,12 +2327,10 @@ function lightRankConfetti() {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-        window.__LAST_XP_COURSE_ID__ = null;
 
     const audio = document.getElementById("courseCompleteSound");
     if (!audio) return;
 
-    window.__LAST_COMPLETED_COUNT__ = null;
     window.__SOUND_ALREADY_PLAYED__ = false;
 
     if (typeof window.refreshCourseStatus !== "function") {
@@ -2333,6 +2346,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const updated = window.coursePathData || [];
         const completedCount = updated.filter(c => c.state === "completed").length;
+        localStorage.setItem(
+        K.lastCompletedCount,
+        String(completedCount)
+        );
 
        if (window.__LAST_COMPLETED_COUNT__ === null) {
             window.__LAST_COMPLETED_COUNT__ = completedCount;
@@ -2375,7 +2392,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         window.__LAST_XP_COURSE_ID__ = uniqueKey;
 
-
+       localStorage.setItem(
+        K.lastXpCourseId,
+        window.__LAST_XP_COURSE_ID__
+        );
 
         const gainedXP = Number(lastCompletedCourse.xpAward || 0);
 
@@ -2819,7 +2839,7 @@ document.addEventListener("click", function (e) {
     audioEl.play().catch(()=>{});
     };
 
-  window.handleCourseClose = function () {
+ /*  window.handleCourseClose = function () {
     $('#courseFrame').attr('src', '');
     $('#courseModal').css('display', 'none');
     unlockScrollIfNoPopup();
@@ -2848,28 +2868,24 @@ document.addEventListener("click", function (e) {
       }
     }, 600);
   };
-})();
+})(); */
 function handleEnrollClick(e) {
     e.preventDefault();
 
     const btn = e.currentTarget;
+
     btn.classList.add("enroll-clicked");
 
     if (btn.classList.contains("is-animating")) return;
     btn.classList.add("is-animating");
 
-    const programId =
-        document.querySelector(".program-about")?.dataset.programId;
+    sessionStorage.setItem("program_" + window.PROGRAM_ID + "_justEnrolled","1");
 
-    if (programId) {
-        sessionStorage.setItem(`program_${programId}_justEnrolled`, "1");
-    }
 
     setTimeout(() => {
         window.location.href = btn.href;
     }, 400);
 }
-
 window.addEventListener("beforeunload", () => {
     const popup = document.getElementById("rank-popup");
 
