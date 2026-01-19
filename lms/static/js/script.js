@@ -224,6 +224,7 @@ function waitForCirclesAndPlayIntro() {
         return;
     }
 
+    circlesWrapper.style.visibility = "visible"; 
     playGameCourseIntro();
 }
 
@@ -534,7 +535,6 @@ if (myBadgesIcon) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    initializeScene();
     refreshCourseStatus();
 });
 
