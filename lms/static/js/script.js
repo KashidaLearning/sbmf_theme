@@ -207,6 +207,25 @@ function updateContainerHeight() {
     const last = calculatePosition(circleElements.length - 1);
     coursescontainer.style.minHeight = `${last.y + 120}px`;
 }
+function waitForCirclesAndPlayIntro() {
+    if (
+        getProgramFlag("justEnrolled") !== "1" ||
+        INTRO_PLAYING ||
+        INTRO_FINISHED
+    ) {
+        return;
+    }
+
+    const circles = document.querySelectorAll(".circle-item");
+
+    if (!circles.length) {
+        requestAnimationFrame(waitForCirclesAndPlayIntro);
+        return;
+    }
+
+    playGameCourseIntro();
+}
+
 
 function initializeScene() {
     if (!circlesWrapper || !coursescontainer) return;
@@ -231,13 +250,7 @@ function initializeScene() {
         }
     });
 
-   if (
-    getProgramFlag("justEnrolled") === "1" &&
-    !INTRO_PLAYING &&
-    !ENROLL_INTRO_ACTIVE
-) {
-    setTimeout(playGameCourseIntro, 300);
-}
+  
 
 
 
@@ -424,6 +437,8 @@ async function refreshCourseStatus() {
             window.coursePathData = data.coursePathData.items;
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
+            waitForCirclesAndPlayIntro();
+
         }
       
 
