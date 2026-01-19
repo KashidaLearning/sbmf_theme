@@ -2157,6 +2157,11 @@ _safe_current_user_name = request.user.username
 <script>
   window.PROGRAM_ID = ${program.id};
 </script>
+<script>
+  if (sessionStorage.getItem("program_{{ program.id }}_justEnrolled") === "1") {
+    document.documentElement.classList.add("just-enrolled");
+  }
+</script>
 
 <script>
     window.__COMPLETED_BEFORE__ = 0;
