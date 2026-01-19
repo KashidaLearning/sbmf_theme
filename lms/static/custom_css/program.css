@@ -203,6 +203,7 @@ ease;
     font-style: normal;
     font-weight: 700;
     line-height: 37px;
+    display: none;
     }
  #certificate-status {
     position: relative; 

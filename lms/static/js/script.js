@@ -209,8 +209,13 @@ function updateContainerHeight() {
     coursescontainer.style.minHeight = `${last.y + 120}px`;
 }
 function waitForCirclesAndPlayIntro() {
-    if (INTRO_PLAYING || INTRO_FINISHED) return;
-    if (getProgramFlag("justEnrolled") !== "1") return;
+    if (
+        getProgramFlag("justEnrolled") !== "1" ||
+        INTRO_PLAYING ||
+        INTRO_FINISHED
+    ) {
+        return;
+    }
 
     const circles = document.querySelectorAll(".circle-item");
 
@@ -221,6 +226,7 @@ function waitForCirclesAndPlayIntro() {
 
     playGameCourseIntro();
 }
+
 
 
 function initializeScene() {
@@ -236,6 +242,10 @@ function initializeScene() {
     applyPulseToActiveCourses();
     updatePositions();
     const justEnrolled = getProgramFlag("justEnrolled") === "1";
+
+    
+
+
     document.querySelectorAll(".circle-item").forEach(c => {
         if (justEnrolled && !INTRO_FINISHED) {
             c.classList.add("is-faded");
@@ -431,9 +441,7 @@ async function refreshCourseStatus() {
 
        if (data.coursePathData?.items) {
             window.coursePathData = data.coursePathData.items;
-            if (!INTRO_PLAYING && !ENROLL_INTRO_ACTIVE) {
-                initializeScene();
-            }
+            initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
             waitForCirclesAndPlayIntro();
 
@@ -544,6 +552,8 @@ window.addEventListener("message", (event) => {
 
 
 function playGameCourseIntro() {
+    document.documentElement.classList.remove("just-enrolled");
+
     const STEP_DURATION_DESKTOP = 700;
     const STEP_DURATION_MOBILE  = 620;
     if (ENROLL_INTRO_ACTIVE) return;
