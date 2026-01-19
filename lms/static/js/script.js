@@ -23,6 +23,7 @@ window.__POPUP_HANDLED__ = null;
 window.__ACTIVE_RANK_POPUP_STAGE__ = null;
 window.__JUST_COMPLETED_STAGE__ = null; 
 
+
 let numCircles = 0;
 let circleElements = [];
 
@@ -208,13 +209,8 @@ function updateContainerHeight() {
     coursescontainer.style.minHeight = `${last.y + 120}px`;
 }
 function waitForCirclesAndPlayIntro() {
-    if (
-        getProgramFlag("justEnrolled") !== "1" ||
-        INTRO_PLAYING ||
-        INTRO_FINISHED
-    ) {
-        return;
-    }
+    if (INTRO_PLAYING || INTRO_FINISHED) return;
+    if (getProgramFlag("justEnrolled") !== "1") return;
 
     const circles = document.querySelectorAll(".circle-item");
 
@@ -435,7 +431,9 @@ async function refreshCourseStatus() {
 
        if (data.coursePathData?.items) {
             window.coursePathData = data.coursePathData.items;
-            initializeScene();
+            if (!INTRO_PLAYING && !ENROLL_INTRO_ACTIVE) {
+                initializeScene();
+            }
             document.dispatchEvent(new Event("circlesRebuilt"));
             waitForCirclesAndPlayIntro();
 
@@ -547,8 +545,9 @@ window.addEventListener("message", (event) => {
 
 function playGameCourseIntro() {
     const STEP_DURATION_DESKTOP = 700;
-const STEP_DURATION_MOBILE  = 620;
+    const STEP_DURATION_MOBILE  = 620;
     if (ENROLL_INTRO_ACTIVE) return;
+     if (INTRO_PLAYING || INTRO_FINISHED) return;
     if (getProgramFlag("justEnrolled") !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
