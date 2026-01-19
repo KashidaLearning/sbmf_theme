@@ -2153,6 +2153,11 @@ for ub in user_badges:
 _safe_current_user_rank = 0
 _safe_current_user_name = request.user.username
 %>
+
+<script>
+  window.PROGRAM_ID = ${program.id};
+</script>
+
 <script>
     window.__COMPLETED_BEFORE__ = 0;
 window.USER_IS_ENROLLED = "${ 'true' if user_is_enrolled else 'false' }";
@@ -2849,7 +2854,12 @@ function handleEnrollClick(e) {
     if (btn.classList.contains("is-animating")) return;
     btn.classList.add("is-animating");
 
-    sessionStorage.setItem("programJustEnrolled", "1");
+   sessionStorage.setItem(
+  "program_" + window.PROGRAM_ID + "_justEnrolled",
+  "1"
+);
+
+
 
     setTimeout(() => {
         window.location.href = btn.href;

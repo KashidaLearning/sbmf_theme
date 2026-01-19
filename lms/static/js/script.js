@@ -1,3 +1,19 @@
+console.log("SCRIPT.JS LOADED ", window.PROGRAM_ID);
+
+const PROGRAM_KEY = `program_${window.PROGRAM_ID}`;
+
+function getProgramFlag(key) {
+  return sessionStorage.getItem(`${PROGRAM_KEY}_${key}`);
+}
+
+function setProgramFlag(key, value = "1") {
+  sessionStorage.setItem(`${PROGRAM_KEY}_${key}`, value);
+}
+
+function clearProgramFlag(key) {
+  sessionStorage.removeItem(`${PROGRAM_KEY}_${key}`);
+}
+
 let INTRO_PLAYING = false;
 let INTRO_FINISHED = false;
 let ENROLL_INTRO_ACTIVE = false;
@@ -124,8 +140,8 @@ function createCircle(data, index) {
 }
 const ROOT = document.querySelector(".program-about") || document.body;
 
-const CURRENT_PROGRAM_ID =
-    ROOT.dataset.programId || window.location.pathname;
+const CURRENT_PROGRAM_ID = String(window.PROGRAM_ID);
+
 
 const CURRENT_USER_ID =
     ROOT.dataset.userId || "anonymous";
@@ -204,7 +220,7 @@ function initializeScene() {
     data.forEach((item, index) => createCircle(item, index));
     applyPulseToActiveCourses();
     updatePositions();
-    const justEnrolled = sessionStorage.getItem("programJustEnrolled") === "1";
+    const justEnrolled = getProgramFlag("justEnrolled") === "1";
     document.querySelectorAll(".circle-item").forEach(c => {
         if (justEnrolled && !INTRO_FINISHED) {
             c.classList.add("is-faded");
@@ -216,12 +232,15 @@ function initializeScene() {
     });
 
    if (
-    sessionStorage.getItem("programJustEnrolled") === "1" &&
-    !INTRO_FINISHED &&
-    !INTRO_PLAYING
-    ) {
-        setTimeout(playGameCourseIntro, 300);
-    }
+    getProgramFlag("justEnrolled") === "1" &&
+    !INTRO_PLAYING &&
+    !ENROLL_INTRO_ACTIVE
+) {
+    setTimeout(playGameCourseIntro, 300);
+}
+
+
+
 
 }
 
@@ -515,8 +534,7 @@ function playGameCourseIntro() {
     const STEP_DURATION_DESKTOP = 700;
 const STEP_DURATION_MOBILE  = 620;
     if (ENROLL_INTRO_ACTIVE) return;
-    if (sessionStorage.getItem("programJustEnrolled") !== "1") return;
-
+    if (getProgramFlag("justEnrolled") !== "1") return;
     ENROLL_INTRO_ACTIVE = true;
     INTRO_PLAYING = true;
 
@@ -594,7 +612,9 @@ const STEP_DURATION_MOBILE  = 620;
 }
 
 function finishIntro() {
-    sessionStorage.removeItem("programJustEnrolled");
+    clearProgramFlag("justEnrolled");
+    setProgramFlag("introPlayed");
+
 
     INTRO_PLAYING = false;
     ENROLL_INTRO_ACTIVE = false;
