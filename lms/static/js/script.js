@@ -213,18 +213,12 @@ function waitForCirclesAndPlayIntro() {
         getProgramFlag("justEnrolled") !== "1" ||
         INTRO_PLAYING ||
         INTRO_FINISHED
-    ) {
-        return;
-    }
+    ) return;
 
     const circles = document.querySelectorAll(".circle-item");
+    if (!circles.length) return; // no looping anymore
 
-    if (!circles.length) {
-        requestAnimationFrame(waitForCirclesAndPlayIntro);
-        return;
-    }
-
-    circlesWrapper.style.visibility = "visible"; 
+    circlesWrapper.style.visibility = "visible";
     playGameCourseIntro();
 }
 
@@ -232,8 +226,11 @@ function waitForCirclesAndPlayIntro() {
 
 function initializeScene() {
     if (!circlesWrapper || !coursescontainer) return;
-    const data = window.coursePathData || [];
-    if (!data.length || !circlesWrapper) return;
+
+    const raw = window.coursePathData || [];
+    const data = Array.isArray(raw) ? raw : (raw.items || []);
+
+    if (!data.length) return;
 
     numCircles = data.length;
     circlesWrapper.innerHTML = "";
@@ -242,10 +239,8 @@ function initializeScene() {
     data.forEach((item, index) => createCircle(item, index));
     applyPulseToActiveCourses();
     updatePositions();
+
     const justEnrolled = getProgramFlag("justEnrolled") === "1";
-
-    
-
 
     document.querySelectorAll(".circle-item").forEach(c => {
         if (justEnrolled && !INTRO_FINISHED) {
@@ -257,12 +252,10 @@ function initializeScene() {
         }
     });
 
-  
-
-
-
-
+    // IMPORTANT: don't keep wrapper hidden
+    circlesWrapper.style.visibility = "visible";
 }
+
 
 function updateBadgesPopup(badges) {
     const items = document.querySelectorAll("#my-badges-content .badge-item img");
@@ -535,8 +528,26 @@ if (myBadgesIcon) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    refreshCourseStatus();
+    // 1) Build circles immediately from existing page data (NO network delay)
+    initializeScene();
+
+    // 2) If just enrolled, start intro immediately after DOM paints
+    if (getProgramFlag("justEnrolled") === "1") {
+        circlesWrapper.style.visibility = "visible";
+        requestAnimationFrame(() => {
+            playGameCourseIntro();   // or waitForCirclesAndPlayIntro()
+        });
+
+        // 3) Optional: refresh AFTER intro finishes (best) OR after a short delay
+        // (finishIntro already does refreshCourseStatus(), so you can skip this line)
+        // setTimeout(refreshCourseStatus, 1500);
+    } else {
+        circlesWrapper.style.visibility = "visible";
+        // Normal users: refresh right away for leaderboard/progress updates
+        refreshCourseStatus();
+    }
 });
+
 
 window.addEventListener("resize", () => {
     if (!circleElements.length) return;
