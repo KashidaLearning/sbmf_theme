@@ -422,6 +422,9 @@ function updateLeaderboardPopup(leaderboardData) {
 
 
 async function refreshCourseStatus() {
+    if (getProgramFlag("justEnrolled") === "1") return;
+        if (ENROLL_INTRO_ACTIVE || INTRO_PLAYING) return;
+
     if (ENROLL_INTRO_ACTIVE) return;   
     try {
         const response = await fetch(window.location.pathname + "?ajax=1");
@@ -437,7 +440,6 @@ async function refreshCourseStatus() {
             window.coursePathData = data.coursePathData.items;
             initializeScene();
             document.dispatchEvent(new Event("circlesRebuilt"));
-            waitForCirclesAndPlayIntro();
 
         }
       
@@ -556,6 +558,7 @@ window.addEventListener("resize", () => {
 
 window.addEventListener("message", (event) => {
     if (!event.data) return;
+    if (getProgramFlag("justEnrolled") === "1" || INTRO_PLAYING) return;
     if (event.data.event === "progress" || event.data.event === "completion") {
         refreshCourseStatus();
     }
