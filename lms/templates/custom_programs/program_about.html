@@ -1142,7 +1142,7 @@ def time_to_seconds(timestr):
                     <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
                     <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}">
                 </div>
-                <p> لوحة التحكم</p>
+                <p> دليل اللعبة</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
@@ -1189,7 +1189,7 @@ def time_to_seconds(timestr):
                 <div class="icon-circle">
                      <img src="${static.url('images/dashboard-icon.png')}" alt="لوحةالتحكم">
                 </div>
-                <p> لوحة التحكم</p>
+                <p> دليل اللعبة</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
@@ -1805,7 +1805,7 @@ for index, data in enumerate(sorted_leaderboard, start=1):
         <div class="control-text-box">
             <h3>الشارات</h3>
             <ul>
-                <li>بعد إكمال كل تحدٍّ، تحصلون على شارة تقديرًا لإنجازكم.</li>
+                <li>بعد إكمال كل تحدٍّ، تحصلون على شارة تقديرًا لإنجازكم</li>
                 <li>عند جمع كل الشارات، تصبحون مؤهّلين للحصول على الشهادة النهائية.</li>
             </ul>
         </div>
@@ -1863,10 +1863,10 @@ for ub in user_badges:
 <div id="my-badges-content" style="display: none;">
 
     <div class="sharati-intro-text">
-        كل تحدٍ يمنحكم أداة جديدة تساعدكم على الاستمرار بعد انقطاع الإنترنت.
-        <br>
-        أكملوا جميع التحديات لجمع الأدوات الستة وتكوين «حقيبة الاستمرارية».
-    </div>
+كل تحدٍ يمنحك شارة جديدة تساعدك   .  
+
+      <br>
+أكمل جميع التحديات لجمع الشارات.       </div>
 
     <div class="badge-grid">
 
@@ -1981,16 +1981,16 @@ for ub in user_badges:
 
         <!-- CENTER -->
         <div class="popup-center">
-            <div class="icon-item-tab" data-target="control-content" >
+             <div class="icon-item-tab" data-target="leaderboard-content" data-img-active="${static.url('images/leaderboard-icon-active.png')}">
                 <div class="icon-circle-tab">
-                    <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
-                     <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}" >
+                    <img class="icon-img" src="${static.url('images/leaderboard-icon-2.png')}">
+                    <img class="icon-img-active" src="${static.url('images/leaderboard-icon-active.png')}" >
 
                 </div>
-                <p class="tab-label">لوحة التحكم</p>
+                <p class="tab-label">لوحة الصدارة</p>
             </div>
+         
           
-
             <div class="icon-item-tab no-color" data-target="my-badges-content" >
                 <div class="icon-circle-tab">
                     <img class="icon-img" src="${static.url('images/badges-icon-1.png')}">
@@ -1998,13 +1998,13 @@ for ub in user_badges:
                 </div>
                 <p class="tab-label">شاراتي</p>
             </div>
-           <div class="icon-item-tab" data-target="leaderboard-content" data-img-active="${static.url('images/leaderboard-icon-active.png')}">
+             <div class="icon-item-tab" data-target="control-content" >
                 <div class="icon-circle-tab">
-                    <img class="icon-img" src="${static.url('images/leaderboard-icon-2.png')}">
-                    <img class="icon-img-active" src="${static.url('images/leaderboard-icon-active.png')}" >
+                    <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
+                     <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}" >
 
                 </div>
-                <p class="tab-label">لوحة الصدارة</p>
+                <p class="tab-label">دليل اللعبة</p>
             </div>
         <div class="popup-left">
 
@@ -2570,7 +2570,7 @@ document.body.addEventListener('click', function(e) {
     msg.className = 'locked-message';
 
     if (window.USER_IS_ENROLLED === "true") {
-        msg.textContent = "لطفًا، أكملوا التحدّي المتاح أولًا للتمكّن من فتح التحديات المقفلة.";
+        msg.textContent = "لطفًا، أكمل التحدّي المتاح أولًا للتمكّن من فتح التحديات المقفلة.";
     } else {
         msg.textContent = "يجب الالتحاق في الرحلة أولًا لتتمكّن من بدء المغامرات.";
     }
