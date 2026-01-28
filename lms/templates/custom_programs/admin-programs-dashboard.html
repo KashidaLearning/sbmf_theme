@@ -1,0 +1,158 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%inherit file="../main.html" />
+<%!
+import pytz
+from django.urls import reverse
+from six import text_type
+from django.utils.translation import gettext as _
+from custom_programs.helpers import get_enrollments_for_program, get_completions_for_program
+%>
+<%
+    local_tz = pytz.timezone(settings.TIME_ZONE)
+%>
+<%block name="bodyclass">ambassador-dashboard</%block>
+<%block name="pagetitle">${_("Admin Dashboard")}</%block>
+<%include file="dashboard-style.html"/>
+<div class="admin-instruction">
+    <div class="container">
+       <div class="admin-instruction-inner">
+            <div class="admin-row">
+                <div class="input-box">
+                    <div class="main-boxes first">
+                        <h2>${total_programs}</h2>
+                        <p>${_("Total Programs")}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-type-slide">
+            <div class="form-inner-main">
+                <div class="form-left">
+                    <div class="form-inner student-search">
+                        <input type="text" name="program" id="program" placeholder="${_('Search Program')}" autocomplete="off">
+                    </div>
+                    <div class="form-inner">
+                        <input type="hidden" name="csrfmiddlewaretoken" id="csrfmiddlewaretoken" value="${csrf_token}">
+                        <input type="submit" value="${_('Search')}" id="search-admin-program">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-data-div">
+            <div class="loading-image hidden">
+                <img src="${static.url('images/ajax-loader1.gif')}">
+            </div>
+            <div class="admin-report-div">
+                <div class="admin-listing-main user-details">
+                    <table cellpadding="0" cellspacing="0" width="100%">
+                        <tr class="head-tabel">
+                            <th align="left" valign="top" class="first-head">${_("Program Name")}</th>
+                            <th align="left" valign="top">${_("Start Date")}</th>
+                            <th align="left" valign="top">${_("Male Enrollments")}</th>
+                            <th align="left" valign="top">${_("Female Enrollments")}</th>
+                            <th align="left" valign="top">${_("Total Enrollments")}</th>
+                            <th align="left" valign="top">${_("No. of Completed")}</th>
+                        </tr>
+                        % for program in programs:
+                            <%
+                                total_enrollments = get_enrollments_for_program(program.id)
+                                male_enrollments = get_enrollments_for_program(program.id, gender="m")
+                                female_enrollments = get_enrollments_for_program(program.id, gender="f")
+                                total_completed = get_completions_for_program(program.id)
+                                date_started =  program.start.strftime("%d/%m/%Y") if program.start else ""
+                            %>
+                            <tr>
+                                <td class="first-box">
+                                    ${program.name}
+                                </td>
+                                <td class="second-box">${date_started}</td>
+                                <td class="third-box">${male_enrollments}</td>
+                                <td class="third-box">${female_enrollments}</td>
+                                <td class="third-box">${total_enrollments}</td>
+                                <td class="fourth-box">${total_completed}</td>
+                            </tr>
+                        % endfor
+                    </table>
+                </div>
+                <div class="admine-bottom">
+                    % if programs.has_other_pages:
+                        <div class="pagignation">
+                            <ul>
+                                % if programs.has_previous():
+                                    <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                                % else:
+                                    <li><a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-left"></i></a></li>
+                                % endif
+                                % if programs.number + (-4) > 1:
+                                    <li>
+                                        <a href="javascript:void(0)" data-page="${ programs.number + (-5) }" class="admin-programs-pagination-btn" >&hellip;</a>
+                                    </li>
+                                % endif
+                                % for i in programs.paginator.page_range:
+                                    % if programs.number == i:
+                                        <li class="active"><a href="javascript:void(0)" class="disabled">${ i }</a></li>
+                                    % elif i > programs.number + (-5) and i < programs.number + + (5):
+                                        <li><a href="javascript:void(0)" data-page="${ i }" class="admin-programs-pagination-btn">${ i }</a></li>
+                                    % endif
+                                % endfor
+                                % if programs.paginator.num_pages > programs.number + (4):
+                                    <li>
+                                        <a href="javascript:void(0)" data-page="${ programs.number + (5) }" class="admin-programs-pagination-btn">&hellip;</a>
+                                    </li>
+                                % endif
+                                % if programs.has_next():
+                                    <li>
+                                        <a href="javascript:void(0)" data-page="${ programs.next_page_number() }" class="admin-programs-pagination-btn"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                % else:
+                                    <li>
+                                        <a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                % endif
+                            </ul>
+                        </div>
+                    % endif
+                </div>
+            </div>
+        </div>
+        <div class="download-btn">
+            <a href="javascript:void(0)" id="download-admin-program-report">
+                <img src="${static.url('images/edit-img.png')}" class="respond"> ${_("Download")}
+            </a>
+        </div>
+        <div class="report-download-msg hidden">
+            <p>${_("Report generation has been started, once generated it will be available to download. This report will be accessible for next 7 days.")}</p>
+        </div>
+        <div class="download-area">
+            <ul class="reports-list">
+            </ul>
+        </div>
+    </div>
+</div>
+<%block name="js_extra">
+<script type="text/javascript">
+    $(document).ready(function(){
+        get_report()
+        function get_report(){
+            $.ajax({
+                type: "GET",
+                data: {},
+                url: "/programs/admin-dashboard/programs/get/reports/",
+                success: function(data) {
+                    if(!$(".report-download-msg").hasClass("hidden")){
+                        $(".report-download-msg").addClass('hidden')
+                    }
+                    $(".download-area ul").empty()
+                    $.each(data.data, function( index, value ) {
+                        $(".download-area ul").append('<li><a href="'+value[1]+'" target="_blank">'+value[0]+'</a></li>');
+                    })
+                },
+                // complete:function(data){
+                //     setTimeout(get_report, 5000);
+                // }
+            });
+        }
+    })
+</script>
+</%block>

@@ -1,0 +1,18 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%block name="custom_style_extra">
+<link href="${static.url('custom_css/select2.min.css')}" rel="stylesheet" >
+<link href="${static.url('custom_css/select2.css')}" rel="stylesheet" >
+<link href="${static.url('custom_css/jquery-ui.css')}" rel="stylesheet">
+<link href="${static.url('custom_css/daterangepicker.css')}" rel="stylesheet" >
+<link href="${static.url('custom_css/reports.css')}" rel="stylesheet" >
+</%block>
+
+<%block name="custom_js_extra">
+<script type="text/javascript" src="${static.url('js/select2.js')}"></script>
+<script type="text/javascript" src="${static.url('js/jquery-ui.min.js')}"></script>
+<script type="text/javascript" src="${static.url('js/moment.min.js')}"></script>
+<script type="text/javascript" src="${static.url('js/daterangepicker.js')}"></script>
+<script type="text/javascript" src="${static.url('js/reports.js')}"></script>
+<script type="text/javascript" src="${static.url('js/validator.js')}"></script>
+</%block>
