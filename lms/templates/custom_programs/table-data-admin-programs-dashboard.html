@@ -30,7 +30,7 @@ from custom_programs.helpers import get_enrollments_for_program, get_completions
             %>
             <tr>
                 <td class="first-box">
-                    ${program.name}
+                    <a href="${reverse('custom_programs:admin-program-view', args=[program.id])}">${program.name}</a>
                 </td>
                 <td class="second-box">${date_started}</td>
                 <td class="third-box">${male_enrollments}</td>
