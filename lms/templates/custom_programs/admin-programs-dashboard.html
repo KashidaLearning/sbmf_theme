@@ -64,7 +64,7 @@ from custom_programs.helpers import get_enrollments_for_program, get_completions
                             %>
                             <tr>
                                 <td class="first-box">
-                                    ${program.name}
+                                    <a href="${reverse('custom_programs:admin-program-view', args=[program.id])}">${program.name}</a>
                                 </td>
                                 <td class="second-box">${date_started}</td>
                                 <td class="third-box">${male_enrollments}</td>
@@ -138,7 +138,7 @@ from custom_programs.helpers import get_enrollments_for_program, get_completions
             $.ajax({
                 type: "GET",
                 data: {},
-                url: "/programs/admin-dashboard/programs/get/reports/",
+                url: "/admin-dashboard/programs/get/reports/",
                 success: function(data) {
                     if(!$(".report-download-msg").hasClass("hidden")){
                         $(".report-download-msg").addClass('hidden')
@@ -148,9 +148,9 @@ from custom_programs.helpers import get_enrollments_for_program, get_completions
                         $(".download-area ul").append('<li><a href="'+value[1]+'" target="_blank">'+value[0]+'</a></li>');
                     })
                 },
-                // complete:function(data){
-                //     setTimeout(get_report, 5000);
-                // }
+                complete:function(data){
+                    setTimeout(get_report, 5000);
+                }
             });
         }
     })
