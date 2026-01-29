@@ -1,0 +1,82 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%!
+import pytz
+from django.urls import reverse
+from six import text_type
+from django.utils.translation import gettext as _
+from custom_programs.helpers import get_enrollments_for_program, get_completions_for_program
+%>
+<%
+    local_tz = pytz.timezone(settings.TIME_ZONE)
+%>
+<div class="admin-listing-main user-details">
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <tr class="head-tabel">
+            <th align="left" valign="top" class="first-head">${_("Program Name")}</th>
+            <th align="left" valign="top">${_('Start Date')}</th>
+            <th align="left" valign="top">${_("Male Enrollments")}</th>
+            <th align="left" valign="top">${_("Female Enrollments")}</th>
+            <th align="left" valign="top">${_("Total Enrollments")}</th>
+            <th align="left" valign="top">${_('No. of Completed')}</th>
+        </tr>
+        % for program in programs:
+            <%
+                total_enrollments = get_enrollments_for_program(program.id)
+                male_enrollments = get_enrollments_for_program(program.id, gender="m")
+                female_enrollments = get_enrollments_for_program(program.id, gender="f")
+                total_completed = get_completions_for_program(program.id)
+                date_started =  program.start.strftime("%d/%m/%Y") if program.start else ""
+            %>
+            <tr>
+                <td class="first-box">
+                    <a href="${reverse('custom_programs:admin-program-view', args=[program.id])}">${program.name}</a>
+                </td>
+                <td class="second-box">${date_started}</td>
+                <td class="third-box">${male_enrollments}</td>
+                <td class="third-box">${female_enrollments}</td>
+                <td class="third-box">${total_enrollments}</td>
+                <td class="fourth-box">${total_completed}</td>
+            </tr>
+        % endfor
+    </table>
+</div>
+<div class="admine-bottom">
+    % if programs.has_other_pages:
+        <div class="pagignation">
+            <ul>
+                % if programs.has_previous():
+                    <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                % else:
+                    <li><a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-left"></i></a></li>
+                % endif
+                % if programs.number + (-4) > 1:
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ programs.number + (-5) }" class="admin-programs-pagination-btn" >&hellip;</a>
+                    </li>
+                % endif
+                % for i in programs.paginator.page_range:
+                    % if programs.number == i:
+                        <li class="active"><a href="javascript:void(0)" class="disabled">${ i }</a></li>
+                    % elif i > programs.number + (-5) and i < programs.number + + (5):
+                        <li><a href="javascript:void(0)" data-page="${ i }" class="admin-programs-pagination-btn">${ i }</a></li>
+                    % endif
+                % endfor
+                % if programs.paginator.num_pages > programs.number + (4):
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ programs.number + (5) }" class="admin-programs-pagination-btn">&hellip;</a>
+                    </li>
+                % endif
+                % if programs.has_next():
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ programs.next_page_number() }" class="admin-programs-pagination-btn"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                % else:
+                    <li>
+                        <a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                % endif
+            </ul>
+        </div>
+    % endif
+</div>

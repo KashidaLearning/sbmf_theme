@@ -1,0 +1,92 @@
+<%page expression_filter="h"/>
+<%namespace name='static' file='../static_content.html'/>
+<%!
+import pytz
+from django.urls import reverse
+from six import text_type
+from django.utils.translation import gettext as _
+from custom_programs.helpers import get_completion_date, get_program_progress, get_badges_issued, get_rank_number, get_points_xp
+%>
+<%
+    local_tz = pytz.timezone(settings.TIME_ZONE)
+%>
+<div class="admin-listing-main course-details">
+    <table cellpadding="0" cellspacing="0" width="100%">
+        <tr class="head-tabel">
+            <th align="left" valign="top">${_("Student Name")}</th>
+            <th align="left" valign="top">${_('Email')}</th>
+            <th align="left" valign="top">${_('Progress(%)')}</th>
+            <th align="left" valign="top">${_('Completed In')}</th>
+            <th align="left" valign="top">${_('Enrolled In')}</th>
+            <th align="left" valign="top">${_('Badges Issued')}</th>
+            <th align="left" valign="top">${_('Rank')}</th>
+            <th align="left" valign="top">${_('Points')}</th>
+        </tr>
+        % for enrollment in enrollments:
+            <%
+                enrollment_date = enrollment.created.replace(tzinfo=pytz.utc).astimezone(local_tz).strftime("%d/%m/%Y")
+                progress = get_program_progress(enrollment.user, enrollment.program)
+                completion_date = get_completion_date(enrollment.user.id, enrollment.program_id)
+                badges_issued = get_badges_issued(enrollment.user, enrollment.program)
+                rank_number = get_rank_number(enrollment.user, enrollment.program)
+                points_xp = get_points_xp(enrollment.user, enrollment.program)
+            %>
+            <tr>
+                <td class="second-box">
+                    % if hasattr(enrollment.user, 'profile'):
+                        ${enrollment.user.profile.name or enrollment.user.get_full_name() or enrollment.user.username}
+                    % else:
+                        ${enrollment.user.get_full_name() or enrollment.user.username}
+                    % endif
+                </td>
+                <td class="second-box">${enrollment.user.email}</td>
+                <td class="second-box">${progress}</td>
+                <td class="second-box">${completion_date}</td>
+                <td class="third-box">${enrollment_date}</td>
+                <td class="third-box">${badges_issued}</td>
+                <td class="third-box">${rank_number}</td>
+                <td class="third-box">${points_xp}</td>
+            </tr>
+        % endfor
+    </table>
+</div>
+<div class="admine-bottom">
+    % if enrollments.has_other_pages:
+        <div class="pagignation">
+            <ul>
+                % if enrollments.has_previous():
+                    <li><a href="#"><i class="fa fa-angle-left"></i></a></li>
+                % else:
+                    <li><a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-left"></i></a></li>
+                % endif
+                % if enrollments.number + (-4) > 1:
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ enrollments.number + (-5) }" data-program=${program.id} class="ase-pagination-btn" >&hellip;</a>
+                    </li>
+                % endif
+                % for i in enrollments.paginator.page_range:
+                    % if enrollments.number == i:
+                        <li class="active"><a href="javascript:void(0)" class="disabled">${ i }</a></li>
+                    % elif i > enrollments.number + (-5) and i < enrollments.number + + (5):
+                        <li><a href="javascript:void(0)" data-page="${ i }" data-program=${program.id} class="ase-pagination-btn">${ i }</a></li>
+                    % endif
+                % endfor
+                % if enrollments.paginator.num_pages > enrollments.number + (4):
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ enrollments.number + (5) }" data-program=${program.id} class="ase-pagination-btn">&hellip;</a>
+                    </li>
+                % endif
+                % if enrollments.has_next():
+                    <li>
+                        <a href="javascript:void(0)" data-page="${ enrollments.next_page_number() }" data-program=${program.id} class="ase-pagination-btn"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                % else:
+                    <li>
+                        <a href="javascript:void(0)" class="disabled"><i class="fa fa-angle-right"></i></a>
+                    </li>
+                % endif
+            </ul>
+            <div style="padding-top: 10px;padding-bottom: 20px;"><p>Total ${all_enrollments} rows</p></div>
+        </div>
+    % endif
+</div>
