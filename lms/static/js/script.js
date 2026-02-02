@@ -914,6 +914,11 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("final");
+        document.dispatchEvent(
+        new CustomEvent("certificateUnlocked", {
+            detail: { cert_url: "#" }
+        })
+    );
     }
 
 }

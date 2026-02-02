@@ -720,7 +720,7 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
    
   .rank-num {
     width: 104px;
-    color: rgba(17, 13, 124, 0.20);
+    color: var(--program-main-color);
     text-align: left;
     text-shadow: 0 4px 4px rgba(255, 255, 255, 0.15);
     font-family: "IBM Plex Sans";
@@ -729,6 +729,7 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
     font-weight: 700;
     line-height: normal;
     text-transform: capitalize;
+
 }
 
 
@@ -2308,6 +2309,30 @@ function lightRankConfetti() {
 
 
 <script src="${static.url('js/script.js')}"></script>
+<script>
+document.addEventListener("certificateUnlocked", function (e) {
+    const data = e.detail || {};
+
+    const certSection = document.getElementById("certificate-content");
+    if (!certSection) return;
+
+    const btn = certSection.querySelector(".download-btn");
+    if (!btn) return;
+
+    btn.classList.remove("disabled");
+    btn.classList.add("active");
+    btn.removeAttribute("onclick");
+
+    if (data.cert_url) {
+        btn.setAttribute("href", data.cert_url);
+    }
+
+    const msg = certSection.querySelector(".certificate-case p");
+    if (msg) {
+        msg.textContent = "مبروك! يمكنك الآن تنزيل شهادتك 🎓";
+    }
+});
+</script>
 
 
 <script>
