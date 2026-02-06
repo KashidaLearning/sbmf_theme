@@ -7,7 +7,17 @@
 
 
 <style>
-
+.header-logo {
+    width: auto !important;
+    max-width: 100% !important;
+}
+img.logo {
+    height: auto !important;
+    max-height: 78px !important;
+    margin-right: -127px !important;
+    margin-left: 30px !important;
+    max-width: 151px !important;
+}
   .global-header .nav-links .secondary {
         margin: 0 !important;
         background-color: white;
@@ -44,13 +54,18 @@
 
   .global-header .nav-links .main .nav-tab a {
     color: white !important;
-    font-size: 18px !important;
+    font-size: 23px !important;
     font-weight: 700 !important;
     padding: 0 !important;
   }
 
    .global-header .nav-links .main .nav-tab {
-    margin: 0 20px !important;
+    margin: 0 30px !important;
+        display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    white-space: nowrap;
    }
 
 
@@ -64,7 +79,7 @@
 
 .global-header .nav-links .main {
         margin: 0 !important;
-        margin-right: 80px !important;
+        margin-right: 36px !important;
       }
 
     .global-header .nav-links .main .nav-tab a.active, .global-header .nav-links .main .nav-tab a:hover {
@@ -114,7 +129,12 @@ from openedx.core.djangoapps.site_configuration import helpers as configuration_
           تواصل معنا 
           </a>
       </div>
-
+      <div class="mobile-nav-item hidden-mobile nav-item nav-tab">
+          <a class="tab-nav-link discover-new-link" href="https://sbmf-website.kashida-learning.co/%d8%a7%d9%84%d8%b1%d8%a6%d9%8a%d8%b3%d9%8a%d8%a9/"
+             aria-current="${'page' if '/about' in request.path else 'false'}">
+             المدوّنة
+          </a>
+      </div>
        <div class="mobile-nav-item hidden-mobile nav-item nav-tab">
           <a class="tab-nav-link discover-new-link" href="https://sbmf-website.kashida-learning.co/%d8%b9%d9%86-%d8%a7%d9%84%d8%a8%d8%b1%d9%86%d8%a7%d9%85%d8%ac-2/"
              aria-current="${'page' if '/about' in request.path else 'false'}">
