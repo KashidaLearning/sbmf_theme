@@ -192,6 +192,9 @@ from common.djangoapps.pipeline_mako import render_require_js_path_overrides
   % endif
   <link rel="stylesheet" type="text/css" href="${static.url('css/custom-learning.css')}" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google tag (gtag.js) --> 
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SMM5QHLKFX"></script>
+   <script>   window.dataLayer = window.dataLayer || [];   function gtag(){dataLayer.push(arguments);}   gtag('js', new Date());   gtag('config', 'G-SMM5QHLKFX'); </script>
 </head>
 
 <body class="${static.dir_rtl()} <%block name='bodyclass'/> lang_${LANGUAGE_CODE}">
