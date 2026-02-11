@@ -1922,7 +1922,7 @@ for ub in user_badges:
 
             <div class="certificate-case" style="background-image: url('${static.url("images/downloadbutton.png")}'); box-shadow:none;">
                 <p style="font-size: 0.9em; margin-top: 20px; text-align: center !important;padding: 0px !important;}">
-                    مبروووك! أنجزتم مغامرة "فهم وبناء السردية الشخصية" بنجاح،
+                    مبروووك! أنجزتم المغامرة بنجاح،
                     ونلتم شهادتكم بجدارة.
                 </p>
             </div>
@@ -2319,6 +2319,7 @@ document.addEventListener("certificateUnlocked", function (e) {
     const btn = certSection.querySelector(".download-btn");
     if (!btn) return;
 
+    // Enable button only
     btn.classList.remove("disabled");
     btn.classList.add("active");
     btn.removeAttribute("onclick");
@@ -2326,13 +2327,9 @@ document.addEventListener("certificateUnlocked", function (e) {
     if (data.cert_url) {
         btn.setAttribute("href", data.cert_url);
     }
-
-    const msg = certSection.querySelector(".certificate-case p");
-    if (msg) {
-        msg.textContent = "مبروك! يمكنك الآن تنزيل شهادتك 🎓";
-    }
 });
 </script>
+
 
 
 <script>
