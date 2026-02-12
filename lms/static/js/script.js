@@ -474,11 +474,14 @@ async function refreshCourseStatus() {
             updateEvalStatus(data.eval);
         }
         if (data.program_state) {
+        if (typeof data.cert_url !== "undefined") {
+            window.PROGRAM_CERT_URL = data.cert_url || "";
+        }
         const prev = window.__LAST_PROGRAM_STATE__;
         const curr = data.program_state;
 
         window.PROGRAM_STATE = curr;
-
+       
         if (prev) {
             // PRE
             if (!prev.pre_completed && curr.pre_completed) {
@@ -913,25 +916,17 @@ function handleProgramPopups() {
             eval: { label: "مبروك! أنهيت الرحلة بالكامل 🎓 يمكنك استلام شهادتك" }
         });
 
-        markPopupAsShown("final");
-        fetch(window.location.pathname, { credentials: "same-origin" })
-        .then(r => r.text())
-        .then(html => {
-        
-            const m = html.match(/<a[^>]+class="[^"]*download-btn[^"]*active[^"]*"[^>]+href="([^"]+)"/);
-            const certUrl = (m && m[1]) ? m[1] : "";
+         markPopupAsShown("final");
+        window.__JUST_COMPLETED_STAGE__ = null;
 
-            document.dispatchEvent(new CustomEvent("certificateUnlocked", {
-            detail: { cert_url: certUrl }
-            }));
-        })
-        .catch(() => {
-            document.dispatchEvent(new CustomEvent("certificateUnlocked", {
-            detail: { cert_url: "" }
-            }));
-        });
-    }
+        document.dispatchEvent(
+            new CustomEvent("certificateUnlocked", {
+                detail: { cert_url: window.PROGRAM_CERT_URL }
+            })
+        );
 
+    return;
+}
 }
 
 

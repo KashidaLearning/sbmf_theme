@@ -2313,30 +2313,23 @@ function lightRankConfetti() {
 <script src="${static.url('js/script.js')}"></script>
 <script>
 document.addEventListener("certificateUnlocked", function (e) {
-  const data = (e && e.detail) ? e.detail : {};
-  const url = data.cert_url || "";
+  const url = (e && e.detail && e.detail.cert_url) ? e.detail.cert_url : "";
+  const certSection = document.getElementById("certificate-content");
+  if (!certSection) return;
 
-  const roots = [
-    document.getElementById("certificate-content"),
-    document.getElementById("popup-dynamic-content")
-  ];
+  const btn = certSection.querySelector(".download-btn");
+  if (!btn) return;
 
-  roots.forEach(root => {
-    if (!root) return;
+  btn.classList.remove("disabled");
+  btn.classList.add("active");
+  btn.removeAttribute("onclick");
 
-    const btn = root.querySelector("#certificate-content .download-btn, .download-btn");
-    if (!btn) return;
-
-    btn.classList.remove("disabled");
-    btn.classList.add("active");
-    btn.removeAttribute("onclick");
-
-    if (url) {
-      btn.setAttribute("href", url);
-    }
-  });
+  if (url) {
+    btn.setAttribute("href", url);
+  }
 });
 </script>
+
 
 
 
