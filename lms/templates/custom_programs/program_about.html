@@ -2222,6 +2222,14 @@ window.CURRENT_USER_RANK = ${_safe_current_user_rank};
 window.CURRENT_USER_NAME = "${_safe_current_user_name}";
 </script>
 
+<script>
+window.CURRENT_USER_NAME = "${request.user.profile.name or request.user.username}";
+window.MY_APP_ASSETS = {
+    certCharacters: "${static.url('images/cert-characters.png')}",
+    downloadBg: "${static.url('images/downloadbutton.png')}",
+    logo: "${static.url('images/sbmf-logo.png')}"
+};
+</script>
 
 <script>
 window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
@@ -2312,14 +2320,39 @@ function lightRankConfetti() {
 <script>
 document.addEventListener("certificateUnlocked", function (e) {
     const data = e.detail || {};
-
     const certSection = document.getElementById("certificate-content");
     if (!certSection) return;
 
+    const status = certSection.querySelector("#certificate-status");
     const btn = certSection.querySelector(".download-btn");
-    if (!btn) return;
 
-    // Enable button only
+    if (!status || !btn) return;
+
+    status.innerHTML = `
+        <h1>شهــــــادة إنجــــــاز</h1>
+
+        <div class="name">
+            ${window.CURRENT_USER_NAME || ""}
+        </div>
+
+        <div class="certificate-characters-right">
+            <img src="${window.MY_APP_ASSETS.certCharacters}" alt="characters">
+        </div>
+
+        <div class="certificate-case"
+            style="background-image: url('${window.MY_APP_ASSETS.downloadBg}');
+                   box-shadow:none;">
+            <p style="font-size: 0.9em; margin-top: 20px; text-align: center;">
+                مبروووك! أنجزتم المغامرة بنجاح،
+                ونلتم شهادتكم بجدارة.
+            </p>
+        </div>
+
+        <div class="certificate-logo">
+            <img src="${window.MY_APP_ASSETS.logo}" alt="logo">
+        </div>
+    `;
+
     btn.classList.remove("disabled");
     btn.classList.add("active");
     btn.removeAttribute("onclick");
@@ -2329,6 +2362,7 @@ document.addEventListener("certificateUnlocked", function (e) {
     }
 });
 </script>
+
 
 
 
