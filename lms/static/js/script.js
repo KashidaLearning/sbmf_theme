@@ -473,10 +473,10 @@ async function refreshCourseStatus() {
         if (data.eval) {
             updateEvalStatus(data.eval);
         }
-        if (data.program_state) {
-        if (typeof data.cert_url !== "undefined") {
-            window.PROGRAM_CERT_URL = data.cert_url || "";
+         if (typeof data.cert_url !== "undefined") {
+            window.PROGRAM_CERT_URL = data.cert_url;
         }
+        if (data.program_state) {
         const prev = window.__LAST_PROGRAM_STATE__;
         const curr = data.program_state;
 
