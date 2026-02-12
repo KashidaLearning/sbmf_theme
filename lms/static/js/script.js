@@ -914,11 +914,22 @@ function handleProgramPopups() {
         });
 
         markPopupAsShown("final");
-        document.dispatchEvent(
-        new CustomEvent("certificateUnlocked", {
-            detail: { cert_url: "#" }
+        fetch(window.location.pathname, { credentials: "same-origin" })
+        .then(r => r.text())
+        .then(html => {
+        
+            const m = html.match(/<a[^>]+class="[^"]*download-btn[^"]*active[^"]*"[^>]+href="([^"]+)"/);
+            const certUrl = (m && m[1]) ? m[1] : "";
+
+            document.dispatchEvent(new CustomEvent("certificateUnlocked", {
+            detail: { cert_url: certUrl }
+            }));
         })
-    );
+        .catch(() => {
+            document.dispatchEvent(new CustomEvent("certificateUnlocked", {
+            detail: { cert_url: "" }
+            }));
+        });
     }
 
 }

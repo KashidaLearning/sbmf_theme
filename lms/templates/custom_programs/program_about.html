@@ -2314,52 +2314,39 @@ function lightRankConfetti() {
 }
 </script>
 
+<script>
+  window.PROGRAM_CERT_URL = "${cert_url or ''}";
+</script>
 
 
 <script src="${static.url('js/script.js')}"></script>
 <script>
 document.addEventListener("certificateUnlocked", function (e) {
-  const data = e.detail || {};
-  const certSection = document.getElementById("certificate-content");
-  if (!certSection) return;
+  const data = (e && e.detail) ? e.detail : {};
+  const url = data.cert_url || "";
 
-  const status = certSection.querySelector("#certificate-status");
-  const btn = certSection.querySelector(".download-btn");
-  if (!status || !btn) return;
+  const roots = [
+    document.getElementById("certificate-content"),
+    document.getElementById("popup-dynamic-content")
+  ];
 
-  const userName = (window.CURRENT_USER_NAME || "");
-  const certCharacters = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.certCharacters) ? window.MY_APP_ASSETS.certCharacters : "";
-  const downloadBg = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.downloadBg) ? window.MY_APP_ASSETS.downloadBg : "";
-  const logo = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.logo) ? window.MY_APP_ASSETS.logo : "";
+  roots.forEach(root => {
+    if (!root) return;
 
-  status.innerHTML =
-    '<h1>شهــــــادة إنجــــــاز</h1>' +
+    const btn = root.querySelector("#certificate-content .download-btn, .download-btn");
+    if (!btn) return;
 
-    '<div class="name">' + userName + '</div>' +
+    btn.classList.remove("disabled");
+    btn.classList.add("active");
+    btn.removeAttribute("onclick");
 
-    '<div class="certificate-characters-right">' +
-      '<img src="' + certCharacters + '" alt="characters">' +
-    '</div>' +
-
-    '<div class="certificate-case" style="background-image: url(\'' + downloadBg + '\'); box-shadow:none;">' +
-      '<p style="font-size: 0.9em; margin-top: 20px; text-align: center;">' +
-        'مبروووك! أنجزتم المغامرة بنجاح، ونلتم شهادتكم بجدارة.' +
-      '</p>' +
-    '</div>' +
-
-    '<div class="certificate-logo">' +
-      '<img src="' + logo + '" alt="logo">' +
-    '</div>';
-
-  btn.classList.remove("disabled");
-  btn.classList.add("active");
-  btn.removeAttribute("onclick");
-
-  if (data.cert_url) {
-    btn.setAttribute("href", data.cert_url);
-  }
+    if (url) {
+      btn.setAttribute("href", url);
+    }
+  });
 });
 </script>
+
 
 
 
