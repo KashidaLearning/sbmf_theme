@@ -2223,15 +2223,6 @@ window.CURRENT_USER_NAME = "${_safe_current_user_name}";
 </script>
 
 <script>
-window.CURRENT_USER_NAME = "${request.user.profile.name or request.user.username}";
-window.MY_APP_ASSETS = {
-    certCharacters: "${static.url('images/cert-characters.png')}",
-    downloadBg: "${static.url('images/downloadbutton.png')}",
-    logo: "${static.url('images/sbmf-logo.png')}"
-};
-</script>
-
-<script>
 window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
 </script>
 
