@@ -2319,47 +2319,45 @@ function lightRankConfetti() {
 <script src="${static.url('js/script.js')}"></script>
 <script>
 document.addEventListener("certificateUnlocked", function (e) {
-    const data = e.detail || {};
-    const certSection = document.getElementById("certificate-content");
-    if (!certSection) return;
+  const data = e.detail || {};
+  const certSection = document.getElementById("certificate-content");
+  if (!certSection) return;
 
-    const status = certSection.querySelector("#certificate-status");
-    const btn = certSection.querySelector(".download-btn");
+  const status = certSection.querySelector("#certificate-status");
+  const btn = certSection.querySelector(".download-btn");
+  if (!status || !btn) return;
 
-    if (!status || !btn) return;
+  const userName = (window.CURRENT_USER_NAME || "");
+  const certCharacters = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.certCharacters) ? window.MY_APP_ASSETS.certCharacters : "";
+  const downloadBg = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.downloadBg) ? window.MY_APP_ASSETS.downloadBg : "";
+  const logo = (window.MY_APP_ASSETS && window.MY_APP_ASSETS.logo) ? window.MY_APP_ASSETS.logo : "";
 
-    status.innerHTML = `
-        <h1>شهــــــادة إنجــــــاز</h1>
+  status.innerHTML =
+    '<h1>شهــــــادة إنجــــــاز</h1>' +
 
-        <div class="name">
-            ${window.CURRENT_USER_NAME || ""}
-        </div>
+    '<div class="name">' + userName + '</div>' +
 
-        <div class="certificate-characters-right">
-            <img src="${window.MY_APP_ASSETS.certCharacters}" alt="characters">
-        </div>
+    '<div class="certificate-characters-right">' +
+      '<img src="' + certCharacters + '" alt="characters">' +
+    '</div>' +
 
-        <div class="certificate-case"
-            style="background-image: url('${window.MY_APP_ASSETS.downloadBg}');
-                   box-shadow:none;">
-            <p style="font-size: 0.9em; margin-top: 20px; text-align: center;">
-                مبروووك! أنجزتم المغامرة بنجاح،
-                ونلتم شهادتكم بجدارة.
-            </p>
-        </div>
+    '<div class="certificate-case" style="background-image: url(\'' + downloadBg + '\'); box-shadow:none;">' +
+      '<p style="font-size: 0.9em; margin-top: 20px; text-align: center;">' +
+        'مبروووك! أنجزتم المغامرة بنجاح، ونلتم شهادتكم بجدارة.' +
+      '</p>' +
+    '</div>' +
 
-        <div class="certificate-logo">
-            <img src="${window.MY_APP_ASSETS.logo}" alt="logo">
-        </div>
-    `;
+    '<div class="certificate-logo">' +
+      '<img src="' + logo + '" alt="logo">' +
+    '</div>';
 
-    btn.classList.remove("disabled");
-    btn.classList.add("active");
-    btn.removeAttribute("onclick");
+  btn.classList.remove("disabled");
+  btn.classList.add("active");
+  btn.removeAttribute("onclick");
 
-    if (data.cert_url) {
-        btn.setAttribute("href", data.cert_url);
-    }
+  if (data.cert_url) {
+    btn.setAttribute("href", data.cert_url);
+  }
 });
 </script>
 
