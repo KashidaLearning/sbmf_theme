@@ -2313,20 +2313,42 @@ function lightRankConfetti() {
 <script src="${static.url('js/script.js')}"></script>
 <script>
 document.addEventListener("certificateUnlocked", function (e) {
-  const url = (e && e.detail && e.detail.cert_url) ? e.detail.cert_url : "";
-  const certSection = document.getElementById("certificate-content");
-  if (!certSection) return;
+    const url = (e && e.detail && e.detail.cert_url) ? e.detail.cert_url : "";
+    if (!url) return;
 
-  const btn = certSection.querySelector(".download-btn");
-  if (!btn) return;
+    const certSection = document.getElementById("certificate-content");
+    if (!certSection) return;
 
-  btn.classList.remove("disabled");
-  btn.classList.add("active");
-  btn.removeAttribute("onclick");
+    const status = certSection.querySelector("#certificate-status");
+    const btn = certSection.querySelector(".download-btn");
 
-  if (url) {
+    if (!status || !btn) return;
+
+    status.innerHTML = `
+        <h1>شهــــــادة إنجــــــاز</h1>
+
+
+        <div class="certificate-characters-right">
+            <img src="/static/images/cert-characters.png" alt="characters">
+        </div>
+
+        <div class="certificate-case"
+            style="background-image: url('/static/images/downloadbutton.png'); box-shadow:none;">
+            <p style="font-size: 0.9em; margin-top: 20px; text-align: center;">
+                مبروووك! أنجزتم المغامرة بنجاح،
+                ونلتم شهادتكم بجدارة.
+            </p>
+        </div>
+
+        <div class="certificate-logo">
+            <img src="/static/images/sbmf-logo.png" alt="logo">
+        </div>
+    `;
+
+    btn.classList.remove("disabled");
+    btn.classList.add("active");
+    btn.removeAttribute("onclick");
     btn.setAttribute("href", url);
-  }
 });
 </script>
 
