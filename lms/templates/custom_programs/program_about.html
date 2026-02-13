@@ -2229,6 +2229,15 @@ window.FIRST_COMPLETED_BADGE = "${static.url('images/tickicon.png')}";
 <script>
 window.PROGRAM_PAGE_URL = "${reverse('custom_programs:program_about', kwargs={'program_id': program.id})}";
 </script>
+<script>
+window.CERT_ASSETS = {
+    characters: "${static.url('images/cert-characters.png')}",
+    downloadBg: "${static.url('images/downloadbutton.png')}",
+    logo: "${static.url('images/sbmf-logo.png')}"
+};
+</script>
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
@@ -2324,26 +2333,27 @@ document.addEventListener("certificateUnlocked", function (e) {
 
     if (!status || !btn) return;
 
-    status.innerHTML = `
-        <h1>شهــــــادة إنجــــــاز</h1>
+    status.innerHTML =
+        '<h1>شهــــــادة إنجــــــاز</h1>' +
+
+        '<div class="certificate-characters-right">' +
+            '<img src="' + window.CERT_ASSETS.characters + '" alt="">' +
+        '</div>' +
+
+        '<div class="certificate-case" style="background-image: url(\'' +
+            window.CERT_ASSETS.downloadBg +
+            '\'); box-shadow:none;">' +
+            '<p style="font-size: 0.9em; margin-top: 20px; text-align: center;">' +
+                'مبروووك! أنجزتم المغامرة بنجاح، ونلتم شهادتكم بجدارة.' +
+            '</p>' +
+        '</div>' +
+
+        '<div class="certificate-logo">' +
+            '<img src="' + window.CERT_ASSETS.logo + '" alt="">' +
+        '</div>';
 
 
-        <div class="certificate-characters-right">
-            <img src="/static/images/cert-characters.png" alt="characters">
-        </div>
 
-        <div class="certificate-case"
-            style="background-image: url('/static/images/downloadbutton.png'); box-shadow:none;">
-            <p style="font-size: 0.9em; margin-top: 20px; text-align: center;">
-                مبروووك! أنجزتم المغامرة بنجاح،
-                ونلتم شهادتكم بجدارة.
-            </p>
-        </div>
-
-        <div class="certificate-logo">
-            <img src="/static/images/sbmf-logo.png" alt="logo">
-        </div>
-    `;
 
     btn.classList.remove("disabled");
     btn.classList.add("active");
