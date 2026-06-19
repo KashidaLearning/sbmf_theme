@@ -1143,7 +1143,7 @@ def time_to_seconds(timestr):
                     <img class="icon-img" src="${static.url('images/dashboard-icon.png')}">
                     <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}">
                 </div>
-                <p> دليل اللعبة</p>
+                <p> قواعد اللعبة</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
@@ -1190,7 +1190,7 @@ def time_to_seconds(timestr):
                 <div class="icon-circle">
                      <img src="${static.url('images/dashboard-icon.png')}" alt="لوحةالتحكم">
                 </div>
-                <p> دليل اللعبة</p>
+                <p> قواعد اللعبة</p>
             </div>
             <div class="icon-item" id="my-badges" role="button" tabindex="0" data-target="my-badges-content">
                 <div class="icon-circle">
@@ -1896,9 +1896,9 @@ for ub in user_badges:
                 % else:
                     <div style="width:120px;height:120px;"></div>
                 % endif
-                % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
+                <!-- % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
                     <div class="badge-title">${badge_title}</div>
-                % endif
+                % endif -->
             </div>
 
         % endfor
@@ -2005,7 +2005,7 @@ for ub in user_badges:
                      <img class="icon-img-active" src="${static.url('images/dashboard-icon-active.png')}" >
 
                 </div>
-                <p class="tab-label">دليل اللعبة</p>
+                <p class="tab-label">قواعد اللعبة</p>
             </div>
         <div class="popup-left">
 
