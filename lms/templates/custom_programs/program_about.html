@@ -1896,12 +1896,7 @@ for ub in user_badges:
             % else:
                 <div style="width:120px;height:120px;"></div>
             % endif
-
-            <%doc>
-            % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
-                <div class="badge-title">${badge_title}</div>
-            % endif
-            </%doc>
+           <div class="badge-title">${badge_title}</div>
         </div>
         % endfor
 
