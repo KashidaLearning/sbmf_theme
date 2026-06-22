@@ -1888,19 +1888,21 @@ for ub in user_badges:
                 course_locked = pc.state == "locked" if hasattr(pc, 'state') else False
             %>
 
-            <div class="badge-item">
-                % if user_badge:
-                    <img src="${user_badge.badge.icon.url}">
-                % elif course_placeholder:
-                    <img src="${course_placeholder.placeholder_icon.url}">
-                % else:
-                    <div style="width:120px;height:120px;"></div>
-                % endif
-                <!-- % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
-                    <div class="badge-title">${badge_title}</div>
-                % endif -->
-            </div>
+          <div class="badge-item">
+            % if user_badge:
+                <img src="${user_badge.badge.icon.url}">
+            % elif course_placeholder:
+                <img src="${course_placeholder.placeholder_icon.url}">
+            % else:
+                <div style="width:120px;height:120px;"></div>
+            % endif
 
+            <%doc>
+            % if not course_locked and pc.course_type not in ["pre_assessment", "post_assessment", "assignment"]:
+                <div class="badge-title">${badge_title}</div>
+            % endif
+            </%doc>
+        </div>
         % endfor
 
     </div>
