@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+تفعيل الحساب - منصة مهارات المستقبل
+{% endautoescape %}
