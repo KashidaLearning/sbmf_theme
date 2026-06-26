@@ -1779,7 +1779,24 @@ box-shadow:
 }
 
 
+.password-wrapper {
+    position: relative;
+}
 
+.password-wrapper .password-toggle {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    color: #000080;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    padding-left: 45px;
+}
 
 
 
