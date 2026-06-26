@@ -92,6 +92,9 @@
                 </div>
             <% } %>
         <% } %>
+        <% if (type === 'password') { %>
+	<div class="password-wrapper">
+	<% } %>
         <input id="<%- form %>-<%- name %>"
            type="<%- type %>"
            name="<%- name %>"
@@ -112,6 +115,12 @@
             <% if ( placeholder ) { %> placeholder="<%- placeholder %>"<% } %>
             value="<%- defaultValue %>"
         />
+        <% if (type === 'password') { %>
+            <span class="password-toggle" onclick="var input=this.parentElement.querySelector('input');var icon=this.querySelector('i');if(input.type==='password'){input.type='text';icon.classList.remove('fa-eye');icon.classList.add('fa-eye-slash');}else{input.type='password';icon.classList.remove('fa-eye-slash');icon.classList.add('fa-eye');}">
+               <i class="fa fa-eye"></i>
+            </span>
+        </div>
+        <% } %>
         <% if ( type === 'checkbox' ) { %>
             <label for="<%- form %>-<%- name %>">
                 <span class="label-text"><%= HtmlUtils.HTML(label) %></span>
