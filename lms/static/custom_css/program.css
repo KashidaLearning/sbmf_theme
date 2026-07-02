@@ -16,14 +16,9 @@ header.global-header .header-logo a .logo {
     margin: 0;
 }
 /* Remove transition from the link */
-a:not(.btn),
-a:visited:not(.btn) {
-    transition: none !important;
-}
+a:not(.btn), a:visited:not(.btn) {
 
-/* Remove transition from the underline */
-.global-header .nav-links .main .nav-item a:not(.btn)::after {
-    transition: none !important;
+    transform: none !important;
 }
 .wrapper.wrapper-footer {
     background-color: #110D7C;
