@@ -15,6 +15,9 @@ header.global-header .header-logo a .logo {
     height: 40px;
     margin: 0;
 }
+.global-header .nav-links .main .nav-item a:not(.btn)::after {
+    transition: none !important;
+}
 .wrapper.wrapper-footer {
     background-color: #110D7C;
 }

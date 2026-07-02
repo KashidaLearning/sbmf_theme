@@ -1,3 +1,6 @@
+.global-header .nav-links .main .nav-item a:not(.btn)::after {
+    transition: none !important;
+}
 .dashboard {
     background: linear-gradient(154deg, #416A9E 34.21%, #0B0867 73.48%, #110D7C 102.84%);
   }
