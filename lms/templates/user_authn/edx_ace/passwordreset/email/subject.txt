@@ -1,0 +1,4 @@
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans trimmed %}إعادة تعيين كلمة المرور على {{ platform_name }}{% endblocktrans %}
+{% endautoescape %}

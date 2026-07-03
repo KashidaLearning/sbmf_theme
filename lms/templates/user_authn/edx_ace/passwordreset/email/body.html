@@ -1,0 +1,47 @@
+{% extends 'ace_common/edx_ace/common/base_body.html' %}
+
+{% load i18n %}
+{% load static %}
+{% block content %}
+<table width="100%" align="right" border="0" cellpadding="0" cellspacing="0" role="presentation" dir="rtl">
+    <tr>
+        <td>
+            <h1>
+                {% trans "إعادة تعيين كلمة المرور" as tmsg %}{{ tmsg | force_escape }}
+            </h1>
+
+            <p style="color: rgba(0,0,0,.75);">
+                {% filter force_escape %}
+                {% blocktrans %}لقد استلمت هذا البريد الإلكتروني لأنك طلبت إعادة تعيين كلمة المرور لحسابك على {{ platform_name }}.{% endblocktrans %}
+                {% endfilter %}
+                <br />
+            </p>
+
+            {% if failed %}
+                <p style="color: rgba(0,0,0,.75);">
+                    {% filter force_escape %}
+                    {% blocktrans %}لكن لا يوجد حالياً حساب مستخدم مرتبط بعنوان البريد الإلكتروني: {{ email_address }}.{% endblocktrans %}
+                    {% endfilter %}
+                    <br />
+                </p>
+
+                <p style="color: rgba(0,0,0,.75);">
+                    {% trans "إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني." as tmsg %}{{ tmsg | force_escape }}
+                    <br />
+                </p>
+            {% else %}
+                <p style="color: rgba(0,0,0,.75);">
+                    {% trans "إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذا البريد الإلكتروني، ولم يتم تغيير كلمة المرور الخاصة بك." as tmsg %}{{ tmsg | force_escape }}
+                    <br />
+                </p>
+
+                {# xss-lint: disable=django-trans-missing-escape #}
+                {% trans "إعادة تعيين كلمة المرور" as course_cta_text %}
+
+                {# email client support for style sheets is pretty spotty, so we have to inline all of these styles #}
+                {% include "ace_common/edx_ace/common/return_to_course_cta.html" with course_cta_text=course_cta_text reset_url=reset_link %}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endblock %}
