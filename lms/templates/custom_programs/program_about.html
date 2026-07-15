@@ -1583,26 +1583,32 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
 % endfor
 
 
-  <%
-  total_badges_overall = total_badges * 1000
-  rank_value =  total_points 
+ <%
+total_badges_overall = total_badges * 1000
+rank_value = total_points
 
-  completed_courses = sum(1 for c in courses if UserBadge.get_my_course_badges(user, c.course.course_key))
-  total_courses = len(courses)
-  user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
+completed_courses = sum(
+    1 for c in courses
+    if UserBadge.get_my_course_badges(user, c.course.course_key)
+)
+total_courses = len(courses)
+user_program_progress = (
+    int((completed_courses / total_courses) * 100)
+    if total_courses > 0
+    else 0
+)
 
-  # Add to leaderboard
-    profile_image_urls = get_profile_image_urls_for_user(user)
+profile_image_urls = get_profile_image_urls_for_user(user)
 
-    leaderboard_data.append({
-        'user': user,
-        'rank_points': rank_value,
-        'progress': user_program_progress,
-        'username': user.username,
-        'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username,
-        'profile_image_url': profile_image_urls.get('medium')
-    })
-  %>
+leaderboard_data.append({
+    'user': user,
+    'rank_points': rank_value,
+    'progress': user_program_progress,
+    'username': user.username,
+    'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username,
+    'profile_image_url': profile_image_urls.get('medium')
+})
+%>
 % endfor
 
 <%
