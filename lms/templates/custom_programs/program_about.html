@@ -2243,7 +2243,7 @@ window.STATE_ICONS = {
 </script>
 <script>
 window.CURRENT_USER_ID = ${request.user.id};
-window.LEADERBOARD_AVATAR = "${current_user_profile_image or static.url('images/image-profile-blue.png')}";
+window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
 window.EVAL_ICONS = {
     completed: "${static.url('images/tick-icon.png')}",
     locked: "${static.url('images/Locked1.png')}",

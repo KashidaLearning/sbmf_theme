@@ -386,7 +386,7 @@ function renderLeaderboardInContainer(container, users, currentUser) {
         row.innerHTML = `
             <div class="rank-box">${index + 1}</div>
             <div class="icon">
-                <img src="${window.LEADERBOARD_AVATAR || ''}" alt="avatar">
+               <img src="${u.profile_image_url || window.LEADERBOARD_AVATAR || ''}" alt="avatar">
             </div>
             <div class="row-right ${colorClass}">
                 <div class="name pt0">${u.name}</div>
