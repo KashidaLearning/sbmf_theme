@@ -247,14 +247,9 @@ position: absolute;
       font-size: 18px;
       color: #fff;
     }
-   .icon img {
-    width: 73px;
-    height: 73px;
+.icon img {
     max-width: 73px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+    fill: var(--Royal-Indigo, #110D7C);
 }
     /* === Row Colors === */
    .gold {
@@ -1564,15 +1559,12 @@ ul.eval-grid:before {
 }
 
 .lh-avatar img {
-    width: 73px;
-    height: 73px;
-    max-width: 73px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    max-width: 100%;
     margin-top: -17px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
 }
 
 /* Rank Text Styling */

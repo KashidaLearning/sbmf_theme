@@ -737,10 +737,6 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 .rank-user img {
     width: 58px;
     height: 58px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
 }
 
 /* info blocks */
@@ -1598,7 +1594,16 @@ user_program_progress = (
     else 0
 )
 
-profile_image_urls = get_profile_image_urls_for_user(user)
+user_has_profile_image = bool(
+    getattr(user.profile, 'profile_image_uploaded_at', None)
+)
+
+profile_image_url = (
+    get_profile_image_urls_for_user(user).get('medium')
+    if user_has_profile_image
+    else static.url('images/image-profile-blue.png')
+)
+
 
 leaderboard_data.append({
     'user': user,
@@ -1606,7 +1611,7 @@ leaderboard_data.append({
     'progress': user_program_progress,
     'username': user.username,
     'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username,
-    'profile_image_url': profile_image_urls.get('medium')
+    'profile_image_url': profile_image_url
 })
 %>
 % endfor
@@ -1723,16 +1728,23 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             <p class="lh-p">نقاطك:   <b>XP ${ "%.2f" % current_user_rank_points}</b> </p>
            
         </div>
-        <%
-        current_user_profile_image = get_profile_image_urls_for_user(request.user).get('medium')
-        %>
+<%
+current_user_has_profile_image = bool(
+    getattr(request.user.profile, 'profile_image_uploaded_at', None)
+)
 
-    <div class="lh-avatar">
-        <img
-            src="${current_user_profile_image or static.url('images/image-profile.png')}"
-            alt="${request.user.profile.name or request.user.username}"
-        >
-    </div>
+current_user_profile_image = (
+    get_profile_image_urls_for_user(request.user).get('medium')
+    if current_user_has_profile_image
+    else static.url('images/image-profile.png')
+)
+%>
+   <div class="lh-avatar">
+    <img
+        src="${current_user_profile_image}"
+        alt="${request.user.profile.name or request.user.username}"
+    >
+</div>
     </div>
     </div>
 </div>
