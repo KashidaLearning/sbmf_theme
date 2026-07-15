@@ -247,10 +247,15 @@ position: absolute;
       font-size: 18px;
       color: #fff;
     }
-   .icon img{
+   .icon img {
+    width: 73px;
+    height: 73px;
     max-width: 73px;
-    fill: var(--Royal-Indigo, #110D7C);
-    }
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
     /* === Row Colors === */
    .gold {
     background: color-mix(in srgb, var(--program-main-color) 85%, black);
@@ -1559,12 +1564,15 @@ ul.eval-grid:before {
 }
 
 .lh-avatar img {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; 
-    max-width: 100%;
-        margin-top: -17px;
+    width: 73px;
+    height: 73px;
+    max-width: 73px;
+    flex-shrink: 0;
+    margin-top: -17px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
 /* Rank Text Styling */

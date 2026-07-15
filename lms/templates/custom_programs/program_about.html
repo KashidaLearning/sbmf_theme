@@ -735,9 +735,12 @@ body:not(.user-enrolled) .sticky-icons-wrapper {
 
 
 .rank-user img {
-      width: 58px;
+    width: 58px;
     height: 58px;
- 
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
 /* info blocks */
@@ -1589,13 +1592,16 @@ users = User.objects.filter(id__in=user_ids).order_by("username")
   user_program_progress = int((completed_courses / total_courses) * 100) if total_courses > 0 else 0
 
   # Add to leaderboard
-  leaderboard_data.append({
-      'user': user,
-      'rank_points': rank_value,
-      'progress': user_program_progress,
-      'username': user.username,
-      'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username
-  })
+    profile_image_urls = get_profile_image_urls_for_user(user)
+
+    leaderboard_data.append({
+        'user': user,
+        'rank_points': rank_value,
+        'progress': user_program_progress,
+        'username': user.username,
+        'name': user.profile.name if hasattr(user, 'profile') and user.profile.name else user.username,
+        'profile_image_url': profile_image_urls.get('medium')
+    })
   %>
 % endfor
 
@@ -1711,9 +1717,16 @@ for index, data in enumerate(sorted_leaderboard, start=1):
             <p class="lh-p">نقاطك:   <b>XP ${ "%.2f" % current_user_rank_points}</b> </p>
            
         </div>
-        <div class="lh-avatar">
-            <img src="${static.url('images/image-profile.png')}">
-        </div>
+        <%
+        current_user_profile_image = get_profile_image_urls_for_user(request.user).get('medium')
+        %>
+
+    <div class="lh-avatar">
+        <img
+            src="${current_user_profile_image or static.url('images/image-profile.png')}"
+            alt="${request.user.profile.name or request.user.username}"
+        >
+    </div>
     </div>
     </div>
 </div>
@@ -1732,8 +1745,11 @@ for index, data in enumerate(sorted_leaderboard, start=1):
     <div class="leaderboard-row mako-row">
       <div class="rank-box">${index}</div>
       <div class="icon">
-        <img src="${static.url('images/image-profile-blue.png')}" alt="avatar">
-      </div>
+        <img
+            src="${user_data['profile_image_url'] or static.url('images/image-profile-blue.png')}"
+            alt="${user_data['name'] or user_data['username']}"
+        >
+    </div>
       <div class="row-right ${color_class}"> 
         <div class="name pt0">${user_data['name'] or user_data['username']}</div>
         <div class="pt2">
@@ -2120,7 +2136,10 @@ for ub in user_badges:
         <div class="rank-num">1</div>
 
         <div class="rank-user">
-          <img src="${static.url('images/image-profile-blue.png')}">
+            <img
+                src="${current_user_profile_image or static.url('images/image-profile-blue.png')}"
+                alt="${request.user.profile.name or request.user.username}"
+            >
         </div>
 
         <div class="rank-info green">
@@ -2206,7 +2225,7 @@ window.STATE_ICONS = {
 </script>
 <script>
 window.CURRENT_USER_ID = ${request.user.id};
-window.LEADERBOARD_AVATAR = "${static.url('images/image-profile-blue.png')}";
+window.LEADERBOARD_AVATAR = "${current_user_profile_image or static.url('images/image-profile-blue.png')}";
 window.EVAL_ICONS = {
     completed: "${static.url('images/tick-icon.png')}",
     locked: "${static.url('images/Locked1.png')}",
