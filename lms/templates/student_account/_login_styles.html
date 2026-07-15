@@ -443,3 +443,297 @@ a.form-toggle.active {
     text-align: right !important;
 }
 </style>
+<style>
+/* Registration profile dropdown fields */
+.view-register .register-form .form-field select.input-inline {
+    display: block !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 54px !important;
+    margin: 8px 0 20px !important;
+    padding: 0 18px !important;
+
+    color: #110d7c !important;
+    background-color: #ffffff !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18) !important;
+
+    font-family: inherit !important;
+    font-size: 16px !important;
+    line-height: 54px !important;
+    text-align: right !important;
+    direction: rtl !important;
+
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+.view-register .register-form .form-field select.input-inline:focus {
+    border: 2px solid #110d7c !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(17, 13, 124, 0.15) !important;
+}
+
+.view-register .register-form .form-field select.input-inline option {
+    color: #110d7c !important;
+    background: #ffffff !important;
+    font-family: inherit !important;
+    font-size: 16px !important;
+    direction: rtl !important;
+}
+
+.view-register .register-form .form-field.select-country,
+.view-register .register-form .form-field.select-year_of_birth,
+.view-register .register-form .form-field.select-level_of_education,
+.view-register .register-form .form-field.select-gender {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    float: none !important;
+    clear: both !important;
+}
+
+.view-register .register-form .form-field.select-country label,
+.view-register .register-form .form-field.select-year_of_birth label,
+.view-register .register-form .form-field.select-level_of_education label,
+.view-register .register-form .form-field.select-gender label {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 6px !important;
+    text-align: right !important;
+}
+</style>
+<script>
+(function () {
+    'use strict';
+
+    function setFieldLabel(select, text) {
+        if (!select) return;
+
+        var field = select.closest('.form-field');
+        if (!field) return;
+
+        var label = field.querySelector('label .label-text');
+        if (label) {
+            label.textContent = text;
+        }
+
+        /* Hide the English instructional text */
+        var instructions = field.querySelector('.tip-input');
+        if (instructions) {
+            instructions.style.display = 'none';
+        }
+    }
+
+    function setPlaceholder(select, text) {
+        if (!select) return;
+
+        var emptyOption = Array.from(select.options).find(function (option) {
+            return option.value === '';
+        });
+
+        if (emptyOption) {
+            emptyOption.textContent = text;
+        }
+    }
+
+    function customizeCountry() {
+        var select = document.getElementById('register-country');
+
+        if (!select || select.dataset.sbmfCustomized === 'true') return;
+
+        setFieldLabel(select, 'البلد');
+        setPlaceholder(select, 'اختر البلد');
+
+        var saudiOption = Array.from(select.options).find(function (option) {
+            return option.value.toUpperCase() === 'SA';
+        });
+
+        if (saudiOption) {
+            saudiOption.textContent = 'المملكة العربية السعودية';
+
+            var placeholder = Array.from(select.options).find(function (option) {
+                return option.value === '';
+            });
+
+            if (placeholder) {
+                placeholder.insertAdjacentElement('afterend', saudiOption);
+            } else {
+                select.insertBefore(saudiOption, select.firstChild);
+            }
+        }
+
+        select.dataset.sbmfCustomized = 'true';
+    }
+
+    function customizeBirthYear() {
+        var select = document.getElementById('register-year_of_birth');
+
+        if (!select || select.dataset.sbmfCustomized === 'true') return;
+
+        setFieldLabel(select, 'سنة الميلاد');
+        setPlaceholder(select, 'اختر سنة الميلاد');
+
+        select.dataset.sbmfCustomized = 'true';
+    }
+
+    function customizeGender() {
+        var select = document.getElementById('register-gender');
+
+        if (!select || select.dataset.sbmfCustomized === 'true') return;
+
+        setFieldLabel(select, 'الجنس');
+        setPlaceholder(select, 'اختر الجنس');
+
+        Array.from(select.options).forEach(function (option) {
+            if (option.value === 'm') {
+                option.textContent = 'ذكر';
+            } else if (option.value === 'f') {
+                option.textContent = 'أنثى';
+            } else if (option.value !== '') {
+                option.remove();
+            }
+        });
+
+        select.dataset.sbmfCustomized = 'true';
+    }
+
+    function customizeEducation() {
+        var select = document.getElementById('register-level_of_education');
+
+        if (!select || select.dataset.sbmfCustomized === 'true') return;
+
+        setFieldLabel(select, 'المستوى التعليمي');
+        setPlaceholder(select, 'اختر المستوى التعليمي');
+
+        var educationLabels = {
+            p: 'دكتوراه',
+            m: 'ماجستير / شهادة مهنية',
+            b: 'بكالوريوس / ليسانس',
+            a: 'شهادة مهنية / دبلوم',
+            hs: 'المرحلة الثانوية',
+            jhs: 'المرحلة المتوسطة',
+            el: 'المرحلة الابتدائية',
+            none: 'دون تعليم رسمي',
+            other: 'نوع آخر من التعليم'
+        };
+
+        Array.from(select.options).forEach(function (option) {
+            if (educationLabels[option.value]) {
+                option.textContent = educationLabels[option.value];
+            }
+        });
+
+        select.dataset.sbmfCustomized = 'true';
+    }
+
+    function customizeRegistrationFields() {
+        customizeCountry();
+        customizeBirthYear();
+        customizeGender();
+        customizeEducation();
+    }
+
+    function startRegistrationCustomization() {
+        customizeRegistrationFields();
+
+        var observer = new MutationObserver(function () {
+            customizeRegistrationFields();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    if (document.body) {
+        startRegistrationCustomization();
+    } else {
+        document.addEventListener(
+            'DOMContentLoaded',
+            startRegistrationCustomization
+        );
+    }
+})();
+</script>
+<style>
+/* Correct registration dropdown styling */
+#register.register-form .form-field.select-country,
+#register.register-form .form-field.select-year_of_birth,
+#register.register-form .form-field.select-level_of_education,
+#register.register-form .form-field.select-gender {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    box-sizing: border-box !important;
+}
+
+#register.register-form .form-field select.input-inline {
+    display: block !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 47px !important;
+    margin: 8px 0 20px !important;
+    padding: 0 16px !important;
+
+    color: #110d7c !important;
+    background-color: #f4f4f4 !important;
+    border: none !important;
+    border-radius: 8px !important;
+
+    box-shadow:
+        6.89px 6.89px 20.67px 0 #221a372e,
+        -6.89px -6.89px 20.67px 0 #ffffff1f,
+        0 4px 4px 0 #00000040 !important;
+
+    font-family: inherit !important;
+    font-size: 16px !important;
+    text-align: right !important;
+    direction: rtl !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+#register.register-form .form-field select.input-inline:focus,
+#register.register-form .form-field select.input-inline:invalid {
+    background-color: #f4f4f4 !important;
+    border: none !important;
+    outline: none !important;
+
+    box-shadow:
+        6.89px 6.89px 20.67px 0 #221a372e,
+        -6.89px -6.89px 20.67px 0 #ffffff1f,
+        0 4px 4px 0 #00000040 !important;
+}
+
+#register.register-form .form-field select.input-inline option {
+    color: #110d7c !important;
+    background-color: #ffffff !important;
+    font-family: inherit !important;
+    font-size: 16px !important;
+    direction: rtl !important;
+}
+
+#register.register-form .form-field.select-country label,
+#register.register-form .form-field.select-year_of_birth label,
+#register.register-form .form-field.select-level_of_education label,
+#register.register-form .form-field.select-gender label {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 6px !important;
+    text-align: right !important;
+}
+
+/* Remove the English descriptions under the dropdowns */
+#register.register-form .form-field.select-country .tip-input,
+#register.register-form .form-field.select-year_of_birth .tip-input,
+#register.register-form .form-field.select-level_of_education .tip-input,
+#register.register-form .form-field.select-gender .tip-input {
+    display: none !important;
+}
+</style>
