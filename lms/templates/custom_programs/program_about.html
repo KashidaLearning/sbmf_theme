@@ -1601,7 +1601,7 @@ user_has_profile_image = bool(
 profile_image_url = (
     get_profile_image_urls_for_user(user).get('medium')
     if user_has_profile_image
-    else static.url('images/image-profile-blue.png')
+    else None
 )
 
 
@@ -1736,12 +1736,12 @@ current_user_has_profile_image = bool(
 current_user_profile_image = (
     get_profile_image_urls_for_user(request.user).get('medium')
     if current_user_has_profile_image
-    else static.url('images/image-profile.png')
+    else None
 )
 %>
    <div class="lh-avatar">
     <img
-        src="${current_user_profile_image}"
+        src="${current_user_profile_image or static.url('images/image-profile.png')}"
         alt="${request.user.profile.name or request.user.username}"
     >
 </div>
