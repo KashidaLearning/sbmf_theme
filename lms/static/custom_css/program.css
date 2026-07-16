@@ -246,10 +246,12 @@ position: absolute;
       justify-content: center;
       font-size: 18px;
       color: #fff;
+      width:74px;
     }
 .icon img {
     max-width: 73px;
     fill: var(--Royal-Indigo, #110D7C);
+    width:100%;
 }
     /* === Row Colors === */
    .gold {
@@ -298,7 +300,8 @@ position: absolute;
     justify-content: space-between;
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), -6.89px -6.89px 20.671px 0 rgba(255, 255, 255, 0.12), 6.89px 6.89px 20.671px 0 rgba(34, 26, 55, 0.18);
-    }
+max-width: 674.5px;   
+}
     .row-right .pt2{
    display: flex;
     justify-content: space-between;
