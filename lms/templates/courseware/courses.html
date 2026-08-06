@@ -448,7 +448,8 @@
     z-index: 1;
 }
 
- 
+
+
 .program-card__overlay {
   inset: 0;
   z-index: 2;
@@ -460,27 +461,30 @@
 }
 
 .program-card__gif {
-  top: 7%;
-  left: 50%;
-  z-index: 3;
-  width: 78%;
-  height: 38%;
-  object-fit: contain;
-  transform: translateX(-50%);
-  pointer-events: none;
+    top: 3%;
+    left: 62%;
+    z-index: 3;
+    width: 105%;
+    height: 90%;
+    object-fit: contain;
+    transform: translateX(-50%);
+    pointer-events: none;
 }
 
-.program-card__characters {
-  right: 50%;
-  bottom: 0;
-  z-index: 4;
-  width: 100%;
-  max-height: 78%;
-  object-fit: contain;
-  object-position: bottom center;
-  transform: translateX(50%);
-  pointer-events: none;
+ .program-card__characters {
+    right: 56%;
+    bottom: 12px;
+    /* top: 0px; */
+    z-index: 1;
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: bottom center;
+    transform: translateX(50%);
+    pointer-events: none;
+    overflow: overlay;
 }
+
 
 .program-info {
   position: absolute;
