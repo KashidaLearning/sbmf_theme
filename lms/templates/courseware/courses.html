@@ -88,7 +88,7 @@
               for item in program.program_background_images.all()
               if item.image
           }
-          program_card_url = program.program_card.url if program.program_card else None
+          program_card_url = program.card.url if program.card else None
           characters_card_url = card_images.get("characters-card")
           gif_card_url = card_images.get("gif-card")
           program_subject = (
