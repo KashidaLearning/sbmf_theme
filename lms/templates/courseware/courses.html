@@ -402,6 +402,7 @@
  
 .program-card {
   width: 360px;
+  height: 500px;
   position: relative;
   border-radius: 26px;
   overflow: hidden;
@@ -410,20 +411,22 @@
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+
 .program-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
 }
 
 .program-card__link {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 360 / 560;
-  overflow: hidden;
-  color: inherit;
-  text-decoration: none !important;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+     text-decoration: none !important;
 }
+
 
 .program-card__background,
 .program-card__overlay,
@@ -433,13 +436,19 @@
 }
 
 .program-card__background {
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+   position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+    object-position: center;
+    border-radius: inherit;
+    transform: scale(1.16); /* crops the spacing inside the PNG */
+    z-index: 1;
 }
 
+ 
 .program-card__overlay {
   inset: 0;
   z-index: 2;
