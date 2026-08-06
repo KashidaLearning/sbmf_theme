@@ -9,7 +9,9 @@
  
 <%
     user = request.user
-    programs = list(Program.objects.all()[:100])
+    programs = list(
+        Program.objects.prefetch_related("program_background_images").all()[:100]
+    )
 %>
  
 <main id="main" aria-label="Content" tabindex="-1" dir="rtl">
@@ -80,43 +82,66 @@
 
     <div class="programs-grid">
       % for index, program in enumerate(programs):
-      
-        <div  class="program-card">
-          <div class="spline-bg">
-           % if program.spline_url:
-          <a href="${reverse('custom_programs:program_about', args=[program.id])}" target="_blank" class="external-link">
+        <%
+          card_images = {
+              item.position: item.image.url
+              for item in program.program_background_images.all()
+              if item.image
+          }
+          program_card_url = program.program_card.url if program.program_card else None
+          characters_card_url = card_images.get("characters-card")
+          gif_card_url = card_images.get("gif-card")
+          program_subject = (
+              program.subject
+              if getattr(program, "subject", None)
+              else _("Skill")
+          )
+        %>
 
-          <iframe src="${program.spline_url}" frameborder="0" >
+        <article class="program-card">
+          <a
+            href="${reverse('custom_programs:program_about', args=[program.id])}"
+            class="program-card__link"
+            aria-label="${program.name}"
+          >
+            % if program_card_url:
+              <img
+                class="program-card__background"
+                src="${program_card_url}"
+                alt=""
+                aria-hidden="true"
+              />
+            % endif
 
-         
-          </iframe>
-          
-           </a>
-           % endif
-           <!--
-            <div class="progress-badge" >
-              % if program.age_range:
-                  ${program.age_range}
-              % endif  
-            </div>
-            -->
-            <!-- <div class="program-info">
-              <h3 class="program-title">${program.name}</h3>
-              <div class="program-subject" >
-               <img src="${static.url('images/cat-icon.png')}">${program.subject if hasattr(program, 'subject') else 'المهارة'}
+            <div class="program-card__overlay" aria-hidden="true"></div>
+
+            % if gif_card_url:
+              <img
+                class="program-card__gif"
+                src="${gif_card_url}"
+                alt=""
+                aria-hidden="true"
+              />
+            % endif
+
+            % if characters_card_url:
+              <img
+                class="program-card__characters"
+                src="${characters_card_url}"
+                alt=""
+                aria-hidden="true"
+              />
+            % endif
+
+            <div class="program-info">
+              <h2 class="program-title">${program.name}</h2>
+              <div class="program-subject">
+                <img src="${static.url('images/cat-icon.png')}" alt="" />
+                <span>${program_subject}</span>
               </div>
-            </div> -->
-            
-          </div>
-           <p class="program-text">
-        ابدؤوا مغامرتكم من الداخل.
-        في هذه التجربة تتعلّمون كيف تديرون وقتكم، وتنظّمون مواردكم،
-        وتضعون أهدافكم بطريقة عملية تساعدكم على بناء الثقة وتحقيق التوازن.
-        تتعرّفون على أدوات التحليل، اتخاذ القرار، والتخطيط الذكي
-        لحياتكم اليومية والمستقبلية.
-      </p>
-        </div>
-    
+            </div>
+          </a>
+        </article>
       % endfor
      
     </div>
@@ -341,19 +366,10 @@
 
 /*Enf of Hero Section Styles */
   
-  .program-text {
-    font-size: 16px;
-    line-height: 1.8;
-    color: white;
-    margin-bottom: 18px;
-    font-weight: 400;
-}
-
 .program-subject img {
-    margin-left: 12px;
-    width: 24px;
-    height: 24px;
-    margin-top: -9px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
  
 .programs-section {
@@ -385,83 +401,109 @@
  
  
 .program-card {
-    width: 360px;
-    height: 560px;
-    position: relative;
-    border-radius: 26px;
-    overflow: hidden;
-    text-decoration: none;
-}
- 
-
- 
-.spline-bg {
+  width: 360px;
   position: relative;
-  width: 100%;
-  height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #110D7C;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
- 
-.spline-bg iframe {
+
+.program-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+}
+
+.program-card__link {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 360 / 560;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none !important;
+}
+
+.program-card__background,
+.program-card__overlay,
+.program-card__gif,
+.program-card__characters {
+  position: absolute;
+}
+
+.program-card__background {
+  inset: 0;
   width: 100%;
   height: 100%;
-  border: none;
   object-fit: cover;
+  z-index: 1;
 }
- 
- 
-.progress-badge {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #110D7C;
-    font-size: 15px;
-    font-weight: 800;
-    padding: 5px 20px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-    min-width: 75px;
-    padding-top: 12px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    display: none;
+
+.program-card__overlay {
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 13, 124, 0.04) 35%,
+    rgba(17, 13, 124, 0.85) 100%
+  );
 }
- 
- 
- 
- 
+
+.program-card__gif {
+  top: 7%;
+  left: 50%;
+  z-index: 3;
+  width: 78%;
+  height: 38%;
+  object-fit: contain;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.program-card__characters {
+  right: 50%;
+  bottom: 0;
+  z-index: 4;
+  width: 100%;
+  max-height: 78%;
+  object-fit: contain;
+  object-position: bottom center;
+  transform: translateX(50%);
+  pointer-events: none;
+}
+
 .program-info {
-    position: absolute;
-    bottom: 25px;
-    width: 100%;
-    text-align: right;
-    padding-right: 10px;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    z-index: 10;
-     display: none;
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+  z-index: 5;
+  text-align: right;
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
+
 .program-title {
   color: #fff;
-    font-size: 46px;
-    font-weight: bold;
-    padding-left: 170px;
-    margin-bottom: 17px;
-    align-content: right;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 800;
+  margin: 0 0 14px;
+  font-family: 'IBM Plex Sans', sans-serif !important;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.38);
 }
- 
-  
+
 .program-subject {
-    display: inline-block;
-    border-radius: 10px;
-    padding: 10px 40px 12px 50px;
-    margin-bottom: -6px;
-    padding-right: 25px;
-    color:  #110D7C;;
-    font-size: 16px;
-    font-family: 'IBM Plex Sans', sans-serif !important;
-    display: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  padding: 10px 16px;
+  color: #110D7C;
+  background: #FFCB05;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif !important;
 }
   
 
@@ -474,34 +516,27 @@
  
  
 @media (max-width: 992px) {
-.program-grid{
-  gap: 10px !important;
-    max-width: 1240px !important;
-}
   .program-card {
-            width: 33% ;
+    width: calc(50% - 30px);
+    max-width: 360px;
   }
 }
  
 @media (max-width: 768px) {
   .program-card {
-    width: 100%;
-    height: 480px;
+    width: min(360px, 90vw);
   }
   .section-title {
     font-size: 36px;
   }
   .program-title {
-    font-size: 22px;
-    
+    font-size: 30px;
   }
-  .spline-bg {
-    width: 90%;
-}
-    .program-card {
-        width: 100%;
-        height: 480px;
-    }
+
+  .programs-grid {
+    gap: 48px;
+    padding: 0 16px;
+  }
 }
  
 header.global-header .header-logo a .logo {
