@@ -139,7 +139,7 @@
 
             <div class="program-info">
               <h2 class="program-title">${program.name}</h2>
-              <div class="program-subject">
+              <div class="program-subject" style="background-color: ${program.css_single_color};">
                 <img src="${static.url('images/cat-icon.png')}" alt="" />
                 <span>${program_subject}</span>
               </div>
@@ -516,7 +516,6 @@
   border-radius: 12px;
   padding: 10px 16px;
   color: #110D7C;
-  background: var(--primary-color);
   font-size: 16px;
   font-weight: 700;
   font-family: 'IBM Plex Sans', sans-serif !important;
