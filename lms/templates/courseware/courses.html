@@ -91,6 +91,8 @@
           program_card_url = program.card.url if program.card else None
           characters_card_url = card_images.get("characters-card")
           gif_card_url = card_images.get("gif-card")
+          css_characters_card = getattr(program, "css_characters_card", "") or ""
+          css_gif_card = getattr(program, "css_gif_card", "") or ""
           program_subject = (
               program.subject
               if getattr(program, "subject", None)
@@ -119,6 +121,7 @@
               <img
                 class="program-card__gif"
                 src="${gif_card_url}"
+                style="${css_gif_card}"
                 alt=""
                 aria-hidden="true"
               />
@@ -128,6 +131,7 @@
               <img
                 class="program-card__characters"
                 src="${characters_card_url}"
+                style="${css_characters_card}"
                 alt=""
                 aria-hidden="true"
               />
