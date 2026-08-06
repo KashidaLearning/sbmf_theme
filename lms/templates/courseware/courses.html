@@ -405,8 +405,7 @@
   height: 500px;
   position: relative;
   border-radius: 26px;
-  overflow: hidden;
-  background: #110D7C;
+  background: transparent;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -467,8 +466,8 @@
     width: 105%;
     height: 90%;
     object-fit: contain;
-    transform: translateX(-50%);
     pointer-events: none;
+    right:0px;
 }
 
  .program-card__characters {
@@ -480,9 +479,9 @@
     max-height: 100%;
     object-fit: contain;
     object-position: bottom center;
-    transform: translateX(50%);
     pointer-events: none;
     overflow: overlay;
+    left:0px;
 }
 
 
@@ -513,7 +512,7 @@
   border-radius: 12px;
   padding: 10px 16px;
   color: #110D7C;
-  background: #FFCB05;
+  background: var(--primary-color);
   font-size: 16px;
   font-weight: 700;
   font-family: 'IBM Plex Sans', sans-serif !important;
