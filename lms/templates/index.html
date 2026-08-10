@@ -90,8 +90,6 @@
           program_card_url = program.card.url if program.card else None
           characters_card_url = card_images.get("characters-card")
           gif_card_url = card_images.get("gif-card")
-          css_characters_card = getattr(program, "css_characters_card", "") or ""
-          css_gif_card = getattr(program, "css_gif_card", "") or ""
           program_subject = (
               program.subject
               if getattr(program, "subject", None)
@@ -100,7 +98,7 @@
           subject_color = getattr(program, "css_single_color", "") or ""
         %>
 
-        <article class="program-card">
+        <article class="program-card program-card--${program.id}">
           <a
             href="${reverse('custom_programs:program_about', args=[program.id])}"
             class="program-card__link"
@@ -123,7 +121,6 @@
               <img
                 class="program-card__gif"
                 src="${gif_card_url}"
-                style="${css_gif_card}"
                 alt=""
                 aria-hidden="true"
               />
@@ -133,7 +130,6 @@
               <img
                 class="program-card__characters"
                 src="${characters_card_url}"
-                style="${css_characters_card}"
                 alt=""
                 aria-hidden="true"
               />
@@ -426,6 +422,7 @@
     display: block;
     width: 100%;
     height: 100%;
+    overflow: hidden;
     border-radius: inherit;
      text-decoration: none !important;
 }
@@ -446,17 +443,23 @@
     object-fit: cover;
     object-position: center;
     border-radius: inherit;
+    transform: scale(1.35);
     z-index: 1;
 }
 
 .program-card__overlay {
   inset: 0;
   z-index: 2;
- 
+  background: linear-gradient(
+    180deg,
+    rgba(17, 13, 124, 0.04) 35%,
+    rgba(17, 13, 124, 0.85) 100%
+  );
 }
 
 .program-card__gif {
     top: 3%;
+    left: 62%;
     z-index: 3;
     width: 105%;
     height: 90%;
@@ -466,6 +469,7 @@
 }
 
  .program-card__characters {
+    right: 56%;
     bottom: 12px;
     z-index: 1;
     width: 100%;
@@ -473,6 +477,7 @@
     object-fit: contain;
     object-position: bottom center;
     pointer-events: none;
+    overflow: overlay;
     left:0px;
 }
 
@@ -503,6 +508,7 @@
   border-radius: 12px;
   padding: 10px 16px;
   color: #110D7C;
+  background: var(--primary-color);
   font-size: 16px;
   font-weight: 700;
   font-family: 'IBM Plex Sans', sans-serif !important;
@@ -549,3 +555,42 @@ div#content {
     margin: 0px !important;
 }
 </style>
+
+% for program in programs:
+  <%
+    desktop_characters_css = getattr(program, "css_characters_card", "") or ""
+    desktop_gif_css = getattr(program, "css_gif_card", "") or ""
+    mobile_characters_css = (
+        getattr(program, "css_characters_card_mobile", "") or ""
+    )
+    mobile_gif_css = getattr(program, "css_gif_card_mobile", "") or ""
+  %>
+  % if desktop_characters_css or desktop_gif_css or mobile_characters_css or mobile_gif_css:
+    <style>
+      % if desktop_gif_css:
+        .program-card--${program.id} .program-card__gif {
+          ${desktop_gif_css | n}
+        }
+      % endif
+      % if desktop_characters_css:
+        .program-card--${program.id} .program-card__characters {
+          ${desktop_characters_css | n}
+        }
+      % endif
+      % if mobile_characters_css or mobile_gif_css:
+        @media (max-width: 420px) {
+          % if mobile_gif_css:
+            .program-card--${program.id} .program-card__gif {
+              ${mobile_gif_css | n}
+            }
+          % endif
+          % if mobile_characters_css:
+            .program-card--${program.id} .program-card__characters {
+              ${mobile_characters_css | n}
+            }
+          % endif
+        }
+      % endif
+    </style>
+  % endif
+% endfor
