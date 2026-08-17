@@ -76,6 +76,24 @@ cert_name_long = settings.CERT_NAME_LONG
      box-shadow: 0 4px 4px 2px rgba(255, 255, 255, 0.15), 4px 4px 16px 6px rgba(0, 0, 0, 0.25) inset;
 
 }
+.program-card__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.program-card__link:hover,
+.program-card__link:focus,
+.program-card__link:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+.program-card__link:focus-visible {
+    outline: 3px solid var(--program-accent);
+    outline-offset: 4px;
+}
 </style>
   <%static:webpack entry="UnenrollmentFactory">
     UnenrollmentFactory({
@@ -298,7 +316,7 @@ cert_name_long = settings.CERT_NAME_LONG
 %>
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
-                <div class="card-container">
+                <a class="card-container program-card__link" href="${reverse('custom_programs:program_about', args=[program.id])}" aria-label="${program.name}">
                 <!-- Progress pill (centered on top of card) -->
                 <div class="program-card__progress-pill">
                     <span>${program_progress_average}%</span>
@@ -309,9 +327,7 @@ cert_name_long = settings.CERT_NAME_LONG
                     <header class="program-card__header" style="background-image: url('${header_img}');">
                 % endif
                     <h2 class="program-card__title">
-                        <a href="${reverse('custom_programs:program_about', args=[program.id])}">
-                            ${program.name}
-                        </a>
+                        ${program.name}
                     </h2>
                 </header>
 
@@ -382,7 +398,7 @@ cert_name_long = settings.CERT_NAME_LONG
                     </div>
 
                 </div>
-             </div>
+                </a>
             </article>
 
         % endfor  ## end programs loop
