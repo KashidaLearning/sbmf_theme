@@ -15,6 +15,45 @@
     <%static:require_module module_name="js/student_account/logistration_factory" class_name="LogistrationFactory">
         var options = ${data | n, dump_js_escaped_json};
         LogistrationFactory(options);
+        function localizeRegistrationForm() {
+            var nameHelp = document.getElementById('register-name-desc');
+            if (nameHelp && nameHelp.textContent.trim() !== 'أدخل اسمك الكامل') {
+                nameHelp.textContent = 'أدخل اسمك الكامل';
+            }
+
+            var passwordHelp = document.getElementById('register-password-desc');
+            var arabicPasswordHelp = 'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل.';
+            if (passwordHelp && passwordHelp.textContent.trim() !== arabicPasswordHelp) {
+                passwordHelp.textContent = arabicPasswordHelp;
+            }
+
+            document.querySelectorAll('#register a[href="/tos"], #register a[href$="/tos"]').forEach(function (link) {
+                link.setAttribute('href', 'https://f-skills.com/شروط الخدمة');
+            });
+
+            document.querySelectorAll('#register a[href="/privacy"], #register a[href$="/privacy"]').forEach(function (link) {
+                link.setAttribute('href', 'https://f-skills.com//سياسة-الخصوصية');
+            });
+        }
+
+        function startRegistrationLocalization() {
+            var registrationContainer = document.getElementById('login-and-registration-container');
+            if (!registrationContainer) return;
+
+            localizeRegistrationForm();
+
+            var registrationObserver = new MutationObserver(localizeRegistrationForm);
+            registrationObserver.observe(registrationContainer, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startRegistrationLocalization);
+        } else {
+            startRegistrationLocalization();
+        }
         if ('newrelic' in window) {
             newrelic.finished();
             // Because of a New Relic bug, the finished() event doesn't show up
