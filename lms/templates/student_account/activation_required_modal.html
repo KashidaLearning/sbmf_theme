@@ -1,0 +1,391 @@
+<%page expression_filter="h"/>
+<%!
+from django.urls import reverse
+%>
+
+<style>
+    html.activation-required-open,
+    body.activation-required-open {
+        overflow: hidden !important;
+    }
+
+    .activation-required-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: rgba(10, 30, 88, 0.58);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+        direction: rtl;
+    }
+
+    .activation-required-modal {
+        width: min(620px, 100%);
+        padding: 42px 38px 34px;
+        overflow: hidden;
+        color: #fff;
+        text-align: center;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(92, 158, 198, 0.78),
+                rgba(34, 62, 151, 0.82)
+            );
+        border: 1px solid rgba(255, 255, 255, 0.32);
+        border-radius: 24px;
+        box-shadow:
+            0 24px 70px rgba(4, 18, 69, 0.46),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(18px);
+        backdrop-filter: blur(18px);
+    }
+
+    .activation-required-icon {
+        display: flex;
+        width: 74px;
+        height: 74px;
+        margin: 0 auto 22px;
+        align-items: center;
+        justify-content: center;
+        color: #17387f;
+        font-size: 36px;
+        background: #ffca0a;
+        border-radius: 50%;
+        box-shadow: 0 10px 28px rgba(7, 32, 101, 0.32);
+    }
+
+    .activation-required-title {
+        margin: 0 0 16px;
+        color: #fff;
+        font-size: clamp(26px, 4vw, 34px);
+        font-weight: 700;
+        line-height: 1.45;
+    }
+
+    .activation-required-description {
+        max-width: 500px;
+        margin: 0 auto;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 18px;
+        line-height: 1.9;
+    }
+
+    .activation-required-email {
+        display: block;
+        width: fit-content;
+        max-width: 100%;
+        margin: 18px auto;
+        padding: 10px 18px;
+        overflow-wrap: anywhere;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 600;
+        direction: ltr;
+        background: rgba(10, 33, 94, 0.38);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 12px;
+    }
+
+    .activation-required-note {
+        margin: 18px 0 0;
+        color: #fff4bb;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.8;
+    }
+
+    .activation-required-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 28px;
+    }
+
+    .activation-required-button {
+        min-height: 48px;
+        padding: 12px 24px;
+        border: 0;
+        border-radius: 25px;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.4;
+        cursor: pointer;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+    }
+
+    .activation-required-button:hover,
+    .activation-required-button:focus-visible {
+        transform: translateY(-2px);
+    }
+
+    .activation-required-button:focus-visible,
+    .activation-required-logout:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+    }
+
+    .activation-required-button--primary {
+        color: #142f72;
+        background: #ffca0a;
+        box-shadow: 0 8px 22px rgba(8, 29, 85, 0.28);
+    }
+
+    .activation-required-button--secondary {
+        color: #fff;
+        background: rgba(13, 45, 113, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .activation-required-button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .activation-required-status {
+        min-height: 27px;
+        margin: 18px 0 0;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.7;
+    }
+
+    .activation-required-status.is-success {
+        color: #eaffdf;
+    }
+
+    .activation-required-status.is-error {
+        color: #ffe0e0;
+    }
+
+    .activation-required-logout {
+        display: inline-block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 15px;
+        text-decoration: underline;
+    }
+
+    .activation-required-logout:hover,
+    .activation-required-logout:focus {
+        color: #fff;
+    }
+
+    @media (max-width: 600px) {
+        .activation-required-overlay {
+            padding: 14px;
+        }
+
+        .activation-required-modal {
+            padding: 32px 20px 26px;
+            border-radius: 19px;
+        }
+
+        .activation-required-description {
+            font-size: 16px;
+        }
+
+        .activation-required-actions {
+            flex-direction: column;
+        }
+
+        .activation-required-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<div
+    id="activation-required-overlay"
+    class="activation-required-overlay"
+    role="presentation"
+>
+    <section
+        id="activation-required-modal"
+        class="activation-required-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="activation-required-title"
+        aria-describedby="activation-required-description"
+        data-resend-url="${reverse('send_account_activation_email')}"
+    >
+        <div class="activation-required-icon" aria-hidden="true">✉</div>
+
+        <h2 id="activation-required-title" class="activation-required-title">
+            فعّل حسابك للمتابعة
+        </h2>
+
+        <p id="activation-required-description" class="activation-required-description">
+            أرسلنا رابط تفعيل الحساب إلى بريدك الإلكتروني:
+        </p>
+
+        <strong class="activation-required-email">${request.user.email}</strong>
+
+        <p class="activation-required-note">
+            يجب تفعيل حسابك قبل التسجيل في أي برنامج.
+        </p>
+
+        <div class="activation-required-actions">
+            <button
+                id="activation-required-resend"
+                class="activation-required-button activation-required-button--primary"
+                type="button"
+            >
+                إعادة إرسال رابط التفعيل
+            </button>
+
+            <button
+                id="activation-required-reload"
+                class="activation-required-button activation-required-button--secondary"
+                type="button"
+            >
+                لقد فعّلت حسابي
+            </button>
+        </div>
+
+        <p
+            id="activation-required-status"
+            class="activation-required-status"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <a
+            class="activation-required-logout"
+            href="${reverse('logout')}"
+        >
+            تسجيل الخروج
+        </a>
+    </section>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    var modal = document.getElementById('activation-required-modal');
+    var resendButton = document.getElementById('activation-required-resend');
+    var reloadButton = document.getElementById('activation-required-reload');
+    var statusMessage = document.getElementById('activation-required-status');
+
+    if (!modal || !resendButton || !reloadButton || !statusMessage) {
+        return;
+    }
+
+    document.documentElement.classList.add('activation-required-open');
+    document.body.classList.add('activation-required-open');
+
+    function getCookie(name) {
+        var cookieValue = null;
+        var cookies = document.cookie ? document.cookie.split(';') : [];
+
+        cookies.some(function (cookie) {
+            var trimmedCookie = cookie.trim();
+
+            if (trimmedCookie.substring(0, name.length + 1) === name + '=') {
+                cookieValue = decodeURIComponent(
+                    trimmedCookie.substring(name.length + 1)
+                );
+                return true;
+            }
+
+            return false;
+        });
+
+        return cookieValue;
+    }
+
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = 'activation-required-status';
+
+        if (type) {
+            statusMessage.classList.add(type);
+        }
+    }
+
+    resendButton.addEventListener('click', function () {
+        resendButton.disabled = true;
+        showStatus('جاري إرسال رابط التفعيل...', '');
+
+        fetch(modal.getAttribute('data-resend-url'), {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(function (response) {
+            if (!response.ok) {
+                throw new Error('Activation email request failed.');
+            }
+
+            showStatus(
+                'تم إرسال رابط تفعيل جديد إلى بريدك الإلكتروني.',
+                'is-success'
+            );
+
+            window.setTimeout(function () {
+                resendButton.disabled = false;
+            }, 30000);
+        }).catch(function () {
+            resendButton.disabled = false;
+            showStatus(
+                'تعذّر إرسال رابط التفعيل. يرجى المحاولة مرة أخرى.',
+                'is-error'
+            );
+        });
+    });
+
+    reloadButton.addEventListener('click', function () {
+        window.location.reload();
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return;
+        }
+
+        if (event.key !== 'Tab') {
+            return;
+        }
+
+        var focusableElements = Array.prototype.slice.call(
+            modal.querySelectorAll(
+                'button:not([disabled]), a[href]'
+            )
+        );
+
+        if (!focusableElements.length) {
+            event.preventDefault();
+            return;
+        }
+
+        var firstElement = focusableElements[0];
+        var lastElement = focusableElements[focusableElements.length - 1];
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+        }
+    }, true);
+
+    window.setTimeout(function () {
+        resendButton.focus();
+    }, 0);
+}());
+</script>
