@@ -87,7 +87,7 @@ cert_name_long = settings.CERT_NAME_LONG
 .program-card__link:focus,
 .program-card__link:visited {
     color: inherit;
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 .program-card__link:focus-visible {
@@ -316,7 +316,7 @@ cert_name_long = settings.CERT_NAME_LONG
 %>
 
             <article class="program-card" style="--program-accent:${program_accent_color};">
-                <div class="card-container">
+                <a class="card-container program-card__link" href="${reverse('custom_programs:program_about', args=[program.id])}" aria-label="${program.name}">
                 <!-- Progress pill (centered on top of card) -->
                 <div class="program-card__progress-pill">
                     <span>${program_progress_average}%</span>
@@ -326,14 +326,9 @@ cert_name_long = settings.CERT_NAME_LONG
                 % if header_img:
                     <header class="program-card__header" style="background-image: url('${header_img}');">
                 % endif
-                <h2 class="program-card__title">
-                    <a
-                        class="program-card__link"
-                        href="${reverse('custom_programs:program_about', args=[program.id])}"
-                    >
+                    <h2 class="program-card__title">
                         ${program.name}
-                    </a>
-                </h2>
+                    </h2>
                 </header>
 
                 <!-- Courses list -->
@@ -366,22 +361,13 @@ cert_name_long = settings.CERT_NAME_LONG
                                   %>
 
 
-                                          <a
-                                            class="course-row program-card__link ${course_state_class}"
-                                            href="${reverse('custom_programs:program_about', args=[program.id])}"
-                                            aria-label="${course['name']}"
-                                        >
+                                          <div class="course-row ${course_state_class}">
                                             <div class="row-container">
-                                                <span class="course-row__title">${course['name']}</span>
-
-                                                <span class="course-row__status">
-                                                    <img
-                                                        src="${static.url(course_icon_file)}"
-                                                        alt="${course_icon_alt}"
-                                                    >
-                                                </span>
-                                            </div>
-                                        </a>
+                                              <span class="course-row__title">${course['name']}</span>
+                                              <span class="course-row__status">
+                                                  <img src="${static.url(course_icon_file)}" alt="${course_icon_alt}">
+                                              </span>
+                                              </div>
                                           </div>
 
                                       % endfor
@@ -412,8 +398,8 @@ cert_name_long = settings.CERT_NAME_LONG
                     </div>
 
                 </div>
-             </div>
-        </article>
+                </a>
+            </article>
 
         % endfor  ## end programs loop
 
@@ -447,9 +433,10 @@ cert_name_long = settings.CERT_NAME_LONG
     </div>
   </div>
 
-<a href="/courses" class="go-to-journeys">
+  <a href="/courses" class="go-to-journeys">
     استكشف المغامرات
-</a>
+  </a>
+</div>
 
         % endif
 
