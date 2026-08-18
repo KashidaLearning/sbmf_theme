@@ -79,15 +79,26 @@ cert_name_long = settings.CERT_NAME_LONG
 .program-card__link {
     display: block;
     color: inherit;
-    text-decoration: none;
+    text-decoration: none !important;
+    pointer-events: none;
+    cursor: default;
+}
+
+.program-card__link .program-card__title,
+.program-card__link .course-row {
+    pointer-events: auto;
     cursor: pointer;
+    text-decoration: none !important;
 }
 
 .program-card__link:hover,
 .program-card__link:focus,
-.program-card__link:visited {
+.program-card__link:visited,
+.program-card__link:hover .program-card__title,
+.program-card__link:hover .course-row,
+.program-card__link:hover .course-row__title {
     color: inherit;
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .program-card__link:focus-visible {
