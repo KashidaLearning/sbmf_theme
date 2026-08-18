@@ -60,7 +60,7 @@ from django.urls import reverse
     .activation-required-title {
         margin: 0 0 16px;
         color: #fff;
-        font-size: 24px;
+        font-size: 25px;
         font-weight: 700;
         line-height: 1.45;
     }
@@ -69,7 +69,7 @@ from django.urls import reverse
         max-width: 500px;
         margin: 0 auto;
         color: rgba(255, 255, 255, 0.95);
-        font-size: 14px;
+        font-size: 18px;
         line-height: 1.9;
     }
 
@@ -82,7 +82,7 @@ from django.urls import reverse
 	box-sizing: border-box;
 	align-items: center;
 	justify-content: center;
-	font-size: 14px;
+	font-size: 18px;
         width: fit-content;
         max-width: 100%;
         overflow-wrap: anywhere;
@@ -97,7 +97,7 @@ from django.urls import reverse
     .activation-required-note {
         margin: 14px 0 0;
 	color: #fff;
-	font-size: 14px;
+	font-size: 18px;
         font-weight: 600;
         line-height: 1.8;
     }
@@ -116,8 +116,7 @@ from django.urls import reverse
         border: 0;
         border-radius: 56px;
         font-family: inherit;
-        font-size: 14px;
-        font-weight: 700;
+        font-size: 18px;
         line-height: 1.4;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
@@ -147,7 +146,23 @@ from django.urls import reverse
         background: #416a9e;
         border: 0;
     }
+    #activation-required-modal .activation-required-button--primary:hover,
+#activation-required-modal .activation-required-button--primary:focus,
+#activation-required-modal .activation-required-button--primary:active {
+    background: #ffcb05 !important;
+    background-image: none !important;
+    color: #142f72 !important;
+    border: 0 !important;
+}
 
+#activation-required-modal .activation-required-button--secondary:hover,
+#activation-required-modal .activation-required-button--secondary:focus,
+#activation-required-modal .activation-required-button--secondary:active {
+    background: #416a9e !important;
+    background-image: none !important;
+    color: #fff !important;
+    border: 0 !important;
+}
     .activation-required-button:disabled {
         opacity: 0.65;
         cursor: not-allowed;
@@ -172,15 +187,15 @@ from django.urls import reverse
     }
 
     .activation-required-logout {
-        display: block;
-        width: 100%;
-        height: 37px;
-        margin: 4px auto 0;
-        color: #ffcb05;
-        font-size: 14px;
-        line-height: 37px;
-        text-align: center;
-        text-decoration: none;
+          display: block;
+    width: 100%;
+    height: 37px;
+    margin: 4px auto 0;
+    color: #ffcb05 !important;
+    font-size: 18px !important;
+    line-height: 37px !important;
+    text-align: center;
+    text-decoration: none !important;
     }
 
     .activation-required-logout:hover,
